@@ -1,22 +1,29 @@
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as cookieParser from 'cookie-parser';
-import { AppModule } from './app.module';
+import { AdminAppModule } from './presenters/rest/admin/app.module';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const adminApp = await NestFactory.create(AdminAppModule);
 
   const swaggerConfig = new DocumentBuilder()
-    .setTitle('Mabell API')
+    .setTitle('Admin API')
     .setDescription('The API description')
     .setVersion('1.0')
     .build();
-  const documentFactory = () => SwaggerModule.createDocument(app, swaggerConfig);
-  SwaggerModule.setup('api', app, documentFactory);
+  const documentFactory = () => SwaggerModule.createDocument(adminApp, swaggerConfig);
+  SwaggerModule.setup('swagger', adminApp, documentFactory);
 
-  app.use(cookieParser());
+  adminApp.use(cookieParser());
+  adminApp.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      skipNullProperties: true,
+    }),
+  );
 
-  await app.listen(process.env.PORT ?? 3000);
+  await adminApp.listen(process.env.PORT ?? 3000);
 }
 
 bootstrap();
