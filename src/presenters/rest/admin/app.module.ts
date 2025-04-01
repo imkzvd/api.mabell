@@ -6,6 +6,7 @@ import * as path from 'path';
 import { MongooseModule } from '../../../infrastructure/persistence/mongoose/mongoose.module';
 import { AdminsModule } from './controllers/admins/admins.module';
 import { UploadsModule } from './controllers/uploads/uploads.module';
+import { UsersModule } from './controllers/users/users.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { UploadsModule } from './controllers/uploads/uploads.module';
     MongooseModule,
     AdminsModule,
     UploadsModule,
+    UsersModule,
   ],
 })
 export class AdminAppModule {}
