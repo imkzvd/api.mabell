@@ -46,7 +46,7 @@ export class TmpFileStorageAdapter implements TmpFileStorage {
       prepKey,
       JSON.stringify(fileData),
       'EX',
-      (expiresAt.getTime() - Date.now()) / 1000,
+      Math.round((expiresAt.getTime() - Date.now()) / 1000),
     );
 
     return fileData;
