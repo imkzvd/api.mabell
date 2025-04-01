@@ -14,6 +14,10 @@ import { UsersModule } from './controllers/users/users.module';
       rootPath: path.join(process.cwd(), 'tmp'),
       serveRoot: '/tmp',
     }),
+    ServeStaticModule.forRoot({
+      rootPath: path.join(process.cwd(), 'storage'),
+      serveRoot: '/storage',
+    }),
     ConfigModule.forRoot(),
     CqrsModule.forRoot(),
     MongooseModule,
