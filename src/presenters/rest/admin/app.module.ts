@@ -6,6 +6,7 @@ import * as path from 'path';
 import { MongooseModule } from '../../../infrastructure/persistence/mongoose/mongoose.module';
 import { AdminsModule } from './controllers/admins/admins.module';
 import { UploadsModule } from './controllers/uploads/uploads.module';
+import { UsersModule } from './controllers/users/users.module';
 
 @Module({
   imports: [
@@ -13,11 +14,16 @@ import { UploadsModule } from './controllers/uploads/uploads.module';
       rootPath: path.join(process.cwd(), 'tmp'),
       serveRoot: '/tmp',
     }),
+    ServeStaticModule.forRoot({
+      rootPath: path.join(process.cwd(), 'storage'),
+      serveRoot: '/storage',
+    }),
     ConfigModule.forRoot(),
     CqrsModule.forRoot(),
     MongooseModule,
     AdminsModule,
     UploadsModule,
+    UsersModule,
   ],
 })
 export class AdminAppModule {}
