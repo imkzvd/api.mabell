@@ -120,7 +120,7 @@ export class UserRO {
     this.birthDate = dto.birthDate;
     this.region = new LabelValueRO(dto.region, getRegionLabelByValue(dto.region));
     this.genres = dto.genres.map((genre) => new LabelValueRO(genre, getGenreLabelByValue(genre)));
-    this.avatar = `${process.env.HOST}${dto.avatar}`;
+    this.avatar = dto.avatar ? `${process.env.HOST}${dto.avatar}` : null;
     this.color = dto.color;
     this.isBlocked = dto.isBlocked;
     this.isVerified = dto.isVerified;
