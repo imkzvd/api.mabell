@@ -245,7 +245,7 @@ export class UsersController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete('/:id')
   async delete(@Param('id', ParseObjectIdPipe) id: string): Promise<void> {
-    await this._commandBus.execute(new DeleteUserCommand(id));
+    return this._commandBus.execute(new DeleteUserCommand(id));
   }
 
   @ApiOperation({ summary: 'Find users', operationId: 'find' })
