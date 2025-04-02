@@ -46,7 +46,7 @@ lerna-debug.log*
 .temp
 .tmp
 tmp
-storage
+/storage
 
 # Runtime data
 pids
