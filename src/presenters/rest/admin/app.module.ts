@@ -7,6 +7,7 @@ import { MongooseModule } from '../../../infrastructure/persistence/mongoose/mon
 import { AdminsModule } from './controllers/admins/admins.module';
 import { UploadsModule } from './controllers/uploads/uploads.module';
 import { UsersModule } from './controllers/users/users.module';
+import { ArtistsModule } from './controllers/artists/artists.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { UsersModule } from './controllers/users/users.module';
     AdminsModule,
     UploadsModule,
     UsersModule,
+    ArtistsModule,
   ],
 })
 export class AdminAppModule {}
