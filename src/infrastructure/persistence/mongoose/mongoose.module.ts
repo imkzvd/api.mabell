@@ -3,6 +3,7 @@ import { Global, Module } from '@nestjs/common';
 import { MongooseModule as MongooseNestModule } from '@nestjs/mongoose';
 import { AdminModule } from './modules/admin/admin.module';
 import { UserModule } from './modules/user/user.module';
+import { ArtistModule } from './modules/artist/artist.module';
 
 @Global()
 @Module({
@@ -12,7 +13,8 @@ import { UserModule } from './modules/user/user.module';
     ),
     AdminModule,
     UserModule,
+    ArtistModule,
   ],
-  exports: [AdminModule, UserModule],
+  exports: [AdminModule, UserModule, ArtistModule],
 })
 export class MongooseModule {}
