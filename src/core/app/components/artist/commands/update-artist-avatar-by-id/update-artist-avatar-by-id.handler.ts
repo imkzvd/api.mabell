@@ -1,14 +1,10 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
 import {
-  TMP_FILE_STORAGE_DI_TOKEN,
-  TmpFileStorage,
-} from '../../../upload/storage/tmp-file-storage.port';
-import {
   ARTIST_FILE_STORAGE_DI_TOKEN,
   ArtistFileStorage,
 } from '../../ports/storage/artist-file-storage.port';
-import { BadRequestException, NotFoundException } from '../../../../../shared/exceptions';
+import { NotFoundException } from '../../../../../shared/exceptions';
 import { UpdateArtistAvatarByIdCommand } from './update-artist-avatar-by-id.command';
 import {
   ARTIST_WRITE_REPOSITORY_DI_TOKEN,
@@ -22,8 +18,6 @@ export class UpdateArtistAvatarByIdHandler
   constructor(
     @Inject(ARTIST_WRITE_REPOSITORY_DI_TOKEN)
     private readonly _artistWriteRepository: ArtistWriteRepository,
-    @Inject(TMP_FILE_STORAGE_DI_TOKEN)
-    private readonly _tmpFileStorage: TmpFileStorage,
     @Inject(ARTIST_FILE_STORAGE_DI_TOKEN)
     private readonly _artistFileStorage: ArtistFileStorage,
   ) {}
@@ -35,17 +29,10 @@ export class UpdateArtistAvatarByIdHandler
       throw new NotFoundException('Artist does not exist');
     }
 
-    const tmpFileData = await this._tmpFileStorage.findById(payload.fileId);
-
-    if (!tmpFileData) {
-      throw new BadRequestException('The file has not been uploaded');
-    }
-
-    const storedFileData = await this._artistFileStorage.saveAvatar(
+    const storedFileData = await this._artistFileStorage.saveArtistAvatar(
       foundArtist.getId(),
-      tmpFileData,
+      payload.fileId,
     );
-    await this._tmpFileStorage.deleteById(tmpFileData.id);
 
     foundArtist.updateAvatar(storedFileData.path);
 

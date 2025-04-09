@@ -32,6 +32,6 @@ export class DeleteArtistCoverByIdHandler implements ICommandHandler<DeleteArtis
 
     await this._artistWriteRepository.save(foundArtist);
 
-    return this._artistFileStorage.deleteCover(foundArtist.getId());
+    return this._artistFileStorage.deleteArtistCover(foundArtist.getId());
   }
 }
