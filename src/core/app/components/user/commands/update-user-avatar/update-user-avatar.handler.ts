@@ -6,22 +6,16 @@ import {
   UserWriteRepository,
 } from '../../../../../domain/components/user/repository/user-write-repository.port';
 import {
-  TMP_FILE_STORAGE_DI_TOKEN,
-  TmpFileStorage,
-} from '../../../upload/storage/tmp-file-storage.port';
-import {
   USER_FILE_STORAGE_DI_TOKEN,
   UserFileStorage,
 } from '../../ports/storage/user-file-storage.port';
-import { BadRequestException, NotFoundException } from '../../../../../shared/exceptions';
+import { NotFoundException } from '../../../../../shared/exceptions';
 
 @CommandHandler(UpdateUserAvatarCommand)
 export class UpdateUserAvatarHandler implements ICommandHandler<UpdateUserAvatarCommand> {
   constructor(
     @Inject(USER_WRITE_REPOSITORY_DI_TOKEN)
     private readonly _userWriteRepository: UserWriteRepository,
-    @Inject(TMP_FILE_STORAGE_DI_TOKEN)
-    private readonly _tmpFileStorage: TmpFileStorage,
     @Inject(USER_FILE_STORAGE_DI_TOKEN)
     private readonly _userFileStorage: UserFileStorage,
   ) {}
@@ -33,14 +27,10 @@ export class UpdateUserAvatarHandler implements ICommandHandler<UpdateUserAvatar
       throw new NotFoundException('User does not exist');
     }
 
-    const tmpFileData = await this._tmpFileStorage.findById(payload.fileId);
-
-    if (!tmpFileData) {
-      throw new BadRequestException('The file has not been uploaded');
-    }
-
-    const storedFileData = await this._userFileStorage.saveAvatar(foundUser.getId(), tmpFileData);
-    await this._tmpFileStorage.deleteById(tmpFileData.id);
+    const storedFileData = await this._userFileStorage.saveUserAvatar(
+      foundUser.getId(),
+      payload.fileId,
+    );
 
     foundUser.updateAvatar(storedFileData.path);
     foundUser.updateColor(payload.color || foundUser.getColor());

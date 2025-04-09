@@ -32,6 +32,6 @@ export class DeleteUserAvatarHandler implements ICommandHandler<DeleteUserAvatar
 
     await this._userWriteRepository.save(foundUser);
 
-    return this._userFileStorage.deleteAvatar(foundUser.getId());
+    return this._userFileStorage.deleteUserAvatar(foundUser.getId());
   }
 }
