@@ -27,6 +27,6 @@ export class DeleteArtistByIdHandler implements ICommandHandler<DeleteArtistById
       throw new NotFoundException('Artist does not exist');
     }
 
-    return this._artistFileStorage.deleteDirectory(deleteArtistId);
+    return this._artistFileStorage.deleteArtistDirectory(deleteArtistId);
   }
 }

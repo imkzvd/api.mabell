@@ -34,6 +34,6 @@ export class DeleteArtistAvatarByIdHandler
 
     await this._artistWriteRepository.save(foundArtist);
 
-    return this._artistFileStorage.deleteAvatar(foundArtist.getId());
+    return this._artistFileStorage.deleteArtistAvatar(foundArtist.getId());
   }
 }

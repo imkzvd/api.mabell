@@ -4,53 +4,44 @@ import * as path from 'path';
 import * as process from 'process';
 
 export abstract class FileStorage {
-  protected readonly _rootDirPath: string = process.cwd();
-  protected readonly _rootStorageDirPath: string = path.join(this._rootDirPath, '/storage');
+  protected readonly _projectDirPath: string = process.cwd();
+  protected readonly _storagesDirPath: string = path.join(this._projectDirPath, '/storages');
   protected readonly _storageDirPath: string;
 
-  constructor(public readonly directoryName: string) {
-    const dirPath = path.join(this._rootStorageDirPath, directoryName);
+  constructor(public readonly storageName: string) {
+    this._storageDirPath = path.join(this._storagesDirPath, storageName);
 
-    this._storageDirPath = dirPath;
-    fsPromises.mkdir(dirPath, { recursive: true });
+    fsPromises.mkdir(this._storageDirPath, { recursive: true });
   }
 
-  protected createDirectory(id: string) {
-    return fsPromises.mkdir(path.join(this._storageDirPath, id), { recursive: true });
+  protected async createDirectory(...segments: string[]): Promise<{
+    absPath: string;
+    relPath: string;
+  }> {
+    const prepPath = path.join(this._storageDirPath, ...segments);
+    await fsPromises.mkdir(prepPath, { recursive: true });
+
+    return this.resolveProjectPath(...segments);
   }
 
-  protected getDirectoryById(id: string): string {
-    return path.join(this._storageDirPath, id);
+  protected resolveProjectPath(...segments: string[]): { absPath: string; relPath: string } {
+    const absolutePath: string = path.join(this._storageDirPath, ...segments);
+
+    return {
+      absPath: absolutePath,
+      relPath: `/${path.relative(this._projectDirPath, absolutePath)}`,
+    };
   }
 
-  protected deleteDirectoryById(id: string): Promise<void> {
-    return fsPromises.rm(path.join(this._storageDirPath, id), { recursive: true, force: true });
-  }
-
-  protected deleteFileByIdFromDirectory(id: string, path: string): Promise<void> {
+  protected deleteByPath(path: string): Promise<void> {
     return fsPromises.rm(path, { recursive: true, force: true });
   }
 
-  protected async existsDirectoryById(id: string): Promise<boolean> {
-    try {
-      await fsPromises.access(path.join(this._storageDirPath, id));
-
-      return true;
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (e) {
-      return false;
-    }
+  protected convertAndSaveImage(srcPath: string, distPath: string) {
+    return sharp(srcPath).webp().toFile(distPath);
   }
 
-  protected getAbsolutePath(id: string, fileName: string): string {
-    return path.join(this._storageDirPath, id, fileName);
-  }
-
-  protected getRelativePath(dirPath: string): string {
-    return `/${path.relative(this._rootDirPath, dirPath)}`;
-  }
-
-  protected convertImageToWebp(input: string, output: string) {
-    return sharp(input).webp().toFile(output);
+  protected moveFile(srcPath: string, destPath: string) {
+    return fsPromises.rename(srcPath, destPath);
   }
 }
