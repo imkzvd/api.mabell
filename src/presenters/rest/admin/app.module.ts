@@ -17,8 +17,8 @@ import { AlbumsModule } from './controllers/albums/albums.module';
       serveRoot: '/tmp',
     }),
     ServeStaticModule.forRoot({
-      rootPath: path.join(process.cwd(), 'storage'),
-      serveRoot: '/storage',
+      rootPath: path.join(process.cwd(), 'storages'),
+      serveRoot: '/storages',
     }),
     ConfigModule.forRoot(),
     CqrsModule.forRoot(),
