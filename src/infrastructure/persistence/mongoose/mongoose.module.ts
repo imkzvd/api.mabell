@@ -4,6 +4,7 @@ import { MongooseModule as MongooseNestModule } from '@nestjs/mongoose';
 import { AdminModule } from './modules/admin/admin.module';
 import { UserModule } from './modules/user/user.module';
 import { ArtistModule } from './modules/artist/artist.module';
+import { AlbumModule } from './modules/album/album.module';
 
 @Global()
 @Module({
@@ -14,7 +15,8 @@ import { ArtistModule } from './modules/artist/artist.module';
     AdminModule,
     UserModule,
     ArtistModule,
+    AlbumModule,
   ],
-  exports: [AdminModule, UserModule, ArtistModule],
+  exports: [AdminModule, UserModule, ArtistModule, AlbumModule],
 })
 export class MongooseModule {}
