@@ -8,6 +8,7 @@ import { AdminsModule } from './controllers/admins/admins.module';
 import { UploadsModule } from './controllers/uploads/uploads.module';
 import { UsersModule } from './controllers/users/users.module';
 import { ArtistsModule } from './controllers/artists/artists.module';
+import { AlbumsModule } from './controllers/albums/albums.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { ArtistsModule } from './controllers/artists/artists.module';
     UploadsModule,
     UsersModule,
     ArtistsModule,
+    AlbumsModule,
   ],
 })
 export class AdminAppModule {}
