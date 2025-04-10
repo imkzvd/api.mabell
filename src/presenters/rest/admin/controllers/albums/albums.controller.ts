@@ -1,0 +1,209 @@
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  NotFoundException,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
+import {
+  ApiBody,
+  ApiCreatedResponse,
+  ApiNoContentResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
+import { faker } from '@faker-js/faker';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { ParseObjectIdPipe } from '../../../common/pipes/parse-object-id.pipe';
+import { UpdateAlbumDTO } from './dtos/update-album.dto';
+import { AlbumRO } from './ros/album.ro';
+import { GetAlbumByIdQuery } from '../../../../../core/app/components/album/queries/get-album-by-id/get-album-by-id.query';
+import { UpdateAlbumArtistsDTO } from './dtos/update-album-artists.dto';
+import { UpdateAlbumByIdCommand } from '../../../../../core/app/components/album/commands/update-album-by-id/update-album-by-id.command';
+import { UpdateAlbumArtistsByIdCommand } from '../../../../../core/app/components/album/commands/update-album-artists-by-id/update-album-artists-by-id.command';
+import { UpdateAlbumCoverDTO } from './dtos/update-album-cover.dto';
+import { UpdateAlbumCoverByIdCommand } from '../../../../../core/app/components/album/commands/update-album-cover-by-id/update-album-cover-by-id.command';
+import { DeleteAlbumCoverByIdCommand } from '../../../../../core/app/components/album/commands/delete-album-cover-by-id/delete-album-cover-by-id.command';
+import { DeleteAlbumByIdCommand } from '../../../../../core/app/components/album/commands/delete-album-by-id/delete-album-by-id.command';
+import { BadRequestException } from '../../../../../core/shared/exceptions';
+import { CreateAlbumDTO } from './dtos/create-album.dto';
+import { CreateAlbumCommand } from '../../../../../core/app/components/album/commands/create-album/create-album.command';
+
+@ApiTags('Albums')
+@Controller({ path: '/albums' })
+export class AlbumsController {
+  constructor(
+    private readonly _commandBus: CommandBus,
+    private readonly _queryBus: QueryBus,
+  ) {}
+
+  @ApiOperation({ summary: 'Create an album', operationId: 'create' })
+  @ApiBody({ type: CreateAlbumDTO })
+  @ApiCreatedResponse({ description: 'Album', type: AlbumRO })
+  @Post('/')
+  async create(@Body() { artist, name }: CreateAlbumDTO): Promise<AlbumRO> {
+    const { id } = await this._commandBus.execute(new CreateAlbumCommand(artist, name));
+
+    const createdAlbum = await this._queryBus.execute(new GetAlbumByIdQuery(id));
+
+    if (!createdAlbum) {
+      throw new BadRequestException('Some error');
+    }
+
+    return new AlbumRO(createdAlbum);
+  }
+
+  @ApiOperation({
+    summary: 'Update album data',
+    operationId: 'update',
+  })
+  @ApiParam({
+    type: String,
+    name: 'id',
+    description: 'Id',
+    example: faker.database.mongodbObjectId(),
+  })
+  @ApiBody({ type: UpdateAlbumDTO })
+  @ApiOkResponse({ description: 'Album', type: AlbumRO })
+  @Patch('/:id')
+  async update(
+    @Param('id', ParseObjectIdPipe) id: string,
+    @Body() dto: UpdateAlbumDTO,
+  ): Promise<AlbumRO> {
+    await this._commandBus.execute(new UpdateAlbumByIdCommand(id, dto));
+
+    const updatedAlbum = await this._queryBus.execute(new GetAlbumByIdQuery(id));
+
+    if (!updatedAlbum) {
+      throw new NotFoundException('Album not found');
+    }
+
+    return new AlbumRO(updatedAlbum);
+  }
+
+  @ApiOperation({
+    summary: 'Update artists of the album',
+    operationId: 'updateArtists',
+  })
+  @ApiParam({
+    type: String,
+    name: 'id',
+    description: 'Id',
+    example: faker.database.mongodbObjectId(),
+  })
+  @ApiBody({ type: UpdateAlbumArtistsDTO })
+  @ApiOkResponse({ description: 'Album', type: AlbumRO })
+  @Patch('/:id/artists')
+  async updateArtists(
+    @Param('id', ParseObjectIdPipe) id: string,
+    @Body() dto: UpdateAlbumArtistsDTO,
+  ): Promise<AlbumRO> {
+    await this._commandBus.execute(new UpdateAlbumArtistsByIdCommand(id, dto.artists));
+
+    const updatedAlbum = await this._queryBus.execute(new GetAlbumByIdQuery(id));
+
+    if (!updatedAlbum) {
+      throw new NotFoundException('Album not found');
+    }
+
+    return new AlbumRO(updatedAlbum);
+  }
+
+  @ApiOperation({
+    summary: 'Update cover of the album',
+    operationId: 'updateCover',
+  })
+  @ApiParam({
+    type: String,
+    name: 'id',
+    description: 'Id',
+    example: faker.database.mongodbObjectId(),
+  })
+  @ApiBody({ type: UpdateAlbumCoverDTO })
+  @ApiOkResponse({ description: 'Album', type: AlbumRO })
+  @Patch('/:id/cover')
+  async updateCover(
+    @Param('id', ParseObjectIdPipe) id: string,
+    @Body() dto: UpdateAlbumCoverDTO,
+  ): Promise<AlbumRO> {
+    await this._commandBus.execute(new UpdateAlbumCoverByIdCommand(id, dto));
+
+    const updatedAlbum = await this._queryBus.execute(new GetAlbumByIdQuery(id));
+
+    if (!updatedAlbum) {
+      throw new NotFoundException('Album not found');
+    }
+
+    return new AlbumRO(updatedAlbum);
+  }
+
+  @ApiOperation({
+    summary: 'Delete cover of the album',
+    operationId: 'deleteCover',
+  })
+  @ApiParam({
+    type: String,
+    name: 'id',
+    description: 'Id',
+    example: faker.database.mongodbObjectId(),
+  })
+  @ApiOkResponse({ description: 'Album', type: AlbumRO })
+  @Delete('/:id/cover')
+  async deleteCover(@Param('id', ParseObjectIdPipe) id: string): Promise<AlbumRO> {
+    await this._commandBus.execute(new DeleteAlbumCoverByIdCommand(id));
+
+    const updatedAlbum = await this._queryBus.execute(new GetAlbumByIdQuery(id));
+
+    if (!updatedAlbum) {
+      throw new NotFoundException('Album not found');
+    }
+
+    return new AlbumRO(updatedAlbum);
+  }
+
+  @ApiOperation({
+    summary: 'Delete an album by id',
+    operationId: 'delete',
+  })
+  @ApiParam({
+    type: String,
+    name: 'id',
+    description: 'Id',
+    example: faker.database.mongodbObjectId(),
+  })
+  @ApiNoContentResponse({
+    description: 'Album has been deleted',
+    schema: { format: 'json' },
+  })
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @Delete('/:id')
+  async delete(@Param('id', ParseObjectIdPipe) id: string): Promise<void> {
+    await this._commandBus.execute(new DeleteAlbumByIdCommand(id));
+  }
+
+  @ApiOperation({ summary: 'Find an album by id', operationId: 'findOne' })
+  @ApiParam({
+    type: String,
+    name: 'id',
+    description: 'Id',
+    example: faker.database.mongodbObjectId(),
+  })
+  @ApiOkResponse({ description: 'Album', type: AlbumRO })
+  @Get('/:id')
+  async findOne(@Param('id', ParseObjectIdPipe) id: string): Promise<AlbumRO> {
+    const foundAlbum = await this._queryBus.execute(new GetAlbumByIdQuery(id));
+
+    if (!foundAlbum) {
+      throw new NotFoundException(`There is no album with the specified ID`);
+    }
+
+    return new AlbumRO(foundAlbum);
+  }
+}

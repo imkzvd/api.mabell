@@ -8,6 +8,7 @@ import {
   TmpFileStorage,
 } from '../../../core/app/components/upload/storage/tmp-file-storage.port';
 import { BadRequestException } from '../../../core/shared/exceptions';
+import { AlbumId } from '../../../core/domain/components/album/album.entity';
 
 export class ArtistFileStorageAdapter extends FileStorage implements ArtistFileStorage {
   constructor(
@@ -92,6 +93,56 @@ export class ArtistFileStorageAdapter extends FileStorage implements ArtistFileS
     return {
       fileName,
       ...this.resolveProjectPath(id, fileName),
+    };
+  }
+
+  async saveAlbumCover(id: ArtistId, albumId: AlbumId, fileId: string): Promise<StoredFileDTO> {
+    const tmpFileData = await this._tmpFileStorage.findById(fileId);
+
+    if (!tmpFileData) {
+      throw new BadRequestException('The file has not been uploaded');
+    }
+
+    await this.createAlbumDirectoryById(id, albumId);
+    const { fileName, absPath, relPath } = this.getAlbumCoverMetaById(id, albumId);
+    await this.convertAndSaveImage(tmpFileData.path, absPath);
+    await this._tmpFileStorage.deleteById(tmpFileData.id);
+
+    return new StoredFileDTO(fileName, relPath, absPath, tmpFileData.size, tmpFileData.type);
+  }
+
+  deleteAlbumCover(artistId: ArtistId, albumId: AlbumId): Promise<void> {
+    const { absPath } = this.getAlbumCoverMetaById(artistId, albumId);
+
+    return this.deleteByPath(absPath);
+  }
+
+  deleteAlbumDirectory(artistId: ArtistId, albumId: AlbumId): Promise<void> {
+    const { absPath } = this.resolveProjectPath(artistId, albumId);
+
+    return this.deleteByPath(absPath);
+  }
+
+  private createAlbumDirectoryById(
+    artistId: ArtistId,
+    albumId: string,
+  ): Promise<{ absPath: string; relPath: string }> {
+    return this.createDirectory(artistId, albumId);
+  }
+
+  private getAlbumCoverMetaById(
+    artistId: ArtistId,
+    albumId: AlbumId,
+  ): {
+    fileName: string;
+    absPath: string;
+    relPath: string;
+  } {
+    const fileName = 'cover.webp';
+
+    return {
+      fileName,
+      ...this.resolveProjectPath(artistId, albumId, fileName),
     };
   }
 }
