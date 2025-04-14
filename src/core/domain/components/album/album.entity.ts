@@ -6,6 +6,7 @@ import { AlbumTypeVO } from './vos/album-type.vo';
 import { NameVO } from '../artist/vos/name.vo';
 import { ReleaseDateVO } from './vos/release-date.vo';
 import { DescriptionVO } from './vos/description.vo';
+import { TrackId } from '../track/track.entity';
 
 export type AlbumId = EntityId<'Album'>;
 
@@ -20,7 +21,7 @@ export class Album {
     private _color: HexColorVO | null,
     private _description: DescriptionVO,
     private _releaseAt: ReleaseDateVO | null,
-    private _tracks: Set<string>,
+    private _tracks: Set<TrackId>,
     private _isActive: boolean,
     private _isPublic: boolean,
     private readonly _createdAt: Date,
@@ -166,28 +167,28 @@ export class Album {
     return this._tracks.size;
   }
 
-  addTrack(id: string): this {
+  addTrack(id: TrackId): this {
     this._tracks.add(id);
     this.refreshUpdatedAt();
 
     return this;
   }
 
-  deleteTrack(id: string): this {
+  deleteTrack(id: TrackId): this {
     this._tracks.delete(id);
     this.refreshUpdatedAt();
 
     return this;
   }
 
-  addTracks(ids: string[]): this {
+  addTracks(ids: TrackId[]): this {
     this._tracks = new Set(ids);
     this.refreshUpdatedAt();
 
     return this;
   }
 
-  deleteTracks(ids: string[]): this {
+  deleteTracks(ids: TrackId[]): this {
     ids.forEach((id) => this._tracks.delete(id));
     this.refreshUpdatedAt();
 

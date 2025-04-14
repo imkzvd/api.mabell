@@ -9,6 +9,7 @@ import {
 } from '../../../core/app/components/upload/storage/tmp-file-storage.port';
 import { BadRequestException } from '../../../core/shared/exceptions';
 import { AlbumId } from '../../../core/domain/components/album/album.entity';
+import { TrackId } from '../../../core/domain/components/track/track.entity';
 
 export class ArtistFileStorageAdapter extends FileStorage implements ArtistFileStorage {
   constructor(
@@ -123,6 +124,31 @@ export class ArtistFileStorageAdapter extends FileStorage implements ArtistFileS
     return this.deleteByPath(absPath);
   }
 
+  async saveTrack(
+    id: ArtistId,
+    albumId: AlbumId,
+    trackId: TrackId,
+    fileId: string,
+  ): Promise<StoredFileDTO> {
+    const tmpFileData = await this._tmpFileStorage.findById(fileId);
+
+    if (!tmpFileData) {
+      throw new BadRequestException('The file has not been uploaded');
+    }
+
+    await this.createTrackDirectory(id, albumId, trackId);
+    const { fileName, absPath, relPath } = this.getTrackMeta(id, albumId, trackId);
+    await this.moveFile(tmpFileData.path, absPath);
+
+    return new StoredFileDTO(fileName, relPath, absPath, tmpFileData.size, tmpFileData.type);
+  }
+
+  deleteTrack(id: ArtistId, albumId: AlbumId, trackId: TrackId): Promise<void> {
+    const { absPath } = this.resolveProjectPath(id, albumId, trackId);
+
+    return this.deleteByPath(absPath);
+  }
+
   private createAlbumDirectoryById(
     artistId: ArtistId,
     albumId: string,
@@ -143,6 +169,31 @@ export class ArtistFileStorageAdapter extends FileStorage implements ArtistFileS
     return {
       fileName,
       ...this.resolveProjectPath(artistId, albumId, fileName),
+    };
+  }
+
+  private createTrackDirectory(
+    artistId: ArtistId,
+    albumId: string,
+    trackId: string,
+  ): Promise<{ absPath: string; relPath: string }> {
+    return this.createDirectory(artistId, albumId, trackId);
+  }
+
+  private getTrackMeta(
+    artistId: ArtistId,
+    albumId: AlbumId,
+    trackId: TrackId,
+  ): {
+    fileName: string;
+    absPath: string;
+    relPath: string;
+  } {
+    const fileName = `${trackId}.mp3`;
+
+    return {
+      fileName,
+      ...this.resolveProjectPath(artistId, albumId, trackId, fileName),
     };
   }
 }
