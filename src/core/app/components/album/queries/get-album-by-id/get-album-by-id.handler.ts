@@ -14,6 +14,6 @@ export class GetAlbumByIdHandler implements IQueryHandler<GetAlbumByIdQuery> {
   ) {}
 
   async execute({ id }: GetAlbumByIdQuery) {
-    return this._albumReadRepository.findById(id);
+    return this._albumReadRepository.findById(id, true);
   }
 }

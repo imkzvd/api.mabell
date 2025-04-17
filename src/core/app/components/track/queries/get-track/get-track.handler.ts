@@ -14,6 +14,6 @@ export class GetTrackHandler implements IQueryHandler<GetTrackQuery> {
   ) {}
 
   async execute({ id }: GetTrackQuery) {
-    return this._trackReadRepository.findById(id);
+    return this._trackReadRepository.findById(id, true);
   }
 }
