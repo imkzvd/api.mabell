@@ -5,6 +5,7 @@ import {
   USER_READ_REPOSITORY_DI_TOKEN,
   UserReadRepository,
 } from '../../ports/repository/user-read-repository.port';
+import UserMapper from '../dtos/user.mapper';
 
 @QueryHandler(GetUserByIdQuery)
 export class GetUserByIdHandler implements IQueryHandler<GetUserByIdQuery> {
@@ -14,6 +15,8 @@ export class GetUserByIdHandler implements IQueryHandler<GetUserByIdQuery> {
   ) {}
 
   async execute({ id }: GetUserByIdQuery) {
-    return this._userReadRepository.findById(id);
+    const foundUser = await this._userReadRepository.findById(id);
+
+    return foundUser ? UserMapper.toDTO(foundUser) : null;
   }
 }
