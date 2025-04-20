@@ -1,7 +1,7 @@
-import { Region } from '../../../../domain/common/constants/regions';
-import { Genre } from '../../../../domain/common/constants/genres';
+import { Region } from '../../../../../../domain/common/constants/regions';
+import { Genre } from '../../../../../../domain/common/constants/genres';
 
-export class SimplifiedUserDTO {
+export class UserDTO {
   constructor(
     public readonly id: string,
     public readonly username: string,
