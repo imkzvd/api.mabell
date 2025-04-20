@@ -5,6 +5,7 @@ import {
   ADMIN_READ_REPOSITORY_DI_TOKEN,
   AdminReadRepository,
 } from '../../repository/admin-read-repository.port';
+import AdminMapper from '../dtos/admin.mapper';
 
 @QueryHandler(GetAdminByIdQuery)
 export class GetAdminByIdHandler implements IQueryHandler<GetAdminByIdQuery> {
@@ -14,6 +15,8 @@ export class GetAdminByIdHandler implements IQueryHandler<GetAdminByIdQuery> {
   ) {}
 
   async execute({ id }: GetAdminByIdQuery) {
-    return this._adminReadRepository.findById(id);
+    const foundAdmin = await this._adminReadRepository.findById(id);
+
+    return foundAdmin ? AdminMapper.toDTO(foundAdmin) : null;
   }
 }

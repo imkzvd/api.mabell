@@ -5,6 +5,8 @@ import {
   ADMIN_READ_REPOSITORY_DI_TOKEN,
   AdminReadRepository,
 } from '../../repository/admin-read-repository.port';
+import { OffsetLimitPaginationResponseDTO } from '../../../../common/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
+import AdminMapper from '../dtos/admin.mapper';
 
 @QueryHandler(GetAdminsQuery)
 export class GetAdminsHandler implements IQueryHandler<GetAdminsQuery> {
@@ -14,8 +16,16 @@ export class GetAdminsHandler implements IQueryHandler<GetAdminsQuery> {
   ) {}
 
   async execute({ pagination }: GetAdminsQuery) {
-    return this._adminReadRepository.find({
+    const foundAdmins = await this._adminReadRepository.find({
       pagination,
     });
+
+    return new OffsetLimitPaginationResponseDTO(
+      foundAdmins.items.map((dto) => AdminMapper.toDTO(dto)),
+      foundAdmins.total,
+      foundAdmins.limit,
+      foundAdmins.offset,
+      foundAdmins.hasMore,
+    );
   }
 }
