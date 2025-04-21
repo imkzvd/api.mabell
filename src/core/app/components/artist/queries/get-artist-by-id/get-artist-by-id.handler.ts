@@ -5,6 +5,7 @@ import {
   ARTIST_READ_REPOSITORY_DI_TOKEN,
   ArtistReadRepository,
 } from '../../ports/repository/artist-read-repository.port';
+import ArtistMapper from '../dtos/artist.mapper';
 
 @QueryHandler(GetArtistByIdQuery)
 export class GetArtistByIdHandler implements IQueryHandler<GetArtistByIdQuery> {
@@ -14,6 +15,8 @@ export class GetArtistByIdHandler implements IQueryHandler<GetArtistByIdQuery> {
   ) {}
 
   async execute({ id }: GetArtistByIdQuery) {
-    return this._artistReadRepository.findById(id);
+    const foundArtist = await this._artistReadRepository.findById(id);
+
+    return foundArtist ? ArtistMapper.toDTO(foundArtist) : null;
   }
 }

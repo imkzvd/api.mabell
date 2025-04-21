@@ -5,6 +5,8 @@ import {
   ARTIST_READ_REPOSITORY_DI_TOKEN,
   ArtistReadRepository,
 } from '../../ports/repository/artist-read-repository.port';
+import { OffsetLimitPaginationResponseDTO } from '../../../../common/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
+import ArtistMapper from '../dtos/artist.mapper';
 
 @QueryHandler(GetArtistsQuery)
 export class GetArtistsHandler implements IQueryHandler<GetArtistsQuery> {
@@ -14,8 +16,16 @@ export class GetArtistsHandler implements IQueryHandler<GetArtistsQuery> {
   ) {}
 
   async execute({ pagination }: GetArtistsQuery) {
-    return this._artistReadRepository.find({
+    const foundArtists = await this._artistReadRepository.find({
       pagination,
     });
+
+    return new OffsetLimitPaginationResponseDTO(
+      foundArtists.items.map((artist) => ArtistMapper.toDTO(artist)),
+      foundArtists.total,
+      foundArtists.limit,
+      foundArtists.offset,
+      foundArtists.hasMore,
+    );
   }
 }
