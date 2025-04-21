@@ -2,7 +2,6 @@ import { ApiProperty } from '@nestjs/swagger';
 import { faker } from '@faker-js/faker';
 import * as process from 'process';
 import { LabelValueRO } from '../../../../common/ros/label-value.ro';
-import { AlbumDTO } from '../../../../../../core/app/components/album/dtos/album.dto';
 import { ArtistRO } from '../../artists/ros/artist.ro';
 import {
   Genres,
@@ -12,6 +11,12 @@ import {
   AlbumTypes,
   getAlbumTypeLabelByValue,
 } from '../../../../../../core/domain/components/album/constants/album-types';
+import { AlbumDTO } from '../../../../../../core/app/components/album/queries/dtos/album.dto';
+import { TrackRO } from '../../tracks/ros/track.ro';
+import { OffsetLimitPaginationRO } from '../../../../common/ros/offset-limit-pagination.ro';
+import { OffsetLimitPaginationResponseDTO } from '../../../../../../core/app/common/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
+import { TrackDTO } from '../../../../../../core/app/components/track/queries/dtos/track.dto';
+import { TracksRO } from '../../tracks/ros/tracks.ro';
 
 export class AlbumRO {
   @ApiProperty({
@@ -27,13 +32,6 @@ export class AlbumRO {
     example: faker.music.songName(),
   })
   name: string;
-
-  @ApiProperty({
-    type: [String],
-    description: 'Ids of artists',
-    example: [faker.database.mongodbObjectId()],
-  })
-  artistIds: string[];
 
   @ApiProperty({ type: () => [ArtistRO], description: 'Artists' })
   artists: ArtistRO[];
@@ -83,8 +81,8 @@ export class AlbumRO {
   })
   releaseAt: Date | null;
 
-  // @ApiProperty({ type: () => [], description: 'Album tracks' })
-  tracks: [];
+  @ApiProperty({ type: () => OffsetLimitPaginationRO<TrackRO>, description: 'Album tracks' })
+  tracks: OffsetLimitPaginationRO<TrackRO>;
 
   @ApiProperty({ type: Boolean, description: 'Active', example: true })
   isActive: boolean;
@@ -106,21 +104,20 @@ export class AlbumRO {
   })
   updatedAt: Date;
 
-  constructor(dto: AlbumDTO) {
-    this.id = dto.id;
-    this.name = dto.name;
-    this.artistIds = dto.artistIds;
-    this.artists = dto.artists.map((i) => new ArtistRO(i));
-    this.type = new LabelValueRO(dto.type, getAlbumTypeLabelByValue(dto.type));
-    this.genres = dto.genres.map((genre) => new LabelValueRO(genre, getGenreLabelByValue(genre)));
-    this.cover = dto.cover ? `${process.env.HOST}${dto.cover}` : null;
-    this.color = dto.color;
-    this.description = dto.description;
-    this.releaseAt = dto.releaseAt;
-    this.tracks = [];
-    this.isActive = dto.isActive;
-    this.isPublic = dto.isPublic;
-    this.createdAt = dto.createdAt;
-    this.updatedAt = dto.updatedAt;
+  constructor(album: AlbumDTO, tracks?: OffsetLimitPaginationResponseDTO<TrackDTO>) {
+    this.id = album.id;
+    this.name = album.name;
+    this.artists = album.artists.map((i) => new ArtistRO(i));
+    this.type = new LabelValueRO(album.type, getAlbumTypeLabelByValue(album.type));
+    this.genres = album.genres.map((genre) => new LabelValueRO(genre, getGenreLabelByValue(genre)));
+    this.cover = album.cover ? `${process.env.HOST}${album.cover}` : null;
+    this.color = album.color;
+    this.description = album.description;
+    this.releaseAt = album.releaseAt;
+    this.tracks = tracks ? new TracksRO(tracks) : new OffsetLimitPaginationRO();
+    this.isActive = album.isActive;
+    this.isPublic = album.isPublic;
+    this.createdAt = album.createdAt;
+    this.updatedAt = album.updatedAt;
   }
 }

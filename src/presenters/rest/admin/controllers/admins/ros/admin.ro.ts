@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { faker } from '@faker-js/faker';
 import { LabelValueRO } from '../../../../common/ros/label-value.ro';
-import { AdminDTO } from '../../../../../../core/app/components/admin/dtos/admin.dto';
+import { AdminDTO } from '../../../../../../core/app/components/admin/queries/dtos/admin.dto';
 import { getAdminRoleLabelByValue } from '../../../../../../core/domain/components/admin/constants/admin-roles';
 
 export class AdminRO {

@@ -1,17 +1,20 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { OffsetLimitPaginationRO } from '../../../../common/ros/offset-limit-pagination.ro';
 import { OffsetLimitPaginationResponseDTO } from '../../../../../../core/app/common/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
-import { SimplifiedAlbumRO } from './simplified-album.ro';
-import { SimplifiedAlbumDTO } from '../../../../../../core/app/components/album/dtos/simplified-album.dto';
+import { AlbumRO } from './album.ro';
+import { AlbumDTO } from '../../../../../../core/app/components/album/queries/dtos/album.dto';
 
-export class AlbumsRO extends OffsetLimitPaginationRO<SimplifiedAlbumRO> {
-  @ApiProperty({ type: () => [SimplifiedAlbumRO], description: 'Items' })
-  declare items: SimplifiedAlbumRO[];
+export class AlbumsRO extends OffsetLimitPaginationRO<AlbumRO> {
+  @ApiProperty({ type: () => [AlbumRO], description: 'Items' })
+  declare items: AlbumRO[];
 
-  constructor(result: OffsetLimitPaginationResponseDTO<SimplifiedAlbumDTO>) {
-    super({
-      ...result,
-      items: result.items.map((item) => new SimplifiedAlbumRO(item)),
-    });
+  constructor(result: OffsetLimitPaginationResponseDTO<AlbumDTO>) {
+    super(
+      result.items.map((item) => new AlbumRO(item)),
+      result.total,
+      result.offset,
+      result.limit,
+      result.hasMore,
+    );
   }
 }

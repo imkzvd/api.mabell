@@ -10,7 +10,7 @@ import {
   Genres,
   getGenreLabelByValue,
 } from '../../../../../../core/domain/common/constants/genres';
-import { UserDTO } from '../../../../../../core/app/components/user/dtos/user.dto';
+import { UserDTO } from '../../../../../../core/app/components/user/queries/dtos/user.dto';
 
 export class UserRO {
   @ApiProperty({
