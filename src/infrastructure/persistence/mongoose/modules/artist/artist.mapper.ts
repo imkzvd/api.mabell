@@ -2,14 +2,11 @@ import { Types } from 'mongoose';
 import { ReadMapper, WriteMapper } from '../../base/mapper.interface';
 import { Artist as ArtistDocument } from './artist.document';
 import { Artist, ArtistId } from '../../../../../core/domain/components/artist/artist.entity';
-import { ArtistDTO } from '../../../../../core/app/components/artist/dtos/artist.dto';
-import { SimplifiedArtistDTO } from '../../../../../core/app/components/artist/dtos/simplified-artist.dto';
 import { ArtistFactory } from '../../../../../core/domain/components/artist/artist.factory';
+import { ArtistDTO } from '../../../../../core/app/components/artist/ports/repository/dtos/artist.dto';
 
 class ArtistMapper
-  implements
-    WriteMapper<ArtistDocument, Artist>,
-    ReadMapper<ArtistDocument, ArtistDTO, SimplifiedArtistDTO>
+  implements WriteMapper<ArtistDocument, Artist>, ReadMapper<ArtistDocument, ArtistDTO>
 {
   toDocument(entity: Artist): ArtistDocument {
     return {
@@ -68,23 +65,8 @@ class ArtistMapper
     );
   }
 
-  toSimplifiedDTO(doc: ArtistDocument): SimplifiedArtistDTO {
-    return new SimplifiedArtistDTO(
-      doc._id.toHexString(),
-      doc.name,
-      doc.birthName,
-      doc.birthDate,
-      doc.genres,
-      doc.biography,
-      doc.avatar,
-      doc.cover,
-      doc.accentColor,
-      doc.secondaryColor,
-      doc.isActive,
-      doc.isPublic,
-      doc.createdAt,
-      doc.updatedAt,
-    );
+  toPopulatedDTO(doc: ArtistDocument): ArtistDTO {
+    return this.toDTO(doc);
   }
 }
 

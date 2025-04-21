@@ -1,9 +1,9 @@
+import * as process from 'process';
 import { ApiProperty } from '@nestjs/swagger';
 import { faker } from '@faker-js/faker';
-import * as process from 'process';
-import { TrackDTO } from '../../../../../../core/app/components/track/dtos/track.dto';
-import { SimplifiedAlbumRO } from '../../albums/ros/simplified-album.ro';
-import { SimplifiedArtistRO } from '../../artists/ros/simplified-artist.ro';
+import { TrackDTO } from '../../../../../../core/app/components/track/queries/dtos/track.dto';
+import { AlbumRO } from '../../albums/ros/album.ro';
+import { ArtistRO } from '../../artists/ros/artist.ro';
 
 export class TrackRO {
   @ApiProperty({
@@ -28,10 +28,10 @@ export class TrackRO {
   albumId: string;
 
   @ApiProperty({
-    // type: () => SimplifiedAlbumRO,
+    type: () => AlbumRO,
     description: 'Album',
   })
-  album: SimplifiedAlbumRO;
+  album: AlbumRO;
 
   @ApiProperty({
     type: [String],
@@ -41,10 +41,10 @@ export class TrackRO {
   artistIds: string[];
 
   @ApiProperty({
-    type: () => [SimplifiedArtistRO],
+    type: () => [ArtistRO],
     description: 'Primary artists',
   })
-  artists: SimplifiedArtistRO[];
+  artists: ArtistRO[];
 
   @ApiProperty({
     type: [String],
@@ -54,10 +54,10 @@ export class TrackRO {
   featArtistIds: string[];
 
   @ApiProperty({
-    type: () => [SimplifiedArtistRO],
+    type: () => [ArtistRO],
     description: 'Featured artists',
   })
-  featArtists: SimplifiedArtistRO[];
+  featArtists: ArtistRO[];
 
   @ApiProperty({
     type: String,
@@ -94,12 +94,9 @@ export class TrackRO {
   constructor(dto: TrackDTO) {
     this.id = dto.id;
     this.name = dto.name;
-    this.albumId = dto.albumId;
-    this.album = new SimplifiedAlbumRO(dto.album);
-    this.artistIds = dto.artistIds;
-    this.artists = dto.artists.map((i) => new SimplifiedArtistRO(i));
-    this.featArtistIds = dto.featArtistIds;
-    this.featArtists = dto.featArtists.map((i) => new SimplifiedArtistRO(i));
+    this.album = new AlbumRO(dto.album);
+    this.artists = dto.artists.map((i) => new ArtistRO(i));
+    this.featArtists = dto.featArtists.map((i) => new ArtistRO(i));
     this.file = dto.file ? `${process.env.HOST}${dto.file}` : null;
     this.duration = dto.duration;
     this.isExplicit = dto.isExplicit;

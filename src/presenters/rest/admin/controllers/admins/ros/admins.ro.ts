@@ -1,17 +1,20 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { OffsetLimitPaginationRO } from '../../../../common/ros/offset-limit-pagination.ro';
-import { SimplifiedAdminRO } from './simplified-admin.ro';
+import { AdminRO } from './admin.ro';
 import { OffsetLimitPaginationResponseDTO } from '../../../../../../core/app/common/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
-import { SimplifiedAdminDTO } from '../../../../../../core/app/components/admin/dtos/simplified-admin.dto';
+import { AdminDTO } from '../../../../../../core/app/components/admin/queries/dtos/admin.dto';
 
-export class AdminsRO extends OffsetLimitPaginationRO<SimplifiedAdminRO> {
-  @ApiProperty({ type: [SimplifiedAdminRO], description: 'Items' })
-  declare items: SimplifiedAdminRO[];
+export class AdminsRO extends OffsetLimitPaginationRO<AdminRO> {
+  @ApiProperty({ type: [AdminRO], description: 'Items' })
+  declare items: AdminRO[];
 
-  constructor(result: OffsetLimitPaginationResponseDTO<SimplifiedAdminDTO>) {
-    super({
-      ...result,
-      items: result.items.map((item) => new SimplifiedAdminRO(item)),
-    });
+  constructor(result: OffsetLimitPaginationResponseDTO<AdminDTO>) {
+    super(
+      result.items.map((item) => new AdminRO(item)),
+      result.total,
+      result.offset,
+      result.limit,
+      result.hasMore,
+    );
   }
 }

@@ -4,14 +4,13 @@ import { Model } from 'mongoose';
 import { Admin as AdminDocument } from './admin.document';
 import AdminMapper from './admin.mapper';
 import { BaseReadRepository } from '../../base/base-read-repository.abstract';
-import { AdminDTO } from '../../../../../core/app/components/admin/dtos/admin.dto';
-import { SimplifiedAdminDTO } from '../../../../../core/app/components/admin/dtos/simplified-admin.dto';
 import { AdminFilter } from '../../../../../core/app/components/admin/repository/admin.filter';
 import { AdminReadRepository } from '../../../../../core/app/components/admin/repository/admin-read-repository.port';
+import { AdminDTO } from '../../../../../core/app/components/admin/repository/dtos/admin.dto';
 
 @Injectable()
 export class AdminReadRepositoryAdapter
-  extends BaseReadRepository<AdminDocument, AdminDTO, SimplifiedAdminDTO, AdminFilter>
+  extends BaseReadRepository<AdminDocument, AdminDTO, AdminFilter>
   implements AdminReadRepository
 {
   constructor(

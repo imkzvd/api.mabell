@@ -1,6 +1,6 @@
-import { Genre } from '../../../../domain/common/constants/genres';
+import { Genre } from '../../../../../domain/common/constants/genres';
 
-export class SimplifiedArtistDTO {
+export class ArtistDTO {
   constructor(
     public readonly id: string,
     public readonly name: string,

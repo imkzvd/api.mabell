@@ -4,14 +4,13 @@ import { Model } from 'mongoose';
 import { User as UserDocument } from './user.document';
 import UserMapper from './user.mapper';
 import { BaseReadRepository } from '../../base/base-read-repository.abstract';
-import { UserDTO } from '../../../../../core/app/components/user/dtos/user.dto';
-import { SimplifiedUserDTO } from '../../../../../core/app/components/user/dtos/simplified-user.dto';
 import { UserFilter } from '../../../../../core/app/components/user/ports/repository/user.filter';
 import { UserReadRepository } from '../../../../../core/app/components/user/ports/repository/user-read-repository.port';
+import { UserDTO } from '../../../../../core/app/components/user/ports/repository/dtos/user.dto';
 
 @Injectable()
 export class UserReadRepositoryAdapter
-  extends BaseReadRepository<UserDocument, UserDTO, SimplifiedUserDTO, UserFilter>
+  extends BaseReadRepository<UserDocument, UserDTO, UserFilter>
   implements UserReadRepository
 {
   constructor(

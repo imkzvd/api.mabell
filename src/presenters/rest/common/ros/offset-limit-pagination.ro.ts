@@ -4,6 +4,7 @@ import { OffsetLimitPaginationResponseDTO } from '../../../../core/app/common/dt
 export class OffsetLimitPaginationRO<T extends Record<string, any>>
   implements OffsetLimitPaginationResponseDTO<T>
 {
+  @ApiProperty({ type: Array, description: 'Items' })
   public items: T[];
 
   @ApiProperty({ type: Number, description: 'Total', example: 1000 })
@@ -18,11 +19,17 @@ export class OffsetLimitPaginationRO<T extends Record<string, any>>
   @ApiProperty({ type: Boolean, description: 'Has More', example: true })
   hasMore: boolean;
 
-  constructor(result: OffsetLimitPaginationResponseDTO<T>) {
-    this.items = result.items;
-    this.total = result.total;
-    this.offset = result.offset;
-    this.limit = result.limit;
-    this.hasMore = result.hasMore;
+  constructor(
+    items: T[] = [],
+    total: number = 0,
+    offset: number = 0,
+    limit: number = 50,
+    hasMore: boolean = false,
+  ) {
+    this.items = items;
+    this.total = total;
+    this.offset = offset;
+    this.limit = limit;
+    this.hasMore = hasMore;
   }
 }

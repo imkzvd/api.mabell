@@ -1,6 +1,6 @@
-import { AdminRole } from '../../../../domain/components/admin/constants/admin-roles';
+import { AdminRole } from '../../../../../domain/components/admin/constants/admin-roles';
 
-export class SimplifiedAdminDTO {
+export class AdminDTO {
   constructor(
     public readonly id: string,
     public readonly username: string,

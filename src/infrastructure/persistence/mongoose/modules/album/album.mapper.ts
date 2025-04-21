@@ -2,17 +2,18 @@ import { Types } from 'mongoose';
 import { ReadMapper, WriteMapper } from '../../base/mapper.interface';
 import { Album as AlbumDocument } from './album.document';
 import { Album, AlbumId } from '../../../../../core/domain/components/album/album.entity';
-import { AlbumDTO } from '../../../../../core/app/components/album/dtos/album.dto';
-import { SimplifiedAlbumDTO } from '../../../../../core/app/components/album/dtos/simplified-album.dto';
 import { AlbumFactory } from '../../../../../core/domain/components/album/album.factory';
 import { ArtistId } from '../../../../../core/domain/components/artist/artist.entity';
 import ArtistMapper from '../artist/artist.mapper';
-import { AlbumPopulatedDocument } from './types';
+import { AlbumWithArtistsDocument } from './types';
+import { TrackId } from '../../../../../core/domain/components/track/track.entity';
+import { AlbumDTO } from '../../../../../core/app/components/album/ports/repository/dtos/album.dto';
+import { AlbumWithArtistsDTO } from '../../../../../core/app/components/album/ports/repository/dtos/album-with-artists.dto';
 
 class AlbumMapper
   implements
     WriteMapper<AlbumDocument, Album>,
-    ReadMapper<AlbumPopulatedDocument, AlbumDTO, SimplifiedAlbumDTO>
+    ReadMapper<AlbumDocument, AlbumDTO, AlbumWithArtistsDocument, AlbumWithArtistsDTO>
 {
   toDocument(entity: Album): AlbumDocument {
     return {
@@ -44,7 +45,7 @@ class AlbumMapper
       color: doc.color,
       description: doc.description,
       releaseAt: doc.releaseAt,
-      tracks: doc.tracks,
+      tracks: doc.tracks as TrackId[],
       isActive: doc.isActive,
       isPublic: doc.isPublic,
       createdAt: doc.createdAt,
@@ -52,12 +53,11 @@ class AlbumMapper
     });
   }
 
-  toDTO(doc: AlbumPopulatedDocument): AlbumDTO {
+  toDTO(doc: AlbumDocument): AlbumDTO {
     return new AlbumDTO(
       doc._id.toHexString(),
       doc.name,
-      doc.artists.map((artist) => artist._id.toHexString()),
-      doc.artists.map((artist) => ArtistMapper.toDTO(artist)),
+      doc.artists.map((id) => id.toHexString()),
       doc.type,
       doc.genres,
       doc.cover,
@@ -65,7 +65,6 @@ class AlbumMapper
       doc.description,
       doc.releaseAt,
       doc.tracks,
-      [],
       doc.isActive,
       doc.isPublic,
       doc.createdAt,
@@ -73,11 +72,10 @@ class AlbumMapper
     );
   }
 
-  toSimplifiedDTO(doc: AlbumPopulatedDocument): SimplifiedAlbumDTO {
-    return new SimplifiedAlbumDTO(
+  toPopulatedDTO(doc: AlbumWithArtistsDocument): AlbumWithArtistsDTO {
+    return new AlbumWithArtistsDTO(
       doc._id.toHexString(),
       doc.name,
-      doc.artists.map((artist) => artist._id.toHexString()),
       doc.artists.map((artist) => ArtistMapper.toDTO(artist)),
       doc.type,
       doc.genres,
@@ -86,7 +84,6 @@ class AlbumMapper
       doc.description,
       doc.releaseAt,
       doc.tracks,
-      [],
       doc.isActive,
       doc.isPublic,
       doc.createdAt,

@@ -2,15 +2,12 @@ import { Types } from 'mongoose';
 import type { Admin as AdminDocument } from './admin.document';
 import { ReadMapper, WriteMapper } from '../../base/mapper.interface';
 import { Admin, AdminId } from '../../../../../core/domain/components/admin/admin.entity';
-import { AdminDTO } from '../../../../../core/app/components/admin/dtos/admin.dto';
-import { SimplifiedAdminDTO } from '../../../../../core/app/components/admin/dtos/simplified-admin.dto';
 import { AdminFactory } from '../../../../../core/domain/components/admin/admin.factory';
 import { HashedPasswordVO } from '../../../../../core/domain/common/vos/hashed-password.vo';
+import { AdminDTO } from '../../../../../core/app/components/admin/repository/dtos/admin.dto';
 
 class AdminMapper
-  implements
-    WriteMapper<AdminDocument, Admin>,
-    ReadMapper<AdminDocument, AdminDTO, SimplifiedAdminDTO>
+  implements WriteMapper<AdminDocument, Admin>, ReadMapper<AdminDocument, AdminDTO>
 {
   toDocument(entity: Admin): AdminDocument {
     return {
@@ -50,16 +47,8 @@ class AdminMapper
     );
   }
 
-  toSimplifiedDTO(doc: AdminDocument): SimplifiedAdminDTO {
-    return new SimplifiedAdminDTO(
-      doc._id.toHexString(),
-      doc.username,
-      doc.name,
-      doc.isBlocked,
-      doc.role,
-      doc.createdAt,
-      doc.updatedAt,
-    );
+  toPopulatedDTO(doc: AdminDocument): AdminDTO {
+    return this.toDTO(doc);
   }
 }
 
