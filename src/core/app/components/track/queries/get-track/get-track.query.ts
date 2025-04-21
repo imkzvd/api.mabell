@@ -1,7 +1,7 @@
 import { Query } from '@nestjs/cqrs';
-import { TrackWithAlbumAndArtistsDTO } from '../../dtos/track-with-album-and-artists.dto';
+import { TrackDTO } from '../dtos/track.dto';
 
-export class GetTrackQuery extends Query<TrackWithAlbumAndArtistsDTO | null> {
+export class GetTrackQuery extends Query<TrackDTO | null> {
   constructor(public readonly id: string) {
     super();
   }

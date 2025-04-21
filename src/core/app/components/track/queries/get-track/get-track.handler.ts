@@ -5,6 +5,7 @@ import {
   TRACK_READ_REPOSITORY_DI_TOKEN,
   TrackReadRepository,
 } from '../../ports/repository/track-read-repository.port';
+import TrackMapper from '../dtos/track.mapper';
 
 @QueryHandler(GetTrackQuery)
 export class GetTrackHandler implements IQueryHandler<GetTrackQuery> {
@@ -14,6 +15,8 @@ export class GetTrackHandler implements IQueryHandler<GetTrackQuery> {
   ) {}
 
   async execute({ id }: GetTrackQuery) {
-    return this._trackReadRepository.findById(id, true);
+    const foundTrack = await this._trackReadRepository.findById(id, true);
+
+    return foundTrack ? TrackMapper.toDTO(foundTrack) : null;
   }
 }
