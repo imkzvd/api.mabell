@@ -1,12 +1,13 @@
 import { Overwrite } from 'utility-types';
 import type { Track } from './track.document';
-import { AlbumPopulatedDocument } from '../album/types';
 import { Artist } from '../artist/artist.document';
+import { Album } from '../album/album.document';
+import { AlbumWithArtistsDocument } from '../album/types';
 
-export type TrackPopulatedDocument = Overwrite<
+export type TrackWithAlbumAndArtistDocument = Overwrite<
   Track,
   {
-    album: AlbumPopulatedDocument;
+    album: Overwrite<Album, AlbumWithArtistsDocument>;
     artists: Artist[];
     featArtists: Artist[];
   }

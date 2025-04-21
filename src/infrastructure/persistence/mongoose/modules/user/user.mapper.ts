@@ -2,14 +2,11 @@ import { Types } from 'mongoose';
 import { User as UserDocument } from './user.document';
 import { ReadMapper, WriteMapper } from '../../base/mapper.interface';
 import { User, UserId } from '../../../../../core/domain/components/user/user.entity';
-import { UserDTO } from '../../../../../core/app/components/user/dtos/user.dto';
-import { SimplifiedUserDTO } from '../../../../../core/app/components/user/dtos/simplified-user.dto';
 import { UserFactory } from '../../../../../core/domain/components/user/user.factory';
 import { HashedPasswordVO } from '../../../../../core/domain/common/vos/hashed-password.vo';
+import { UserDTO } from '../../../../../core/app/components/user/ports/repository/dtos/user.dto';
 
-class UserMapper
-  implements WriteMapper<UserDocument, User>, ReadMapper<UserDocument, UserDTO, SimplifiedUserDTO>
-{
+class UserMapper implements WriteMapper<UserDocument, User>, ReadMapper<UserDocument, UserDTO> {
   toDocument(entity: User): UserDocument {
     return {
       _id: new Types.ObjectId(entity.getId()),
@@ -72,24 +69,8 @@ class UserMapper
     );
   }
 
-  toSimplifiedDTO(doc: UserDocument): SimplifiedUserDTO {
-    return new SimplifiedUserDTO(
-      doc._id.toHexString(),
-      doc.username,
-      doc.name,
-      doc.email,
-      doc.birthDate,
-      doc.region,
-      doc.genres,
-      doc.avatar,
-      doc.color,
-      doc.isBlocked,
-      doc.isVerified,
-      doc.isPublic,
-      doc.isPremium,
-      doc.createdAt,
-      doc.updatedAt,
-    );
+  toPopulatedDTO(doc: UserDocument): UserDTO {
+    return this.toDTO(doc);
   }
 }
 

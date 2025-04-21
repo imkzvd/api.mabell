@@ -8,8 +8,9 @@ export interface WriteMapper<Document extends BaseDocument, Entity extends Recor
 export interface ReadMapper<
   Document extends BaseDocument,
   DTO extends Record<string, any>,
-  SimplifiedDTO extends Record<string, any>,
+  PopulatedDocument extends BaseDocument = Document,
+  PopulatedDTO extends Record<string, any> = DTO,
 > {
   toDTO(doc: Document): DTO;
-  toSimplifiedDTO(doc: Document): SimplifiedDTO;
+  toPopulatedDTO(doc: PopulatedDocument): PopulatedDTO;
 }
