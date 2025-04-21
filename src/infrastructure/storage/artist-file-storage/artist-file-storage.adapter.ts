@@ -119,7 +119,7 @@ export class ArtistFileStorageAdapter extends FileStorage implements ArtistFileS
   }
 
   deleteAlbumDirectory(artistId: ArtistId, albumId: AlbumId): Promise<void> {
-    const { absPath } = this.resolveProjectPath(artistId, albumId);
+    const { absPath } = this.resolveProjectPath(artistId, 'albums', albumId);
 
     return this.deleteByPath(absPath);
   }
@@ -136,15 +136,15 @@ export class ArtistFileStorageAdapter extends FileStorage implements ArtistFileS
       throw new BadRequestException('The file has not been uploaded');
     }
 
-    await this.createTrackDirectory(id, albumId, trackId);
+    await this.createAlbumDirectoryById(id, albumId);
     const { fileName, absPath, relPath } = this.getTrackMeta(id, albumId, trackId);
     await this.moveFile(tmpFileData.path, absPath);
 
     return new StoredFileDTO(fileName, relPath, absPath, tmpFileData.size, tmpFileData.type);
   }
 
-  deleteTrack(id: ArtistId, albumId: AlbumId, trackId: TrackId): Promise<void> {
-    const { absPath } = this.resolveProjectPath(id, albumId, trackId);
+  deleteTrack(artistId: ArtistId, albumId: AlbumId, trackId: TrackId): Promise<void> {
+    const { absPath } = this.getTrackMeta(artistId, albumId, trackId);
 
     return this.deleteByPath(absPath);
   }
@@ -153,7 +153,7 @@ export class ArtistFileStorageAdapter extends FileStorage implements ArtistFileS
     artistId: ArtistId,
     albumId: string,
   ): Promise<{ absPath: string; relPath: string }> {
-    return this.createDirectory(artistId, albumId);
+    return this.createDirectory(artistId, 'albums', albumId);
   }
 
   private getAlbumCoverMetaById(
@@ -168,16 +168,8 @@ export class ArtistFileStorageAdapter extends FileStorage implements ArtistFileS
 
     return {
       fileName,
-      ...this.resolveProjectPath(artistId, albumId, fileName),
+      ...this.resolveProjectPath(artistId, 'albums', albumId, fileName),
     };
-  }
-
-  private createTrackDirectory(
-    artistId: ArtistId,
-    albumId: string,
-    trackId: string,
-  ): Promise<{ absPath: string; relPath: string }> {
-    return this.createDirectory(artistId, albumId, trackId);
   }
 
   private getTrackMeta(
@@ -193,7 +185,7 @@ export class ArtistFileStorageAdapter extends FileStorage implements ArtistFileS
 
     return {
       fileName,
-      ...this.resolveProjectPath(artistId, albumId, trackId, fileName),
+      ...this.resolveProjectPath(artistId, 'albums', albumId, fileName),
     };
   }
 }
