@@ -29,10 +29,10 @@ export class CreateTrackHandler implements ICommandHandler<CreateTrackCommand> {
     }
 
     const generatedId = this._trackWriteRepository.generateId();
-    const nextAlbumIndex = (await this._albumWriteRepository.getTotalCount()) + 1;
+    const nextTrackIndex = foundAlbum.getTracksTotal() + 1;
     const createdTrack = TrackFactory.create({
       id: generatedId,
-      name: name || `Album #${nextAlbumIndex}`,
+      name: name || `Track #${nextTrackIndex}`,
       album: foundAlbum.getId(),
       artists: foundAlbum.getArtists(),
     });
