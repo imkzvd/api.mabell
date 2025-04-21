@@ -9,6 +9,7 @@ import { UpdateAlbumArtistsByIdHandler } from '../../../../../core/app/component
 import { UpdateAlbumByIdHandler } from '../../../../../core/app/components/album/commands/update-album-by-id/update-album-by-id.handler';
 import { UpdateAlbumCoverByIdHandler } from '../../../../../core/app/components/album/commands/update-album-cover-by-id/update-album-cover-by-id.handler';
 import { GetAlbumByIdHandler } from '../../../../../core/app/components/album/queries/get-album-by-id/get-album-by-id.handler';
+import { GetAlbumTracksHandler } from '../../../../../core/app/components/track/queries/get-album-tracks/get-album-tracks.handler';
 
 @Module({
   imports: [TmpFileStorageModule, ArtistFileStorageModule],
@@ -20,6 +21,7 @@ import { GetAlbumByIdHandler } from '../../../../../core/app/components/album/qu
     UpdateAlbumByIdHandler,
     UpdateAlbumCoverByIdHandler,
     GetAlbumByIdHandler,
+    GetAlbumTracksHandler,
   ],
   controllers: [AlbumsController],
 })
