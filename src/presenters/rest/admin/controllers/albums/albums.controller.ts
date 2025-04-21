@@ -1,14 +1,17 @@
 import {
   Body,
   Controller,
+  DefaultValuePipe,
   Delete,
   Get,
   HttpCode,
   HttpStatus,
   NotFoundException,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import {
   ApiBody,
@@ -17,6 +20,7 @@ import {
   ApiOkResponse,
   ApiOperation,
   ApiParam,
+  ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
 import { faker } from '@faker-js/faker';
@@ -35,6 +39,8 @@ import { DeleteAlbumByIdCommand } from '../../../../../core/app/components/album
 import { BadRequestException } from '../../../../../core/shared/exceptions';
 import { CreateAlbumDTO } from './dtos/create-album.dto';
 import { CreateAlbumCommand } from '../../../../../core/app/components/album/commands/create-album/create-album.command';
+import { GetAlbumTracksQuery } from '../../../../../core/app/components/track/queries/get-album-tracks/get-album-tracks.query';
+import { TracksRO } from '../tracks/ros/tracks.ro';
 
 @ApiTags('Albums')
 @Controller({ path: '/albums' })
@@ -204,6 +210,43 @@ export class AlbumsController {
       throw new NotFoundException(`There is no album with the specified ID`);
     }
 
-    return new AlbumRO(foundAlbum);
+    const foundTracks = await this._queryBus.execute(new GetAlbumTracksQuery(id));
+
+    return new AlbumRO(foundAlbum, foundTracks);
+  }
+
+  @ApiOperation({ summary: 'Get album tracks', operationId: 'getTracks' })
+  @ApiParam({
+    type: String,
+    name: 'id',
+    description: 'Id',
+    example: faker.database.mongodbObjectId(),
+  })
+  @ApiQuery({
+    required: false,
+    type: Number,
+    name: 'limit',
+    description: 'Limit',
+    example: 50,
+  })
+  @ApiQuery({
+    required: false,
+    type: Number,
+    name: 'offset',
+    description: 'Offset',
+    example: 0,
+  })
+  @ApiOkResponse({ description: 'Album tracks', type: TracksRO })
+  @Get('/:id/tracks')
+  async getTracks(
+    @Param('id', ParseObjectIdPipe) id: string,
+    @Query('limit', new DefaultValuePipe(50), ParseIntPipe) limit: number,
+    @Query('offset', new DefaultValuePipe(0), ParseIntPipe) offset: number,
+  ): Promise<TracksRO> {
+    const foundTracks = await this._queryBus.execute(
+      new GetAlbumTracksQuery(id, { limit, offset }),
+    );
+
+    return new TracksRO(foundTracks);
   }
 }
