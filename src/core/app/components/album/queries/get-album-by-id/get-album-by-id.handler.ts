@@ -5,6 +5,7 @@ import {
   ALBUM_READ_REPOSITORY_DI_TOKEN,
   AlbumReadRepository,
 } from '../../ports/repository/album-read-repository.port';
+import AlbumMapper from '../dtos/album.mapper';
 
 @QueryHandler(GetAlbumByIdQuery)
 export class GetAlbumByIdHandler implements IQueryHandler<GetAlbumByIdQuery> {
@@ -14,6 +15,8 @@ export class GetAlbumByIdHandler implements IQueryHandler<GetAlbumByIdQuery> {
   ) {}
 
   async execute({ id }: GetAlbumByIdQuery) {
-    return this._albumReadRepository.findById(id, true);
+    const foundAlbum = await this._albumReadRepository.findById(id, true);
+
+    return foundAlbum ? AlbumMapper.toDTO(foundAlbum) : null;
   }
 }

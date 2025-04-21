@@ -1,7 +1,7 @@
 import { Query } from '@nestjs/cqrs';
-import { AlbumWithArtistsAndTracksDTO } from '../../dtos/album-with-artists-and-tracks.dto';
+import { AlbumDTO } from '../dtos/album.dto';
 
-export class GetAlbumByIdQuery extends Query<AlbumWithArtistsAndTracksDTO | null> {
+export class GetAlbumByIdQuery extends Query<AlbumDTO | null> {
   constructor(public readonly id: string) {
     super();
   }
