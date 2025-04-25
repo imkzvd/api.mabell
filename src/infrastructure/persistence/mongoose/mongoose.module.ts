@@ -6,6 +6,7 @@ import { UserModule } from './modules/user/user.module';
 import { ArtistModule } from './modules/artist/artist.module';
 import { AlbumModule } from './modules/album/album.module';
 import { TrackModule } from './modules/track/track.module';
+import { PlaylistModule } from './modules/playlist/playlist.module';
 
 @Global()
 @Module({
@@ -18,7 +19,8 @@ import { TrackModule } from './modules/track/track.module';
     ArtistModule,
     AlbumModule,
     TrackModule,
+    PlaylistModule,
   ],
-  exports: [AdminModule, UserModule, ArtistModule, AlbumModule, TrackModule],
+  exports: [AdminModule, UserModule, ArtistModule, AlbumModule, TrackModule, PlaylistModule],
 })
 export class MongooseModule {}
