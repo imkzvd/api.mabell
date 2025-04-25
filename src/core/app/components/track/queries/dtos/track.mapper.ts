@@ -2,6 +2,7 @@ import { TrackDTO } from './track.dto';
 import { TrackWithAlbumAndArtistsDTO } from '../../ports/repository/dtos/track-with-album-and-artists.dto';
 import ArtistMapper from '../../../artist/queries/dtos/artist.mapper';
 import AlbumMapper from '../../../album/queries/dtos/album.mapper';
+import { PlaylistTrackDTO } from './playlist-track.dto';
 
 class TrackMapper {
   toDTO(dto: TrackWithAlbumAndArtistsDTO): TrackDTO {
@@ -19,6 +20,10 @@ class TrackMapper {
       dto.createdAt,
       dto.updatedAt,
     );
+  }
+
+  toPlaylistTrackDTO(dto: TrackWithAlbumAndArtistsDTO, addedAt: Date): PlaylistTrackDTO {
+    return new PlaylistTrackDTO(this.toDTO(dto), addedAt);
   }
 }
 
