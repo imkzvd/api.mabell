@@ -4,7 +4,7 @@ export const USER_WRITE_REPOSITORY_DI_TOKEN = Symbol('USER_WRITE_REPOSITORY_DI_T
 
 export interface UserWriteRepository {
   save(entity: User): Promise<void>;
-  deleteById(id: string): Promise<boolean>;
+  deleteById(id: string): Promise<UserId | null>;
   findById(id: string): Promise<User | null>;
   existsById(id: string): Promise<UserId | null>;
   existsByEmail(email: string): Promise<UserId | null>;

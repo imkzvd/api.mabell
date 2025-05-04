@@ -9,6 +9,7 @@ export type ArtistWriteRepository = {
   findByIds(ids: string[]): Promise<{
     items: Artist[];
     foundIds: ArtistId[];
+    total: number;
     missingIds: string[];
   }>;
   existsById(id: string): Promise<ArtistId | null>;
