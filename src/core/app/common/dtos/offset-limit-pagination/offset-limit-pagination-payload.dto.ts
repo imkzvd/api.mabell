@@ -1,6 +1,6 @@
 export class OffsetLimitPaginationDTO {
   constructor(
-    public readonly limit?: number,
-    public readonly offset?: number,
+    public readonly limit: number = 50,
+    public readonly offset: number = 0,
   ) {}
 }

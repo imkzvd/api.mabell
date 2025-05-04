@@ -1,4 +1,4 @@
-export class OffsetLimitPaginationResponseDTO<Item extends Record<string, any>> {
+export class OffsetLimitPaginationResponseDTO<Item extends Record<string, any> | string> {
   constructor(
     public readonly items: Item[],
     public readonly total: number,
