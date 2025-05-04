@@ -11,6 +11,7 @@ export class TrackFactory {
     album: AlbumId;
     artists: ArtistId[];
     featArtists?: ArtistId[];
+    trackNumber?: number;
     file?: string | null;
     tracks?: string[];
     duration?: number | null;
@@ -26,6 +27,7 @@ export class TrackFactory {
       props.album,
       new Set(props.artists),
       new Set(props.featArtists),
+      props.trackNumber ?? 0,
       props.file || null,
       props.duration ? DurationVO.create(props.duration) : null,
       props.isExplicit ?? false,

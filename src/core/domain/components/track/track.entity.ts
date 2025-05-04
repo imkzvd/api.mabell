@@ -13,6 +13,7 @@ export class Track {
     private _album: AlbumId,
     private _artists: Set<ArtistId>,
     private _featArtists: Set<ArtistId>,
+    private _trackNumber: number,
     private _file: string | null,
     private _duration: DurationVO | null,
     private _isExplicit: boolean,
@@ -43,6 +44,17 @@ export class Track {
 
   getArtists(): ArtistId[] {
     return [...this._artists.values()];
+  }
+
+  getTrackNumber(): number {
+    return this._trackNumber;
+  }
+
+  updateTrackNumber(value: number): Track {
+    this._trackNumber = value;
+    this.refreshUpdatedAt();
+
+    return this;
   }
 
   getMainArtist(): ArtistId {
