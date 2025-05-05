@@ -1,13 +1,25 @@
 import { Overwrite } from 'utility-types';
-import type { Track } from './track.document';
-import { Artist } from '../artist/artist.document';
-import { Album } from '../album/album.document';
-import { AlbumWithArtistsDocument } from '../album/types';
+import type { Track } from './track.schema';
+import { AlbumWithArtists, AlbumWithArtistsDocument } from '../album/types';
+import { HydratedDocument } from 'mongoose';
+import { ArtistDocument } from '../artist/types';
+import { Artist } from '../artist/artist.schema';
 
-export type TrackWithAlbumAndArtistDocument = Overwrite<
+export type TrackDocument = HydratedDocument<Track>;
+
+export type TrackWithAlbumAndArtistsDocument = Overwrite<
+  TrackDocument,
+  {
+    album: AlbumWithArtistsDocument;
+    artists: ArtistDocument[];
+    featArtists: ArtistDocument[];
+  }
+>;
+
+export type TrackWithAlbumAndArtists = Overwrite<
   Track,
   {
-    album: Overwrite<Album, AlbumWithArtistsDocument>;
+    album: AlbumWithArtists;
     artists: Artist[];
     featArtists: Artist[];
   }
