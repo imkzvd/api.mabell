@@ -13,5 +13,10 @@ export type ArtistWriteRepository = {
     missingIds: string[];
   }>;
   existsById(id: string): Promise<ArtistId | null>;
+  existsByIds(ids: string[]): Promise<{
+    foundIds: ArtistId[];
+    total: number;
+    missingIds: string[];
+  }>;
   getNextIndex(): Promise<number>;
 };
