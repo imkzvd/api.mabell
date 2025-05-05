@@ -1,12 +1,23 @@
-import { ReadRepository } from '../../../../common/base/read-repository/read-repository.interface';
-import { PlaylistDTO } from './dtos/playlist.dto';
-import { PlaylistFilter } from '../../../../../domain/components/playlist/repository/playlist.filter';
 import { PlaylistWithOwnerDTO } from './dtos/playlist-with-owner.dto';
+import { OffsetLimitPaginationDTO } from '../../../../common/dtos/offset-limit-pagination/offset-limit-pagination-payload.dto';
+import { OffsetLimitPaginationResponseDTO } from '../../../../common/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
 
 export const PLAYLIST_READ_REPOSITORY_DI_TOKEN = Symbol('PLAYLIST_READ_REPOSITORY_DI_TOKEN');
 
-export type PlaylistReadRepository = ReadRepository<
-  PlaylistDTO,
-  PlaylistFilter,
-  PlaylistWithOwnerDTO
->;
+export interface PlaylistReadRepository {
+  findById(
+    id: string,
+    options?: Partial<{
+      isPublic: boolean;
+    }>,
+  ): Promise<PlaylistWithOwnerDTO | null>;
+
+  getTracks(
+    id: string,
+    options?: Partial<{
+      pagination?: OffsetLimitPaginationDTO;
+    }>,
+  ): Promise<OffsetLimitPaginationResponseDTO<{ id: string; addedAt: Date }>>;
+
+  getPublicStatus(id: string): Promise<boolean>;
+}
