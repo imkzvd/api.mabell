@@ -6,7 +6,6 @@ import {
   AdminWriteRepository,
 } from '../../../../../domain/components/admin/repository/admin-write-repository.port';
 import { DuplicationException, NotFoundException } from '../../../../../shared/exceptions';
-import { AdminFilter } from '../../../../../domain/components/admin/repository/admin.filter';
 
 @CommandHandler(UpdateAdminUsernameCommand)
 export class UpdateAdminUsernameHandler implements ICommandHandler<UpdateAdminUsernameCommand> {
@@ -22,11 +21,9 @@ export class UpdateAdminUsernameHandler implements ICommandHandler<UpdateAdminUs
       throw new NotFoundException(`There is no admin with the specified ID`);
     }
 
-    const existingAdminId = await this._adminWriteRepository.existsByFilter(
-      new AdminFilter({ username }),
-    );
+    const existsAdminId = await this._adminWriteRepository.existsByUsername(username);
 
-    if (existingAdminId) {
+    if (existsAdminId) {
       throw new DuplicationException(`The admin with this username already exist`);
     }
 

@@ -21,9 +21,17 @@ export class UpdateAdminHandler implements ICommandHandler<UpdateAdminCommand> {
       throw new NotFoundException(`There is no admin with the specified ID`);
     }
 
-    foundAdmin.updateName(payload.name || foundAdmin.getName().value);
-    foundAdmin.updateRole(payload.role || foundAdmin.getRole().value);
-    foundAdmin.updateBlockedStatus(payload.isBlocked ?? foundAdmin.getBlockedStatus());
+    if (payload.name) {
+      foundAdmin.updateName(payload.name);
+    }
+
+    if (payload.role) {
+      foundAdmin.updateRole(payload.role);
+    }
+
+    if (typeof payload.isBlocked === 'boolean') {
+      foundAdmin.updateBlockedStatus(payload.isBlocked);
+    }
 
     return this._adminWriteRepository.save(foundAdmin);
   }
