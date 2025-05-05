@@ -9,7 +9,12 @@ import {
   PASSWORD_SERVICE_DI_TOKEN,
   PasswordService,
 } from '../../../../common/services/password-service.port';
-import { NotFoundException, UnauthorizedException } from '../../../../../shared/exceptions';
+import {
+  BadRequestException,
+  NotFoundException,
+  UnauthorizedException,
+} from '../../../../../shared/exceptions';
+import { USER_MIN_LENGTH_PASSWORD } from '../../constants';
 
 @CommandHandler(UpdateUserPasswordCommand)
 export class UpdateUserPasswordHandler implements ICommandHandler<UpdateUserPasswordCommand> {
@@ -34,6 +39,10 @@ export class UpdateUserPasswordHandler implements ICommandHandler<UpdateUserPass
 
     if (!isValidPassword) {
       throw new UnauthorizedException('The password is incorrect');
+    }
+
+    if (payload.newPassword.length < USER_MIN_LENGTH_PASSWORD) {
+      throw new BadRequestException('Password is invalid');
     }
 
     const hashedNewPassword = await this._passwordService.hash(payload.newPassword);

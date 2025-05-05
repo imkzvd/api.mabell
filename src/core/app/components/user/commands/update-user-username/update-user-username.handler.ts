@@ -6,7 +6,6 @@ import {
   UserWriteRepository,
 } from '../../../../../domain/components/user/repository/user-write-repository.port';
 import { DuplicationException, NotFoundException } from '../../../../../shared/exceptions';
-import { UserFilter } from '../../../../../domain/components/user/repository/user.filter';
 
 @CommandHandler(UpdateUserUsernameCommand)
 export class UpdateUserUsernameHandler implements ICommandHandler<UpdateUserUsernameCommand> {
@@ -26,11 +25,9 @@ export class UpdateUserUsernameHandler implements ICommandHandler<UpdateUserUser
       return;
     }
 
-    const existingUserId = await this._userWriteRepository.existsByFilter(
-      new UserFilter({ username }),
-    );
+    const existsUserId = await this._userWriteRepository.existsByUsername(username);
 
-    if (existingUserId) {
+    if (existsUserId) {
       throw new DuplicationException(`The user with this username already exist`);
     }
 

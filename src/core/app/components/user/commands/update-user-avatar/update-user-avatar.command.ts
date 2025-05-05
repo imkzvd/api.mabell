@@ -5,7 +5,7 @@ export class UpdateUserAvatarCommand extends Command<void> {
     public readonly id: string,
     public readonly payload: {
       fileId: string;
-      color?: string;
+      color?: string | null;
     },
   ) {
     super();

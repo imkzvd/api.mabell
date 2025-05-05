@@ -21,12 +21,12 @@ export class DeleteUserHandler implements ICommandHandler<DeleteUserCommand> {
   ) {}
 
   async execute({ id }: DeleteUserCommand) {
-    const deletedUserId = await this._userWriteRepository.deleteById(id);
+    const isDeletedUser = await this._userWriteRepository.deleteById(id);
 
-    if (!deletedUserId) {
+    if (!isDeletedUser) {
       throw new NotFoundException('User does not exist');
     }
 
-    return this._userFileStorage.deleteUserDirectory(deletedUserId);
+    return this._userFileStorage.deleteUserDirectory(id);
   }
 }
