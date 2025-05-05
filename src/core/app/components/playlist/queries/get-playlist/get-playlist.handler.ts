@@ -14,8 +14,10 @@ export class GetPlaylistHandler implements IQueryHandler<GetPlaylistQuery> {
     private readonly _playlistReadRepository: PlaylistReadRepository,
   ) {}
 
-  async execute({ id }: GetPlaylistQuery) {
-    const foundPlaylist = await this._playlistReadRepository.findById(id, true);
+  async execute({ id, isPublic }: GetPlaylistQuery) {
+    const foundPlaylist = await this._playlistReadRepository.findById(id, {
+      isPublic,
+    });
 
     return foundPlaylist ? PlaylistMapper.toDTO(foundPlaylist) : null;
   }
