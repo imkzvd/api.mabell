@@ -11,6 +11,8 @@ import {
   TrackWriteRepository,
 } from '../../../../../domain/components/track/repository/track-write-repository.port';
 import { TrackFactory } from '../../../../../domain/components/track/track.factory';
+import { ID_SERVICE_DI_TOKEN, IdService } from '../../../../common/services/id-service.port';
+import { TrackId } from '../../../../../domain/components/track/track.entity';
 
 @CommandHandler(CreateTrackCommand)
 export class CreateTrackHandler implements ICommandHandler<CreateTrackCommand> {
@@ -19,6 +21,8 @@ export class CreateTrackHandler implements ICommandHandler<CreateTrackCommand> {
     private readonly _albumWriteRepository: AlbumWriteRepository,
     @Inject(TRACK_WRITE_REPOSITORY_DI_TOKEN)
     private readonly _trackWriteRepository: TrackWriteRepository,
+    @Inject(ID_SERVICE_DI_TOKEN)
+    private readonly _idService: IdService<TrackId>,
   ) {}
 
   async execute({ albumId, name }: CreateTrackCommand) {
@@ -28,16 +32,18 @@ export class CreateTrackHandler implements ICommandHandler<CreateTrackCommand> {
       throw new NotFoundException('Album does not exist');
     }
 
-    const generatedId = this._trackWriteRepository.generateId();
-    const nextTrackIndex = foundAlbum.getTracksTotal() + 1;
+    const generatedId = this._idService.generate();
+    const nextAlbumTrackIndex = await this._trackWriteRepository.getNextAlbumTrackIndex(
+      foundAlbum.getId(),
+    );
     const createdTrack = TrackFactory.create({
       id: generatedId,
-      name: name || `Track #${nextTrackIndex}`,
+      name: name || `Track #${nextAlbumTrackIndex}`,
       album: foundAlbum.getId(),
       artists: foundAlbum.getArtists(),
+      trackNumber: nextAlbumTrackIndex,
     });
 
-    foundAlbum.addTrack(createdTrack.getId());
     await this._trackWriteRepository.save(createdTrack);
     await this._albumWriteRepository.save(foundAlbum);
 
