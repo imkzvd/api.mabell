@@ -27,6 +27,6 @@ export class DeleteUserHandler implements ICommandHandler<DeleteUserCommand> {
       throw new NotFoundException('User does not exist');
     }
 
-    return this._userFileStorage.deleteUserDirectory(id);
+    return this._userFileStorage.deleteUserDirectory(isDeletedUser);
   }
 }
