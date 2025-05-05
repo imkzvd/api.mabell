@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { Album } from './album.document';
-import { AlbumSchema } from './album.schema';
+import { Album, AlbumSchema } from './album.schema';
 import { ALBUM_WRITE_REPOSITORY_DI_TOKEN } from '../../../../../core/domain/components/album/repository/album-write-repository.port';
 import { AlbumWriteRepositoryAdapter } from './album-write-repository.adapter';
 import { AlbumReadRepositoryAdapter } from './album-read-repository.adapter';
