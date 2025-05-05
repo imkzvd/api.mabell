@@ -3,6 +3,7 @@ export class TrackDTO {
     public readonly id: string,
     public readonly name: string,
     public readonly album: string,
+    public readonly trackNumber: number,
     public readonly artists: string[],
     public readonly featArtists: string[],
     public readonly file: string | null,
