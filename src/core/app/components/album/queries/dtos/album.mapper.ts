@@ -14,7 +14,6 @@ class AlbumMapper {
       dto.color,
       dto.description,
       dto.releaseAt,
-      dto.tracks,
       dto.isActive,
       dto.isPublic,
       dto.createdAt,
