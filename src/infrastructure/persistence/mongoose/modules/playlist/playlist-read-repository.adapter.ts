@@ -1,31 +1,78 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { BaseReadRepository } from '../../base/base-read-repository.abstract';
-import { Playlist } from './playlist.document';
-import { PlaylistDTO } from '../../../../../core/app/components/playlist/ports/repository/dtos/playlist.dto';
-import { PlaylistFilter } from '../../../../../core/app/components/playlist/ports/repository/playlist.filter';
-import { PlaylistWithOwnerDocument } from './types';
+import { Playlist } from './playlist.schema';
+import { PlaylistWithOwner, PlaylistWithOwnerDocument } from './types';
 import { PlaylistWithOwnerDTO } from '../../../../../core/app/components/playlist/ports/repository/dtos/playlist-with-owner.dto';
 import { PlaylistReadRepository } from '../../../../../core/app/components/playlist/ports/repository/playlist-read-repository.port';
 import PlaylistMapper from './playlist.mapper';
 import { POPULATE_OPTIONS } from './constants';
+import { OffsetLimitPaginationDTO } from '../../../../../core/app/common/dtos/offset-limit-pagination/offset-limit-pagination-payload.dto';
+import { OffsetLimitPaginationResponseDTO } from '../../../../../core/app/common/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
+import { NotFoundException } from '../../../../../core/shared/exceptions';
 
 @Injectable()
-export class PlaylistReadRepositoryAdapter
-  extends BaseReadRepository<
-    Playlist,
-    PlaylistDTO,
-    PlaylistFilter,
-    PlaylistWithOwnerDocument,
-    PlaylistWithOwnerDTO
-  >
-  implements PlaylistReadRepository
-{
+export class PlaylistReadRepositoryAdapter implements PlaylistReadRepository {
   constructor(
     @InjectModel(Playlist.name)
     private readonly _playlistModel: Model<Playlist>,
-  ) {
-    super(_playlistModel, PlaylistMapper, POPULATE_OPTIONS);
+  ) {}
+
+  async findById(
+    id: string,
+    options?: Partial<{ isPublic: boolean }>,
+  ): Promise<PlaylistWithOwnerDTO | null> {
+    const foundDoc = await this._playlistModel
+      .findOne(
+        {
+          _id: id,
+          ...(options?.isPublic !== undefined && { isPublic: options.isPublic }),
+        },
+        null,
+      )
+      .populate<PlaylistWithOwnerDocument>(POPULATE_OPTIONS)
+      .lean<PlaylistWithOwner>()
+      .exec();
+
+    if (!foundDoc) {
+      return null;
+    }
+
+    return PlaylistMapper.toDTO(foundDoc);
+  }
+
+  async getTracks(
+    id: string,
+    options?: Partial<{
+      pagination?: OffsetLimitPaginationDTO;
+    }>,
+  ): Promise<OffsetLimitPaginationResponseDTO<{ id: string; addedAt: Date }>> {
+    const foundDoc = await this._playlistModel
+      .findById(id, 'tracks')
+      .lean<Pick<Playlist, 'tracks'>>()
+      .exec();
+
+    if (!foundDoc) {
+      throw new NotFoundException('Playlist not found');
+    }
+
+    return new OffsetLimitPaginationResponseDTO(
+      foundDoc.tracks,
+      foundDoc.tracks.length,
+      options?.pagination?.limit ?? 50,
+      options?.pagination?.offset ?? 0,
+      (options?.pagination?.limit ?? 50) + (options?.pagination?.offset ?? 0) <
+        foundDoc.tracks.length,
+    );
+  }
+
+  async getPublicStatus(id: string): Promise<boolean> {
+    const foundDoc = await this._playlistModel.findById(id, 'isPublic').lean().exec();
+
+    if (!foundDoc) {
+      throw new NotFoundException('Playlist not found');
+    }
+
+    return foundDoc.isPublic;
   }
 }
