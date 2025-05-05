@@ -1,7 +1,7 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
 import { NotFoundException } from '../../../../../shared/exceptions';
-import { UpdateAlbumCoverByIdCommand } from './update-album-cover-by-id.command';
+import { DeleteAlbumCoverCommand } from './delete-album-cover.command';
 import {
   ALBUM_WRITE_REPOSITORY_DI_TOKEN,
   AlbumWriteRepository,
@@ -11,8 +11,8 @@ import {
   ArtistFileStorage,
 } from '../../../artist/ports/storage/artist-file-storage.port';
 
-@CommandHandler(UpdateAlbumCoverByIdCommand)
-export class UpdateAlbumCoverByIdHandler implements ICommandHandler<UpdateAlbumCoverByIdCommand> {
+@CommandHandler(DeleteAlbumCoverCommand)
+export class DeleteAlbumCoverHandler implements ICommandHandler<DeleteAlbumCoverCommand> {
   constructor(
     @Inject(ALBUM_WRITE_REPOSITORY_DI_TOKEN)
     private readonly _albumWriteRepository: AlbumWriteRepository,
@@ -20,25 +20,18 @@ export class UpdateAlbumCoverByIdHandler implements ICommandHandler<UpdateAlbumC
     private readonly _artistFileStorage: ArtistFileStorage,
   ) {}
 
-  async execute({ id, payload }: UpdateAlbumCoverByIdCommand) {
+  async execute({ id }: DeleteAlbumCoverCommand) {
     const foundAlbum = await this._albumWriteRepository.findById(id);
 
     if (!foundAlbum) {
-      throw new NotFoundException('Artist does not exist');
+      throw new NotFoundException('Album does not exist');
     }
 
-    const storedFileData = await this._artistFileStorage.saveAlbumCover(
-      foundAlbum.getMainArtist(),
-      foundAlbum.getId(),
-      payload.fileId,
-    );
+    foundAlbum.deleteCover();
+    foundAlbum.deleteColor();
 
-    foundAlbum.updateCover(storedFileData.path);
+    await this._albumWriteRepository.save(foundAlbum);
 
-    if (payload.color !== undefined) {
-      foundAlbum.updateColor(payload.color);
-    }
-
-    return this._albumWriteRepository.save(foundAlbum);
+    return this._artistFileStorage.deleteAlbumCover(foundAlbum.getMainArtist(), foundAlbum.getId());
   }
 }

@@ -1,7 +1,7 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
 import { NotFoundException } from '../../../../../shared/exceptions';
-import { DeleteAlbumCoverByIdCommand } from './delete-album-cover-by-id.command';
+import { UpdateAlbumCoverCommand } from './update-album-cover.command';
 import {
   ALBUM_WRITE_REPOSITORY_DI_TOKEN,
   AlbumWriteRepository,
@@ -11,8 +11,8 @@ import {
   ArtistFileStorage,
 } from '../../../artist/ports/storage/artist-file-storage.port';
 
-@CommandHandler(DeleteAlbumCoverByIdCommand)
-export class DeleteAlbumCoverByIdHandler implements ICommandHandler<DeleteAlbumCoverByIdCommand> {
+@CommandHandler(UpdateAlbumCoverCommand)
+export class UpdateAlbumCoverHandler implements ICommandHandler<UpdateAlbumCoverCommand> {
   constructor(
     @Inject(ALBUM_WRITE_REPOSITORY_DI_TOKEN)
     private readonly _albumWriteRepository: AlbumWriteRepository,
@@ -20,18 +20,25 @@ export class DeleteAlbumCoverByIdHandler implements ICommandHandler<DeleteAlbumC
     private readonly _artistFileStorage: ArtistFileStorage,
   ) {}
 
-  async execute({ id }: DeleteAlbumCoverByIdCommand) {
+  async execute({ id, payload }: UpdateAlbumCoverCommand) {
     const foundAlbum = await this._albumWriteRepository.findById(id);
 
     if (!foundAlbum) {
-      throw new NotFoundException('Album does not exist');
+      throw new NotFoundException('Artist does not exist');
     }
 
-    foundAlbum.deleteCover();
-    foundAlbum.deleteColor();
+    const storedFileData = await this._artistFileStorage.saveAlbumCover(
+      foundAlbum.getMainArtist(),
+      foundAlbum.getId(),
+      payload.fileId,
+    );
 
-    await this._albumWriteRepository.save(foundAlbum);
+    foundAlbum.updateCover(storedFileData.path);
 
-    return this._artistFileStorage.deleteAlbumCover(foundAlbum.getMainArtist(), foundAlbum.getId());
+    if (payload.color !== undefined) {
+      foundAlbum.updateColor(payload.color);
+    }
+
+    return this._albumWriteRepository.save(foundAlbum);
   }
 }

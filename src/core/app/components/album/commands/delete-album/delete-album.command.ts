@@ -1,6 +1,6 @@
 import { Command } from '@nestjs/cqrs';
 
-export class DeleteAlbumByIdCommand extends Command<void> {
+export class DeleteAlbumCommand extends Command<void> {
   constructor(public readonly id: string) {
     super();
   }

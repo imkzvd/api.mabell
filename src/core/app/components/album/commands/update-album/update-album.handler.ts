@@ -1,20 +1,20 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
 import { NotFoundException } from '../../../../../shared/exceptions';
-import { UpdateAlbumByIdCommand } from './update-album-by-id.command';
+import { UpdateAlbumCommand } from './update-album.command';
 import {
   ALBUM_WRITE_REPOSITORY_DI_TOKEN,
   AlbumWriteRepository,
 } from '../../../../../domain/components/album/repository/album-write-repository.port';
 
-@CommandHandler(UpdateAlbumByIdCommand)
-export class UpdateAlbumByIdHandler implements ICommandHandler<UpdateAlbumByIdCommand> {
+@CommandHandler(UpdateAlbumCommand)
+export class UpdateAlbumHandler implements ICommandHandler<UpdateAlbumCommand> {
   constructor(
     @Inject(ALBUM_WRITE_REPOSITORY_DI_TOKEN)
     private readonly _albumWriteRepository: AlbumWriteRepository,
   ) {}
 
-  async execute({ id, payload }: UpdateAlbumByIdCommand) {
+  async execute({ id, payload }: UpdateAlbumCommand) {
     const foundAlbum = await this._albumWriteRepository.findById(id);
 
     if (!foundAlbum) {

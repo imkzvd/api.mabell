@@ -5,24 +5,28 @@ import {
   ALBUM_WRITE_REPOSITORY_DI_TOKEN,
   AlbumWriteRepository,
 } from '../../../../../domain/components/album/repository/album-write-repository.port';
-import { UpdateAlbumArtistsByIdCommand } from './update-album-artists-by-id.command';
+import { UpdateAlbumArtistsCommand } from './update-album-artists.command';
 import {
   ARTIST_WRITE_REPOSITORY_DI_TOKEN,
   ArtistWriteRepository,
 } from '../../../../../domain/components/artist/repository/artist-write-repository.port';
+import {
+  TRACK_WRITE_REPOSITORY_DI_TOKEN,
+  TrackWriteRepository,
+} from '../../../../../domain/components/track/repository/track-write-repository.port';
 
-@CommandHandler(UpdateAlbumArtistsByIdCommand)
-export class UpdateAlbumArtistsByIdHandler
-  implements ICommandHandler<UpdateAlbumArtistsByIdCommand>
-{
+@CommandHandler(UpdateAlbumArtistsCommand)
+export class UpdateAlbumArtistsHandler implements ICommandHandler<UpdateAlbumArtistsCommand> {
   constructor(
     @Inject(ALBUM_WRITE_REPOSITORY_DI_TOKEN)
     private readonly _albumWriteRepository: AlbumWriteRepository,
     @Inject(ARTIST_WRITE_REPOSITORY_DI_TOKEN)
     private readonly _artistWriteRepository: ArtistWriteRepository,
+    @Inject(TRACK_WRITE_REPOSITORY_DI_TOKEN)
+    private readonly _trackWriteRepository: TrackWriteRepository,
   ) {}
 
-  async execute({ id, artists }: UpdateAlbumArtistsByIdCommand) {
+  async execute({ id, artists }: UpdateAlbumArtistsCommand) {
     const foundAlbum = await this._albumWriteRepository.findById(id);
 
     if (!foundAlbum) {
@@ -40,6 +44,14 @@ export class UpdateAlbumArtistsByIdHandler
     }
 
     foundAlbum.updateArtists(foundArtistsResp.foundIds);
+
+    const foundTracks = await this._trackWriteRepository.findByAlbumId(foundAlbum.getId());
+
+    if (foundTracks.total) {
+      foundTracks.items.forEach((i) => i.updateArtists(foundAlbum.getArtists()));
+
+      await this._trackWriteRepository.saveMany(foundTracks.items);
+    }
 
     return this._albumWriteRepository.save(foundAlbum);
   }

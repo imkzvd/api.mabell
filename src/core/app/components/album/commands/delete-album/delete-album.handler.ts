@@ -5,14 +5,14 @@ import {
   AlbumWriteRepository,
 } from '../../../../../domain/components/album/repository/album-write-repository.port';
 import { NotFoundException } from '../../../../../shared/exceptions';
-import { DeleteAlbumByIdCommand } from './delete-album-by-id.command';
+import { DeleteAlbumCommand } from './delete-album.command';
 import {
   ARTIST_FILE_STORAGE_DI_TOKEN,
   ArtistFileStorage,
 } from '../../../artist/ports/storage/artist-file-storage.port';
 
-@CommandHandler(DeleteAlbumByIdCommand)
-export class DeleteAlbumByIdHandler implements ICommandHandler<DeleteAlbumByIdCommand> {
+@CommandHandler(DeleteAlbumCommand)
+export class DeleteAlbumHandler implements ICommandHandler<DeleteAlbumCommand> {
   constructor(
     @Inject(ALBUM_WRITE_REPOSITORY_DI_TOKEN)
     private readonly _albumWriteRepository: AlbumWriteRepository,
@@ -20,7 +20,7 @@ export class DeleteAlbumByIdHandler implements ICommandHandler<DeleteAlbumByIdCo
     private readonly _artistFileStorage: ArtistFileStorage,
   ) {}
 
-  async execute({ id }: DeleteAlbumByIdCommand) {
+  async execute({ id }: DeleteAlbumCommand) {
     const foundAlbum = await this._albumWriteRepository.findById(id);
 
     if (!foundAlbum) {

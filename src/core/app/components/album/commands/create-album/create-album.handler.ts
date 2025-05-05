@@ -11,6 +11,8 @@ import {
 } from '../../../../../domain/components/album/repository/album-write-repository.port';
 import { NotFoundException } from '../../../../../shared/exceptions';
 import { AlbumFactory } from '../../../../../domain/components/album/album.factory';
+import { ID_SERVICE_DI_TOKEN, IdService } from '../../../../common/services/id-service.port';
+import { AlbumId } from '../../../../../domain/components/album/album.entity';
 
 @CommandHandler(CreateAlbumCommand)
 export class CreateAlbumHandler implements ICommandHandler<CreateAlbumCommand> {
@@ -19,6 +21,8 @@ export class CreateAlbumHandler implements ICommandHandler<CreateAlbumCommand> {
     private readonly _artistWriteRepository: ArtistWriteRepository,
     @Inject(ALBUM_WRITE_REPOSITORY_DI_TOKEN)
     private readonly _albumWriteRepository: AlbumWriteRepository,
+    @Inject(ID_SERVICE_DI_TOKEN)
+    private readonly _idService: IdService<AlbumId>,
   ) {}
 
   async execute({ artistId, name }: CreateAlbumCommand) {
@@ -28,8 +32,8 @@ export class CreateAlbumHandler implements ICommandHandler<CreateAlbumCommand> {
       throw new NotFoundException('Artist does not exist');
     }
 
-    const generatedId = this._albumWriteRepository.generateId();
-    const nextAlbumIndex = (await this._albumWriteRepository.getTotalCount()) + 1;
+    const generatedId = this._idService.generate();
+    const nextAlbumIndex = await this._albumWriteRepository.getNextArtistAlbumIndex(existArtistId);
     const createdAlbum = AlbumFactory.create({
       id: generatedId,
       name: name || `Album #${nextAlbumIndex}`,
