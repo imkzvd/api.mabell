@@ -8,6 +8,7 @@ import { DeleteTrackFileHandler } from '../../../../../core/app/components/track
 import { UpdateTrackHandler } from '../../../../../core/app/components/track/commands/update-track/update-track.handler';
 import { UpdateTrackFileHandler } from '../../../../../core/app/components/track/commands/update-track-file/update-track-file.handler';
 import { GetTrackHandler } from '../../../../../core/app/components/track/queries/get-track/get-track.handler';
+import { UpdateTrackFeatArtistsHandler } from '../../../../../core/app/components/track/commands/update-track-feat-artists/update-track-feat-artists.handler';
 
 @Module({
   imports: [TmpFileStorageModule, ArtistFileStorageModule],
@@ -16,6 +17,7 @@ import { GetTrackHandler } from '../../../../../core/app/components/track/querie
     DeleteTrackHandler,
     DeleteTrackFileHandler,
     UpdateTrackHandler,
+    UpdateTrackFeatArtistsHandler,
     UpdateTrackFileHandler,
     GetTrackHandler,
   ],
