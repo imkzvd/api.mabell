@@ -7,7 +7,7 @@ import { UpdateAdminUsernameHandler } from '../../../../../core/app/components/a
 import { RefreshAdminPasswordHandler } from '../../../../../core/app/components/admin/commands/refresh-admin-password/refresh-admin-password.handler';
 import { DeleteAdminHandler } from '../../../../../core/app/components/admin/commands/delete-admin/delete-admin.handler';
 import { GetAdminsHandler } from '../../../../../core/app/components/admin/queries/get-admins/get-admins.handler';
-import { GetAdminByIdHandler } from '../../../../../core/app/components/admin/queries/get-admin-by-id/get-admin-by-id.handler';
+import { GetAdminHandler } from '../../../../../core/app/components/admin/queries/get-admin/get-admin.handler';
 
 @Module({
   imports: [PasswordModule],
@@ -18,7 +18,7 @@ import { GetAdminByIdHandler } from '../../../../../core/app/components/admin/qu
     RefreshAdminPasswordHandler,
     DeleteAdminHandler,
     GetAdminsHandler,
-    GetAdminByIdHandler,
+    GetAdminHandler,
   ],
   controllers: [AdminsController],
 })
