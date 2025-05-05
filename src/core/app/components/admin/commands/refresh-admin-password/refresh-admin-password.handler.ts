@@ -9,6 +9,7 @@ import {
   PASSWORD_SERVICE_DI_TOKEN,
   PasswordService,
 } from '../../../../common/services/password-service.port';
+import { ADMIN_PASSWORD_LENGTH } from '../../constants';
 
 @CommandHandler(RefreshAdminPasswordCommand)
 export class RefreshAdminPasswordHandler implements ICommandHandler<RefreshAdminPasswordCommand> {
@@ -26,15 +27,16 @@ export class RefreshAdminPasswordHandler implements ICommandHandler<RefreshAdmin
       throw new NotFoundException(`There is no admin with the specified ID`);
     }
 
-    const generatedPassword = this._passwordService.generate(8);
-    const hashedPassword = await this._passwordService.hash(generatedPassword);
-
-    foundAdmin.updatePassword(hashedPassword);
+    const { password, hashPassword } = await this._passwordService.generate({
+      length: ADMIN_PASSWORD_LENGTH,
+      hash: true,
+    });
+    foundAdmin.updatePassword(hashPassword);
 
     await this._adminWriteRepository.save(foundAdmin);
 
     return {
-      password: generatedPassword,
+      password,
     };
   }
 }

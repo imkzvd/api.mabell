@@ -22,22 +22,24 @@ export class GetAlbumTracksHandler implements IQueryHandler<GetAlbumTracksQuery>
     private readonly _trackReadRepository: TrackReadRepository,
   ) {}
 
-  async execute({ albumId, pagination }: GetAlbumTracksQuery) {
-    const foundAlbum = await this._albumReadRepository.findById(albumId);
+  async execute({ albumId, options }: GetAlbumTracksQuery) {
+    const isPublicAlbum = await this._albumReadRepository.getPublicStatus(albumId);
 
-    if (!foundAlbum) {
-      throw new NotFoundException('Album does not exist');
+    if (options?.isPublic && !isPublicAlbum) {
+      throw new NotFoundException('Album not found');
     }
 
-    const slicedTrackIdList = foundAlbum.tracks.slice(0, pagination?.limit ?? 50);
-    const foundTracks = await this._trackReadRepository.findByIds(slicedTrackIdList, true);
+    const foundTracks = await this._trackReadRepository.findByAlbumId(albumId, {
+      isPublic: options?.isPublic,
+      pagination: options?.pagination,
+    });
 
     return new OffsetLimitPaginationResponseDTO(
       foundTracks.items.map((i) => TrackMapper.toDTO(i)),
-      foundTracks.items.length,
-      pagination?.limit ?? 50,
-      pagination?.offset ?? 0,
-      foundTracks.items.length > (pagination?.limit ?? 50),
+      foundTracks.total,
+      foundTracks.limit,
+      foundTracks.offset,
+      foundTracks.hasMore,
     );
   }
 }

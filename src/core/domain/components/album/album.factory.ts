@@ -7,7 +7,6 @@ import { AlbumTypeVO } from './vos/album-type.vo';
 import { AlbumTypes } from './constants/album-types';
 import { DescriptionVO } from './vos/description.vo';
 import { ReleaseDateVO } from './vos/release-date.vo';
-import { TrackId } from '../track/track.entity';
 
 export class AlbumFactory {
   static create(props: {
@@ -20,7 +19,6 @@ export class AlbumFactory {
     color?: string | null;
     description?: string;
     releaseAt?: Date | null;
-    tracks?: TrackId[];
     isActive?: boolean;
     isPublic?: boolean;
     createdAt?: Date;
@@ -36,7 +34,6 @@ export class AlbumFactory {
       props.color ? HexColorVO.create(props.color) : null,
       DescriptionVO.create(props.description || ''),
       props.releaseAt ? ReleaseDateVO.create(props.releaseAt) : null,
-      new Set(props.tracks),
       props.isActive ?? false,
       props.isPublic ?? false,
       props.createdAt || new Date(),

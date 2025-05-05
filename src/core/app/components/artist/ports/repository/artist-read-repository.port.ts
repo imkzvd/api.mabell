@@ -1,7 +1,14 @@
-import { ArtistFilter } from './artist.filter';
-import { ReadRepository } from '../../../../common/base/read-repository/read-repository.interface';
 import { ArtistDTO } from './dtos/artist.dto';
 
 export const ARTIST_READ_REPOSITORY_DI_TOKEN = Symbol('ARTIST_READ_REPOSITORY_DI_TOKEN');
 
-export type ArtistReadRepository = ReadRepository<ArtistDTO, ArtistFilter>;
+export interface ArtistReadRepository {
+  findById(
+    id: string,
+    options?: Partial<{
+      isPublic: boolean;
+    }>,
+  ): Promise<ArtistDTO | null>;
+
+  getPublicStatus(id: string): Promise<boolean>;
+}

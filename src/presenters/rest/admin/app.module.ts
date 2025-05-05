@@ -11,6 +11,7 @@ import { ArtistsModule } from './controllers/artists/artists.module';
 import { AlbumsModule } from './controllers/albums/albums.module';
 import { TracksModule } from './controllers/tracks/tracks.module';
 import { PlaylistsModule } from './controllers/playlists/playlists.module';
+import { IdModule } from '../../../infrastructure/services/id/id.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { PlaylistsModule } from './controllers/playlists/playlists.module';
     ConfigModule.forRoot(),
     CqrsModule.forRoot(),
     MongooseModule,
+    IdModule,
     AdminsModule,
     UploadsModule,
     UsersModule,

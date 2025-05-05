@@ -6,7 +6,10 @@ import { TrackDTO } from '../dtos/track.dto';
 export class GetAlbumTracksQuery extends Query<OffsetLimitPaginationResponseDTO<TrackDTO>> {
   constructor(
     public readonly albumId: string,
-    public readonly pagination?: OffsetLimitPaginationDTO,
+    public readonly options?: Partial<{
+      isPublic: boolean;
+      pagination: OffsetLimitPaginationDTO;
+    }>,
   ) {
     super();
   }

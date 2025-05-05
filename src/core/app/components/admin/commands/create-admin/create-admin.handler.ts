@@ -10,33 +10,41 @@ import {
   PasswordService,
 } from '../../../../common/services/password-service.port';
 import { AdminFactory } from '../../../../../domain/components/admin/admin.factory';
+import { ID_SERVICE_DI_TOKEN, IdService } from '../../../../common/services/id-service.port';
+import { AdminId } from '../../../../../domain/components/admin/admin.entity';
+import { ADMIN_PASSWORD_LENGTH } from '../../constants';
 
 @CommandHandler(CreateAdminCommand)
 export class CreateAdminHandler implements ICommandHandler<CreateAdminCommand> {
   constructor(
     @Inject(ADMIN_WRITE_REPOSITORY_DI_TOKEN)
     private readonly _adminWriteRepository: AdminWriteRepository,
+    @Inject(ID_SERVICE_DI_TOKEN)
+    private readonly _idService: IdService<AdminId>,
     @Inject(PASSWORD_SERVICE_DI_TOKEN)
     private readonly _passwordService: PasswordService,
   ) {}
 
-  async execute({ username, name }: CreateAdminCommand) {
-    const generatedId = this._adminWriteRepository.generateId();
-    const generatedPassword = this._passwordService.generate(8);
-    const hashedPassword = await this._passwordService.hash(generatedPassword);
-    const nextAdminIndex = (await this._adminWriteRepository.getTotalCount()) + 1;
+  async execute() {
+    const generatedId = this._idService.generate();
+    const { password, hashPassword } = await this._passwordService.generate({
+      length: ADMIN_PASSWORD_LENGTH,
+      hash: true,
+    });
+
+    const nextAdminIndex = await this._adminWriteRepository.getNextIndex();
     const createdAdmin = AdminFactory.create({
       id: generatedId,
-      username: username || `admin${nextAdminIndex}`,
-      password: hashedPassword,
-      name: name || `Admin #${nextAdminIndex}`,
+      username: `guest${nextAdminIndex}`,
+      password: hashPassword,
+      name: `Guest #${nextAdminIndex}`,
     });
 
     await this._adminWriteRepository.save(createdAdmin);
 
     return {
       id: createdAdmin.getId(),
-      password: generatedPassword,
+      password,
     };
   }
 }

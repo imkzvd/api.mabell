@@ -9,8 +9,7 @@ import { UpdateUserUsernameHandler } from '../../../../../core/app/components/us
 import { UpdateUserPasswordHandler } from '../../../../../core/app/components/user/commands/update-user-password/update-user-password.handler';
 import { RefreshUserPasswordHandler } from '../../../../../core/app/components/user/commands/refresh-user-password/refresh-user-password.handler';
 import { DeleteUserHandler } from '../../../../../core/app/components/user/commands/delete-user/delete-user.handler';
-import { GetUserByIdHandler } from '../../../../../core/app/components/user/queries/get-user-by-id/get-user-by-id.handler';
-import { GetUsersHandler } from '../../../../../core/app/components/user/queries/get-users/get-users.handler';
+import { GetUserHandler } from '../../../../../core/app/components/user/queries/get-user/get-user.handler';
 import { UpdateUserAvatarHandler } from '../../../../../core/app/components/user/commands/update-user-avatar/update-user-avatar.handler';
 import { DeleteUserAvatarHandler } from '../../../../../core/app/components/user/commands/delete-user-avatar/delete-user-avatar.handler';
 import { UserFileStorageModule } from '../../../../../infrastructure/storage/user-file-storage/user-file-storage.module';
@@ -29,8 +28,7 @@ import { TmpFileStorageModule } from '../../../../../infrastructure/storage/tmp-
     UpdateUserAvatarHandler,
     DeleteUserAvatarHandler,
     DeleteUserHandler,
-    GetUserByIdHandler,
-    GetUsersHandler,
+    GetUserHandler,
   ],
   controllers: [UsersController],
 })

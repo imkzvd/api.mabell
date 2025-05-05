@@ -10,6 +10,7 @@ import {
   PasswordService,
 } from '../../../../common/services/password-service.port';
 import { NotFoundException } from '../../../../../shared/exceptions';
+import { USER_MIN_LENGTH_PASSWORD } from '../../constants';
 
 @CommandHandler(RefreshUserPasswordCommand)
 export class RefreshUserPasswordHandler implements ICommandHandler<RefreshUserPasswordCommand> {
@@ -27,15 +28,17 @@ export class RefreshUserPasswordHandler implements ICommandHandler<RefreshUserPa
       throw new NotFoundException(`There is no user with the specified ID`);
     }
 
-    const generatedPassword = this._passwordService.generate(8);
-    const hashedPassword = await this._passwordService.hash(generatedPassword);
+    const { password, hashPassword } = await this._passwordService.generate({
+      length: USER_MIN_LENGTH_PASSWORD,
+      hash: true,
+    });
 
-    foundUser.updatePassword(hashedPassword);
+    foundUser.updatePassword(hashPassword);
 
     await this._userWriteRepository.save(foundUser);
 
     return {
-      password: generatedPassword,
+      password,
     };
   }
 }

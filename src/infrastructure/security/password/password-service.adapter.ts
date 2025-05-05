@@ -5,10 +5,32 @@ import { PasswordService } from '../../../core/app/common/services/password-serv
 import { HashedPasswordVO } from '../../../core/domain/common/vos/hashed-password.vo';
 
 export class PasswordServiceAdapter implements PasswordService {
-  generate(length: number) {
-    return generatePassword.generate({
-      length,
+  generate(options: { hash: false }): Promise<string>;
+  generate(options: { hash: true }): Promise<{ password: string; hashPassword: HashedPasswordVO }>;
+  async generate(options?: Partial<{ length: number; hash: boolean }>): Promise<
+    | string
+    | {
+        password: string;
+        hashPassword: HashedPasswordVO;
+      }
+  > {
+    const generatedPassword = generatePassword.generate({
+      numbers: true,
+      uppercase: true,
+      strict: true,
+      length: options?.length || 8,
     });
+
+    if (!options?.hash) {
+      return generatedPassword;
+    }
+
+    const hashPassword = await this.hash(generatedPassword);
+
+    return {
+      password: generatedPassword,
+      hashPassword,
+    };
   }
 
   async hash(password: string): Promise<HashedPasswordVO> {

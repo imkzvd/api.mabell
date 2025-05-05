@@ -28,14 +28,14 @@ import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { ParseObjectIdPipe } from '../../../common/pipes/parse-object-id.pipe';
 import { UpdateAlbumDTO } from './dtos/update-album.dto';
 import { AlbumRO } from './ros/album.ro';
-import { GetAlbumByIdQuery } from '../../../../../core/app/components/album/queries/get-album-by-id/get-album-by-id.query';
+import { GetAlbumQuery } from '../../../../../core/app/components/album/queries/get-album/get-album.query';
 import { UpdateAlbumArtistsDTO } from './dtos/update-album-artists.dto';
-import { UpdateAlbumByIdCommand } from '../../../../../core/app/components/album/commands/update-album-by-id/update-album-by-id.command';
-import { UpdateAlbumArtistsByIdCommand } from '../../../../../core/app/components/album/commands/update-album-artists-by-id/update-album-artists-by-id.command';
+import { UpdateAlbumCommand } from '../../../../../core/app/components/album/commands/update-album/update-album.command';
+import { UpdateAlbumArtistsCommand } from '../../../../../core/app/components/album/commands/update-album-artists/update-album-artists.command';
 import { UpdateAlbumCoverDTO } from './dtos/update-album-cover.dto';
-import { UpdateAlbumCoverByIdCommand } from '../../../../../core/app/components/album/commands/update-album-cover-by-id/update-album-cover-by-id.command';
-import { DeleteAlbumCoverByIdCommand } from '../../../../../core/app/components/album/commands/delete-album-cover-by-id/delete-album-cover-by-id.command';
-import { DeleteAlbumByIdCommand } from '../../../../../core/app/components/album/commands/delete-album-by-id/delete-album-by-id.command';
+import { UpdateAlbumCoverCommand } from '../../../../../core/app/components/album/commands/update-album-cover/update-album-cover.command';
+import { DeleteAlbumCoverCommand } from '../../../../../core/app/components/album/commands/delete-album-cover/delete-album-cover.command';
+import { DeleteAlbumCommand } from '../../../../../core/app/components/album/commands/delete-album/delete-album.command';
 import { BadRequestException } from '../../../../../core/shared/exceptions';
 import { CreateAlbumDTO } from './dtos/create-album.dto';
 import { CreateAlbumCommand } from '../../../../../core/app/components/album/commands/create-album/create-album.command';
@@ -57,7 +57,7 @@ export class AlbumsController {
   async create(@Body() { artist, name }: CreateAlbumDTO): Promise<AlbumRO> {
     const { id } = await this._commandBus.execute(new CreateAlbumCommand(artist, name));
 
-    const createdAlbum = await this._queryBus.execute(new GetAlbumByIdQuery(id));
+    const createdAlbum = await this._queryBus.execute(new GetAlbumQuery(id));
 
     if (!createdAlbum) {
       throw new BadRequestException('Some error');
@@ -83,9 +83,9 @@ export class AlbumsController {
     @Param('id', ParseObjectIdPipe) id: string,
     @Body() dto: UpdateAlbumDTO,
   ): Promise<AlbumRO> {
-    await this._commandBus.execute(new UpdateAlbumByIdCommand(id, dto));
+    await this._commandBus.execute(new UpdateAlbumCommand(id, dto));
 
-    const updatedAlbum = await this._queryBus.execute(new GetAlbumByIdQuery(id));
+    const updatedAlbum = await this._queryBus.execute(new GetAlbumQuery(id));
 
     if (!updatedAlbum) {
       throw new NotFoundException('Album not found');
@@ -111,9 +111,9 @@ export class AlbumsController {
     @Param('id', ParseObjectIdPipe) id: string,
     @Body() dto: UpdateAlbumArtistsDTO,
   ): Promise<AlbumRO> {
-    await this._commandBus.execute(new UpdateAlbumArtistsByIdCommand(id, dto.artists));
+    await this._commandBus.execute(new UpdateAlbumArtistsCommand(id, dto.artists));
 
-    const updatedAlbum = await this._queryBus.execute(new GetAlbumByIdQuery(id));
+    const updatedAlbum = await this._queryBus.execute(new GetAlbumQuery(id));
 
     if (!updatedAlbum) {
       throw new NotFoundException('Album not found');
@@ -139,9 +139,9 @@ export class AlbumsController {
     @Param('id', ParseObjectIdPipe) id: string,
     @Body() dto: UpdateAlbumCoverDTO,
   ): Promise<AlbumRO> {
-    await this._commandBus.execute(new UpdateAlbumCoverByIdCommand(id, dto));
+    await this._commandBus.execute(new UpdateAlbumCoverCommand(id, dto));
 
-    const updatedAlbum = await this._queryBus.execute(new GetAlbumByIdQuery(id));
+    const updatedAlbum = await this._queryBus.execute(new GetAlbumQuery(id));
 
     if (!updatedAlbum) {
       throw new NotFoundException('Album not found');
@@ -163,9 +163,9 @@ export class AlbumsController {
   @ApiOkResponse({ description: 'Album', type: AlbumRO })
   @Delete('/:id/cover')
   async deleteCover(@Param('id', ParseObjectIdPipe) id: string): Promise<AlbumRO> {
-    await this._commandBus.execute(new DeleteAlbumCoverByIdCommand(id));
+    await this._commandBus.execute(new DeleteAlbumCoverCommand(id));
 
-    const updatedAlbum = await this._queryBus.execute(new GetAlbumByIdQuery(id));
+    const updatedAlbum = await this._queryBus.execute(new GetAlbumQuery(id));
 
     if (!updatedAlbum) {
       throw new NotFoundException('Album not found');
@@ -191,7 +191,7 @@ export class AlbumsController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete('/:id')
   async delete(@Param('id', ParseObjectIdPipe) id: string): Promise<void> {
-    await this._commandBus.execute(new DeleteAlbumByIdCommand(id));
+    await this._commandBus.execute(new DeleteAlbumCommand(id));
   }
 
   @ApiOperation({ summary: 'Find an album by id', operationId: 'findOne' })
@@ -204,7 +204,7 @@ export class AlbumsController {
   @ApiOkResponse({ description: 'Album', type: AlbumRO })
   @Get('/:id')
   async findOne(@Param('id', ParseObjectIdPipe) id: string): Promise<AlbumRO> {
-    const foundAlbum = await this._queryBus.execute(new GetAlbumByIdQuery(id));
+    const foundAlbum = await this._queryBus.execute(new GetAlbumQuery(id));
 
     if (!foundAlbum) {
       throw new NotFoundException(`There is no album with the specified ID`);
@@ -244,7 +244,7 @@ export class AlbumsController {
     @Query('offset', new DefaultValuePipe(0), ParseIntPipe) offset: number,
   ): Promise<TracksRO> {
     const foundTracks = await this._queryBus.execute(
-      new GetAlbumTracksQuery(id, { limit, offset }),
+      new GetAlbumTracksQuery(id, { pagination: { limit, offset } }),
     );
 
     return new TracksRO(foundTracks);

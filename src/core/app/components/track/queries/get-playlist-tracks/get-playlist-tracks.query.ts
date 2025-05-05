@@ -8,7 +8,10 @@ export class GetPlaylistTracksQuery extends Query<
 > {
   constructor(
     public readonly playlistId: string,
-    public readonly pagination?: OffsetLimitPaginationDTO,
+    public readonly options?: Partial<{
+      pagination: OffsetLimitPaginationDTO;
+      isPublic: boolean;
+    }>,
   ) {
     super();
   }

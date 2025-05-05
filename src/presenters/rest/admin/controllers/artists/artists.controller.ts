@@ -26,22 +26,21 @@ import {
 import { faker } from '@faker-js/faker';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { ArtistRO } from './ros/artist.ro';
-import { ArtistsRO } from './ros/artists.ro';
 import { CreateArtistDTO } from './dtos/create-artist.dto';
 import { UpdateArtistImageDTO } from './dtos/update-artist-image.dto';
 import { UpdateArtistDTO } from './dtos/update-artist.dto';
 import { CreateArtistCommand } from '../../../../../core/app/components/artist/commands/create-artist/create-artist.command';
-import { GetArtistByIdQuery } from '../../../../../core/app/components/artist/queries/get-artist-by-id/get-artist-by-id.query';
+import { GetArtistQuery } from '../../../../../core/app/components/artist/queries/get-artist/get-artist.query';
 import { BadRequestException } from '../../../../../core/shared/exceptions';
 import { ParseObjectIdPipe } from '../../../common/pipes/parse-object-id.pipe';
-import { UpdateArtistByIdCommand } from '../../../../../core/app/components/artist/commands/update-artist-by-id/update-artist-by-id.command';
-import { UpdateArtistAvatarByIdCommand } from '../../../../../core/app/components/artist/commands/update-artist-avatar-by-id/update-artist-avatar-by-id.command';
-import { UpdateArtistCoverByIdCommand } from '../../../../../core/app/components/artist/commands/update-artist-cover-by-id/update-artist-cover-by-id.command';
-import { DeleteArtistAvatarByIdCommand } from '../../../../../core/app/components/artist/commands/delete-artist-avatar-by-id/delete-artist-avatar-by-id.command';
-import { DeleteArtistCoverByIdCommand } from '../../../../../core/app/components/artist/commands/delete-artist-cover-by-id/delete-artist-cover-by-id.command';
-import { DeleteArtistByIdCommand } from '../../../../../core/app/components/artist/commands/delete-artist-by-id/delete-artist-by-id.command';
-import { GetArtistsQuery } from '../../../../../core/app/components/artist/queries/get-artists/get-artists.query';
-import { OffsetLimitPaginationDTO } from '../../../../../core/app/common/dtos/offset-limit-pagination/offset-limit-pagination-payload.dto';
+import { UpdateArtistCommand } from '../../../../../core/app/components/artist/commands/update-artist/update-artist.command';
+import { UpdateArtistAvatarCommand } from '../../../../../core/app/components/artist/commands/update-artist-avatar/update-artist-avatar.command';
+import { UpdateArtistCoverCommand } from '../../../../../core/app/components/artist/commands/update-artist-cover/update-artist-cover.command';
+import { DeleteArtistAvatarCommand } from '../../../../../core/app/components/artist/commands/delete-artist-avatar/delete-artist-avatar.command';
+import { DeleteArtistCoverCommand } from '../../../../../core/app/components/artist/commands/delete-artist-cover/delete-artist-cover.command';
+import { DeleteArtistCommand } from '../../../../../core/app/components/artist/commands/delete-artist/delete-artist.command';
+import { TracksRO } from '../tracks/ros/tracks.ro';
+import { GetArtistTracksQuery } from '../../../../../core/app/components/track/queries/get-artist-tracks/get-artist-tracks.query';
 
 @ApiTags('Artists')
 @Controller({ path: '/artists' })
@@ -58,7 +57,7 @@ export class ArtistsController {
   async create(@Body() { name }: CreateArtistDTO): Promise<ArtistRO> {
     const { id } = await this._commandBus.execute(new CreateArtistCommand(name));
 
-    const createdArtist = await this._queryBus.execute(new GetArtistByIdQuery(id));
+    const createdArtist = await this._queryBus.execute(new GetArtistQuery(id));
 
     if (!createdArtist) {
       throw new BadRequestException('Some error');
@@ -84,9 +83,9 @@ export class ArtistsController {
     @Param('id', ParseObjectIdPipe) id: string,
     @Body() dto: UpdateArtistDTO,
   ): Promise<ArtistRO> {
-    await this._commandBus.execute(new UpdateArtistByIdCommand(id, dto));
+    await this._commandBus.execute(new UpdateArtistCommand(id, dto));
 
-    const updatedArtist = await this._queryBus.execute(new GetArtistByIdQuery(id));
+    const updatedArtist = await this._queryBus.execute(new GetArtistQuery(id));
 
     if (!updatedArtist) {
       throw new NotFoundException('Artist not found');
@@ -113,13 +112,13 @@ export class ArtistsController {
     @Body() { fileId, color }: UpdateArtistImageDTO,
   ): Promise<ArtistRO> {
     await this._commandBus.execute(
-      new UpdateArtistAvatarByIdCommand(id, {
+      new UpdateArtistAvatarCommand(id, {
         fileId,
-        accentColor: color,
+        color,
       }),
     );
 
-    const updatedArtist = await this._queryBus.execute(new GetArtistByIdQuery(id));
+    const updatedArtist = await this._queryBus.execute(new GetArtistQuery(id));
 
     if (!updatedArtist) {
       throw new NotFoundException('Artist not found');
@@ -146,13 +145,13 @@ export class ArtistsController {
     @Body() { fileId, color }: UpdateArtistImageDTO,
   ): Promise<ArtistRO> {
     await this._commandBus.execute(
-      new UpdateArtistCoverByIdCommand(id, {
+      new UpdateArtistCoverCommand(id, {
         fileId,
-        secondaryColor: color,
+        color,
       }),
     );
 
-    const updatedArtist = await this._queryBus.execute(new GetArtistByIdQuery(id));
+    const updatedArtist = await this._queryBus.execute(new GetArtistQuery(id));
 
     if (!updatedArtist) {
       throw new NotFoundException('Artist not found');
@@ -174,9 +173,9 @@ export class ArtistsController {
   @ApiOkResponse({ description: "Artist's avatar has been deleted", type: ArtistRO })
   @Delete('/:id/avatar')
   async deleteAvatar(@Param('id', ParseObjectIdPipe) id: string): Promise<ArtistRO> {
-    await this._commandBus.execute(new DeleteArtistAvatarByIdCommand(id));
+    await this._commandBus.execute(new DeleteArtistAvatarCommand(id));
 
-    const updatedArtist = await this._queryBus.execute(new GetArtistByIdQuery(id));
+    const updatedArtist = await this._queryBus.execute(new GetArtistQuery(id));
 
     if (!updatedArtist) {
       throw new NotFoundException('Artist not found');
@@ -198,9 +197,9 @@ export class ArtistsController {
   @ApiOkResponse({ description: "Artist's cover has been deleted", type: ArtistRO })
   @Delete('/:id/cover')
   async deleteCover(@Param('id', ParseObjectIdPipe) id: string): Promise<ArtistRO> {
-    await this._commandBus.execute(new DeleteArtistCoverByIdCommand(id));
+    await this._commandBus.execute(new DeleteArtistCoverCommand(id));
 
-    const updatedArtist = await this._queryBus.execute(new GetArtistByIdQuery(id));
+    const updatedArtist = await this._queryBus.execute(new GetArtistQuery(id));
 
     if (!updatedArtist) {
       throw new NotFoundException('Artist not found');
@@ -226,35 +225,7 @@ export class ArtistsController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete('/:id')
   async delete(@Param('id', ParseObjectIdPipe) id: string): Promise<void> {
-    return this._commandBus.execute(new DeleteArtistByIdCommand(id));
-  }
-
-  @ApiOperation({ summary: 'Find artists', operationId: 'find' })
-  @ApiQuery({
-    required: false,
-    type: Number,
-    name: 'limit',
-    description: 'Limit',
-    example: 25,
-  })
-  @ApiQuery({
-    required: false,
-    type: Number,
-    name: 'offset',
-    description: 'Offset',
-    example: 0,
-  })
-  @ApiOkResponse({ type: ArtistsRO })
-  @Get('/')
-  async find(
-    @Query('limit', new DefaultValuePipe(25), ParseIntPipe) limit: number,
-    @Query('offset', new DefaultValuePipe(0), ParseIntPipe) offset: number,
-  ): Promise<ArtistsRO> {
-    const result = await this._queryBus.execute(
-      new GetArtistsQuery(new OffsetLimitPaginationDTO(limit, offset)),
-    );
-
-    return new ArtistsRO(result);
+    return this._commandBus.execute(new DeleteArtistCommand(id));
   }
 
   @ApiOperation({ summary: 'Find an artist by id', operationId: 'findOne' })
@@ -267,12 +238,47 @@ export class ArtistsController {
   @ApiOkResponse({ description: 'Artist', type: ArtistRO })
   @Get('/:id')
   async findOne(@Param('id', ParseObjectIdPipe) id: string): Promise<ArtistRO> {
-    const foundArtist = await this._queryBus.execute(new GetArtistByIdQuery(id));
+    const foundArtist = await this._queryBus.execute(new GetArtistQuery(id));
 
     if (!foundArtist) {
       throw new NotFoundException(`There is no artist with the specified ID`);
     }
 
     return new ArtistRO(foundArtist);
+  }
+
+  @ApiOperation({ summary: 'Get artist tracks', operationId: 'getTracks' })
+  @ApiParam({
+    type: String,
+    name: 'id',
+    description: 'Id',
+    example: faker.database.mongodbObjectId(),
+  })
+  @ApiQuery({
+    required: false,
+    type: Number,
+    name: 'limit',
+    description: 'Limit',
+    example: 50,
+  })
+  @ApiQuery({
+    required: false,
+    type: Number,
+    name: 'offset',
+    description: 'Offset',
+    example: 0,
+  })
+  @ApiOkResponse({ description: 'Artist tracks', type: TracksRO })
+  @Get('/:id/tracks')
+  async getTracks(
+    @Param('id', ParseObjectIdPipe) id: string,
+    @Query('limit', new DefaultValuePipe(50), ParseIntPipe) limit: number,
+    @Query('offset', new DefaultValuePipe(0), ParseIntPipe) offset: number,
+  ): Promise<TracksRO> {
+    const foundTracks = await this._queryBus.execute(
+      new GetArtistTracksQuery(id, { pagination: { limit, offset } }),
+    );
+
+    return new TracksRO(foundTracks);
   }
 }

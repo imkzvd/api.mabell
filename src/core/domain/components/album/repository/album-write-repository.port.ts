@@ -1,7 +1,14 @@
-import { WriteRepository } from '../../../common/repository/write-repository.interface';
 import { Album, AlbumId } from '../album.entity';
-import { AlbumFilter } from './album.filter';
 
 export const ALBUM_WRITE_REPOSITORY_DI_TOKEN = Symbol('ALBUM_WRITE_REPOSITORY_DI_TOKEN');
 
-export type AlbumWriteRepository = WriteRepository<Album, AlbumId, AlbumFilter>;
+export interface AlbumWriteRepository {
+  save(entity: Album): Promise<void>;
+  deleteById(id: string): Promise<AlbumId | null>;
+  deleteByArtistId(artistId: string): Promise<{
+    deletedIds: AlbumId[];
+    total: number;
+  }>;
+  findById(id: string): Promise<Album | null>;
+  getNextArtistAlbumIndex(artistId: string): Promise<number>;
+}

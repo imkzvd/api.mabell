@@ -33,7 +33,10 @@ export class UpdateUserAvatarHandler implements ICommandHandler<UpdateUserAvatar
     );
 
     foundUser.updateAvatar(storedFileData.path);
-    foundUser.updateColor(payload.color || foundUser.getColor());
+
+    if (payload.color !== undefined) {
+      foundUser.updateColor(payload.color);
+    }
 
     return this._userWriteRepository.save(foundUser);
   }

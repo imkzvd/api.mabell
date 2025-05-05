@@ -33,6 +33,8 @@ import { UpdateTrackCommand } from '../../../../../core/app/components/track/com
 import { UpdateTrackFileCommand } from '../../../../../core/app/components/track/commands/update-track-file/update-track-file.command';
 import { DeleteTrackCommand } from '../../../../../core/app/components/track/commands/delete-track/delete-track.command';
 import { DeleteTrackFileCommand } from '../../../../../core/app/components/track/commands/delete-track-file/delete-track-file.command';
+import { UpdateTrackFeatArtistsDTO } from './dtos/update-track-feat-artists.dto';
+import { UpdateTrackFeatArtistsCommand } from '../../../../../core/app/components/track/commands/update-track-feat-artists/update-track-feat-artists.command';
 
 @ApiTags('Tracks')
 @Controller({ path: '/tracks' })
@@ -76,6 +78,34 @@ export class TracksController {
     @Body() dto: UpdateTrackDTO,
   ): Promise<TrackRO> {
     await this._commandBus.execute(new UpdateTrackCommand(id, dto));
+
+    const updatedTrack = await this._queryBus.execute(new GetTrackQuery(id));
+
+    if (!updatedTrack) {
+      throw new NotFoundException('Track does not exist');
+    }
+
+    return new TrackRO(updatedTrack);
+  }
+
+  @ApiOperation({
+    summary: 'Update track feat. artists',
+    operationId: 'updateFeatArtists',
+  })
+  @ApiParam({
+    type: String,
+    name: 'id',
+    description: 'Id',
+    example: faker.database.mongodbObjectId(),
+  })
+  @ApiBody({ type: UpdateTrackFeatArtistsDTO })
+  @ApiOkResponse({ description: 'Updated track', type: TrackRO })
+  @Patch('/:id/featured-artists')
+  async updateFeatArtists(
+    @Param('id', ParseObjectIdPipe) id: string,
+    @Body() dto: UpdateTrackFeatArtistsDTO,
+  ): Promise<TrackRO> {
+    await this._commandBus.execute(new UpdateTrackFeatArtistsCommand(id, dto.artists));
 
     const updatedTrack = await this._queryBus.execute(new GetTrackQuery(id));
 

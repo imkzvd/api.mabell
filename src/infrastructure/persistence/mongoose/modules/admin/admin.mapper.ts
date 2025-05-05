@@ -1,15 +1,17 @@
 import { Types } from 'mongoose';
-import type { Admin as AdminDocument } from './admin.document';
+import type { Admin } from './admin.schema';
 import { ReadMapper, WriteMapper } from '../../base/mapper.interface';
-import { Admin, AdminId } from '../../../../../core/domain/components/admin/admin.entity';
+import {
+  Admin as DomainEntity,
+  AdminId,
+} from '../../../../../core/domain/components/admin/admin.entity';
 import { AdminFactory } from '../../../../../core/domain/components/admin/admin.factory';
 import { HashedPasswordVO } from '../../../../../core/domain/common/vos/hashed-password.vo';
 import { AdminDTO } from '../../../../../core/app/components/admin/repository/dtos/admin.dto';
+import { AdminDocument } from './types';
 
-class AdminMapper
-  implements WriteMapper<AdminDocument, Admin>, ReadMapper<AdminDocument, AdminDTO>
-{
-  toDocument(entity: Admin): AdminDocument {
+class AdminMapper implements WriteMapper<Admin, DomainEntity>, ReadMapper<Admin, AdminDTO> {
+  toPersistenceEntity(entity: DomainEntity): Admin {
     return {
       _id: new Types.ObjectId(entity.getId()),
       username: entity.getUsername().value,
@@ -22,7 +24,7 @@ class AdminMapper
     };
   }
 
-  toEntity(doc: AdminDocument): Admin {
+  toDomainEntity(doc: AdminDocument | Admin): DomainEntity {
     return AdminFactory.create({
       id: doc._id.toHexString() as AdminId,
       username: doc.username,
@@ -35,7 +37,7 @@ class AdminMapper
     });
   }
 
-  toDTO(doc: AdminDocument): AdminDTO {
+  toDTO(doc: AdminDocument | Admin): AdminDTO {
     return new AdminDTO(
       doc._id.toHexString(),
       doc.username,
@@ -45,10 +47,6 @@ class AdminMapper
       doc.createdAt,
       doc.updatedAt,
     );
-  }
-
-  toPopulatedDTO(doc: AdminDocument): AdminDTO {
-    return this.toDTO(doc);
   }
 }
 

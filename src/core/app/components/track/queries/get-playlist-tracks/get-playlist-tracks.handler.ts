@@ -22,26 +22,31 @@ export class GetPlaylistTracksHandler implements IQueryHandler<GetPlaylistTracks
     private readonly _trackReadRepository: TrackReadRepository,
   ) {}
 
-  async execute({ playlistId, pagination }: GetPlaylistTracksQuery) {
-    const foundPlaylist = await this._playlistReadRepository.findById(playlistId);
+  async execute({ playlistId, options }: GetPlaylistTracksQuery) {
+    if (options?.isPublic) {
+      const isPublicPlaylist = await this._playlistReadRepository.getPublicStatus(playlistId);
 
-    if (!foundPlaylist) {
-      throw new NotFoundException('Playlist does not exist');
+      if (!isPublicPlaylist) {
+        throw new NotFoundException('Playlist not found');
+      }
     }
 
-    const slicedTrackIdList = foundPlaylist.tracks
-      .slice(pagination?.offset, pagination?.limit || 50)
-      .map(({ id }) => id);
-    const foundTracks = await this._trackReadRepository.findByIds(slicedTrackIdList, true);
+    const foundPlaylistTracks = await this._playlistReadRepository.getTracks(playlistId, {
+      pagination: options?.pagination,
+    });
+    const foundPlaylistTrackIds = foundPlaylistTracks.items.map(({ id }) => id);
+    const foundTracks = await this._trackReadRepository.findByIds(foundPlaylistTrackIds, {
+      isPublic: options?.isPublic,
+    });
 
     return new OffsetLimitPaginationResponseDTO(
       foundTracks.items.map((i, index) =>
-        TrackMapper.toPlaylistTrackDTO(i, foundPlaylist.tracks[index].addedAt),
+        TrackMapper.toPlaylistTrackDTO(i, foundPlaylistTracks.items[index].addedAt),
       ),
-      foundTracks.items.length,
-      pagination?.limit ?? 50,
-      pagination?.offset ?? 0,
-      foundTracks.items.length > (pagination?.limit ?? 50),
+      foundPlaylistTracks.total,
+      foundPlaylistTracks.limit,
+      foundPlaylistTracks.offset,
+      foundPlaylistTracks.hasMore,
     );
   }
 }

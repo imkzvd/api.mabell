@@ -13,7 +13,6 @@ export class AlbumWithArtistsDTO {
     public readonly color: string | null,
     public readonly description: string,
     public readonly releaseAt: Date | null,
-    public readonly tracks: string[],
     public readonly isActive: boolean,
     public readonly isPublic: boolean,
     public readonly createdAt: Date,

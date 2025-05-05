@@ -238,8 +238,6 @@ export class PlaylistsController {
 
     const foundTracks = await this._queryBus.execute(new GetPlaylistTracksQuery(id));
 
-    console.log(foundTracks);
-
     return new PlaylistRO(foundPlaylist, foundTracks);
   }
 
@@ -276,8 +274,10 @@ export class PlaylistsController {
   ): Promise<PlaylistTracksRO> {
     const foundTracks = await this._queryBus.execute(
       new GetPlaylistTracksQuery(id, {
-        limit,
-        offset,
+        pagination: {
+          limit,
+          offset,
+        },
       }),
     );
 

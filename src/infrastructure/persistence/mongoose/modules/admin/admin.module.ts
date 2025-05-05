@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { Admin } from './admin.document';
-import { AdminSchema } from './admin.schema';
+import { Admin, AdminSchema } from './admin.schema';
 import { AdminWriteRepositoryAdapter } from './admin-write-repository.adapter';
 import { AdminReadRepositoryAdapter } from './admin-read-repository.adapter';
 import { ADMIN_WRITE_REPOSITORY_DI_TOKEN } from '../../../../../core/domain/components/admin/repository/admin-write-repository.port';

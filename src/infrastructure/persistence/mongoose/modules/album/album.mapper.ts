@@ -1,21 +1,22 @@
 import { Types } from 'mongoose';
 import { ReadMapper, WriteMapper } from '../../base/mapper.interface';
-import { Album as AlbumDocument } from './album.document';
-import { Album, AlbumId } from '../../../../../core/domain/components/album/album.entity';
+import { Album } from './album.schema';
+import {
+  Album as DomainAlbum,
+  AlbumId,
+} from '../../../../../core/domain/components/album/album.entity';
 import { AlbumFactory } from '../../../../../core/domain/components/album/album.factory';
 import { ArtistId } from '../../../../../core/domain/components/artist/artist.entity';
 import ArtistMapper from '../artist/artist.mapper';
-import { AlbumWithArtistsDocument } from './types';
-import { TrackId } from '../../../../../core/domain/components/track/track.entity';
-import { AlbumDTO } from '../../../../../core/app/components/album/ports/repository/dtos/album.dto';
+import { AlbumDocument, AlbumWithArtists, AlbumWithArtistsDocument } from './types';
 import { AlbumWithArtistsDTO } from '../../../../../core/app/components/album/ports/repository/dtos/album-with-artists.dto';
 
 class AlbumMapper
   implements
-    WriteMapper<AlbumDocument, Album>,
-    ReadMapper<AlbumDocument, AlbumDTO, AlbumWithArtistsDocument, AlbumWithArtistsDTO>
+    WriteMapper<Album, DomainAlbum>,
+    ReadMapper<AlbumWithArtistsDocument, AlbumWithArtistsDTO>
 {
-  toDocument(entity: Album): AlbumDocument {
+  toPersistenceEntity(entity: DomainAlbum): Album {
     return {
       _id: new Types.ObjectId(entity.getId().toString()),
       name: entity.getName().value,
@@ -26,7 +27,6 @@ class AlbumMapper
       color: entity.getColor()?.value || null,
       description: entity.getDescription().value,
       releaseAt: entity.getReleaseDate()?.value || null,
-      tracks: entity.getTracks(),
       isActive: entity.getActiveStatus(),
       isPublic: entity.getPublicStatus(),
       createdAt: entity.getCreatedAt(),
@@ -34,7 +34,7 @@ class AlbumMapper
     };
   }
 
-  toEntity(doc: AlbumDocument): Album {
+  toDomainEntity(doc: Album | AlbumDocument): DomainAlbum {
     return AlbumFactory.create({
       id: doc._id.toHexString() as AlbumId,
       name: doc.name,
@@ -45,7 +45,6 @@ class AlbumMapper
       color: doc.color,
       description: doc.description,
       releaseAt: doc.releaseAt,
-      tracks: doc.tracks as TrackId[],
       isActive: doc.isActive,
       isPublic: doc.isPublic,
       createdAt: doc.createdAt,
@@ -53,37 +52,17 @@ class AlbumMapper
     });
   }
 
-  toDTO(doc: AlbumDocument): AlbumDTO {
-    return new AlbumDTO(
-      doc._id.toHexString(),
-      doc.name,
-      doc.artists.map((id) => id.toHexString()),
-      doc.type,
-      doc.genres,
-      doc.cover,
-      doc.color,
-      doc.description,
-      doc.releaseAt,
-      doc.tracks,
-      doc.isActive,
-      doc.isPublic,
-      doc.createdAt,
-      doc.updatedAt,
-    );
-  }
-
-  toPopulatedDTO(doc: AlbumWithArtistsDocument): AlbumWithArtistsDTO {
+  toDTO(doc: AlbumWithArtists | AlbumWithArtistsDocument): AlbumWithArtistsDTO {
     return new AlbumWithArtistsDTO(
       doc._id.toHexString(),
       doc.name,
-      doc.artists.map((artist) => ArtistMapper.toDTO(artist)),
+      doc.artists.map((i) => ArtistMapper.toDTO(i)),
       doc.type,
       doc.genres,
       doc.cover,
       doc.color,
       doc.description,
       doc.releaseAt,
-      doc.tracks,
       doc.isActive,
       doc.isPublic,
       doc.createdAt,

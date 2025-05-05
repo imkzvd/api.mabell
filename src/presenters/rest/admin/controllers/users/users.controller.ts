@@ -1,17 +1,14 @@
 import {
   Body,
   Controller,
-  DefaultValuePipe,
   Delete,
   Get,
   HttpCode,
   HttpStatus,
   NotFoundException,
   Param,
-  ParseIntPipe,
   Patch,
   Post,
-  Query,
 } from '@nestjs/common';
 import {
   ApiBody,
@@ -20,14 +17,12 @@ import {
   ApiOkResponse,
   ApiOperation,
   ApiParam,
-  ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
 import { faker } from '@faker-js/faker';
 import { UpdateUserUsernameDTO } from './dtos/update-user-username.dto';
 import { UpdateUserEmailDTO } from './dtos/update-user-email.dto';
 import { UserRO } from './ros/user.ro';
-import { UsersRO } from './ros/users.ro';
 import { UpdateUserAvatarDTO } from './dtos/update-user-avatar.dto';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { ParseObjectIdPipe } from '../../../common/pipes/parse-object-id.pipe';
@@ -40,9 +35,7 @@ import { UpdateUserAvatarCommand } from '../../../../../core/app/components/user
 import { RefreshUserPasswordCommand } from '../../../../../core/app/components/user/commands/refresh-user-password/refresh-user-password.command';
 import { DeleteUserAvatarCommand } from '../../../../../core/app/components/user/commands/delete-user-avatar/delete-user-avatar.command';
 import { DeleteUserCommand } from '../../../../../core/app/components/user/commands/delete-user/delete-user.command';
-import { GetUsersQuery } from '../../../../../core/app/components/user/queries/get-users/get-users.query';
-import { OffsetLimitPaginationDTO } from '../../../../../core/app/common/dtos/offset-limit-pagination/offset-limit-pagination-payload.dto';
-import { GetUserByIdQuery } from '../../../../../core/app/components/user/queries/get-user-by-id/get-user-by-id.query';
+import { GetUserQuery } from '../../../../../core/app/components/user/queries/get-user/get-user.query';
 import { BadRequestException } from '../../../../../core/shared/exceptions';
 
 @ApiTags('Users')
@@ -58,7 +51,7 @@ export class UsersController {
   @Post('/')
   async create(): Promise<UserRO> {
     const { id } = await this._commandBus.execute(new CreateUserCommand());
-    const createdUser = await this._queryBus.execute(new GetUserByIdQuery(id));
+    const createdUser = await this._queryBus.execute(new GetUserQuery(id));
 
     if (!createdUser) {
       throw new BadRequestException('Some error');
@@ -86,7 +79,7 @@ export class UsersController {
   ): Promise<UserRO> {
     await this._commandBus.execute(new UpdateUserCommand(id, dto));
 
-    const updatedUser = await this._queryBus.execute(new GetUserByIdQuery(id));
+    const updatedUser = await this._queryBus.execute(new GetUserQuery(id));
 
     if (!updatedUser) {
       throw new NotFoundException('User not found');
@@ -114,7 +107,7 @@ export class UsersController {
   ): Promise<UserRO> {
     await this._commandBus.execute(new UpdateUserUsernameCommand(id, username));
 
-    const updatedUser = await this._queryBus.execute(new GetUserByIdQuery(id));
+    const updatedUser = await this._queryBus.execute(new GetUserQuery(id));
 
     if (!updatedUser) {
       throw new NotFoundException('User not found');
@@ -142,7 +135,7 @@ export class UsersController {
   ): Promise<UserRO> {
     await this._commandBus.execute(new UpdateUserEmailCommand(id, email));
 
-    const updatedUser = await this._queryBus.execute(new GetUserByIdQuery(id));
+    const updatedUser = await this._queryBus.execute(new GetUserQuery(id));
 
     if (!updatedUser) {
       throw new NotFoundException('User not found');
@@ -175,7 +168,7 @@ export class UsersController {
       }),
     );
 
-    const updatedUser = await this._queryBus.execute(new GetUserByIdQuery(id));
+    const updatedUser = await this._queryBus.execute(new GetUserQuery(id));
 
     if (!updatedUser) {
       throw new NotFoundException('User not found');
@@ -219,7 +212,7 @@ export class UsersController {
   async deleteAvatar(@Param('id', ParseObjectIdPipe) id: string): Promise<UserRO> {
     await this._commandBus.execute(new DeleteUserAvatarCommand(id));
 
-    const updatedUser = await this._queryBus.execute(new GetUserByIdQuery(id));
+    const updatedUser = await this._queryBus.execute(new GetUserQuery(id));
 
     if (!updatedUser) {
       throw new NotFoundException('User not found');
@@ -248,34 +241,6 @@ export class UsersController {
     return this._commandBus.execute(new DeleteUserCommand(id));
   }
 
-  @ApiOperation({ summary: 'Find users', operationId: 'find' })
-  @ApiQuery({
-    required: false,
-    type: Number,
-    name: 'limit',
-    description: 'Limit',
-    example: 25,
-  })
-  @ApiQuery({
-    required: false,
-    type: Number,
-    name: 'offset',
-    description: 'Offset',
-    example: 10,
-  })
-  @ApiOkResponse({ description: 'Users', type: UsersRO })
-  @Get('/')
-  async find(
-    @Query('limit', new DefaultValuePipe(25), ParseIntPipe) limit: number,
-    @Query('offset', new DefaultValuePipe(0), ParseIntPipe) offset: number,
-  ): Promise<UsersRO> {
-    const result = await this._queryBus.execute(
-      new GetUsersQuery(new OffsetLimitPaginationDTO(limit, offset)),
-    );
-
-    return new UsersRO(result);
-  }
-
   @ApiOperation({
     summary: 'Find user by id',
     operationId: 'findOne',
@@ -289,7 +254,7 @@ export class UsersController {
   @ApiOkResponse({ description: 'User', type: UserRO })
   @Get('/:id')
   async findOne(@Param('id', ParseObjectIdPipe) id: string): Promise<UserRO> {
-    const foundUser = await this._queryBus.execute(new GetUserByIdQuery(id));
+    const foundUser = await this._queryBus.execute(new GetUserQuery(id));
 
     if (!foundUser) {
       throw new NotFoundException(`There is no user with the specified ID`);

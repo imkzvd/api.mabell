@@ -1,22 +1,116 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { BaseWriteRepository } from '../../base/base-write-repository.abstract';
-import { Track as TrackDocument } from './track.document';
+import { Track } from './track.schema';
 import TrackMapper from './track.mapper';
 import { TrackWriteRepository } from '../../../../../core/domain/components/track/repository/track-write-repository.port';
-import { Track, TrackId } from '../../../../../core/domain/components/track/track.entity';
-import { TrackFilter } from '../../../../../core/domain/components/track/repository/track.filter';
+import {
+  Track as DomainTrack,
+  TrackId,
+} from '../../../../../core/domain/components/track/track.entity';
+import { TrackDocument } from './types';
 
 @Injectable()
-export class TrackWriteRepositoryAdapter
-  extends BaseWriteRepository<TrackDocument, Track, TrackId, TrackFilter>
-  implements TrackWriteRepository
-{
+export class TrackWriteRepositoryAdapter implements TrackWriteRepository {
   constructor(
-    @InjectModel(TrackDocument.name)
+    @InjectModel(Track.name)
     private readonly _trackModel: Model<TrackDocument>,
-  ) {
-    super(_trackModel, TrackMapper);
+  ) {}
+
+  async save(entity: DomainTrack): Promise<void> {
+    const mappedDoc = TrackMapper.toPersistenceEntity(entity);
+
+    return this._trackModel.findByIdAndUpdate({ _id: mappedDoc._id }, mappedDoc, {
+      new: true,
+      upsert: true,
+      runValidators: true,
+    });
+  }
+
+  async saveMany(entities: DomainTrack[]): Promise<void> {
+    const mappedDocs = entities.map((e) => TrackMapper.toPersistenceEntity(e));
+
+    await this._trackModel.bulkWrite(
+      mappedDocs.map((doc) => ({
+        updateOne: {
+          filter: { _id: doc._id },
+          update: { $set: doc },
+          upsert: true,
+        },
+      })),
+    );
+  }
+
+  async deleteById(id: string): Promise<TrackId | null> {
+    const result = await this._trackModel.deleteOne({ _id: id }).exec();
+
+    return result.deletedCount ? (id as TrackId) : null;
+  }
+
+  async deleteByArtistId(artistId: string): Promise<{
+    deletedIds: TrackId[];
+    total: number;
+  }> {
+    const foundDocs = await this._trackModel.find({ artists: artistId }, '_id').lean().exec();
+
+    await this._trackModel.deleteMany({ artists: artistId }).exec();
+
+    return {
+      deletedIds: foundDocs.map((doc) => doc._id.toHexString() as TrackId),
+      total: foundDocs.length,
+    };
+  }
+
+  async deleteByFeatArtistId(artistId: string): Promise<void> {
+    await this._trackModel
+      .updateMany(
+        { featArtists: artistId },
+        {
+          $pull: { featArtists: artistId },
+        },
+      )
+      .exec();
+  }
+
+  async findById(id: string): Promise<DomainTrack | null> {
+    const foundDoc = await this._trackModel.findOne({ _id: id }).lean<Track>().exec();
+
+    return foundDoc ? TrackMapper.toDomainEntity(foundDoc) : null;
+  }
+
+  async findByAlbumId(albumId: string): Promise<{
+    items: DomainTrack[];
+    total: number;
+  }> {
+    const foundDocs = await this._trackModel.find({ album: albumId }).lean<Track[]>().exec();
+
+    return {
+      items: foundDocs.map((doc) => TrackMapper.toDomainEntity(doc)),
+      total: foundDocs.length,
+    };
+  }
+
+  async findByFeatArtistId(artistId: string): Promise<{
+    items: DomainTrack[];
+    total: number;
+  }> {
+    const foundDocs = await this._trackModel.find({ featArtists: artistId }).lean<Track[]>().exec();
+
+    return {
+      items: foundDocs.map((doc) => TrackMapper.toDomainEntity(doc)),
+      total: foundDocs.length,
+    };
+  }
+
+  async existsById(id: string): Promise<TrackId | null> {
+    const foundDoc = await this._trackModel.exists({ _id: id });
+
+    return foundDoc ? (foundDoc._id.toHexString() as TrackId) : null;
+  }
+
+  async getNextAlbumTrackIndex(albumId: string): Promise<number> {
+    const docsTotal = await this._trackModel.countDocuments({ album: albumId });
+
+    return docsTotal + 1;
   }
 }

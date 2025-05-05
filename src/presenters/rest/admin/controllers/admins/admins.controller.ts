@@ -31,7 +31,7 @@ import { ParseObjectIdPipe } from '../../../common/pipes/parse-object-id.pipe';
 import { UpdateAdminUsernameDTO } from './dtos/update-admin-username.dto';
 import { AdminRefreshedPasswordRO } from './ros/admin-refreshed-password.ro';
 import { UpdateAdminDTO } from './dtos/update-admin.dto';
-import { CreatedAdminRO } from './ros/created-admin.ro';
+import { CreatedAdminWithPasswordRO } from './ros/created-admin-with-password.ro';
 import { CreateAdminCommand } from '../../../../../core/app/components/admin/commands/create-admin/create-admin.command';
 import { UpdateAdminCommand } from '../../../../../core/app/components/admin/commands/update-admin/update-admin.command';
 import { UpdateAdminUsernameCommand } from '../../../../../core/app/components/admin/commands/update-admin-username/update-admin-username.command';
@@ -39,7 +39,7 @@ import { RefreshAdminPasswordCommand } from '../../../../../core/app/components/
 import { DeleteAdminCommand } from '../../../../../core/app/components/admin/commands/delete-admin/delete-admin.command';
 import { GetAdminsQuery } from '../../../../../core/app/components/admin/queries/get-admins/get-admins.query';
 import { OffsetLimitPaginationDTO } from '../../../../../core/app/common/dtos/offset-limit-pagination/offset-limit-pagination-payload.dto';
-import { GetAdminByIdQuery } from '../../../../../core/app/components/admin/queries/get-admin-by-id/get-admin-by-id.query';
+import { GetAdminQuery } from '../../../../../core/app/components/admin/queries/get-admin/get-admin.query';
 
 @ApiTags('Admins')
 @Controller('/admins')
@@ -50,12 +50,17 @@ export class AdminsController {
   ) {}
 
   @ApiOperation({ summary: 'Create an admin', operationId: 'create' })
-  @ApiCreatedResponse({ type: CreatedAdminRO, description: 'Created admin' })
+  @ApiCreatedResponse({ type: CreatedAdminWithPasswordRO, description: 'Created admin' })
   @Post('/')
-  async create(): Promise<CreatedAdminRO> {
+  async create(): Promise<CreatedAdminWithPasswordRO> {
     const { id, password } = await this._commandBus.execute(new CreateAdminCommand());
+    const createdAdmin = await this._queryBus.execute(new GetAdminQuery(id));
 
-    return new CreatedAdminRO(id, password);
+    if (!createdAdmin) {
+      throw new NotFoundException('Admin does not exist');
+    }
+
+    return new CreatedAdminWithPasswordRO(createdAdmin, password);
   }
 
   @ApiOperation({
@@ -177,7 +182,7 @@ export class AdminsController {
   })
   @Get('/:id')
   async findOne(@Param('id', ParseObjectIdPipe) id: string): Promise<AdminRO> {
-    const foundAdmin = await this._queryBus.execute(new GetAdminByIdQuery(id));
+    const foundAdmin = await this._queryBus.execute(new GetAdminQuery(id));
 
     if (!foundAdmin) {
       throw new NotFoundException(`There is no administrator with the specified ID`);

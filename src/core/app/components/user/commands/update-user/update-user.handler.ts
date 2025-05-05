@@ -21,13 +21,32 @@ export class UpdateUserHandler implements ICommandHandler<UpdateUserCommand> {
       throw new NotFoundException(`There is no admin with the specified ID`);
     }
 
-    foundUser.updateName(payload.name || foundUser.getName().value);
-    foundUser.updateBirthDate(payload.birthDate || foundUser.getBirthDate());
-    foundUser.updateRegion(payload.region || foundUser.getRegion().value);
-    foundUser.updateGenres(payload.genres || foundUser.getGenres().map(({ value }) => value));
-    foundUser.updatePremiumStatus(payload.isPremium ?? foundUser.getPremiumStatus());
-    foundUser.updateBlockedStatus(payload.isBlocked || foundUser.getBlockedStatus());
-    foundUser.updatePublicStatus(payload.isPublic ?? foundUser.getPublicStatus());
+    if (payload.name) {
+      foundUser.updateName(payload.name);
+    }
+
+    if (payload.birthDate) {
+      foundUser.updateBirthDate(payload.birthDate);
+    }
+
+    if (payload.region) {
+      foundUser.updateRegion(payload.region);
+    }
+    if (payload.genres) {
+      foundUser.updateGenres(payload.genres);
+    }
+
+    if (typeof payload.isPremium === 'boolean') {
+      foundUser.updatePremiumStatus(payload.isPremium);
+    }
+
+    if (typeof payload.isBlocked === 'boolean') {
+      foundUser.updateBlockedStatus(payload.isBlocked);
+    }
+
+    if (typeof payload.isPublic === 'boolean') {
+      foundUser.updatePublicStatus(payload.isPublic);
+    }
 
     return this._userWriteRepository.save(foundUser);
   }
