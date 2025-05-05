@@ -37,7 +37,7 @@ export class AlbumWriteRepositoryAdapter implements AlbumWriteRepository {
     deletedIds: AlbumId[];
     total: number;
   }> {
-    const foundDocs = await this._albumModel.find({ _id: artistId }, '_id').lean().exec();
+    const foundDocs = await this._albumModel.find({ artists: artistId }, '_id').lean().exec();
 
     await this._albumModel.deleteMany({ artists: artistId }).exec();
 
