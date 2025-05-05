@@ -11,6 +11,8 @@ import {
   UserWriteRepository,
 } from '../../../../../domain/components/user/repository/user-write-repository.port';
 import { PlaylistFactory } from '../../../../../domain/components/playlist/playlist.factory';
+import { ID_SERVICE_DI_TOKEN, IdService } from '../../../../common/services/id-service.port';
+import { PlaylistId } from '../../../../../domain/components/playlist/playlist.entity';
 
 @CommandHandler(CreatePlaylistCommand)
 export class CreatePlaylistHandler implements ICommandHandler<CreatePlaylistCommand> {
@@ -19,6 +21,8 @@ export class CreatePlaylistHandler implements ICommandHandler<CreatePlaylistComm
     private readonly _playlistWriteRepository: PlaylistWriteRepository,
     @Inject(USER_WRITE_REPOSITORY_DI_TOKEN)
     private readonly _userWriteRepository: UserWriteRepository,
+    @Inject(ID_SERVICE_DI_TOKEN)
+    private readonly _idService: IdService<PlaylistId>,
   ) {}
 
   async execute({ ownerId }: CreatePlaylistCommand) {
@@ -28,11 +32,13 @@ export class CreatePlaylistHandler implements ICommandHandler<CreatePlaylistComm
       throw new NotFoundException('User does not exist');
     }
 
-    const generatedId = this._playlistWriteRepository.generateId();
+    const generatedId = this._idService.generate();
+    const nextPlaylistIndex =
+      await this._playlistWriteRepository.getNextPlaylistIndexByOwnerId(ownerId);
     const createdPlaylist = PlaylistFactory.create({
       id: generatedId,
       owner: existUserId,
-      name: 'Playlist',
+      name: `Playlist #${nextPlaylistIndex}`,
     });
 
     await this._playlistWriteRepository.save(createdPlaylist);

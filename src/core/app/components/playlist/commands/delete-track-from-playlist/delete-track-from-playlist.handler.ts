@@ -29,13 +29,13 @@ export class DeleteTrackFromPlaylistHandler
       throw new NotFoundException('Playlist does not exist');
     }
 
-    const existTrackId = await this._trackWriteRepository.existsById(trackId);
+    const existsTrackId = await this._trackWriteRepository.existsById(trackId);
 
-    if (!existTrackId) {
+    if (!existsTrackId) {
       throw new NotFoundException('Track does not exist');
     }
 
-    foundPlaylist.deleteTrack(existTrackId);
+    foundPlaylist.deleteTrack(existsTrackId);
 
     return this._playlistWriteRepository.save(foundPlaylist);
   }
