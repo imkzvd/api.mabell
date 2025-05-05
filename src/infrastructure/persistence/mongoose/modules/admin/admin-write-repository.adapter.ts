@@ -1,22 +1,51 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Admin as AdminDocument } from './admin.document';
+import { Admin } from './admin.schema';
 import AdminMapper from './admin.mapper';
-import { BaseWriteRepository } from '../../base/base-write-repository.abstract';
-import { Admin, AdminId } from '../../../../../core/domain/components/admin/admin.entity';
-import { AdminFilter } from '../../../../../core/domain/components/admin/repository/admin.filter';
+import {
+  Admin as DomainAdmin,
+  AdminId,
+} from '../../../../../core/domain/components/admin/admin.entity';
 import { AdminWriteRepository } from '../../../../../core/domain/components/admin/repository/admin-write-repository.port';
+import { AdminDocument } from './types';
 
 @Injectable()
-export class AdminWriteRepositoryAdapter
-  extends BaseWriteRepository<AdminDocument, Admin, AdminId, AdminFilter>
-  implements AdminWriteRepository
-{
+export class AdminWriteRepositoryAdapter implements AdminWriteRepository {
   constructor(
-    @InjectModel(AdminDocument.name)
+    @InjectModel(Admin.name)
     private readonly _adminModel: Model<AdminDocument>,
-  ) {
-    super(_adminModel, AdminMapper);
+  ) {}
+
+  async save(entity: DomainAdmin): Promise<void> {
+    const mappedDoc = AdminMapper.toPersistenceEntity(entity);
+
+    return this._adminModel.findByIdAndUpdate({ _id: mappedDoc._id }, mappedDoc, {
+      new: true,
+      upsert: true,
+      runValidators: true,
+    });
+  }
+
+  async deleteById(id: string): Promise<AdminId | null> {
+    const result = await this._adminModel.deleteOne({ _id: id }).exec();
+
+    return result.deletedCount ? (id as AdminId) : null;
+  }
+
+  async findById(id: string): Promise<DomainAdmin | null> {
+    const foundDoc = await this._adminModel.findOne({ _id: id }).lean<Admin>().exec();
+
+    return foundDoc ? AdminMapper.toDomainEntity(foundDoc) : null;
+  }
+
+  async existsByUsername(username: string): Promise<AdminId | null> {
+    const foundDoc = await this._adminModel.exists({ username });
+
+    return foundDoc ? (foundDoc._id.toHexString() as AdminId) : null;
+  }
+
+  async getNextIndex(): Promise<number> {
+    return (await this._adminModel.countDocuments()) + 1;
   }
 }
