@@ -4,7 +4,7 @@ import { faker } from '@faker-js/faker';
 import { UserRO } from './ros/user.ro';
 import { QueryBus } from '@nestjs/cqrs';
 import { ParseObjectIdPipe } from '../../../common/pipes/parse-object-id.pipe';
-import { GetUserByIdQuery } from '../../../../../core/app/components/user/queries/get-user-by-id/get-user-by-id.query';
+import { GetUserQuery } from '../../../../../core/app/components/user/queries/get-user/get-user.query';
 
 @ApiTags('Users')
 @Controller({ path: '/users' })
@@ -21,9 +21,9 @@ export class UsersController {
   @ApiOkResponse({ description: 'User', type: UserRO })
   @Get('/:id')
   async getById(@Param('id', ParseObjectIdPipe) id: string): Promise<UserRO> {
-    const foundUser = await this._queryBus.execute(new GetUserByIdQuery(id));
+    const foundUser = await this._queryBus.execute(new GetUserQuery(id, true));
 
-    if (!foundUser || !foundUser.isPublic || !foundUser.isBlocked) {
+    if (!foundUser || foundUser.isBlocked) {
       throw new NotFoundException(`There is no user with the specified ID`);
     }
 
