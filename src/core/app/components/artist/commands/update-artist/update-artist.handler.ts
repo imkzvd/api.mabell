@@ -1,20 +1,20 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
 import { NotFoundException } from '../../../../../shared/exceptions';
-import { UpdateArtistByIdCommand } from './update-artist-by-id.command';
+import { UpdateArtistCommand } from './update-artist.command';
 import {
   ARTIST_WRITE_REPOSITORY_DI_TOKEN,
   ArtistWriteRepository,
 } from '../../../../../domain/components/artist/repository/artist-write-repository.port';
 
-@CommandHandler(UpdateArtistByIdCommand)
-export class UpdateArtistByIdHandler implements ICommandHandler<UpdateArtistByIdCommand> {
+@CommandHandler(UpdateArtistCommand)
+export class UpdateArtistHandler implements ICommandHandler<UpdateArtistCommand> {
   constructor(
     @Inject(ARTIST_WRITE_REPOSITORY_DI_TOKEN)
     private readonly _artistWriteRepository: ArtistWriteRepository,
   ) {}
 
-  async execute({ id, payload }: UpdateArtistByIdCommand) {
+  async execute({ id, payload }: UpdateArtistCommand) {
     const foundArtist = await this._artistWriteRepository.findById(id);
 
     if (!foundArtist) {
@@ -25,8 +25,8 @@ export class UpdateArtistByIdHandler implements ICommandHandler<UpdateArtistById
       foundArtist.updateName(payload.name);
     }
 
-    if (payload.birtName) {
-      foundArtist.updateBirthName(payload.birtName);
+    if (payload.birthName) {
+      foundArtist.updateBirthName(payload.birthName);
     }
 
     if (payload.birthDate) {

@@ -1,12 +1,12 @@
 import { Command } from '@nestjs/cqrs';
 import { Genre } from '../../../../../domain/common/constants/genres';
 
-export class UpdateArtistByIdCommand extends Command<void> {
+export class UpdateArtistCommand extends Command<void> {
   constructor(
     public readonly id: string,
     public readonly payload: Partial<{
       name: string;
-      birtName: string | null;
+      birthName: string | null;
       birthDate: Date | null;
       genres: Genre[];
       biography: string;

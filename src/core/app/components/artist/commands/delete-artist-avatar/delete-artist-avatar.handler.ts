@@ -1,18 +1,18 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
-import { NotFoundException } from '../../../../../shared/exceptions';
 import {
   ARTIST_FILE_STORAGE_DI_TOKEN,
   ArtistFileStorage,
 } from '../../ports/storage/artist-file-storage.port';
-import { DeleteArtistByIdCommand } from './delete-artist-by-id.command';
+import { NotFoundException } from '../../../../../shared/exceptions';
+import { DeleteArtistAvatarCommand } from './delete-artist-avatar.command';
 import {
   ARTIST_WRITE_REPOSITORY_DI_TOKEN,
   ArtistWriteRepository,
 } from '../../../../../domain/components/artist/repository/artist-write-repository.port';
 
-@CommandHandler(DeleteArtistByIdCommand)
-export class DeleteArtistByIdHandler implements ICommandHandler<DeleteArtistByIdCommand> {
+@CommandHandler(DeleteArtistAvatarCommand)
+export class DeleteArtistAvatarHandler implements ICommandHandler<DeleteArtistAvatarCommand> {
   constructor(
     @Inject(ARTIST_WRITE_REPOSITORY_DI_TOKEN)
     private readonly _artistWriteRepository: ArtistWriteRepository,
@@ -20,13 +20,18 @@ export class DeleteArtistByIdHandler implements ICommandHandler<DeleteArtistById
     private readonly _artistFileStorage: ArtistFileStorage,
   ) {}
 
-  async execute({ id }: DeleteArtistByIdCommand) {
-    const deleteArtistId = await this._artistWriteRepository.deleteById(id);
+  async execute({ id }: DeleteArtistAvatarCommand) {
+    const foundArtist = await this._artistWriteRepository.findById(id);
 
-    if (!deleteArtistId) {
+    if (!foundArtist) {
       throw new NotFoundException('Artist does not exist');
     }
 
-    return this._artistFileStorage.deleteArtistDirectory(deleteArtistId);
+    foundArtist.deleteAvatar();
+    foundArtist.deleteAccentColor();
+
+    await this._artistWriteRepository.save(foundArtist);
+
+    return this._artistFileStorage.deleteArtistAvatar(foundArtist.getId());
   }
 }

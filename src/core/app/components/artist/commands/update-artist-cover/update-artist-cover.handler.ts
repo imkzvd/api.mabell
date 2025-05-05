@@ -5,14 +5,14 @@ import {
   ArtistFileStorage,
 } from '../../ports/storage/artist-file-storage.port';
 import { NotFoundException } from '../../../../../shared/exceptions';
-import { DeleteArtistCoverByIdCommand } from './delete-artist-cover-by-id.command';
 import {
   ARTIST_WRITE_REPOSITORY_DI_TOKEN,
   ArtistWriteRepository,
 } from '../../../../../domain/components/artist/repository/artist-write-repository.port';
+import { UpdateArtistCoverCommand } from './update-artist-cover.command';
 
-@CommandHandler(DeleteArtistCoverByIdCommand)
-export class DeleteArtistCoverByIdHandler implements ICommandHandler<DeleteArtistCoverByIdCommand> {
+@CommandHandler(UpdateArtistCoverCommand)
+export class UpdateArtistCoverHandler implements ICommandHandler<UpdateArtistCoverCommand> {
   constructor(
     @Inject(ARTIST_WRITE_REPOSITORY_DI_TOKEN)
     private readonly _artistWriteRepository: ArtistWriteRepository,
@@ -20,18 +20,24 @@ export class DeleteArtistCoverByIdHandler implements ICommandHandler<DeleteArtis
     private readonly _artistFileStorage: ArtistFileStorage,
   ) {}
 
-  async execute({ id }: DeleteArtistCoverByIdCommand) {
+  async execute({ id, payload }: UpdateArtistCoverCommand) {
     const foundArtist = await this._artistWriteRepository.findById(id);
 
     if (!foundArtist) {
       throw new NotFoundException('Artist does not exist');
     }
 
-    foundArtist.deleteCover();
-    foundArtist.deleteSecondaryColor();
+    const storedFileData = await this._artistFileStorage.saveArtistCover(
+      foundArtist.getId(),
+      payload.fileId,
+    );
 
-    await this._artistWriteRepository.save(foundArtist);
+    foundArtist.updateCover(storedFileData.path);
 
-    return this._artistFileStorage.deleteArtistCover(foundArtist.getId());
+    if (payload.color !== undefined) {
+      foundArtist.updateSecondaryColor(payload.color);
+    }
+
+    return this._artistWriteRepository.save(foundArtist);
   }
 }

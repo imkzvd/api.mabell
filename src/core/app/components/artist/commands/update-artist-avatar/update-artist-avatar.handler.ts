@@ -5,16 +5,14 @@ import {
   ArtistFileStorage,
 } from '../../ports/storage/artist-file-storage.port';
 import { NotFoundException } from '../../../../../shared/exceptions';
-import { UpdateArtistAvatarByIdCommand } from './update-artist-avatar-by-id.command';
+import { UpdateArtistAvatarCommand } from './update-artist-avatar.command';
 import {
   ARTIST_WRITE_REPOSITORY_DI_TOKEN,
   ArtistWriteRepository,
 } from '../../../../../domain/components/artist/repository/artist-write-repository.port';
 
-@CommandHandler(UpdateArtistAvatarByIdCommand)
-export class UpdateArtistAvatarByIdHandler
-  implements ICommandHandler<UpdateArtistAvatarByIdCommand>
-{
+@CommandHandler(UpdateArtistAvatarCommand)
+export class UpdateArtistAvatarHandler implements ICommandHandler<UpdateArtistAvatarCommand> {
   constructor(
     @Inject(ARTIST_WRITE_REPOSITORY_DI_TOKEN)
     private readonly _artistWriteRepository: ArtistWriteRepository,
@@ -22,7 +20,7 @@ export class UpdateArtistAvatarByIdHandler
     private readonly _artistFileStorage: ArtistFileStorage,
   ) {}
 
-  async execute({ id, payload }: UpdateArtistAvatarByIdCommand) {
+  async execute({ id, payload }: UpdateArtistAvatarCommand) {
     const foundArtist = await this._artistWriteRepository.findById(id);
 
     if (!foundArtist) {
@@ -36,8 +34,8 @@ export class UpdateArtistAvatarByIdHandler
 
     foundArtist.updateAvatar(storedFileData.path);
 
-    if (payload.accentColor !== undefined) {
-      foundArtist.updateAccentColor(payload.accentColor);
+    if (payload.color !== undefined) {
+      foundArtist.updateAccentColor(payload.color);
     }
 
     return this._artistWriteRepository.save(foundArtist);
