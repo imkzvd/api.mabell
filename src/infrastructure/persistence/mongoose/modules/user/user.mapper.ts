@@ -1,13 +1,14 @@
 import { Types } from 'mongoose';
-import { User as UserDocument } from './user.document';
+import type { User } from './user.schema';
 import { ReadMapper, WriteMapper } from '../../base/mapper.interface';
-import { User, UserId } from '../../../../../core/domain/components/user/user.entity';
+import { User as DomainUser, UserId } from '../../../../../core/domain/components/user/user.entity';
 import { UserFactory } from '../../../../../core/domain/components/user/user.factory';
 import { HashedPasswordVO } from '../../../../../core/domain/common/vos/hashed-password.vo';
 import { UserDTO } from '../../../../../core/app/components/user/ports/repository/dtos/user.dto';
+import { UserDocument } from './types';
 
-class UserMapper implements WriteMapper<UserDocument, User>, ReadMapper<UserDocument, UserDTO> {
-  toDocument(entity: User): UserDocument {
+class UserMapper implements WriteMapper<User, DomainUser>, ReadMapper<User, UserDTO> {
+  toPersistenceEntity(entity: DomainUser): User {
     return {
       _id: new Types.ObjectId(entity.getId()),
       username: entity.getUsername().value,
@@ -28,7 +29,7 @@ class UserMapper implements WriteMapper<UserDocument, User>, ReadMapper<UserDocu
     };
   }
 
-  toEntity(doc: UserDocument): User {
+  toDomainEntity(doc: User | UserDocument): DomainUser {
     return UserFactory.create({
       id: doc._id.toHexString() as UserId,
       username: doc.username,
@@ -49,7 +50,7 @@ class UserMapper implements WriteMapper<UserDocument, User>, ReadMapper<UserDocu
     });
   }
 
-  toDTO(doc: UserDocument): UserDTO {
+  toDTO(doc: User | UserDocument): UserDTO {
     return new UserDTO(
       doc._id.toHexString(),
       doc.username,
@@ -67,10 +68,6 @@ class UserMapper implements WriteMapper<UserDocument, User>, ReadMapper<UserDocu
       doc.createdAt,
       doc.updatedAt,
     );
-  }
-
-  toPopulatedDTO(doc: UserDocument): UserDTO {
-    return this.toDTO(doc);
   }
 }
 
