@@ -1,14 +1,16 @@
 import { Types } from 'mongoose';
 import { ReadMapper, WriteMapper } from '../../base/mapper.interface';
-import { Artist as ArtistDocument } from './artist.document';
-import { Artist, ArtistId } from '../../../../../core/domain/components/artist/artist.entity';
+import { Artist } from './artist.schema';
+import {
+  Artist as DomainArtist,
+  ArtistId,
+} from '../../../../../core/domain/components/artist/artist.entity';
 import { ArtistFactory } from '../../../../../core/domain/components/artist/artist.factory';
 import { ArtistDTO } from '../../../../../core/app/components/artist/ports/repository/dtos/artist.dto';
+import { ArtistDocument } from './types';
 
-class ArtistMapper
-  implements WriteMapper<ArtistDocument, Artist>, ReadMapper<ArtistDocument, ArtistDTO>
-{
-  toDocument(entity: Artist): ArtistDocument {
+class ArtistMapper implements WriteMapper<Artist, DomainArtist>, ReadMapper<Artist, ArtistDTO> {
+  toPersistenceEntity(entity: DomainArtist): Artist {
     return {
       _id: new Types.ObjectId(entity.getId()),
       name: entity.getName().value,
@@ -27,7 +29,7 @@ class ArtistMapper
     };
   }
 
-  toEntity(doc: ArtistDocument): Artist {
+  toDomainEntity(doc: Artist | ArtistDocument): DomainArtist {
     return ArtistFactory.create({
       id: doc._id.toHexString() as ArtistId,
       name: doc.name,
@@ -46,7 +48,7 @@ class ArtistMapper
     });
   }
 
-  toDTO(doc: ArtistDocument): ArtistDTO {
+  toDTO(doc: Artist | ArtistDocument): ArtistDTO {
     return new ArtistDTO(
       doc._id.toHexString(),
       doc.name,
@@ -63,10 +65,6 @@ class ArtistMapper
       doc.createdAt,
       doc.updatedAt,
     );
-  }
-
-  toPopulatedDTO(doc: ArtistDocument): ArtistDTO {
-    return this.toDTO(doc);
   }
 }
 
