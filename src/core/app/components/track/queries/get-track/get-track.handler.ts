@@ -14,8 +14,10 @@ export class GetTrackHandler implements IQueryHandler<GetTrackQuery> {
     private readonly _trackReadRepository: TrackReadRepository,
   ) {}
 
-  async execute({ id }: GetTrackQuery) {
-    const foundTrack = await this._trackReadRepository.findById(id, true);
+  async execute({ id, isPublic }: GetTrackQuery) {
+    const foundTrack = await this._trackReadRepository.findById(id, {
+      isPublic,
+    });
 
     return foundTrack ? TrackMapper.toDTO(foundTrack) : null;
   }
