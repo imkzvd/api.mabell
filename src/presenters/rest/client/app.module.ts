@@ -5,6 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { MongooseModule } from '../../../infrastructure/persistence/mongoose/mongoose.module';
 import { UsersModule } from './controllers/users/users.module';
+import { ArtistsModule } from './controllers/artists/artists.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { UsersModule } from './controllers/users/users.module';
     CqrsModule.forRoot(),
     MongooseModule,
     UsersModule,
+    ArtistsModule,
   ],
 })
 export class ClientAppModule {}
