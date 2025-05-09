@@ -12,6 +12,7 @@ import { AlbumsModule } from './controllers/albums/albums.module';
 import { TracksModule } from './controllers/tracks/tracks.module';
 import { PlaylistsModule } from './controllers/playlists/playlists.module';
 import { IdModule } from '../../../infrastructure/services/id/id.module';
+import { MetadataModule } from './controllers/metadata/metadata.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { IdModule } from '../../../infrastructure/services/id/id.module';
     CqrsModule.forRoot(),
     MongooseModule,
     IdModule,
+    MetadataModule,
     AdminsModule,
     UploadsModule,
     UsersModule,

@@ -8,6 +8,8 @@ export type AdminRoleLabel = keyof typeof AdminRoles;
 
 export type AdminRole = (typeof AdminRoles)[AdminRoleLabel];
 
-export function getAdminRoleLabelByValue(value: AdminRole): AdminRoleLabel | undefined {
-  return (Object.keys(AdminRoles) as AdminRoleLabel[]).find((key) => AdminRoles[key] === value);
+export function getAdminRoleLabelByValue(value: AdminRole): AdminRoleLabel {
+  return (Object.keys(AdminRoles) as AdminRoleLabel[]).find(
+    (key) => AdminRoles[key] === value,
+  ) as AdminRoleLabel;
 }
