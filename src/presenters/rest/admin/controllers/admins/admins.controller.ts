@@ -74,14 +74,21 @@ export class AdminsController {
     example: faker.database.mongodbObjectId(),
   })
   @ApiBody({ type: UpdateAdminDTO })
-  @ApiNoContentResponse({ description: 'Admin has been updated' })
-  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOkResponse({ description: 'Admin has been updated', type: AdminRO })
   @Patch('/:id')
   async update(
     @Param('id', ParseObjectIdPipe) id: string,
     @Body() dto: UpdateAdminDTO,
-  ): Promise<void> {
-    return this._commandBus.execute(new UpdateAdminCommand(id, dto));
+  ): Promise<AdminRO> {
+    await this._commandBus.execute(new UpdateAdminCommand(id, dto));
+
+    const updatedAdmin = await this._queryBus.execute(new GetAdminQuery(id));
+
+    if (!updatedAdmin) {
+      throw new NotFoundException('Admin does not exist');
+    }
+
+    return new AdminRO(updatedAdmin);
   }
 
   @ApiOperation({
@@ -95,14 +102,21 @@ export class AdminsController {
     example: faker.database.mongodbObjectId(),
   })
   @ApiBody({ type: UpdateAdminUsernameDTO })
-  @ApiNoContentResponse({ description: 'Admin username has been updated' })
-  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOkResponse({ description: 'Admin username has been updated', type: AdminRO })
   @Patch('/:id/username')
   async updateUsername(
     @Param('id', ParseObjectIdPipe) id: string,
     @Body() { username }: UpdateAdminUsernameDTO,
-  ): Promise<void> {
-    return this._commandBus.execute(new UpdateAdminUsernameCommand(id, username));
+  ): Promise<AdminRO> {
+    await this._commandBus.execute(new UpdateAdminUsernameCommand(id, username));
+
+    const updatedAdmin = await this._queryBus.execute(new GetAdminQuery(id));
+
+    if (!updatedAdmin) {
+      throw new NotFoundException('Admin does not exist');
+    }
+
+    return new AdminRO(updatedAdmin);
   }
 
   @ApiOperation({
