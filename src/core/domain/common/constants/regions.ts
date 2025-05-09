@@ -254,8 +254,7 @@ export type RegionLabel = keyof typeof Regions;
 export type Region = (typeof Regions)[RegionLabel];
 
 export function getRegionLabelByValue(value: Region): RegionLabel {
-  return (
-    (Object.keys(Regions) as RegionLabel[]).find((key) => Regions[key] === value) ||
-    'Russian Federation'
-  );
+  return (Object.keys(Regions) as RegionLabel[]).find(
+    (key) => Regions[key] === value,
+  ) as RegionLabel;
 }
