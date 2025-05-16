@@ -18,12 +18,12 @@ export class CreateArtistHandler implements ICommandHandler<CreateArtistCommand>
     private readonly _idService: IdService<ArtistId>,
   ) {}
 
-  async execute({ name }: CreateArtistCommand) {
+  async execute({ payload }: CreateArtistCommand) {
     const generatedId = this._idService.generate();
     const nextArtistIndex = await this._artistWriteRepository.getNextIndex();
     const createdArtist = ArtistFactory.create({
       id: generatedId,
-      name: name || `Artist #${nextArtistIndex}`,
+      name: payload?.name || `Artist #${nextArtistIndex}`,
     });
 
     await this._artistWriteRepository.save(createdArtist);
