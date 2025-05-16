@@ -4,13 +4,15 @@ import { IsHexColor, IsNotEmpty, IsOptional } from 'class-validator';
 
 export class UpdateAlbumCoverDTO {
   @ApiProperty({
-    required: true,
+    required: false,
     type: String,
     description: 'Id of the uploaded file',
     example: faker.image.url(),
+    nullable: true,
   })
   @IsNotEmpty()
-  fileId: string;
+  @IsOptional()
+  fileId?: string;
 
   @ApiProperty({
     required: false,
