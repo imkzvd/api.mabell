@@ -61,6 +61,20 @@ export class TrackWriteRepositoryAdapter implements TrackWriteRepository {
     };
   }
 
+  async deleteByAlbumId(albumId: string): Promise<{
+    deletedIds: TrackId[];
+    total: number;
+  }> {
+    const foundDocs = await this._trackModel.find({ album: albumId }, '_id').lean().exec();
+
+    await this._trackModel.deleteMany({ album: albumId }).exec();
+
+    return {
+      deletedIds: foundDocs.map((doc) => doc._id.toHexString() as TrackId),
+      total: foundDocs.length,
+    };
+  }
+
   async deleteByFeatArtistId(artistId: string): Promise<void> {
     await this._trackModel
       .updateMany(

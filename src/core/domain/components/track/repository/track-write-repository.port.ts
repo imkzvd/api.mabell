@@ -10,6 +10,10 @@ export interface TrackWriteRepository {
     deletedIds: TrackId[];
     total: number;
   }>;
+  deleteByAlbumId(albumId: string): Promise<{
+    deletedIds: TrackId[];
+    total: number;
+  }>;
   findById(id: string): Promise<Track | null>;
   findByAlbumId(albumId: string): Promise<{
     items: Track[];
