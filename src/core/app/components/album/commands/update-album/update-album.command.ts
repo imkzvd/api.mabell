@@ -10,7 +10,7 @@ export class UpdateAlbumCommand extends Command<void> {
       type: AlbumType;
       genres: Genre[];
       description: string;
-      releaseAt: Date;
+      releaseAt: Date | null;
       isActive: boolean;
       isPublic: boolean;
     }>,
