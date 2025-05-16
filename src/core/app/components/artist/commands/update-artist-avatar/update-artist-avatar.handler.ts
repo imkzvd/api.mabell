@@ -27,12 +27,14 @@ export class UpdateArtistAvatarHandler implements ICommandHandler<UpdateArtistAv
       throw new NotFoundException('Artist does not exist');
     }
 
-    const storedFileData = await this._artistFileStorage.saveArtistAvatar(
-      foundArtist.getId(),
-      payload.fileId,
-    );
+    if (payload.fileId) {
+      const storedFileData = await this._artistFileStorage.saveArtistAvatar(
+        foundArtist.getId(),
+        payload.fileId,
+      );
 
-    foundArtist.updateAvatar(storedFileData.path);
+      foundArtist.updateAvatar(storedFileData.path);
+    }
 
     if (payload.color !== undefined) {
       foundArtist.updateAccentColor(payload.color);

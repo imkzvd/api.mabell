@@ -7,6 +7,7 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
+  MaxLength,
   MinLength,
 } from 'class-validator';
 import {
@@ -23,6 +24,7 @@ export class UpdateAlbumDTO {
     example: faker.music.songName(),
   })
   @MinLength(1)
+  @MaxLength(30)
   @IsNotEmpty()
   @IsString()
   @IsOptional()
@@ -63,10 +65,11 @@ export class UpdateAlbumDTO {
     type: Date,
     description: 'Release date',
     example: faker.date.past().toISOString(),
+    nullable: true,
   })
   @IsISO8601()
   @IsOptional()
-  releaseAt?: Date;
+  releaseAt?: Date | null;
 
   @ApiProperty({
     required: false,

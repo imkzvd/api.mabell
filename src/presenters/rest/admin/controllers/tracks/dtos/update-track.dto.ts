@@ -4,7 +4,7 @@ import { IsBoolean, IsOptional, IsString } from 'class-validator';
 
 export class UpdateTrackDTO {
   @ApiProperty({
-    required: true,
+    required: false,
     type: String,
     description: 'Name',
     example: faker.music.songName(),

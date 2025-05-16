@@ -27,13 +27,15 @@ export class UpdateAlbumCoverHandler implements ICommandHandler<UpdateAlbumCover
       throw new NotFoundException('Artist does not exist');
     }
 
-    const storedFileData = await this._artistFileStorage.saveAlbumCover(
-      foundAlbum.getMainArtist(),
-      foundAlbum.getId(),
-      payload.fileId,
-    );
+    if (payload.fileId) {
+      const storedFileData = await this._artistFileStorage.saveAlbumCover(
+        foundAlbum.getMainArtist(),
+        foundAlbum.getId(),
+        payload.fileId,
+      );
 
-    foundAlbum.updateCover(storedFileData.path);
+      foundAlbum.updateCover(storedFileData.path);
+    }
 
     if (payload.color !== undefined) {
       foundAlbum.updateColor(payload.color);

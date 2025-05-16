@@ -13,7 +13,7 @@ export class CreateTrackDTO {
   albumId: string;
 
   @ApiProperty({
-    required: true,
+    required: false,
     type: String,
     description: 'Name',
     example: faker.music.songName(),

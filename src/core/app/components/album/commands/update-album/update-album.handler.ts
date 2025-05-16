@@ -37,7 +37,7 @@ export class UpdateAlbumHandler implements ICommandHandler<UpdateAlbumCommand> {
       foundAlbum.updateDescription(payload.description);
     }
 
-    if (payload.releaseAt) {
+    if (payload.releaseAt !== undefined) {
       foundAlbum.updateReleaseDate(payload.releaseAt);
     }
 

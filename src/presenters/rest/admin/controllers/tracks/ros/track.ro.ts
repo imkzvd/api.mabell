@@ -67,7 +67,7 @@ export class TrackRO {
   })
   file: string | null;
 
-  @ApiProperty({ description: 'Duration', example: 240, nullable: true })
+  @ApiProperty({ type: Number, description: 'Duration', example: 240, nullable: true })
   duration: number | null;
 
   @ApiProperty({ description: 'Explicit', example: true })

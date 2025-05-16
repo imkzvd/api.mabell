@@ -27,12 +27,14 @@ export class UpdateArtistCoverHandler implements ICommandHandler<UpdateArtistCov
       throw new NotFoundException('Artist does not exist');
     }
 
-    const storedFileData = await this._artistFileStorage.saveArtistCover(
-      foundArtist.getId(),
-      payload.fileId,
-    );
+    if (payload.fileId) {
+      const storedFileData = await this._artistFileStorage.saveArtistCover(
+        foundArtist.getId(),
+        payload.fileId,
+      );
 
-    foundArtist.updateCover(storedFileData.path);
+      foundArtist.updateCover(storedFileData.path);
+    }
 
     if (payload.color !== undefined) {
       foundArtist.updateSecondaryColor(payload.color);
