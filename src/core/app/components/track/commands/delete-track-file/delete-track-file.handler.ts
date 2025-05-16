@@ -29,6 +29,7 @@ export class DeleteTrackFileHandler implements ICommandHandler<DeleteTrackFileCo
 
     foundTrack.deleteFile();
     foundTrack.deleteDuration();
+    foundTrack.updateActiveStatus(false);
     await this._trackWriteRepository.save(foundTrack);
 
     return this._artistFileStorage.deleteTrack(
