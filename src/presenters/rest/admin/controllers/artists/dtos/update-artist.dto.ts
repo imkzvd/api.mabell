@@ -4,9 +4,9 @@ import {
   IsBoolean,
   IsEnum,
   IsISO8601,
-  IsNotEmpty,
   IsOptional,
   IsString,
+  MaxLength,
   MinLength,
 } from 'class-validator';
 import { Genre, Genres } from '../../../../../../core/domain/common/constants/genres';
@@ -18,9 +18,9 @@ export class UpdateArtistDTO {
     description: 'Name',
     example: faker.person.firstName(),
   })
-  @MinLength(1)
+  @MinLength(3)
+  @MaxLength(30)
   @IsString()
-  @IsNotEmpty()
   @IsOptional()
   name?: string;
 
@@ -31,9 +31,9 @@ export class UpdateArtistDTO {
     example: faker.person.fullName(),
     nullable: true,
   })
-  @MinLength(1)
+  @MinLength(10)
+  @MaxLength(100)
   @IsString()
-  @IsNotEmpty()
   @IsOptional()
   birthName?: string | null;
 
