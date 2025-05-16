@@ -41,6 +41,8 @@ import { DeleteArtistCoverCommand } from '../../../../../core/app/components/art
 import { DeleteArtistCommand } from '../../../../../core/app/components/artist/commands/delete-artist/delete-artist.command';
 import { TracksRO } from '../tracks/ros/tracks.ro';
 import { GetArtistTracksQuery } from '../../../../../core/app/components/track/queries/get-artist-tracks/get-artist-tracks.query';
+import { GetArtistAlbumsQuery } from '../../../../../core/app/components/album/queries/get-artist-albums/get-artist-albums.query';
+import { AlbumsRO } from '../albums/ros/albums.ro';
 
 @ApiTags('Artists')
 @Controller({ path: '/artists' })
@@ -51,11 +53,11 @@ export class ArtistsController {
   ) {}
 
   @ApiOperation({ summary: 'Create an artist', operationId: 'create' })
-  @ApiBody({ type: CreateArtistDTO })
+  @ApiBody({ type: CreateArtistDTO, required: false })
   @ApiCreatedResponse({ description: 'Artist', type: ArtistRO })
   @Post('/')
-  async create(@Body() { name }: CreateArtistDTO): Promise<ArtistRO> {
-    const { id } = await this._commandBus.execute(new CreateArtistCommand(name));
+  async create(@Body() payload?: CreateArtistDTO): Promise<ArtistRO> {
+    const { id } = await this._commandBus.execute(new CreateArtistCommand(payload));
 
     const createdArtist = await this._queryBus.execute(new GetArtistQuery(id));
 
@@ -245,6 +247,41 @@ export class ArtistsController {
     }
 
     return new ArtistRO(foundArtist);
+  }
+
+  @ApiOperation({ summary: 'Get artist albums', operationId: 'getAlbums' })
+  @ApiParam({
+    type: String,
+    name: 'id',
+    description: 'Id',
+    example: faker.database.mongodbObjectId(),
+  })
+  @ApiQuery({
+    required: false,
+    type: Number,
+    name: 'limit',
+    description: 'Limit',
+    example: 50,
+  })
+  @ApiQuery({
+    required: false,
+    type: Number,
+    name: 'offset',
+    description: 'Offset',
+    example: 0,
+  })
+  @ApiOkResponse({ description: 'Artist albums', type: AlbumsRO })
+  @Get('/:id/albums')
+  async getAlbums(
+    @Param('id', ParseObjectIdPipe) id: string,
+    @Query('limit', new DefaultValuePipe(50), ParseIntPipe) limit: number,
+    @Query('offset', new DefaultValuePipe(0), ParseIntPipe) offset: number,
+  ): Promise<AlbumsRO> {
+    const foundAlbums = await this._queryBus.execute(
+      new GetArtistAlbumsQuery(id, { pagination: { limit, offset } }),
+    );
+
+    return new AlbumsRO(foundAlbums);
   }
 
   @ApiOperation({ summary: 'Get artist tracks', operationId: 'getTracks' })
