@@ -13,6 +13,8 @@ import { TracksModule } from './controllers/tracks/tracks.module';
 import { PlaylistsModule } from './controllers/playlists/playlists.module';
 import { IdModule } from '../../../infrastructure/services/id/id.module';
 import { MetadataModule } from './controllers/metadata/metadata.module';
+import { TypesenseModule } from '../../../infrastructure/services/search/typesense/typesense.module';
+import { InMemoryEventBusModule } from '../../../infrastructure/event-bus/in-memory-event-bus/in-memory-event-bus.module';
 
 @Module({
   imports: [
@@ -27,6 +29,8 @@ import { MetadataModule } from './controllers/metadata/metadata.module';
     ConfigModule.forRoot(),
     CqrsModule.forRoot(),
     MongooseModule,
+    InMemoryEventBusModule,
+    TypesenseModule,
     IdModule,
     MetadataModule,
     AdminsModule,
