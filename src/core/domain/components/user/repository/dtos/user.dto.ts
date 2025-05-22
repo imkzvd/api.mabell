@@ -1,5 +1,5 @@
-import { Region } from '../../../../../../domain/common/constants/regions';
-import { Genre } from '../../../../../../domain/common/constants/genres';
+import { Region } from '../../../../common/constants/regions';
+import { Genre } from '../../../../common/constants/genres';
 
 export class UserDTO {
   constructor(

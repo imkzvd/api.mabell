@@ -1,5 +1,5 @@
 import { UserDTO } from './user.dto';
-import { UserDTO as UserRepositoryDTO } from '../../ports/repository/dtos/user.dto';
+import { UserDTO as UserRepositoryDTO } from '../../../../../domain/components/user/repository/dtos/user.dto';
 
 class UserMapper {
   toDTO(dto: UserRepositoryDTO): UserDTO {
