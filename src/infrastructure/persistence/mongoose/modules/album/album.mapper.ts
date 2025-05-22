@@ -9,7 +9,7 @@ import { AlbumFactory } from '../../../../../core/domain/components/album/album.
 import { ArtistId } from '../../../../../core/domain/components/artist/artist.entity';
 import ArtistMapper from '../artist/artist.mapper';
 import { AlbumDocument, AlbumWithArtists, AlbumWithArtistsDocument } from './types';
-import { AlbumWithArtistsDTO } from '../../../../../core/app/components/album/ports/repository/dtos/album-with-artists.dto';
+import { AlbumWithArtistsDTO } from '../../../../../core/domain/components/album/repository/dtos/album-with-artists.dto';
 
 class AlbumMapper
   implements

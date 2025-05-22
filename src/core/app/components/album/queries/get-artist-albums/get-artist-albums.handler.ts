@@ -1,17 +1,17 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
 import { GetArtistAlbumsQuery } from './get-artist-albums.query';
+import AlbumMapper from '../dtos/album.mapper';
+import { NotFoundException } from '../../../../../shared/exceptions';
 import {
   ALBUM_READ_REPOSITORY_DI_TOKEN,
   AlbumReadRepository,
-} from '../../ports/repository/album-read-repository.port';
-import AlbumMapper from '../dtos/album.mapper';
-import { OffsetLimitPaginationResponseDTO } from '../../../../common/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
+} from '../../../../../domain/components/album/repository/album-read-repository.port';
 import {
   ARTIST_READ_REPOSITORY_DI_TOKEN,
   ArtistReadRepository,
-} from '../../../artist/ports/repository/artist-read-repository.port';
-import { NotFoundException } from '../../../../../shared/exceptions';
+} from '../../../../../domain/components/artist/repository/artist-read-repository.port';
+import { OffsetLimitPaginationResponseDTO } from '../../../../../shared/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
 
 @QueryHandler(GetArtistAlbumsQuery)
 export class GetArtistAlbumsHandler implements IQueryHandler<GetArtistAlbumsQuery> {

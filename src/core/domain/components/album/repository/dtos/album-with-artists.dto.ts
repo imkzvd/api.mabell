@@ -1,11 +1,12 @@
-import { AlbumType } from '../../../../../../domain/components/album/constants/album-types';
-import { Genre } from '../../../../../../domain/common/constants/genres';
+import { ArtistDTO } from '../../../artist/repository/dtos/artist.dto';
+import { AlbumType } from '../../constants/album-types';
+import { Genre } from '../../../../common/constants/genres';
 
-export class AlbumDTO {
+export class AlbumWithArtistsDTO {
   constructor(
     public readonly id: string,
     public readonly name: string,
-    public readonly artists: string[],
+    public readonly artists: ArtistDTO[],
     public readonly type: AlbumType,
     public readonly genres: Genre[],
     public readonly cover: string | null,
