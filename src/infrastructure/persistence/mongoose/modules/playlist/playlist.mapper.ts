@@ -6,10 +6,10 @@ import {
   Playlist as DomainPlaylist,
   PlaylistId,
 } from '../../../../../core/domain/components/playlist/playlist.entity';
-import { PlaylistWithOwnerDTO } from '../../../../../core/app/components/playlist/ports/repository/dtos/playlist-with-owner.dto';
 import { PlaylistFactory } from '../../../../../core/domain/components/playlist/playlist.factory';
 import { UserId } from '../../../../../core/domain/components/user/user.entity';
 import UserMapper from '../user/user.mapper';
+import { PlaylistWithOwnerDTO } from '../../../../../core/domain/components/playlist/repository/dtos/playlist-with-owner.dto';
 
 class PlaylistMapper
   implements

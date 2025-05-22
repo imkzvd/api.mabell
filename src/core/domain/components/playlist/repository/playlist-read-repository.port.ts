@@ -1,6 +1,6 @@
 import { PlaylistWithOwnerDTO } from './dtos/playlist-with-owner.dto';
-import { OffsetLimitPaginationDTO } from '../../../../common/dtos/offset-limit-pagination/offset-limit-pagination-payload.dto';
-import { OffsetLimitPaginationResponseDTO } from '../../../../common/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
+import { OffsetLimitPaginationDTO } from '../../../../shared/dtos/offset-limit-pagination/offset-limit-pagination-payload.dto';
+import { OffsetLimitPaginationResponseDTO } from '../../../../shared/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
 
 export const PLAYLIST_READ_REPOSITORY_DI_TOKEN = Symbol('PLAYLIST_READ_REPOSITORY_DI_TOKEN');
 

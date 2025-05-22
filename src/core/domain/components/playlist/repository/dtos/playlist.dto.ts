@@ -1,11 +1,10 @@
-import { Genre } from '../../../../../../domain/common/constants/genres';
-import { UserDTO } from '../../../../user/ports/repository/dtos/user.dto';
+import { Genre } from '../../../../common/constants/genres';
 
-export class PlaylistWithOwnerDTO {
+export class PlaylistDTO {
   constructor(
     public readonly id: string,
-    public readonly owner: UserDTO,
     public readonly name: string,
+    public readonly owner: string | null,
     public readonly genres: Genre[],
     public readonly cover: string | null,
     public readonly color: string | null,
