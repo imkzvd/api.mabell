@@ -6,8 +6,8 @@ import {
   ArtistId,
 } from '../../../../../core/domain/components/artist/artist.entity';
 import { ArtistFactory } from '../../../../../core/domain/components/artist/artist.factory';
-import { ArtistDTO } from '../../../../../core/app/components/artist/ports/repository/dtos/artist.dto';
 import { ArtistDocument } from './types';
+import { ArtistDTO } from '../../../../../core/domain/components/artist/repository/dtos/artist.dto';
 
 class ArtistMapper implements WriteMapper<Artist, DomainArtist>, ReadMapper<Artist, ArtistDTO> {
   toPersistenceEntity(entity: DomainArtist): Artist {

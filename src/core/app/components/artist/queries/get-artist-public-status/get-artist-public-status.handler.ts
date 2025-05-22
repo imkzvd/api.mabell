@@ -1,11 +1,11 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
+import { GetArtistPublicStatusQuery } from './get-artist-public-status.query';
+import { NotFoundException } from '../../../../../shared/exceptions';
 import {
   ARTIST_READ_REPOSITORY_DI_TOKEN,
   ArtistReadRepository,
-} from '../../ports/repository/artist-read-repository.port';
-import { GetArtistPublicStatusQuery } from './get-artist-public-status.query';
-import { NotFoundException } from '../../../../../shared/exceptions';
+} from '../../../../../domain/components/artist/repository/artist-read-repository.port';
 
 @QueryHandler(GetArtistPublicStatusQuery)
 export class GetArtistPublicStatusHandler implements IQueryHandler<GetArtistPublicStatusQuery> {

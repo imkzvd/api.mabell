@@ -1,4 +1,4 @@
-import { Genre } from '../../../../../../domain/common/constants/genres';
+import { Genre } from '../../../../common/constants/genres';
 
 export class ArtistDTO {
   constructor(

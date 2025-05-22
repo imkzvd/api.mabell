@@ -1,11 +1,11 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
 import { GetArtistQuery } from './get-artist.query';
+import ArtistMapper from '../dtos/artist.mapper';
 import {
   ARTIST_READ_REPOSITORY_DI_TOKEN,
   ArtistReadRepository,
-} from '../../ports/repository/artist-read-repository.port';
-import ArtistMapper from '../dtos/artist.mapper';
+} from '../../../../../domain/components/artist/repository/artist-read-repository.port';
 
 @QueryHandler(GetArtistQuery)
 export class GetArtistHandler implements IQueryHandler<GetArtistQuery> {
