@@ -1,11 +1,11 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
 import { GetAdminQuery } from './get-admin.query';
+import AdminMapper from '../dtos/admin.mapper';
 import {
   ADMIN_READ_REPOSITORY_DI_TOKEN,
   AdminReadRepository,
-} from '../../repository/admin-read-repository.port';
-import AdminMapper from '../dtos/admin.mapper';
+} from '../../../../../domain/components/admin/repository/admin-read-repository.port';
 
 @QueryHandler(GetAdminQuery)
 export class GetAdminHandler implements IQueryHandler<GetAdminQuery> {

@@ -7,8 +7,8 @@ import {
 } from '../../../../../core/domain/components/admin/admin.entity';
 import { AdminFactory } from '../../../../../core/domain/components/admin/admin.factory';
 import { HashedPasswordVO } from '../../../../../core/domain/common/vos/hashed-password.vo';
-import { AdminDTO } from '../../../../../core/app/components/admin/repository/dtos/admin.dto';
 import { AdminDocument } from './types';
+import { AdminDTO } from '../../../../../core/domain/components/admin/repository/dtos/admin.dto';
 
 class AdminMapper implements WriteMapper<Admin, DomainEntity>, ReadMapper<Admin, AdminDTO> {
   toPersistenceEntity(entity: DomainEntity): Admin {
