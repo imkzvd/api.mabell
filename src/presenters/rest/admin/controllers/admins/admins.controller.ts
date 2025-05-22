@@ -38,8 +38,8 @@ import { UpdateAdminUsernameCommand } from '../../../../../core/app/components/a
 import { RefreshAdminPasswordCommand } from '../../../../../core/app/components/admin/commands/refresh-admin-password/refresh-admin-password.command';
 import { DeleteAdminCommand } from '../../../../../core/app/components/admin/commands/delete-admin/delete-admin.command';
 import { GetAdminsQuery } from '../../../../../core/app/components/admin/queries/get-admins/get-admins.query';
-import { OffsetLimitPaginationDTO } from '../../../../../core/app/common/dtos/offset-limit-pagination/offset-limit-pagination-payload.dto';
 import { GetAdminQuery } from '../../../../../core/app/components/admin/queries/get-admin/get-admin.query';
+import { OffsetLimitPaginationDTO } from '../../../../../core/shared/dtos/offset-limit-pagination/offset-limit-pagination-payload.dto';
 
 @ApiTags('Admins')
 @Controller('/admins')

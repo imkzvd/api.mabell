@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { OffsetLimitPaginationRO } from '../../../../common/ros/offset-limit-pagination.ro';
-import { OffsetLimitPaginationResponseDTO } from '../../../../../../core/app/common/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
 import { UserDTO } from '../../../../../../core/app/components/user/queries/dtos/user.dto';
 import { UserRO } from './user.ro';
+import { OffsetLimitPaginationResponseDTO } from '../../../../../../core/shared/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
 
 export class UsersRO extends OffsetLimitPaginationRO<UserRO> {
   @ApiProperty({ type: [UserRO], description: 'Items' })

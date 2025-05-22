@@ -14,9 +14,9 @@ import {
 import { AlbumDTO } from '../../../../../../core/app/components/album/queries/dtos/album.dto';
 import { TrackRO } from '../../tracks/ros/track.ro';
 import { OffsetLimitPaginationRO } from '../../../../common/ros/offset-limit-pagination.ro';
-import { OffsetLimitPaginationResponseDTO } from '../../../../../../core/app/common/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
 import { TrackDTO } from '../../../../../../core/app/components/track/queries/dtos/track.dto';
 import { TracksRO } from '../../tracks/ros/tracks.ro';
+import { OffsetLimitPaginationResponseDTO } from '../../../../../../core/shared/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
 
 export class AlbumRO {
   @ApiProperty({

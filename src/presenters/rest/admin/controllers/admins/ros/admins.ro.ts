@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { OffsetLimitPaginationRO } from '../../../../common/ros/offset-limit-pagination.ro';
 import { AdminRO } from './admin.ro';
-import { OffsetLimitPaginationResponseDTO } from '../../../../../../core/app/common/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
 import { AdminDTO } from '../../../../../../core/app/components/admin/queries/dtos/admin.dto';
+import { OffsetLimitPaginationResponseDTO } from '../../../../../../core/shared/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
 
 export class AdminsRO extends OffsetLimitPaginationRO<AdminRO> {
   @ApiProperty({ type: [AdminRO], description: 'Items' })

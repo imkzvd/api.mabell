@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { OffsetLimitPaginationRO } from '../../../../common/ros/offset-limit-pagination.ro';
-import { OffsetLimitPaginationResponseDTO } from '../../../../../../core/app/common/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
 import { AlbumRO } from './album.ro';
 import { AlbumDTO } from '../../../../../../core/app/components/album/queries/dtos/album.dto';
+import { OffsetLimitPaginationResponseDTO } from '../../../../../../core/shared/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
 
 export class AlbumsRO extends OffsetLimitPaginationRO<AlbumRO> {
   @ApiProperty({ type: () => [AlbumRO], description: 'Items' })
