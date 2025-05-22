@@ -1,5 +1,5 @@
-import { ArtistDTO } from '../../../../artist/ports/repository/dtos/artist.dto';
-import { AlbumWithArtistsDTO } from '../../../../album/ports/repository/dtos/album-with-artists.dto';
+import { AlbumWithArtistsDTO } from '../../../album/repository/dtos/album-with-artists.dto';
+import { ArtistDTO } from '../../../artist/repository/dtos/artist.dto';
 
 export class TrackWithAlbumAndArtistsDTO {
   constructor(

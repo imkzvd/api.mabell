@@ -10,8 +10,8 @@ import { TrackFactory } from '../../../../../core/domain/components/track/track.
 import { AlbumId } from '../../../../../core/domain/components/album/album.entity';
 import { ArtistId } from '../../../../../core/domain/components/artist/artist.entity';
 import { TrackDocument, TrackWithAlbumAndArtists, TrackWithAlbumAndArtistsDocument } from './types';
-import { TrackWithAlbumAndArtistsDTO } from '../../../../../core/app/components/track/ports/repository/dtos/track-with-album-and-artists.dto';
 import AlbumMapper from '../album/album.mapper';
+import { TrackWithAlbumAndArtistsDTO } from '../../../../../core/domain/components/track/repository/dtos/track-with-album-and-artists.dto';
 
 class TrackMapper
   implements

@@ -1,11 +1,11 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
 import { GetTrackQuery } from './get-track.query';
+import TrackMapper from '../dtos/track.mapper';
 import {
   TRACK_READ_REPOSITORY_DI_TOKEN,
   TrackReadRepository,
-} from '../../ports/repository/track-read-repository.port';
-import TrackMapper from '../dtos/track.mapper';
+} from '../../../../../domain/components/track/repository/track-read-repository.port';
 
 @QueryHandler(GetTrackQuery)
 export class GetTrackHandler implements IQueryHandler<GetTrackQuery> {

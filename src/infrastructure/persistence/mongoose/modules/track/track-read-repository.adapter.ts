@@ -4,12 +4,11 @@ import { Model } from 'mongoose';
 import TrackMapper from './track.mapper';
 import { Track } from './track.schema';
 import { TrackWithAlbumAndArtistsDocument, TrackWithAlbumAndArtists } from './types';
-import { TrackReadRepository } from '../../../../../core/app/components/track/ports/repository/track-read-repository.port';
-
-import { TrackWithAlbumAndArtistsDTO } from '../../../../../core/app/components/track/ports/repository/dtos/track-with-album-and-artists.dto';
 import { POPULATE_OPTIONS } from './constants';
-import { OffsetLimitPaginationDTO } from '../../../../../core/app/common/dtos/offset-limit-pagination/offset-limit-pagination-payload.dto';
-import { OffsetLimitPaginationResponseDTO } from '../../../../../core/app/common/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
+import { TrackReadRepository } from '../../../../../core/domain/components/track/repository/track-read-repository.port';
+import { TrackWithAlbumAndArtistsDTO } from '../../../../../core/domain/components/track/repository/dtos/track-with-album-and-artists.dto';
+import { OffsetLimitPaginationDTO } from '../../../../../core/shared/dtos/offset-limit-pagination/offset-limit-pagination-payload.dto';
+import { OffsetLimitPaginationResponseDTO } from '../../../../../core/shared/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
 
 @Injectable()
 export class TrackReadRepositoryAdapter implements TrackReadRepository {
@@ -37,8 +36,6 @@ export class TrackReadRepositoryAdapter implements TrackReadRepository {
     if (!foundDoc) {
       return null;
     }
-
-    console.log(foundDoc);
 
     return TrackMapper.toDTO(foundDoc);
   }

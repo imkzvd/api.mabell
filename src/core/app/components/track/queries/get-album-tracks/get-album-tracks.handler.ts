@@ -1,17 +1,17 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
-import {
-  TRACK_READ_REPOSITORY_DI_TOKEN,
-  TrackReadRepository,
-} from '../../ports/repository/track-read-repository.port';
 import { GetAlbumTracksQuery } from './get-album-tracks.query';
+import { NotFoundException } from '../../../../../shared/exceptions';
+import TrackMapper from '../dtos/track.mapper';
 import {
   ALBUM_READ_REPOSITORY_DI_TOKEN,
   AlbumReadRepository,
-} from '../../../album/ports/repository/album-read-repository.port';
-import { OffsetLimitPaginationResponseDTO } from '../../../../common/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
-import { NotFoundException } from '../../../../../shared/exceptions';
-import TrackMapper from '../dtos/track.mapper';
+} from '../../../../../domain/components/album/repository/album-read-repository.port';
+import {
+  TRACK_READ_REPOSITORY_DI_TOKEN,
+  TrackReadRepository,
+} from '../../../../../domain/components/track/repository/track-read-repository.port';
+import { OffsetLimitPaginationResponseDTO } from '../../../../../shared/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
 
 @QueryHandler(GetAlbumTracksQuery)
 export class GetAlbumTracksHandler implements IQueryHandler<GetAlbumTracksQuery> {

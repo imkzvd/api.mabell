@@ -1,17 +1,17 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
-import {
-  TRACK_READ_REPOSITORY_DI_TOKEN,
-  TrackReadRepository,
-} from '../../ports/repository/track-read-repository.port';
 import { GetPlaylistTracksQuery } from './get-playlist-tracks.query';
-import { OffsetLimitPaginationResponseDTO } from '../../../../common/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
 import { NotFoundException } from '../../../../../shared/exceptions';
 import TrackMapper from '../dtos/track.mapper';
 import {
   PLAYLIST_READ_REPOSITORY_DI_TOKEN,
   PlaylistReadRepository,
 } from '../../../playlist/ports/repository/playlist-read-repository.port';
+import {
+  TRACK_READ_REPOSITORY_DI_TOKEN,
+  TrackReadRepository,
+} from '../../../../../domain/components/track/repository/track-read-repository.port';
+import { OffsetLimitPaginationResponseDTO } from '../../../../../shared/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
 
 @QueryHandler(GetPlaylistTracksQuery)
 export class GetPlaylistTracksHandler implements IQueryHandler<GetPlaylistTracksQuery> {
