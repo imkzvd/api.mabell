@@ -1,38 +1,20 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
 import { UpdateAdminCommand } from './update-admin.command';
-import {
-  ADMIN_WRITE_REPOSITORY_DI_TOKEN,
-  AdminWriteRepository,
-} from '../../../../../domain/components/admin/repository/admin-write-repository.port';
-import { NotFoundException } from '../../../../../shared/exceptions';
+import { AdminService } from '../../admin.service';
+import { EVENT_BUS_DI_TOKEN, EventBus } from '../../../../common/ports/event-bus.port';
+import { AdminUpdatedEvent } from '../../../../common/events/admin-updated.event';
 
 @CommandHandler(UpdateAdminCommand)
 export class UpdateAdminHandler implements ICommandHandler<UpdateAdminCommand> {
   constructor(
-    @Inject(ADMIN_WRITE_REPOSITORY_DI_TOKEN)
-    private readonly _adminWriteRepository: AdminWriteRepository,
+    @Inject(AdminService) private _adminService: AdminService,
+    @Inject(EVENT_BUS_DI_TOKEN) private _eb: EventBus,
   ) {}
 
   async execute({ id, payload }: UpdateAdminCommand) {
-    const foundAdmin = await this._adminWriteRepository.findById(id);
+    const updatedAdmin = await this._adminService.updateAdmin(id, payload);
 
-    if (!foundAdmin) {
-      throw new NotFoundException(`There is no admin with the specified ID`);
-    }
-
-    if (payload.name) {
-      foundAdmin.updateName(payload.name);
-    }
-
-    if (payload.role) {
-      foundAdmin.updateRole(payload.role);
-    }
-
-    if (typeof payload.isBlocked === 'boolean') {
-      foundAdmin.updateBlockedStatus(payload.isBlocked);
-    }
-
-    return this._adminWriteRepository.save(foundAdmin);
+    this._eb.publish(new AdminUpdatedEvent({ admin: updatedAdmin }));
   }
 }

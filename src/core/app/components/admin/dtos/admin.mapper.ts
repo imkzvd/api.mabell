@@ -1,5 +1,5 @@
 import { AdminDTO } from './admin.dto';
-import { AdminDTO as AdminRepositoryDTO } from '../../../../../domain/components/admin/repository/dtos/admin.dto';
+import { AdminDTO as AdminRepositoryDTO } from '../../../../domain/components/admin/repository/dtos/admin.dto';
 
 class AdminMapper {
   toDTO(dto: AdminRepositoryDTO): AdminDTO {

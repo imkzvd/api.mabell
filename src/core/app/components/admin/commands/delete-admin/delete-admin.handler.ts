@@ -1,35 +1,20 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { Inject, NotFoundException } from '@nestjs/common';
+import { Inject } from '@nestjs/common';
 import { DeleteAdminCommand } from './delete-admin.command';
-import {
-  ADMIN_WRITE_REPOSITORY_DI_TOKEN,
-  AdminWriteRepository,
-} from '../../../../../domain/components/admin/repository/admin-write-repository.port';
-import { AdminRoles } from '../../../../../domain/components/admin/constants/admin-roles';
-import { BadRequestException } from '../../../../../shared/exceptions';
+import { AdminService } from '../../admin.service';
+import { EVENT_BUS_DI_TOKEN, EventBus } from '../../../../common/ports/event-bus.port';
+import { AdminDeletedEvent } from '../../../../common/events/admin-deleted.event';
 
 @CommandHandler(DeleteAdminCommand)
 export class DeleteAdminHandler implements ICommandHandler<DeleteAdminCommand> {
   constructor(
-    @Inject(ADMIN_WRITE_REPOSITORY_DI_TOKEN)
-    private readonly _adminWriteRepository: AdminWriteRepository,
+    @Inject(AdminService) private readonly _adminService: AdminService,
+    @Inject(EVENT_BUS_DI_TOKEN) private readonly _eb: EventBus,
   ) {}
 
   async execute({ id }: DeleteAdminCommand) {
-    const foundAdmin = await this._adminWriteRepository.findById(id);
+    const deletedAdminId = await this._adminService.deleteAdmin(id);
 
-    if (!foundAdmin) {
-      throw new NotFoundException('Admin does not exist');
-    }
-
-    if (foundAdmin.getRole().value === AdminRoles.Owner) {
-      throw new BadRequestException("You can't delete the owner.");
-    }
-
-    const deletedAdminId = await this._adminWriteRepository.deleteById(id);
-
-    if (!deletedAdminId) {
-      throw new NotFoundException('Admin does not exist');
-    }
+    this._eb.publish(new AdminDeletedEvent({ adminId: deletedAdminId }));
   }
 }

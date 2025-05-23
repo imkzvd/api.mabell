@@ -1,34 +1,20 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
 import { UpdateAdminUsernameCommand } from './update-admin-username.command';
-import {
-  ADMIN_WRITE_REPOSITORY_DI_TOKEN,
-  AdminWriteRepository,
-} from '../../../../../domain/components/admin/repository/admin-write-repository.port';
-import { DuplicationException, NotFoundException } from '../../../../../shared/exceptions';
+import { AdminService } from '../../admin.service';
+import { EVENT_BUS_DI_TOKEN, EventBus } from '../../../../common/ports/event-bus.port';
+import { AdminUpdatedEvent } from '../../../../common/events/admin-updated.event';
 
 @CommandHandler(UpdateAdminUsernameCommand)
 export class UpdateAdminUsernameHandler implements ICommandHandler<UpdateAdminUsernameCommand> {
   constructor(
-    @Inject(ADMIN_WRITE_REPOSITORY_DI_TOKEN)
-    private readonly _adminWriteRepository: AdminWriteRepository,
+    @Inject(AdminService) private _adminService: AdminService,
+    @Inject(EVENT_BUS_DI_TOKEN) private _eb: EventBus,
   ) {}
 
   async execute({ id, username }: UpdateAdminUsernameCommand) {
-    const foundAdmin = await this._adminWriteRepository.findById(id);
+    const updatedAdmin = await this._adminService.updateAdminUsername(id, username);
 
-    if (!foundAdmin) {
-      throw new NotFoundException(`There is no admin with the specified ID`);
-    }
-
-    const existsAdminId = await this._adminWriteRepository.existsByUsername(username);
-
-    if (existsAdminId) {
-      throw new DuplicationException(`The admin with this username already exist`);
-    }
-
-    foundAdmin.updateUsername(username);
-
-    return this._adminWriteRepository.save(foundAdmin);
+    this._eb.publish(new AdminUpdatedEvent({ admin: updatedAdmin }));
   }
 }

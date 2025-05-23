@@ -1,4 +1,4 @@
-import { AdminRole } from '../../../../../domain/components/admin/constants/admin-roles';
+import { AdminRole } from '../../../../domain/components/admin/constants/admin-roles';
 
 export class AdminDTO {
   constructor(
