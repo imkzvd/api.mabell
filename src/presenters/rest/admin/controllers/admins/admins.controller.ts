@@ -31,7 +31,6 @@ import { ParseObjectIdPipe } from '../../../common/pipes/parse-object-id.pipe';
 import { UpdateAdminUsernameDTO } from './dtos/update-admin-username.dto';
 import { AdminRefreshedPasswordRO } from './ros/admin-refreshed-password.ro';
 import { UpdateAdminDTO } from './dtos/update-admin.dto';
-import { CreatedAdminWithPasswordRO } from './ros/created-admin-with-password.ro';
 import { CreateAdminCommand } from '../../../../../core/app/components/admin/commands/create-admin/create-admin.command';
 import { UpdateAdminCommand } from '../../../../../core/app/components/admin/commands/update-admin/update-admin.command';
 import { UpdateAdminUsernameCommand } from '../../../../../core/app/components/admin/commands/update-admin-username/update-admin-username.command';
@@ -49,23 +48,23 @@ export class AdminsController {
     private readonly _queryBus: QueryBus,
   ) {}
 
-  @ApiOperation({ summary: 'Create an admin', operationId: 'create' })
-  @ApiCreatedResponse({ type: CreatedAdminWithPasswordRO, description: 'Created admin' })
+  @ApiOperation({ summary: 'Create an admin', operationId: 'createAdmin' })
+  @ApiCreatedResponse({ type: AdminRO, description: 'Created admin' })
   @Post('/')
-  async create(): Promise<CreatedAdminWithPasswordRO> {
-    const { id, password } = await this._commandBus.execute(new CreateAdminCommand());
+  async createAdmin(): Promise<AdminRO> {
+    const { id } = await this._commandBus.execute(new CreateAdminCommand());
     const createdAdmin = await this._queryBus.execute(new GetAdminQuery(id));
 
     if (!createdAdmin) {
       throw new NotFoundException('Admin does not exist');
     }
 
-    return new CreatedAdminWithPasswordRO(createdAdmin, password);
+    return new AdminRO(createdAdmin);
   }
 
   @ApiOperation({
     summary: 'Update admin data',
-    operationId: 'update',
+    operationId: 'updateAdmin',
   })
   @ApiParam({
     type: String,
@@ -76,7 +75,7 @@ export class AdminsController {
   @ApiBody({ type: UpdateAdminDTO })
   @ApiOkResponse({ description: 'Admin has been updated', type: AdminRO })
   @Patch('/:id')
-  async update(
+  async updateAdmin(
     @Param('id', ParseObjectIdPipe) id: string,
     @Body() dto: UpdateAdminDTO,
   ): Promise<AdminRO> {
@@ -93,7 +92,7 @@ export class AdminsController {
 
   @ApiOperation({
     summary: 'Update admin username',
-    operationId: 'updateUsername',
+    operationId: 'updateAdminUsername',
   })
   @ApiParam({
     type: String,
@@ -104,7 +103,7 @@ export class AdminsController {
   @ApiBody({ type: UpdateAdminUsernameDTO })
   @ApiOkResponse({ description: 'Admin username has been updated', type: AdminRO })
   @Patch('/:id/username')
-  async updateUsername(
+  async updateAdminUsername(
     @Param('id', ParseObjectIdPipe) id: string,
     @Body() { username }: UpdateAdminUsernameDTO,
   ): Promise<AdminRO> {
@@ -121,7 +120,7 @@ export class AdminsController {
 
   @ApiOperation({
     summary: 'Refresh admin password',
-    operationId: 'refreshPassword',
+    operationId: 'refreshAdminPassword',
   })
   @ApiParam({
     type: String,
@@ -131,7 +130,7 @@ export class AdminsController {
   })
   @ApiOkResponse({ type: AdminRefreshedPasswordRO })
   @Patch('/:id/password')
-  async refreshPassword(
+  async refreshAdminPassword(
     @Param('id', ParseObjectIdPipe) id: string,
   ): Promise<AdminRefreshedPasswordRO> {
     const { password } = await this._commandBus.execute(new RefreshAdminPasswordCommand(id));
@@ -139,7 +138,7 @@ export class AdminsController {
     return new AdminRefreshedPasswordRO(password);
   }
 
-  @ApiOperation({ summary: 'Delete an admin by id', operationId: 'delete' })
+  @ApiOperation({ summary: 'Delete an admin by id', operationId: 'deleteAdmin' })
   @ApiParam({
     type: String,
     name: 'id',
@@ -152,11 +151,11 @@ export class AdminsController {
   })
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete('/:id')
-  async delete(@Param('id', ParseObjectIdPipe) id: string): Promise<void> {
+  async deleteAdmin(@Param('id', ParseObjectIdPipe) id: string): Promise<void> {
     return this._commandBus.execute(new DeleteAdminCommand(id));
   }
 
-  @ApiOperation({ summary: 'Find admins', operationId: 'find' })
+  @ApiOperation({ summary: 'Get admins', operationId: 'getAdmins' })
   @ApiQuery({
     required: false,
     type: Number,
@@ -175,7 +174,7 @@ export class AdminsController {
   })
   @ApiOkResponse({ type: AdminsRO })
   @Get('/')
-  async find(
+  async getAdmins(
     @Query('limit', new DefaultValuePipe(50), ParseIntPipe) limit: number,
     @Query('offset', new DefaultValuePipe(0), ParseIntPipe) offset: number,
   ): Promise<AdminsRO> {
@@ -186,7 +185,7 @@ export class AdminsController {
     return new AdminsRO(resp);
   }
 
-  @ApiOperation({ summary: 'Find an admin by id', operationId: 'findOne' })
+  @ApiOperation({ summary: 'Get admin', operationId: 'getAdmin' })
   @ApiOkResponse({ type: AdminRO })
   @ApiParam({
     type: String,
@@ -195,7 +194,7 @@ export class AdminsController {
     example: faker.database.mongodbObjectId(),
   })
   @Get('/:id')
-  async findOne(@Param('id', ParseObjectIdPipe) id: string): Promise<AdminRO> {
+  async getAdmin(@Param('id', ParseObjectIdPipe) id: string): Promise<AdminRO> {
     const foundAdmin = await this._queryBus.execute(new GetAdminQuery(id));
 
     if (!foundAdmin) {

@@ -8,10 +8,12 @@ import { RefreshAdminPasswordHandler } from '../../../../../core/app/components/
 import { DeleteAdminHandler } from '../../../../../core/app/components/admin/commands/delete-admin/delete-admin.handler';
 import { GetAdminsHandler } from '../../../../../core/app/components/admin/queries/get-admins/get-admins.handler';
 import { GetAdminHandler } from '../../../../../core/app/components/admin/queries/get-admin/get-admin.handler';
+import { AdminService } from '../../../../../core/app/components/admin/admin.service';
 
 @Module({
   imports: [PasswordModule],
   providers: [
+    AdminService,
     CreateAdminHandler,
     UpdateAdminHandler,
     UpdateAdminUsernameHandler,
