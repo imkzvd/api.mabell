@@ -1,5 +1,5 @@
 import { ArtistDTO } from './artist.dto';
-import { ArtistDTO as ArtistRepositoryDTO } from '../../../../../domain/components/artist/repository/dtos/artist.dto';
+import { ArtistDTO as ArtistRepositoryDTO } from '../../../../domain/components/artist/repository/dtos/artist.dto';
 
 class ArtistMapper {
   toDTO(dto: ArtistRepositoryDTO): ArtistDTO {

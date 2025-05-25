@@ -1,37 +1,20 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
-import {
-  ARTIST_FILE_STORAGE_DI_TOKEN,
-  ArtistFileStorage,
-} from '../../ports/storage/artist-file-storage.port';
-import { NotFoundException } from '../../../../../shared/exceptions';
 import { DeleteArtistCoverCommand } from './delete-artist-cover.command';
-import {
-  ARTIST_WRITE_REPOSITORY_DI_TOKEN,
-  ArtistWriteRepository,
-} from '../../../../../domain/components/artist/repository/artist-write-repository.port';
+import { ArtistService } from '../../artist.service';
+import { EVENT_BUS_DI_TOKEN, EventBus } from '../../../../common/ports/event-bus.port';
+import { ArtistUpdatedEvent } from '../../../../common/events/artist-updated.event';
 
 @CommandHandler(DeleteArtistCoverCommand)
 export class DeleteArtistCoverHandler implements ICommandHandler<DeleteArtistCoverCommand> {
   constructor(
-    @Inject(ARTIST_WRITE_REPOSITORY_DI_TOKEN)
-    private readonly _artistWriteRepository: ArtistWriteRepository,
-    @Inject(ARTIST_FILE_STORAGE_DI_TOKEN)
-    private readonly _artistFileStorage: ArtistFileStorage,
+    @Inject(ArtistService) private readonly _artistService: ArtistService,
+    @Inject(EVENT_BUS_DI_TOKEN) private readonly _eb: EventBus,
   ) {}
 
   async execute({ id }: DeleteArtistCoverCommand) {
-    const foundArtist = await this._artistWriteRepository.findById(id);
+    await this._artistService.deleteArtistCover(id);
 
-    if (!foundArtist) {
-      throw new NotFoundException('Artist does not exist');
-    }
-
-    foundArtist.deleteCover();
-    foundArtist.deleteSecondaryColor();
-
-    await this._artistWriteRepository.save(foundArtist);
-
-    return this._artistFileStorage.deleteArtistCover(foundArtist.getId());
+    this._eb.publish(new ArtistUpdatedEvent({ id }));
   }
 }

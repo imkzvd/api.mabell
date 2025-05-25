@@ -1,35 +1,22 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
 import { CreateArtistCommand } from './create-artist.command';
-import {
-  ARTIST_WRITE_REPOSITORY_DI_TOKEN,
-  ArtistWriteRepository,
-} from '../../../../../domain/components/artist/repository/artist-write-repository.port';
-import { ArtistFactory } from '../../../../../domain/components/artist/artist.factory';
-import { ID_SERVICE_DI_TOKEN, IdService } from '../../../../common/services/id-service.port';
-import { ArtistId } from '../../../../../domain/components/artist/artist.entity';
+import { EVENT_BUS_DI_TOKEN, EventBus } from '../../../../common/ports/event-bus.port';
+import { ArtistService } from '../../artist.service';
+import { ArtistCreatedEvent } from '../../../../common/events/artist-created.event';
 
 @CommandHandler(CreateArtistCommand)
 export class CreateArtistHandler implements ICommandHandler<CreateArtistCommand> {
   constructor(
-    @Inject(ARTIST_WRITE_REPOSITORY_DI_TOKEN)
-    private readonly _artistWriteRepository: ArtistWriteRepository,
-    @Inject(ID_SERVICE_DI_TOKEN)
-    private readonly _idService: IdService<ArtistId>,
+    @Inject(ArtistService) private readonly _artistService: ArtistService,
+    @Inject(EVENT_BUS_DI_TOKEN) private readonly _eventsBus: EventBus,
   ) {}
 
-  async execute({ payload }: CreateArtistCommand) {
-    const generatedId = this._idService.generate();
-    const nextArtistIndex = await this._artistWriteRepository.getNextIndex();
-    const createdArtist = ArtistFactory.create({
-      id: generatedId,
-      name: payload?.name || `Artist #${nextArtistIndex}`,
-    });
+  async execute() {
+    const { id } = await this._artistService.createArtist();
 
-    await this._artistWriteRepository.save(createdArtist);
+    this._eventsBus.publish(new ArtistCreatedEvent({ id }));
 
-    return {
-      id: createdArtist.getId(),
-    };
+    return { id };
   }
 }

@@ -1,10 +1,12 @@
 import { Query } from '@nestjs/cqrs';
-import { ArtistDTO } from '../dtos/artist.dto';
+import { ArtistDTO } from '../../dtos/artist.dto';
 
 export class GetArtistQuery extends Query<ArtistDTO | null> {
   constructor(
     public readonly id: string,
-    public readonly isPublic?: boolean,
+    public readonly options?: Partial<{
+      isPublic: boolean;
+    }>,
   ) {
     super();
   }
