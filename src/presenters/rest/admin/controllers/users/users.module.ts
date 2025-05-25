@@ -14,10 +14,12 @@ import { UpdateUserAvatarHandler } from '../../../../../core/app/components/user
 import { DeleteUserAvatarHandler } from '../../../../../core/app/components/user/commands/delete-user-avatar/delete-user-avatar.handler';
 import { UserFileStorageModule } from '../../../../../infrastructure/storage/user-file-storage/user-file-storage.module';
 import { TmpFileStorageModule } from '../../../../../infrastructure/storage/tmp-fs-storage/tmp-file-storage.module';
+import { UserService } from '../../../../../core/app/components/user/user.service';
 
 @Module({
   imports: [PasswordModule, TmpFileStorageModule, UserFileStorageModule],
   providers: [
+    UserService,
     CreateUserHandler,
     RegisterUserHandler,
     UpdateUserHandler,
