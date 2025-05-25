@@ -12,10 +12,12 @@ import { TmpFileStorageModule } from '../../../../../infrastructure/storage/tmp-
 import { ArtistFileStorageModule } from '../../../../../infrastructure/storage/artist-file-storage/artist-file-storage.module';
 import { GetArtistAlbumsHandler } from '../../../../../core/app/components/album/queries/get-artist-albums/get-artist-albums.handler';
 import { GetArtistTracksHandler } from '../../../../../core/app/components/track/queries/get-artist-tracks/get-artist-tracks.handler';
+import { ArtistService } from '../../../../../core/app/components/artist/artist.service';
 
 @Module({
   imports: [TmpFileStorageModule, ArtistFileStorageModule],
   providers: [
+    ArtistService,
     CreateArtistHandler,
     UpdateArtistHandler,
     UpdateArtistAvatarHandler,

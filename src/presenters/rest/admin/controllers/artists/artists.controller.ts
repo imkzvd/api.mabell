@@ -26,7 +26,6 @@ import {
 import { faker } from '@faker-js/faker';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { ArtistRO } from './ros/artist.ro';
-import { CreateArtistDTO } from './dtos/create-artist.dto';
 import { UpdateArtistImageDTO } from './dtos/update-artist-image.dto';
 import { UpdateArtistDTO } from './dtos/update-artist.dto';
 import { CreateArtistCommand } from '../../../../../core/app/components/artist/commands/create-artist/create-artist.command';
@@ -53,11 +52,10 @@ export class ArtistsController {
   ) {}
 
   @ApiOperation({ summary: 'Create an artist', operationId: 'create' })
-  @ApiBody({ type: CreateArtistDTO, required: false })
   @ApiCreatedResponse({ description: 'Artist', type: ArtistRO })
   @Post('/')
-  async create(@Body() payload?: CreateArtistDTO): Promise<ArtistRO> {
-    const { id } = await this._commandBus.execute(new CreateArtistCommand(payload));
+  async create(): Promise<ArtistRO> {
+    const { id } = await this._commandBus.execute(new CreateArtistCommand());
 
     const createdArtist = await this._queryBus.execute(new GetArtistQuery(id));
 
