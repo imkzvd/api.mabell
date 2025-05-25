@@ -2,11 +2,11 @@ import { ApiProperty } from '@nestjs/swagger';
 import { faker } from '@faker-js/faker';
 import * as process from 'process';
 import { LabelValueRO } from '../../../../common/ros/label-value.ro';
-import { ArtistDTO } from '../../../../../../core/app/components/artist/queries/dtos/artist.dto';
 import {
   Genres,
   getGenreLabelByValue,
 } from '../../../../../../core/domain/common/constants/genres';
+import { ArtistDTO } from '../../../../../../core/app/components/artist/dtos/artist.dto';
 
 export class ArtistRO {
   @ApiProperty({

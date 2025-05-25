@@ -34,7 +34,7 @@ export class ArtistsController {
   @ApiOkResponse({ description: 'Artist', type: ArtistRO })
   @Get('/:id')
   async getById(@Param('id', ParseObjectIdPipe) id: string): Promise<ArtistRO> {
-    const foundArtist = await this._queryBus.execute(new GetArtistQuery(id, true));
+    const foundArtist = await this._queryBus.execute(new GetArtistQuery(id, { isPublic: true }));
 
     if (!foundArtist) {
       throw new NotFoundException(`There is no artist with the specified ID`);
