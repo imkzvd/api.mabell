@@ -1,44 +1,22 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
 import { RefreshUserPasswordCommand } from './refresh-user-password.command';
-import {
-  USER_WRITE_REPOSITORY_DI_TOKEN,
-  UserWriteRepository,
-} from '../../../../../domain/components/user/repository/user-write-repository.port';
-import {
-  PASSWORD_SERVICE_DI_TOKEN,
-  PasswordService,
-} from '../../../../common/services/password-service.port';
-import { NotFoundException } from '../../../../../shared/exceptions';
-import { USER_MIN_LENGTH_PASSWORD } from '../../constants';
+import { UserService } from '../../user.service';
+import { EVENT_BUS_DI_TOKEN, EventBus } from '../../../../common/ports/event-bus.port';
+import { UserPasswordRefreshedEvent } from '../../../../common/events/user-password-refreshed.event';
 
 @CommandHandler(RefreshUserPasswordCommand)
 export class RefreshUserPasswordHandler implements ICommandHandler<RefreshUserPasswordCommand> {
   constructor(
-    @Inject(USER_WRITE_REPOSITORY_DI_TOKEN)
-    private readonly _userWriteRepository: UserWriteRepository,
-    @Inject(PASSWORD_SERVICE_DI_TOKEN)
-    private readonly _passwordService: PasswordService,
+    @Inject(UserService) private readonly _userService: UserService,
+    @Inject(EVENT_BUS_DI_TOKEN) private readonly _eb: EventBus,
   ) {}
 
   async execute({ id }: RefreshUserPasswordCommand) {
-    const foundUser = await this._userWriteRepository.findById(id);
+    const { password } = await this._userService.refreshUserPassword(id);
 
-    if (!foundUser) {
-      throw new NotFoundException(`There is no user with the specified ID`);
-    }
+    this._eb.publish(new UserPasswordRefreshedEvent({ id, password }));
 
-    const { password, hashPassword } = await this._passwordService.generate({
-      length: USER_MIN_LENGTH_PASSWORD,
-      hash: true,
-    });
-
-    foundUser.updatePassword(hashPassword);
-
-    await this._userWriteRepository.save(foundUser);
-
-    return {
-      password,
-    };
+    return { password };
   }
 }

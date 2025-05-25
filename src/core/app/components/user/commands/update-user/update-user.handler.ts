@@ -1,53 +1,20 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
 import { UpdateUserCommand } from './update-user.command';
-import {
-  USER_WRITE_REPOSITORY_DI_TOKEN,
-  UserWriteRepository,
-} from '../../../../../domain/components/user/repository/user-write-repository.port';
-import { NotFoundException } from '../../../../../shared/exceptions';
+import { UserService } from '../../user.service';
+import { EVENT_BUS_DI_TOKEN, EventBus } from '../../../../common/ports/event-bus.port';
+import { UserUpdatedEvent } from '../../../../common/events/user-updated.event';
 
 @CommandHandler(UpdateUserCommand)
 export class UpdateUserHandler implements ICommandHandler<UpdateUserCommand> {
   constructor(
-    @Inject(USER_WRITE_REPOSITORY_DI_TOKEN)
-    private readonly _userWriteRepository: UserWriteRepository,
+    @Inject(UserService) private readonly _userService: UserService,
+    @Inject(EVENT_BUS_DI_TOKEN) private readonly _eb: EventBus,
   ) {}
 
   async execute({ id, payload }: UpdateUserCommand) {
-    const foundUser = await this._userWriteRepository.findById(id);
+    await this._userService.updateUser(id, payload);
 
-    if (!foundUser) {
-      throw new NotFoundException(`There is no admin with the specified ID`);
-    }
-
-    if (payload.name) {
-      foundUser.updateName(payload.name);
-    }
-
-    if (payload.birthDate) {
-      foundUser.updateBirthDate(payload.birthDate);
-    }
-
-    if (payload.region) {
-      foundUser.updateRegion(payload.region);
-    }
-    if (payload.genres) {
-      foundUser.updateGenres(payload.genres);
-    }
-
-    if (typeof payload.isPremium === 'boolean') {
-      foundUser.updatePremiumStatus(payload.isPremium);
-    }
-
-    if (typeof payload.isBlocked === 'boolean') {
-      foundUser.updateBlockedStatus(payload.isBlocked);
-    }
-
-    if (typeof payload.isPublic === 'boolean') {
-      foundUser.updatePublicStatus(payload.isPublic);
-    }
-
-    return this._userWriteRepository.save(foundUser);
+    this._eb.publish(new UserUpdatedEvent({ id }));
   }
 }

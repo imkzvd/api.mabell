@@ -1,49 +1,22 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
 import { CreateUserCommand } from './create-user.command';
-import {
-  USER_WRITE_REPOSITORY_DI_TOKEN,
-  UserWriteRepository,
-} from '../../../../../domain/components/user/repository/user-write-repository.port';
-import {
-  PASSWORD_SERVICE_DI_TOKEN,
-  PasswordService,
-} from '../../../../common/services/password-service.port';
-import { UserFactory } from '../../../../../domain/components/user/user.factory';
-import { ID_SERVICE_DI_TOKEN, IdService } from '../../../../common/services/id-service.port';
-import { UserId } from '../../../../../domain/components/user/user.entity';
-import { USER_MIN_LENGTH_PASSWORD } from '../../constants';
+import { UserService } from '../../user.service';
+import { EVENT_BUS_DI_TOKEN, EventBus } from '../../../../common/ports/event-bus.port';
+import { UserCreatedEvent } from '../../../../common/events/user-created.event';
 
 @CommandHandler(CreateUserCommand)
 export class CreateUserHandler implements ICommandHandler<CreateUserCommand> {
   constructor(
-    @Inject(USER_WRITE_REPOSITORY_DI_TOKEN)
-    private readonly _userWriteRepository: UserWriteRepository,
-    @Inject(ID_SERVICE_DI_TOKEN)
-    private readonly _idService: IdService<UserId>,
-    @Inject(PASSWORD_SERVICE_DI_TOKEN)
-    private readonly _passwordService: PasswordService,
+    @Inject(UserService) private readonly _userService: UserService,
+    @Inject(EVENT_BUS_DI_TOKEN) private readonly _eb: EventBus,
   ) {}
 
-  async execute({ username, name }: CreateUserCommand) {
-    const generatedId = this._idService.generate();
-    const { password, hashPassword } = await this._passwordService.generate({
-      length: USER_MIN_LENGTH_PASSWORD,
-      hash: true,
-    });
-    const nextUserIndex = await this._userWriteRepository.getNextIndex();
-    const createdAdmin = UserFactory.create({
-      id: generatedId,
-      username: username || `user${nextUserIndex}`,
-      password: hashPassword,
-      name: name || `User #${nextUserIndex}`,
-    });
+  async execute() {
+    const { id } = await this._userService.createUser();
 
-    await this._userWriteRepository.save(createdAdmin);
+    this._eb.publish(new UserCreatedEvent({ id }));
 
-    return {
-      id: createdAdmin.getId(),
-      password,
-    };
+    return { id };
   }
 }
