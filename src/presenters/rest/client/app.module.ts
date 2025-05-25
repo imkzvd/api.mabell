@@ -6,6 +6,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { MongooseModule } from '../../../infrastructure/persistence/mongoose/mongoose.module';
 import { UsersModule } from './controllers/users/users.module';
 import { ArtistsModule } from './controllers/artists/artists.module';
+import { IdModule } from '../../../infrastructure/services/id/id.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { ArtistsModule } from './controllers/artists/artists.module';
     }),
     ConfigModule.forRoot(),
     CqrsModule.forRoot(),
+    IdModule,
     MongooseModule,
     UsersModule,
     ArtistsModule,

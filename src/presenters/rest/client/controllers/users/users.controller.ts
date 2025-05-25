@@ -21,7 +21,7 @@ export class UsersController {
   @ApiOkResponse({ description: 'User', type: UserRO })
   @Get('/:id')
   async getById(@Param('id', ParseObjectIdPipe) id: string): Promise<UserRO> {
-    const foundUser = await this._queryBus.execute(new GetUserQuery(id, true));
+    const foundUser = await this._queryBus.execute(new GetUserQuery(id, { isPublic: true }));
 
     if (!foundUser || foundUser.isBlocked) {
       throw new NotFoundException(`There is no user with the specified ID`);
