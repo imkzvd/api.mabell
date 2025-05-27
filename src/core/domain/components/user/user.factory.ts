@@ -1,4 +1,4 @@
-import { User, UserId } from './user.entity';
+import { User } from './user.entity';
 import { Regions } from '../../common/constants/regions';
 import { HashedPasswordVO } from '../../common/vos/hashed-password.vo';
 import { UsernameVO } from './vos/username.vo';
@@ -6,6 +6,7 @@ import { NameVO } from './vos/name.vo';
 import { EmailVO } from '../../common/vos/email.vo';
 import { RegionVO } from '../../common/vos/region.vo';
 import { GenreVO } from '../../common/vos/genre.vo';
+import { UserId } from './types';
 
 export class UserFactory {
   static create(props: {

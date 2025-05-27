@@ -1,8 +1,9 @@
 import { AdminRole } from '../../constants/admin-roles';
+import { AdminId } from '../../types';
 
 export class AdminDTO {
   constructor(
-    public readonly id: string,
+    public readonly id: AdminId,
     public readonly username: string,
     public readonly name: string,
     public readonly isBlocked: boolean,

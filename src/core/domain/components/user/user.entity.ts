@@ -4,9 +4,7 @@ import { RegionVO } from '../../common/vos/region.vo';
 import { GenreVO } from '../../common/vos/genre.vo';
 import { EmailVO } from '../../common/vos/email.vo';
 import { HashedPasswordVO } from '../../common/vos/hashed-password.vo';
-import { EntityId } from '../../common/types/entity-id.type';
-
-export type UserId = EntityId<'User'>;
+import { UserId } from './types';
 
 export class User {
   constructor(

@@ -1,4 +1,5 @@
-import { Playlist, PlaylistId } from '../playlist.entity';
+import { Playlist } from '../playlist.entity';
+import { PlaylistId } from '../types';
 
 export const PLAYLIST_WRITE_REPOSITORY_DI_TOKEN = Symbol('PLAYLIST_WRITE_REPOSITORY_DI_TOKEN');
 

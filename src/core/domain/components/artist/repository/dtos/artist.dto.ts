@@ -1,8 +1,9 @@
 import { Genre } from '../../../../common/constants/genres';
+import { ArtistId } from '../../types';
 
 export class ArtistDTO {
   constructor(
-    public readonly id: string,
+    public readonly id: ArtistId,
     public readonly name: string,
     public readonly birthName: string | null,
     public readonly birthDate: Date | null,

@@ -1,13 +1,11 @@
-import { EntityId } from '../../common/types/entity-id.type';
-import { ArtistId } from '../artist/artist.entity';
 import { GenreVO } from '../../common/vos/genre.vo';
 import { HexColorVO } from '../../common/vos/hex-color.vo';
 import { AlbumTypeVO } from './vos/album-type.vo';
 import { NameVO } from '../artist/vos/name.vo';
 import { ReleaseDateVO } from './vos/release-date.vo';
 import { DescriptionVO } from './vos/description.vo';
-
-export type AlbumId = EntityId<'Album'>;
+import { AlbumId } from './types';
+import { ArtistId } from '../artist/types';
 
 export class Album {
   constructor(

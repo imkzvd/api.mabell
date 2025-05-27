@@ -1,9 +1,10 @@
 import { Region } from '../../../../common/constants/regions';
 import { Genre } from '../../../../common/constants/genres';
+import { UserId } from '../../types';
 
 export class UserDTO {
   constructor(
-    public readonly id: string,
+    public readonly id: UserId,
     public readonly username: string,
     public readonly name: string,
     public readonly email: string | null,

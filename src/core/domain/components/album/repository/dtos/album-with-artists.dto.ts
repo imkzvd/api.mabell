@@ -1,10 +1,11 @@
 import { ArtistDTO } from '../../../artist/repository/dtos/artist.dto';
 import { AlbumType } from '../../constants/album-types';
 import { Genre } from '../../../../common/constants/genres';
+import { AlbumId } from '../../types';
 
 export class AlbumWithArtistsDTO {
   constructor(
-    public readonly id: string,
+    public readonly id: AlbumId,
     public readonly name: string,
     public readonly artists: ArtistDTO[],
     public readonly type: AlbumType,

@@ -1,12 +1,10 @@
-import { EntityId } from '../../common/types/entity-id.type';
 import { GenreVO } from '../../common/vos/genre.vo';
 import { NameVO } from './vos/name.vo';
 import { BirthNameVO } from './vos/birth-name.vo';
 import { BiographyVO } from './vos/biography.vo';
 import { BirthDateVO } from './vos/birth-date.vo';
 import { HexColorVO } from '../../common/vos/hex-color.vo';
-
-export type ArtistId = EntityId<'Artist'>;
+import { ArtistId } from './types';
 
 export class Artist {
   constructor(

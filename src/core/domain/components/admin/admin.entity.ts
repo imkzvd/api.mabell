@@ -1,10 +1,8 @@
-import { EntityId } from '../../common/types/entity-id.type';
 import { AdminRoleVO } from './vos/admin-role.vo';
 import { UsernameVO } from './vos/username.vo';
 import { NameVO } from './vos/name.vo';
 import { HashedPasswordVO } from '../../common/vos/hashed-password.vo';
-
-export type AdminId = EntityId<'Admin'>;
+import { AdminId } from './types';
 
 export class Admin {
   constructor(

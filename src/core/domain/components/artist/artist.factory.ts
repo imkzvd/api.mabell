@@ -1,10 +1,11 @@
 import { NameVO } from './vos/name.vo';
 import { GenreVO } from '../../common/vos/genre.vo';
-import { Artist, ArtistId } from './artist.entity';
+import { Artist } from './artist.entity';
 import { BirthNameVO } from './vos/birth-name.vo';
 import { BiographyVO } from './vos/biography.vo';
 import { BirthDateVO } from './vos/birth-date.vo';
 import { HexColorVO } from '../../common/vos/hex-color.vo';
+import { ArtistId } from './types';
 
 export class ArtistFactory {
   static create(props: {

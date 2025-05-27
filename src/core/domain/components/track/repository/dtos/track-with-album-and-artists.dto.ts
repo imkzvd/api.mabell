@@ -1,9 +1,10 @@
 import { AlbumWithArtistsDTO } from '../../../album/repository/dtos/album-with-artists.dto';
 import { ArtistDTO } from '../../../artist/repository/dtos/artist.dto';
+import { TrackId } from '../../types';
 
 export class TrackWithAlbumAndArtistsDTO {
   constructor(
-    public readonly id: string,
+    public readonly id: TrackId,
     public readonly name: string,
     public readonly album: AlbumWithArtistsDTO,
     public readonly trackNumber: number,
