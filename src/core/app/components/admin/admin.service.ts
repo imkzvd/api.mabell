@@ -5,7 +5,6 @@ import {
 } from '../../../domain/components/admin/repository/admin-write-repository.port';
 import { AdminFactory } from '../../../domain/components/admin/admin.factory';
 import { ID_SERVICE_DI_TOKEN, IdService } from '../../common/ports/id-service.port';
-import { AdminId } from '../../../domain/components/admin/admin.entity';
 import { ADMIN_PASSWORD_LENGTH } from './constants';
 import {
   PASSWORD_SERVICE_DI_TOKEN,
@@ -22,6 +21,7 @@ import { OffsetLimitPaginationResponseDTO } from '../../../shared/dtos/offset-li
 import { OffsetLimitPaginationDTO } from '../../../shared/dtos/offset-limit-pagination/offset-limit-pagination-payload.dto';
 import { AdminDTO } from './dtos/admin.dto';
 import { UpdateAdminPayload } from './types';
+import { AdminId } from '../../../domain/components/admin/types';
 
 export class AdminService {
   constructor(
@@ -35,7 +35,7 @@ export class AdminService {
     private readonly _passwordService: PasswordService,
   ) {}
 
-  async createAdmin(): Promise<AdminDTO> {
+  async createAdmin(): Promise<AdminId> {
     const generatedId = this._idService.generate();
     const { hashPassword } = await this._passwordService.generate({
       length: ADMIN_PASSWORD_LENGTH,
@@ -43,19 +43,19 @@ export class AdminService {
     });
 
     const nextAdminIndex = await this._wr.getNextIndex();
-    const createdAdminEntity = AdminFactory.create({
+    const createdAdmin = AdminFactory.create({
       id: generatedId,
       username: `guest${nextAdminIndex}`,
       password: hashPassword,
       name: `Guest #${nextAdminIndex}`,
     });
 
-    await this._wr.save(createdAdminEntity);
+    await this._wr.save(createdAdmin);
 
-    return this.getAdmin(createdAdminEntity.getId()) as Promise<AdminDTO>;
+    return createdAdmin.getId();
   }
 
-  async updateAdmin(id: string, payload: UpdateAdminPayload): Promise<AdminDTO> {
+  async updateAdmin(id: string, payload: UpdateAdminPayload): Promise<AdminId> {
     const foundAdmin = await this._wr.findById(id);
 
     if (!foundAdmin) {
@@ -76,16 +76,10 @@ export class AdminService {
 
     await this._wr.save(foundAdmin);
 
-    const updatedAdmin = await this.getAdmin(id);
-
-    if (!updatedAdmin) {
-      throw new NotFoundException('Admin does not exist');
-    }
-
-    return updatedAdmin;
+    return foundAdmin.getId();
   }
 
-  async updateAdminUsername(id: string, username: string): Promise<AdminDTO> {
+  async updateAdminUsername(id: string, username: string): Promise<AdminId> {
     const foundAdmin = await this._wr.findById(id);
 
     if (!foundAdmin) {
@@ -102,16 +96,10 @@ export class AdminService {
 
     await this._wr.save(foundAdmin);
 
-    const updatedAdmin = await this.getAdmin(id);
-
-    if (!updatedAdmin) {
-      throw new NotFoundException('Admin does not exist');
-    }
-
-    return updatedAdmin;
+    return foundAdmin.getId();
   }
 
-  async refreshAdminPassword(id: string): Promise<{ password: string }> {
+  async refreshAdminPassword(id: string): Promise<{ id: AdminId; password: string }> {
     const foundAdmin = await this._wr.findById(id);
 
     if (!foundAdmin) {
@@ -126,12 +114,10 @@ export class AdminService {
 
     await this._wr.save(foundAdmin);
 
-    return {
-      password,
-    };
+    return { id: foundAdmin.getId(), password };
   }
 
-  async deleteAdmin(id: string): Promise<string> {
+  async deleteAdmin(id: string): Promise<AdminId> {
     const foundAdmin = await this._wr.findById(id);
 
     if (!foundAdmin) {

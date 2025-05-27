@@ -13,8 +13,10 @@ export class UpdateAdminHandler implements ICommandHandler<UpdateAdminCommand> {
   ) {}
 
   async execute({ id, payload }: UpdateAdminCommand) {
-    const updatedAdmin = await this._adminService.updateAdmin(id, payload);
+    const updatedAdminId = await this._adminService.updateAdmin(id, payload);
 
-    this._eb.publish(new AdminUpdatedEvent({ admin: updatedAdmin }));
+    this._eb.publish(new AdminUpdatedEvent({ id: updatedAdminId }));
+
+    return updatedAdminId;
   }
 }

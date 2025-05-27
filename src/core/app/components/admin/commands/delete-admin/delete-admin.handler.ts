@@ -15,6 +15,8 @@ export class DeleteAdminHandler implements ICommandHandler<DeleteAdminCommand> {
   async execute({ id }: DeleteAdminCommand) {
     const deletedAdminId = await this._adminService.deleteAdmin(id);
 
-    this._eb.publish(new AdminDeletedEvent({ adminId: deletedAdminId }));
+    this._eb.publish(new AdminDeletedEvent({ id: deletedAdminId }));
+
+    return deletedAdminId;
   }
 }

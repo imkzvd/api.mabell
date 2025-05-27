@@ -13,10 +13,10 @@ export class CreateAdminHandler implements ICommandHandler<CreateAdminCommand> {
   ) {}
 
   async execute() {
-    const createdAdmin = await this._adminService.createAdmin();
+    const createdAdminId = await this._adminService.createAdmin();
 
-    this._eb.publish(new AdminCreatedEvent({ admin: createdAdmin }));
+    this._eb.publish(new AdminCreatedEvent({ id: createdAdminId }));
 
-    return { id: createdAdmin.id };
+    return createdAdminId;
   }
 }

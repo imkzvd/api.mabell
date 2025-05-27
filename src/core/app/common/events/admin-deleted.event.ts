@@ -1,7 +1,8 @@
 import { Event } from '../ports/event-bus.port';
+import { AdminId } from '../../../domain/components/admin/types';
 
 export type AdminDeletedPayload = {
-  adminId: string;
+  id: AdminId;
 };
 
 export class AdminDeletedEvent implements Event<AdminDeletedPayload> {

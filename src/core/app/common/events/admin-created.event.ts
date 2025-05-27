@@ -1,8 +1,8 @@
 import { Event } from '../ports/event-bus.port';
-import { AdminDTO } from '../../../domain/components/admin/repository/dtos/admin.dto';
+import { AdminId } from '../../../domain/components/admin/types';
 
 export type AdminCreatedPayload = {
-  admin: AdminDTO;
+  id: AdminId;
 };
 
 export class AdminCreatedEvent implements Event<AdminCreatedPayload> {

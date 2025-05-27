@@ -3,7 +3,7 @@ import { Inject } from '@nestjs/common';
 import { RefreshAdminPasswordCommand } from './refresh-admin-password.command';
 import { AdminService } from '../../admin.service';
 import { EVENT_BUS_DI_TOKEN, EventBus } from '../../../../common/ports/event-bus.port';
-import { AdminRefreshedPasswordEvent } from '../../../../common/events/admin-refreshed-password.event';
+import { AdminPasswordRefreshedEvent } from '../../../../common/events/admin-password-refreshed.event';
 
 @CommandHandler(RefreshAdminPasswordCommand)
 export class RefreshAdminPasswordHandler implements ICommandHandler<RefreshAdminPasswordCommand> {
@@ -13,10 +13,10 @@ export class RefreshAdminPasswordHandler implements ICommandHandler<RefreshAdmin
   ) {}
 
   async execute({ id }: RefreshAdminPasswordCommand) {
-    const { password } = await this._adminService.refreshAdminPassword(id);
+    const deletionResult = await this._adminService.refreshAdminPassword(id);
 
-    this._eb.publish(new AdminRefreshedPasswordEvent({ adminId: id, password }));
+    this._eb.publish(new AdminPasswordRefreshedEvent(deletionResult));
 
-    return { password };
+    return deletionResult;
   }
 }
