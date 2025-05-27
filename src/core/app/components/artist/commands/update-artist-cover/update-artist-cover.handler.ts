@@ -13,8 +13,10 @@ export class UpdateArtistCoverHandler implements ICommandHandler<UpdateArtistCov
   ) {}
 
   async execute({ id, payload }: UpdateArtistCoverCommand) {
-    await this._artistService.updateArtistCover(id, payload);
+    const updatedArtistId = await this._artistService.updateArtistCover(id, payload);
 
-    this._eb.publish(new ArtistUpdatedEvent({ id }));
+    this._eb.publish(new ArtistUpdatedEvent({ id: updatedArtistId }));
+
+    return updatedArtistId;
   }
 }

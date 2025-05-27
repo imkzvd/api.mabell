@@ -5,7 +5,6 @@ import {
 } from '../../../domain/components/artist/repository/artist-write-repository.port';
 import { ID_SERVICE_DI_TOKEN, IdService } from '../../common/ports/id-service.port';
 import { ArtistFactory } from '../../../domain/components/artist/artist.factory';
-import { ArtistId } from '../../../domain/components/artist/artist.entity';
 import { UpdateArtistAvatarPayload, UpdateArtistCoverPayload, UpdateArtistPayload } from './types';
 import { NotFoundException } from '../../../shared/exceptions';
 import {
@@ -18,6 +17,7 @@ import {
   ArtistReadRepository,
 } from '../../../domain/components/artist/repository/artist-read-repository.port';
 import ArtistMapper from './dtos/artist.mapper';
+import { ArtistId } from '../../../domain/components/artist/types';
 
 export class ArtistService {
   constructor(
@@ -27,7 +27,7 @@ export class ArtistService {
     @Inject(ARTIST_FILE_STORAGE_DI_TOKEN) private readonly _fs: ArtistFileStorage,
   ) {}
 
-  async createArtist(): Promise<{ id: string }> {
+  async createArtist(): Promise<ArtistId> {
     const generatedId = this._idService.generate();
     const nextArtistIndex = await this._wr.getNextIndex();
     const createdArtist = ArtistFactory.create({
@@ -37,10 +37,10 @@ export class ArtistService {
 
     await this._wr.save(createdArtist);
 
-    return { id: createdArtist.getId() };
+    return createdArtist.getId();
   }
 
-  async updateArtist(id: string, payload: UpdateArtistPayload): Promise<void> {
+  async updateArtist(id: string, payload: UpdateArtistPayload): Promise<ArtistId> {
     const foundArtist = await this._wr.findById(id);
 
     if (!foundArtist) {
@@ -76,9 +76,11 @@ export class ArtistService {
     }
 
     await this._wr.save(foundArtist);
+
+    return foundArtist.getId();
   }
 
-  async updateArtistAvatar(id: string, payload: UpdateArtistAvatarPayload): Promise<void> {
+  async updateArtistAvatar(id: string, payload: UpdateArtistAvatarPayload): Promise<ArtistId> {
     const foundArtist = await this._wr.findById(id);
 
     if (!foundArtist) {
@@ -96,9 +98,11 @@ export class ArtistService {
     }
 
     await this._wr.save(foundArtist);
+
+    return foundArtist.getId();
   }
 
-  async deleteArtistAvatar(id: string): Promise<void> {
+  async deleteArtistAvatar(id: string): Promise<ArtistId> {
     const foundArtist = await this._wr.findById(id);
 
     if (!foundArtist) {
@@ -110,9 +114,11 @@ export class ArtistService {
 
     await this._wr.save(foundArtist);
     await this._fs.deleteArtistAvatar(foundArtist.getId());
+
+    return foundArtist.getId();
   }
 
-  async updateArtistCover(id: string, payload: UpdateArtistCoverPayload): Promise<void> {
+  async updateArtistCover(id: string, payload: UpdateArtistCoverPayload): Promise<ArtistId> {
     const foundArtist = await this._wr.findById(id);
 
     if (!foundArtist) {
@@ -130,9 +136,11 @@ export class ArtistService {
     }
 
     await this._wr.save(foundArtist);
+
+    return foundArtist.getId();
   }
 
-  async deleteArtistCover(id: string): Promise<void> {
+  async deleteArtistCover(id: string): Promise<ArtistId> {
     const foundArtist = await this._wr.findById(id);
 
     if (!foundArtist) {
@@ -143,9 +151,11 @@ export class ArtistService {
     foundArtist.deleteSecondaryColor();
     await this._wr.save(foundArtist);
     await this._fs.deleteArtistCover(foundArtist.getId());
+
+    return foundArtist.getId();
   }
 
-  async deleteArtist(id: string): Promise<void> {
+  async deleteArtist(id: string): Promise<ArtistId> {
     const deletedArtistId = await this._wr.deleteById(id);
 
     if (!deletedArtistId) {
@@ -153,6 +163,8 @@ export class ArtistService {
     }
 
     await this._fs.deleteArtistDirectory(deletedArtistId);
+
+    return deletedArtistId;
   }
 
   async getArtist(id: string, options?: Partial<{ isPublic: boolean }>): Promise<ArtistDTO | null> {
@@ -169,5 +181,17 @@ export class ArtistService {
     }
 
     return foundArtist.isPublic;
+  }
+
+  async verifyArtistId(id: string): Promise<ArtistId | null> {
+    return this._wr.existsById(id);
+  }
+
+  async verifyArtistIds(ids: string[]): Promise<{
+    foundIds: ArtistId[];
+    total: number;
+    missingIds: string[];
+  }> {
+    return this._wr.existsByIds(ids);
   }
 }

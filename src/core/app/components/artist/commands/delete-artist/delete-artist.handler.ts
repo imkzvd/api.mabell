@@ -13,8 +13,10 @@ export class DeleteArtistHandler implements ICommandHandler<DeleteArtistCommand>
   ) {}
 
   async execute({ id }: DeleteArtistCommand) {
-    await this._artistService.deleteArtist(id);
+    const deletedArtistId = await this._artistService.deleteArtist(id);
 
-    this._eb.publish(new ArtistDeletedEvent({ id }));
+    this._eb.publish(new ArtistDeletedEvent({ id: deletedArtistId }));
+
+    return deletedArtistId;
   }
 }

@@ -13,10 +13,10 @@ export class CreateArtistHandler implements ICommandHandler<CreateArtistCommand>
   ) {}
 
   async execute() {
-    const { id } = await this._artistService.createArtist();
+    const createdArtistId = await this._artistService.createArtist();
 
-    this._eventsBus.publish(new ArtistCreatedEvent({ id }));
+    this._eventsBus.publish(new ArtistCreatedEvent({ id: createdArtistId }));
 
-    return { id };
+    return createdArtistId;
   }
 }
