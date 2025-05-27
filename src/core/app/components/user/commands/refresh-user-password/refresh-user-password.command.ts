@@ -1,6 +1,7 @@
 import { Command } from '@nestjs/cqrs';
+import { UserId } from '../../../../../domain/components/user/types';
 
-export class RefreshUserPasswordCommand extends Command<{ password: string }> {
+export class RefreshUserPasswordCommand extends Command<{ id: UserId; password: string }> {
   constructor(public readonly id: string) {
     super();
   }

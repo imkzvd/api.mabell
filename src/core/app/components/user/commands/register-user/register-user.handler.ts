@@ -13,10 +13,10 @@ export class RegisterUserHandler implements ICommandHandler<RegisterUserCommand>
   ) {}
 
   async execute({ payload }: RegisterUserCommand) {
-    const { id } = await this._userService.registerUser(payload);
+    const registeredUserId = await this._userService.registerUser(payload);
 
-    this._eb.publish(new UserRegisteredEvent({ id }));
+    this._eb.publish(new UserRegisteredEvent({ id: registeredUserId }));
 
-    return { id };
+    return registeredUserId;
   }
 }

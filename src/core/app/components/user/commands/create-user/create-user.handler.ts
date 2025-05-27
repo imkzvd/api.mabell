@@ -13,10 +13,10 @@ export class CreateUserHandler implements ICommandHandler<CreateUserCommand> {
   ) {}
 
   async execute() {
-    const { id } = await this._userService.createUser();
+    const createdUserId = await this._userService.createUser();
 
-    this._eb.publish(new UserCreatedEvent({ id }));
+    this._eb.publish(new UserCreatedEvent({ id: createdUserId }));
 
-    return { id };
+    return createdUserId;
   }
 }

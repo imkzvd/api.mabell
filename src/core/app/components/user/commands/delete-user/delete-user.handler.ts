@@ -13,8 +13,10 @@ export class DeleteUserHandler implements ICommandHandler<DeleteUserCommand> {
   ) {}
 
   async execute({ id }: DeleteUserCommand) {
-    await this._userService.deleteUser(id);
+    const deletedUserId = await this._userService.deleteUser(id);
 
-    this._eb.publish(new UserDeletedEvent({ id }));
+    this._eb.publish(new UserDeletedEvent({ id: deletedUserId }));
+
+    return deletedUserId;
   }
 }

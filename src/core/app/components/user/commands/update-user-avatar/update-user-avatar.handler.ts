@@ -13,8 +13,10 @@ export class UpdateUserAvatarHandler implements ICommandHandler<UpdateUserAvatar
   ) {}
 
   async execute({ id, payload }: UpdateUserAvatarCommand) {
-    await this._userService.updateUserAvatar(id, payload);
+    const updatedUserId = await this._userService.updateUserAvatar(id, payload);
 
-    this._eb.publish(new UserUpdatedEvent({ id }));
+    this._eb.publish(new UserUpdatedEvent({ id: updatedUserId }));
+
+    return updatedUserId;
   }
 }

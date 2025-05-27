@@ -13,8 +13,10 @@ export class UpdateUserUsernameHandler implements ICommandHandler<UpdateUserUser
   ) {}
 
   async execute({ id, username }: UpdateUserUsernameCommand) {
-    await this._userService.updateUserUsername(id, username);
+    const updatedUserId = await this._userService.updateUserUsername(id, username);
 
-    this._eb.publish(new UserUpdatedEvent({ id }));
+    this._eb.publish(new UserUpdatedEvent({ id: updatedUserId }));
+
+    return updatedUserId;
   }
 }

@@ -13,10 +13,10 @@ export class RefreshUserPasswordHandler implements ICommandHandler<RefreshUserPa
   ) {}
 
   async execute({ id }: RefreshUserPasswordCommand) {
-    const { password } = await this._userService.refreshUserPassword(id);
+    const result = await this._userService.refreshUserPassword(id);
 
-    this._eb.publish(new UserPasswordRefreshedEvent({ id, password }));
+    this._eb.publish(new UserPasswordRefreshedEvent(result));
 
-    return { password };
+    return result;
   }
 }

@@ -14,8 +14,10 @@ export class UpdateUserEmailHandler implements ICommandHandler<UpdateUserEmailCo
   ) {}
 
   async execute({ id, email }: UpdateUserEmailCommand) {
-    await this._userService.updateUserEmail(id, email);
+    const updatedUserId = await this._userService.updateUserEmail(id, email);
 
-    this._eb.publish(new UserEmailUpdatedEvent({ id }));
+    this._eb.publish(new UserEmailUpdatedEvent({ id: updatedUserId }));
+
+    return updatedUserId;
   }
 }

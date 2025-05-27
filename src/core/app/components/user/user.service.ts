@@ -12,7 +12,6 @@ import {
 } from '../../../domain/components/user/repository/user-read-repository.port';
 import UserMapper from './dtos/user.mapper';
 import { ID_SERVICE_DI_TOKEN, IdService } from '../../common/ports/id-service.port';
-import { UserId } from '../../../domain/components/user/user.entity';
 import {
   PASSWORD_SERVICE_DI_TOKEN,
   PasswordService,
@@ -33,6 +32,7 @@ import {
   USER_FILE_STORAGE_DI_TOKEN,
   UserFileStorage,
 } from './ports/storage/user-file-storage.port';
+import { UserId } from '../../../domain/components/user/types';
 
 export class UserService {
   constructor(
@@ -43,7 +43,7 @@ export class UserService {
     @Inject(USER_FILE_STORAGE_DI_TOKEN) private readonly _userFileStorage: UserFileStorage,
   ) {}
 
-  async createUser(): Promise<{ id: string }> {
+  async createUser(): Promise<UserId> {
     const generatedId = this._idService.generate();
     const { hashPassword } = await this._passwordService.generate({
       length: USER_MIN_LENGTH_PASSWORD,
@@ -59,10 +59,10 @@ export class UserService {
 
     await this._wr.save(createdUser);
 
-    return { id: createdUser.getId() };
+    return createdUser.getId();
   }
 
-  async registerUser(payload: RegisterUserPayload): Promise<{ id: string }> {
+  async registerUser(payload: RegisterUserPayload): Promise<UserId> {
     const generatedId = this._idService.generate();
 
     if (payload.password.length < USER_MIN_LENGTH_PASSWORD) {
@@ -82,10 +82,10 @@ export class UserService {
 
     await this._wr.save(createdUser);
 
-    return { id: createdUser.getId() };
+    return createdUser.getId();
   }
 
-  async updateUser(id: string, payload: UpdateUserPayload): Promise<void> {
+  async updateUser(id: string, payload: UpdateUserPayload): Promise<UserId> {
     const foundUser = await this._wr.findById(id);
 
     if (!foundUser) {
@@ -120,9 +120,11 @@ export class UserService {
     }
 
     await this._wr.save(foundUser);
+
+    return foundUser.getId();
   }
 
-  async updateUserUsername(id: string, username: string): Promise<void> {
+  async updateUserUsername(id: string, username: string): Promise<UserId> {
     const foundUser = await this._wr.findById(id);
 
     if (!foundUser) {
@@ -142,9 +144,11 @@ export class UserService {
     foundUser.updateUsername(username);
 
     await this._wr.save(foundUser);
+
+    return foundUser.getId();
   }
 
-  async updateUserEmail(id: string, email: string): Promise<void> {
+  async updateUserEmail(id: string, email: string): Promise<UserId> {
     const foundUser = await this._wr.findById(id);
 
     if (!foundUser) {
@@ -164,9 +168,11 @@ export class UserService {
     foundUser.updateEmail(email);
 
     await this._wr.save(foundUser);
+
+    return foundUser.getId();
   }
 
-  async updateUserPassword(id: string, payload: UpdateUserPasswordPayload): Promise<void> {
+  async updateUserPassword(id: string, payload: UpdateUserPasswordPayload): Promise<UserId> {
     const foundUser = await this._wr.findById(id);
 
     if (!foundUser) {
@@ -191,9 +197,11 @@ export class UserService {
     foundUser.updatePassword(hashedNewPassword);
 
     await this._wr.save(foundUser);
+
+    return foundUser.getId();
   }
 
-  async refreshUserPassword(id: string): Promise<{ password: string }> {
+  async refreshUserPassword(id: string): Promise<{ id: UserId; password: string }> {
     const foundUser = await this._wr.findById(id);
 
     if (!foundUser) {
@@ -209,10 +217,10 @@ export class UserService {
 
     await this._wr.save(foundUser);
 
-    return { password };
+    return { id: foundUser.getId(), password };
   }
 
-  async updateUserAvatar(id: string, payload: UpdateUserAvatarPayload): Promise<void> {
+  async updateUserAvatar(id: string, payload: UpdateUserAvatarPayload): Promise<UserId> {
     const foundUser = await this._wr.findById(id);
 
     if (!foundUser) {
@@ -233,9 +241,11 @@ export class UserService {
     }
 
     await this._wr.save(foundUser);
+
+    return foundUser.getId();
   }
 
-  async deleteUserAvatar(id: string): Promise<void> {
+  async deleteUserAvatar(id: string): Promise<UserId> {
     const foundUser = await this._wr.findById(id);
 
     if (!foundUser) {
@@ -246,16 +256,20 @@ export class UserService {
     foundUser.deleteColor();
     await this._wr.save(foundUser);
     await this._userFileStorage.deleteUserAvatar(foundUser.getId());
+
+    return foundUser.getId();
   }
 
-  async deleteUser(id: string): Promise<void> {
-    const isDeletedUser = await this._wr.deleteById(id);
+  async deleteUser(id: string): Promise<UserId> {
+    const deletedUserId = await this._wr.deleteById(id);
 
-    if (!isDeletedUser) {
+    if (!deletedUserId) {
       throw new NotFoundException('User does not exist');
     }
 
-    await this._userFileStorage.deleteUserDirectory(isDeletedUser);
+    await this._userFileStorage.deleteUserDirectory(deletedUserId);
+
+    return deletedUserId;
   }
 
   async getUser(id: string, options?: Partial<{ isPublic: boolean }>): Promise<UserDTO | null> {
@@ -264,5 +278,9 @@ export class UserService {
     });
 
     return foundUser ? UserMapper.toDTO(foundUser) : null;
+  }
+
+  async verifyUserId(id: string): Promise<UserId | null> {
+    return this._wr.existsById(id);
   }
 }

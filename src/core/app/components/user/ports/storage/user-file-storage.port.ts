@@ -1,6 +1,6 @@
 import { StoredFileDTO } from '../../../../common/dtos/file/stored-file.dto';
-import { UserId } from '../../../../../domain/components/user/user.entity';
-import { PlaylistId } from '../../../../../domain/components/playlist/playlist.entity';
+import { UserId } from '../../../../../domain/components/user/types';
+import { PlaylistId } from '../../../../../domain/components/playlist/types';
 
 export const USER_FILE_STORAGE_DI_TOKEN = Symbol('USER_FILE_STORAGE_DI_TOKEN');
 

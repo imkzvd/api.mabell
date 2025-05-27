@@ -1,7 +1,8 @@
 import { Event } from '../ports/event-bus.port';
+import { UserId } from '../../../domain/components/user/types';
 
 export type UserEmailUpdatedPayload = {
-  id: string;
+  id: UserId;
 };
 
 export class UserEmailUpdatedEvent implements Event<UserEmailUpdatedPayload> {

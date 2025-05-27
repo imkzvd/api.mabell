@@ -13,8 +13,10 @@ export class UpdateUserPasswordHandler implements ICommandHandler<UpdateUserPass
   ) {}
 
   async execute({ id, payload }: UpdateUserPasswordCommand) {
-    await this._userService.updateUserPassword(id, payload);
+    const updatedUserId = await this._userService.updateUserPassword(id, payload);
 
-    this._eb.publish(new UserPasswordUpdatedEvent({ id }));
+    this._eb.publish(new UserPasswordUpdatedEvent({ id: updatedUserId }));
+
+    return updatedUserId;
   }
 }
