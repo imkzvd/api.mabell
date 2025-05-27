@@ -1,5 +1,5 @@
 import { Query } from '@nestjs/cqrs';
-import { AlbumDTO } from '../dtos/album.dto';
+import { AlbumDTO } from '../../dtos/album.dto';
 import { OffsetLimitPaginationResponseDTO } from '../../../../../shared/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
 import { OffsetLimitPaginationDTO } from '../../../../../shared/dtos/offset-limit-pagination/offset-limit-pagination-payload.dto';
 

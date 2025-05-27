@@ -1,46 +1,24 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
-import { NotFoundException } from '../../../../../shared/exceptions';
 import { UpdateAlbumCoverCommand } from './update-album-cover.command';
-import {
-  ALBUM_WRITE_REPOSITORY_DI_TOKEN,
-  AlbumWriteRepository,
-} from '../../../../../domain/components/album/repository/album-write-repository.port';
-import {
-  ARTIST_FILE_STORAGE_DI_TOKEN,
-  ArtistFileStorage,
-} from '../../../artist/ports/storage/artist-file-storage.port';
+import { EVENT_BUS_DI_TOKEN, EventBus } from '../../../../common/ports/event-bus.port';
+import { AlbumService } from '../../album.service';
+import { AlbumUpdatedEvent } from '../../../../common/events/album-updated.event';
+import { AlbumCoverUpdatedEvent } from '../../../../common/events/album-cover-updated.event';
 
 @CommandHandler(UpdateAlbumCoverCommand)
 export class UpdateAlbumCoverHandler implements ICommandHandler<UpdateAlbumCoverCommand> {
   constructor(
-    @Inject(ALBUM_WRITE_REPOSITORY_DI_TOKEN)
-    private readonly _albumWriteRepository: AlbumWriteRepository,
-    @Inject(ARTIST_FILE_STORAGE_DI_TOKEN)
-    private readonly _artistFileStorage: ArtistFileStorage,
+    @Inject(AlbumService) private readonly _albumService: AlbumService,
+    @Inject(EVENT_BUS_DI_TOKEN) private readonly _eb: EventBus,
   ) {}
 
   async execute({ id, payload }: UpdateAlbumCoverCommand) {
-    const foundAlbum = await this._albumWriteRepository.findById(id);
+    const updatedAlbumId = await this._albumService.updateAlbumCover(id, payload);
 
-    if (!foundAlbum) {
-      throw new NotFoundException('Artist does not exist');
-    }
+    this._eb.publish(new AlbumCoverUpdatedEvent({ id: updatedAlbumId }));
+    this._eb.publish(new AlbumUpdatedEvent({ id: updatedAlbumId }));
 
-    if (payload.fileId) {
-      const storedFileData = await this._artistFileStorage.saveAlbumCover(
-        foundAlbum.getMainArtist(),
-        foundAlbum.getId(),
-        payload.fileId,
-      );
-
-      foundAlbum.updateCover(storedFileData.path);
-    }
-
-    if (payload.color !== undefined) {
-      foundAlbum.updateColor(payload.color);
-    }
-
-    return this._albumWriteRepository.save(foundAlbum);
+    return updatedAlbumId;
   }
 }

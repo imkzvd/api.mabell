@@ -1,44 +1,22 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
-import {
-  ALBUM_WRITE_REPOSITORY_DI_TOKEN,
-  AlbumWriteRepository,
-} from '../../../../../domain/components/album/repository/album-write-repository.port';
-import { NotFoundException } from '../../../../../shared/exceptions';
 import { DeleteAlbumCommand } from './delete-album.command';
-import {
-  ARTIST_FILE_STORAGE_DI_TOKEN,
-  ArtistFileStorage,
-} from '../../../artist/ports/storage/artist-file-storage.port';
-import {
-  TRACK_WRITE_REPOSITORY_DI_TOKEN,
-  TrackWriteRepository,
-} from '../../../../../domain/components/track/repository/track-write-repository.port';
+import { EVENT_BUS_DI_TOKEN, EventBus } from '../../../../common/ports/event-bus.port';
+import { AlbumService } from '../../album.service';
+import { AlbumDeletedEvent } from '../../../../common/events/album-deleted.event';
 
 @CommandHandler(DeleteAlbumCommand)
 export class DeleteAlbumHandler implements ICommandHandler<DeleteAlbumCommand> {
   constructor(
-    @Inject(ALBUM_WRITE_REPOSITORY_DI_TOKEN)
-    private readonly _albumWriteRepository: AlbumWriteRepository,
-    @Inject(TRACK_WRITE_REPOSITORY_DI_TOKEN)
-    private readonly _trackWriteRepository: TrackWriteRepository,
-    @Inject(ARTIST_FILE_STORAGE_DI_TOKEN)
-    private readonly _artistFileStorage: ArtistFileStorage,
+    @Inject(AlbumService) private readonly _albumService: AlbumService,
+    @Inject(EVENT_BUS_DI_TOKEN) private readonly _eb: EventBus,
   ) {}
 
   async execute({ id }: DeleteAlbumCommand) {
-    const foundAlbum = await this._albumWriteRepository.findById(id);
+    const deletedAlbumId = await this._albumService.deleteAlbum(id);
 
-    if (!foundAlbum) {
-      throw new NotFoundException('Album does not exist');
-    }
+    this._eb.publish(new AlbumDeletedEvent({ id: deletedAlbumId }));
 
-    await this._albumWriteRepository.deleteById(id);
-    await this._trackWriteRepository.deleteByAlbumId(id);
-
-    return this._artistFileStorage.deleteAlbumDirectory(
-      foundAlbum.getMainArtist(),
-      foundAlbum.getId(),
-    );
+    return deletedAlbumId;
   }
 }

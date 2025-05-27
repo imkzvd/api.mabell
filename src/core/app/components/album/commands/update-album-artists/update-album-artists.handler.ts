@@ -1,58 +1,35 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
-import { BadRequestException, NotFoundException } from '../../../../../shared/exceptions';
-import {
-  ALBUM_WRITE_REPOSITORY_DI_TOKEN,
-  AlbumWriteRepository,
-} from '../../../../../domain/components/album/repository/album-write-repository.port';
 import { UpdateAlbumArtistsCommand } from './update-album-artists.command';
-import {
-  ARTIST_WRITE_REPOSITORY_DI_TOKEN,
-  ArtistWriteRepository,
-} from '../../../../../domain/components/artist/repository/artist-write-repository.port';
-import {
-  TRACK_WRITE_REPOSITORY_DI_TOKEN,
-  TrackWriteRepository,
-} from '../../../../../domain/components/track/repository/track-write-repository.port';
+import { EVENT_BUS_DI_TOKEN, EventBus } from '../../../../common/ports/event-bus.port';
+import { AlbumService } from '../../album.service';
+import { AlbumUpdatedEvent } from '../../../../common/events/album-updated.event';
+import { AlbumArtistsUpdatedEvent } from '../../../../common/events/album-artists-updated.event';
+import { ArtistService } from '../../../artist/artist.service';
+import { NotFoundException } from '../../../../../shared/exceptions';
 
 @CommandHandler(UpdateAlbumArtistsCommand)
 export class UpdateAlbumArtistsHandler implements ICommandHandler<UpdateAlbumArtistsCommand> {
   constructor(
-    @Inject(ALBUM_WRITE_REPOSITORY_DI_TOKEN)
-    private readonly _albumWriteRepository: AlbumWriteRepository,
-    @Inject(ARTIST_WRITE_REPOSITORY_DI_TOKEN)
-    private readonly _artistWriteRepository: ArtistWriteRepository,
-    @Inject(TRACK_WRITE_REPOSITORY_DI_TOKEN)
-    private readonly _trackWriteRepository: TrackWriteRepository,
+    @Inject(ArtistService) private readonly _artistService: ArtistService,
+    @Inject(AlbumService) private readonly _albumService: AlbumService,
+    @Inject(EVENT_BUS_DI_TOKEN) private readonly _eb: EventBus,
   ) {}
 
   async execute({ id, artists }: UpdateAlbumArtistsCommand) {
-    const foundAlbum = await this._albumWriteRepository.findById(id);
+    const verifiedArtistIdsResult = await this._artistService.verifyArtistIds(artists);
 
-    if (!foundAlbum) {
-      throw new NotFoundException(`There is no album with the specified ID`);
+    if (verifiedArtistIdsResult.missingIds.length) {
+      throw new NotFoundException('Artist does not exist');
     }
 
-    if (foundAlbum.getMainArtist() !== artists[0]) {
-      throw new BadRequestException('The main artist cannot be changed');
-    }
+    const updatedAlbumId = await this._albumService.updateAlbumArtists(id, {
+      artists: verifiedArtistIdsResult.foundIds,
+    });
 
-    const foundArtistsResp = await this._artistWriteRepository.findByIds(artists);
+    this._eb.publish(new AlbumArtistsUpdatedEvent({ id: updatedAlbumId }));
+    this._eb.publish(new AlbumUpdatedEvent({ id: updatedAlbumId }));
 
-    if (foundArtistsResp.missingIds.length) {
-      throw new NotFoundException(`There is no artist with the specified ID`);
-    }
-
-    foundAlbum.updateArtists(foundArtistsResp.foundIds);
-
-    const foundTracks = await this._trackWriteRepository.findByAlbumId(foundAlbum.getId());
-
-    if (foundTracks.total) {
-      foundTracks.items.forEach((i) => i.updateArtists(foundAlbum.getArtists()));
-
-      await this._trackWriteRepository.saveMany(foundTracks.items);
-    }
-
-    return this._albumWriteRepository.save(foundAlbum);
+    return updatedAlbumId;
   }
 }

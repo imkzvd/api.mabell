@@ -1,54 +1,22 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
-import { NotFoundException } from '../../../../../shared/exceptions';
 import { UpdateAlbumCommand } from './update-album.command';
-import {
-  ALBUM_WRITE_REPOSITORY_DI_TOKEN,
-  AlbumWriteRepository,
-} from '../../../../../domain/components/album/repository/album-write-repository.port';
+import { EVENT_BUS_DI_TOKEN, EventBus } from '../../../../common/ports/event-bus.port';
+import { AlbumService } from '../../album.service';
+import { AlbumUpdatedEvent } from '../../../../common/events/album-updated.event';
 
 @CommandHandler(UpdateAlbumCommand)
 export class UpdateAlbumHandler implements ICommandHandler<UpdateAlbumCommand> {
   constructor(
-    @Inject(ALBUM_WRITE_REPOSITORY_DI_TOKEN)
-    private readonly _albumWriteRepository: AlbumWriteRepository,
+    @Inject(AlbumService) private readonly _albumService: AlbumService,
+    @Inject(EVENT_BUS_DI_TOKEN) private readonly _eb: EventBus,
   ) {}
 
   async execute({ id, payload }: UpdateAlbumCommand) {
-    const foundAlbum = await this._albumWriteRepository.findById(id);
+    const updatedAlbumId = await this._albumService.updateAlbum(id, payload);
 
-    if (!foundAlbum) {
-      throw new NotFoundException(`There is no artist with the specified ID`);
-    }
+    this._eb.publish(new AlbumUpdatedEvent({ id: updatedAlbumId }));
 
-    if (payload.name) {
-      foundAlbum.updateName(payload.name);
-    }
-
-    if (payload.type) {
-      foundAlbum.updateType(payload.type);
-    }
-
-    if (payload.genres) {
-      foundAlbum.updateGenres(payload.genres);
-    }
-
-    if (payload.description) {
-      foundAlbum.updateDescription(payload.description);
-    }
-
-    if (payload.releaseAt !== undefined) {
-      foundAlbum.updateReleaseDate(payload.releaseAt);
-    }
-
-    if (typeof payload.isActive === 'boolean') {
-      foundAlbum.updateActiveStatus(payload.isActive);
-    }
-
-    if (typeof payload.isPublic === 'boolean') {
-      foundAlbum.updatePublicStatus(payload.isPublic);
-    }
-
-    return this._albumWriteRepository.save(foundAlbum);
+    return updatedAlbumId;
   }
 }

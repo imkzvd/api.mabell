@@ -1,7 +1,8 @@
 import { Event } from '../ports/event-bus.port';
+import { AlbumId } from '../../../domain/components/album/types';
 
 export type AlbumDeletedPayload = {
-  id: string;
+  id: AlbumId;
 };
 
 export class AlbumDeletedEvent implements Event<AlbumDeletedPayload> {

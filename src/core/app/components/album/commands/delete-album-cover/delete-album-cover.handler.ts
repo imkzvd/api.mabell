@@ -1,37 +1,24 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
-import { NotFoundException } from '../../../../../shared/exceptions';
 import { DeleteAlbumCoverCommand } from './delete-album-cover.command';
-import {
-  ALBUM_WRITE_REPOSITORY_DI_TOKEN,
-  AlbumWriteRepository,
-} from '../../../../../domain/components/album/repository/album-write-repository.port';
-import {
-  ARTIST_FILE_STORAGE_DI_TOKEN,
-  ArtistFileStorage,
-} from '../../../artist/ports/storage/artist-file-storage.port';
+import { EVENT_BUS_DI_TOKEN, EventBus } from '../../../../common/ports/event-bus.port';
+import { AlbumService } from '../../album.service';
+import { AlbumUpdatedEvent } from '../../../../common/events/album-updated.event';
+import { AlbumCoverDeletedEvent } from '../../../../common/events/album-cover-deleted.event';
 
 @CommandHandler(DeleteAlbumCoverCommand)
 export class DeleteAlbumCoverHandler implements ICommandHandler<DeleteAlbumCoverCommand> {
   constructor(
-    @Inject(ALBUM_WRITE_REPOSITORY_DI_TOKEN)
-    private readonly _albumWriteRepository: AlbumWriteRepository,
-    @Inject(ARTIST_FILE_STORAGE_DI_TOKEN)
-    private readonly _artistFileStorage: ArtistFileStorage,
+    @Inject(AlbumService) private readonly _albumService: AlbumService,
+    @Inject(EVENT_BUS_DI_TOKEN) private readonly _eb: EventBus,
   ) {}
 
   async execute({ id }: DeleteAlbumCoverCommand) {
-    const foundAlbum = await this._albumWriteRepository.findById(id);
+    const updatedAlbumId = await this._albumService.deleteAlbumCover(id);
 
-    if (!foundAlbum) {
-      throw new NotFoundException('Album does not exist');
-    }
+    this._eb.publish(new AlbumCoverDeletedEvent({ id: updatedAlbumId }));
+    this._eb.publish(new AlbumUpdatedEvent({ id: updatedAlbumId }));
 
-    foundAlbum.deleteCover();
-    foundAlbum.deleteColor();
-
-    await this._albumWriteRepository.save(foundAlbum);
-
-    return this._artistFileStorage.deleteAlbumCover(foundAlbum.getMainArtist(), foundAlbum.getId());
+    return updatedAlbumId;
   }
 }

@@ -1,8 +1,8 @@
 import { Event } from '../ports/event-bus.port';
+import { AlbumId } from '../../../domain/components/album/types';
 
 export type AlbumArtistsUpdatedPayload = {
-  id: string;
-  artistIds: string[];
+  id: AlbumId;
 };
 
 export class AlbumArtistsUpdatedEvent implements Event<AlbumArtistsUpdatedPayload> {
