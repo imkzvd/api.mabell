@@ -20,13 +20,18 @@ import {
   USER_FILE_STORAGE_DI_TOKEN,
   UserFileStorage,
 } from '../../common/ports/file-storages/user-file-storage.port';
+import {
+  TMP_FILE_STORAGE_DI_TOKEN,
+  TmpFileStorage,
+} from '../../common/ports/file-storages/tmp-file-storage.port';
 
 export class PlaylistService {
   constructor(
     @Inject(PLAYLIST_WRITE_REPOSITORY_DI_TOKEN) private readonly _wr: PlaylistWriteRepository,
     @Inject(PLAYLIST_READ_REPOSITORY_DI_TOKEN) private readonly _rr: PlaylistReadRepository,
     @Inject(ID_SERVICE_DI_TOKEN) private readonly _idService: IdService<PlaylistId>,
-    @Inject(USER_FILE_STORAGE_DI_TOKEN) private readonly _userFileStorage: UserFileStorage,
+    @Inject(TMP_FILE_STORAGE_DI_TOKEN) private readonly _tmpFS: TmpFileStorage,
+    @Inject(USER_FILE_STORAGE_DI_TOKEN) private readonly _userFS: UserFileStorage,
   ) {}
 
   async createPlaylist(payload: CreatePlaylistPayload): Promise<PlaylistId> {
@@ -79,10 +84,16 @@ export class PlaylistService {
     }
 
     if (payload.fileId) {
-      const storedFileData = await this._userFileStorage.savePlaylistCover(
+      const uploadedFile = await this._tmpFS.findById(payload.fileId);
+
+      if (!uploadedFile) {
+        throw new NotFoundException('File does not uploaded');
+      }
+
+      const storedFileData = await this._userFS.savePlaylistCover(
         foundPlaylist.getOwner(),
         foundPlaylist.getId(),
-        payload.fileId,
+        uploadedFile,
       );
 
       foundPlaylist.updateCover(storedFileData.path);
@@ -107,10 +118,7 @@ export class PlaylistService {
     foundPlaylist.deleteCover();
     foundPlaylist.deleteColor();
     await this._wr.save(foundPlaylist);
-    await this._userFileStorage.deletePlaylistCover(
-      foundPlaylist.getOwner(),
-      foundPlaylist.getId(),
-    );
+    await this._userFS.deletePlaylistCover(foundPlaylist.getOwner(), foundPlaylist.getId());
 
     return foundPlaylist.getId();
   }
@@ -123,10 +131,7 @@ export class PlaylistService {
     }
 
     await this._wr.deleteById(id);
-    await this._userFileStorage.deletePlaylistDirectory(
-      foundPlaylist.getOwner(),
-      foundPlaylist.getId(),
-    );
+    await this._userFS.deletePlaylistDirectory(foundPlaylist.getOwner(), foundPlaylist.getId());
 
     return foundPlaylist.getId();
   }

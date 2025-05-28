@@ -33,6 +33,10 @@ import {
   USER_FILE_STORAGE_DI_TOKEN,
   UserFileStorage,
 } from '../../common/ports/file-storages/user-file-storage.port';
+import {
+  TMP_FILE_STORAGE_DI_TOKEN,
+  TmpFileStorage,
+} from '../../common/ports/file-storages/tmp-file-storage.port';
 
 export class UserService {
   constructor(
@@ -40,7 +44,8 @@ export class UserService {
     @Inject(USER_READ_REPOSITORY_DI_TOKEN) private readonly _rr: UserReadRepository,
     @Inject(ID_SERVICE_DI_TOKEN) private readonly _idService: IdService<UserId>,
     @Inject(PASSWORD_SERVICE_DI_TOKEN) private readonly _passwordService: PasswordService,
-    @Inject(USER_FILE_STORAGE_DI_TOKEN) private readonly _userFileStorage: UserFileStorage,
+    @Inject(TMP_FILE_STORAGE_DI_TOKEN) private readonly _tmpFS: TmpFileStorage,
+    @Inject(USER_FILE_STORAGE_DI_TOKEN) private readonly _userFS: UserFileStorage,
   ) {}
 
   async createUser(): Promise<UserId> {
@@ -228,10 +233,13 @@ export class UserService {
     }
 
     if (payload.fileId) {
-      const storedFileData = await this._userFileStorage.saveUserAvatar(
-        foundUser.getId(),
-        payload.fileId,
-      );
+      const uploadedFile = await this._tmpFS.findById(payload.fileId);
+
+      if (!uploadedFile) {
+        throw new NotFoundException('File does not uploaded');
+      }
+
+      const storedFileData = await this._userFS.saveUserAvatar(foundUser.getId(), uploadedFile);
 
       foundUser.updateAvatar(storedFileData.path);
     }
@@ -255,7 +263,7 @@ export class UserService {
     foundUser.deleteAvatar();
     foundUser.deleteColor();
     await this._wr.save(foundUser);
-    await this._userFileStorage.deleteUserAvatar(foundUser.getId());
+    await this._userFS.deleteUserAvatar(foundUser.getId());
 
     return foundUser.getId();
   }
@@ -267,7 +275,7 @@ export class UserService {
       throw new NotFoundException('User does not exist');
     }
 
-    await this._userFileStorage.deleteUserDirectory(deletedUserId);
+    await this._userFS.deleteUserDirectory(deletedUserId);
 
     return deletedUserId;
   }

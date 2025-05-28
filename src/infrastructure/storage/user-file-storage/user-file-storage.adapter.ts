@@ -1,6 +1,5 @@
 import { Inject } from '@nestjs/common';
 import { FileStorage } from '../base/file-storage.abstract';
-import { BadRequestException } from '../../../core/shared/exceptions';
 import { PlaylistId } from '../../../core/domain/components/playlist/types';
 import { UserId } from '../../../core/domain/components/user/types';
 import { UserFileStorage } from '../../../core/app/common/ports/file-storages/user-file-storage.port';
@@ -9,25 +8,21 @@ import {
   TmpFileStorage,
 } from '../../../core/app/common/ports/file-storages/tmp-file-storage.port';
 import { StoredFileDTO } from '../../../core/app/common/ports/file-storages/common/dtos/stored-file.dto';
+import { TmpFileDTO } from '../../../core/app/common/ports/file-storages/common/dtos/tmp-file.dto';
 
 export class UserFileStorageAdapter extends FileStorage implements UserFileStorage {
   constructor(@Inject(TMP_FILE_STORAGE_DI_TOKEN) private readonly _tmpFileStorage: TmpFileStorage) {
     super('users');
   }
 
-  async saveUserAvatar(id: UserId, fileId: string): Promise<StoredFileDTO> {
-    const tmpFileData = await this._tmpFileStorage.findById(fileId);
-
-    if (!tmpFileData) {
-      throw new BadRequestException('The file has not been uploaded');
-    }
-
+  async saveUserAvatar(id: UserId, file: TmpFileDTO): Promise<StoredFileDTO> {
     const { fileName, absPath, relPath } = this.getUserAvatarMetaById(id);
-    await this.createUserDirectoryById(id);
-    await this.convertAndSaveImage(tmpFileData.path, absPath);
-    await this._tmpFileStorage.deleteById(tmpFileData.id);
 
-    return new StoredFileDTO(fileName, relPath, absPath, tmpFileData.size, tmpFileData.type);
+    await this.createUserDirectoryById(id);
+    await this.convertAndSaveImage(file.path, absPath);
+    await this._tmpFileStorage.deleteById(file.id);
+
+    return new StoredFileDTO(fileName, relPath, absPath, file.size, file.type);
   }
 
   deleteUserAvatar(id: UserId): Promise<void> {
@@ -45,20 +40,15 @@ export class UserFileStorageAdapter extends FileStorage implements UserFileStora
   async savePlaylistCover(
     id: UserId,
     playlistId: PlaylistId,
-    fileId: string,
+    file: TmpFileDTO,
   ): Promise<StoredFileDTO> {
-    const tmpFileData = await this._tmpFileStorage.findById(fileId);
-
-    if (!tmpFileData) {
-      throw new BadRequestException('The file has not been uploaded');
-    }
-
     await this.createPlaylistDirectoryById(id, playlistId);
-    const { fileName, absPath, relPath } = this.getPlaylistCoverMetaById(id, playlistId);
-    await this.convertAndSaveImage(tmpFileData.path, absPath);
-    await this._tmpFileStorage.deleteById(tmpFileData.id);
 
-    return new StoredFileDTO(fileName, relPath, absPath, tmpFileData.size, tmpFileData.type);
+    const { fileName, absPath, relPath } = this.getPlaylistCoverMetaById(id, playlistId);
+    await this.convertAndSaveImage(file.path, absPath);
+    await this._tmpFileStorage.deleteById(file.id);
+
+    return new StoredFileDTO(fileName, relPath, absPath, file.size, file.type);
   }
 
   async deletePlaylistCover(id: UserId, playlistId: PlaylistId): Promise<void> {
