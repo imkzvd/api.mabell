@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { PasswordServiceAdapter } from './password-service.adapter';
-import { PASSWORD_SERVICE_DI_TOKEN } from '../../../core/app/common/services/password-service.port';
+import { PASSWORD_SERVICE_DI_TOKEN } from '../../../core/app/common/ports/password-service.port';
 
 @Module({
   providers: [
