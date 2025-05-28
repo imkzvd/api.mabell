@@ -13,11 +13,15 @@ import { ArtistFileStorageModule } from '../../../../../infrastructure/storage/a
 import { GetArtistAlbumsHandler } from '../../../../../core/app/components/album/queries/get-artist-albums/get-artist-albums.handler';
 import { GetArtistTracksHandler } from '../../../../../core/app/components/track/queries/get-artist-tracks/get-artist-tracks.handler';
 import { ArtistService } from '../../../../../core/app/components/artist/artist.service';
+import { AlbumService } from '../../../../../core/app/components/album/album.service';
+import { TrackService } from '../../../../../core/app/components/track/track.service';
 
 @Module({
   imports: [TmpFileStorageModule, ArtistFileStorageModule],
   providers: [
     ArtistService,
+    AlbumService,
+    TrackService,
     CreateArtistHandler,
     UpdateArtistHandler,
     UpdateArtistAvatarHandler,

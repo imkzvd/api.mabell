@@ -52,8 +52,8 @@ export class AdminsController {
   @ApiCreatedResponse({ type: AdminRO, description: 'Created admin' })
   @Post('/')
   async createAdmin(): Promise<AdminRO> {
-    const { id } = await this._commandBus.execute(new CreateAdminCommand());
-    const createdAdmin = await this._queryBus.execute(new GetAdminQuery(id));
+    const createdAdminId = await this._commandBus.execute(new CreateAdminCommand());
+    const createdAdmin = await this._queryBus.execute(new GetAdminQuery(createdAdminId));
 
     if (!createdAdmin) {
       throw new NotFoundException('Admin does not exist');
@@ -152,7 +152,7 @@ export class AdminsController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete('/:id')
   async deleteAdmin(@Param('id', ParseObjectIdPipe) id: string): Promise<void> {
-    return this._commandBus.execute(new DeleteAdminCommand(id));
+    await this._commandBus.execute(new DeleteAdminCommand(id));
   }
 
   @ApiOperation({ summary: 'Get admins', operationId: 'getAdmins' })

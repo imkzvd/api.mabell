@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { faker } from '@faker-js/faker';
 import { TrackRO } from './track.ro';
-import { PlaylistTrackDTO } from '../../../../../../core/app/components/track/queries/dtos/playlist-track.dto';
+import { PlaylistTrackDTO } from '../../../../../../core/app/components/track/dtos/playlist-track.dto';
 
 export class PlaylistTrackRO {
   @ApiProperty({

@@ -44,14 +44,13 @@ export class TracksController {
     private readonly _queryBus: QueryBus,
   ) {}
 
-  @ApiOperation({ summary: 'Create an track', operationId: 'create' })
+  @ApiOperation({ summary: 'Create an artist', operationId: 'create' })
   @ApiBody({ type: CreateTrackDTO })
   @ApiCreatedResponse({ description: 'Track', type: TrackRO })
   @Post('/')
-  async create(@Body() { albumId, name }: CreateTrackDTO): Promise<TrackRO> {
-    const { id } = await this._commandBus.execute(new CreateTrackCommand(albumId, name));
-
-    const createdTrack = await this._queryBus.execute(new GetTrackQuery(id));
+  async create(@Body() { albumId }: CreateTrackDTO): Promise<TrackRO> {
+    const createdTrackId = await this._commandBus.execute(new CreateTrackCommand(albumId));
+    const createdTrack = await this._queryBus.execute(new GetTrackQuery(createdTrackId));
 
     if (!createdTrack) {
       throw new BadRequestException('Some error');
@@ -61,7 +60,7 @@ export class TracksController {
   }
 
   @ApiOperation({
-    summary: 'Update track data',
+    summary: 'Update artist data',
     operationId: 'update',
   })
   @ApiParam({
@@ -71,7 +70,7 @@ export class TracksController {
     example: faker.database.mongodbObjectId(),
   })
   @ApiBody({ type: UpdateTrackDTO })
-  @ApiOkResponse({ description: 'Updated track', type: TrackRO })
+  @ApiOkResponse({ description: 'Updated artist', type: TrackRO })
   @Patch('/:id')
   async update(
     @Param('id', ParseObjectIdPipe) id: string,
@@ -89,7 +88,7 @@ export class TracksController {
   }
 
   @ApiOperation({
-    summary: 'Update track feat. artists',
+    summary: 'Update artist feat. artists',
     operationId: 'updateFeatArtists',
   })
   @ApiParam({
@@ -99,7 +98,7 @@ export class TracksController {
     example: faker.database.mongodbObjectId(),
   })
   @ApiBody({ type: UpdateTrackFeatArtistsDTO })
-  @ApiOkResponse({ description: 'Updated track', type: TrackRO })
+  @ApiOkResponse({ description: 'Updated artist', type: TrackRO })
   @Patch('/:id/featured-artists')
   async updateFeatArtists(
     @Param('id', ParseObjectIdPipe) id: string,
@@ -117,7 +116,7 @@ export class TracksController {
   }
 
   @ApiOperation({
-    summary: 'Update file of the track',
+    summary: 'Update file of the artist',
     operationId: 'updateFile',
   })
   @ApiParam({
@@ -127,7 +126,7 @@ export class TracksController {
     example: faker.database.mongodbObjectId(),
   })
   @ApiBody({ type: UpdateTrackFileDTO })
-  @ApiOkResponse({ description: 'Updated track', type: TrackRO })
+  @ApiOkResponse({ description: 'Updated artist', type: TrackRO })
   @Patch('/:id/file')
   async updateFile(
     @Param('id', ParseObjectIdPipe) id: string,
@@ -145,7 +144,7 @@ export class TracksController {
   }
 
   @ApiOperation({
-    summary: 'Delete file of the track',
+    summary: 'Delete file of the artist',
     operationId: 'deleteFile',
   })
   @ApiParam({
@@ -154,7 +153,7 @@ export class TracksController {
     description: 'Id',
     example: faker.database.mongodbObjectId(),
   })
-  @ApiOkResponse({ description: 'Updated track', type: TrackRO })
+  @ApiOkResponse({ description: 'Updated artist', type: TrackRO })
   @Delete('/:id/file')
   async deleteFile(@Param('id', ParseObjectIdPipe) id: string): Promise<TrackRO> {
     await this._commandBus.execute(new DeleteTrackFileCommand(id));
@@ -169,7 +168,7 @@ export class TracksController {
   }
 
   @ApiOperation({
-    summary: 'Delete an track by id',
+    summary: 'Delete an artist by id',
     operationId: 'deleteById',
   })
   @ApiParam({
@@ -188,7 +187,7 @@ export class TracksController {
     await this._commandBus.execute(new DeleteTrackCommand(id));
   }
 
-  @ApiOperation({ summary: 'Get an track by id', operationId: 'getById' })
+  @ApiOperation({ summary: 'Get an artist by id', operationId: 'getById' })
   @ApiParam({
     type: String,
     name: 'id',

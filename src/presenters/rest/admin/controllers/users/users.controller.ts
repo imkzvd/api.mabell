@@ -50,8 +50,8 @@ export class UsersController {
   @ApiCreatedResponse({ description: 'Id of the created user', type: UserRO })
   @Post('/')
   async create(): Promise<UserRO> {
-    const { id } = await this._commandBus.execute(new CreateUserCommand());
-    const createdUser = await this._queryBus.execute(new GetUserQuery(id));
+    const createdUserId = await this._commandBus.execute(new CreateUserCommand());
+    const createdUser = await this._queryBus.execute(new GetUserQuery(createdUserId));
 
     if (!createdUser) {
       throw new BadRequestException('Some error');
@@ -238,7 +238,7 @@ export class UsersController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete('/:id')
   async delete(@Param('id', ParseObjectIdPipe) id: string): Promise<void> {
-    return this._commandBus.execute(new DeleteUserCommand(id));
+    await this._commandBus.execute(new DeleteUserCommand(id));
   }
 
   @ApiOperation({

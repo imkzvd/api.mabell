@@ -9,10 +9,18 @@ import { UpdateTrackHandler } from '../../../../../core/app/components/track/com
 import { UpdateTrackFileHandler } from '../../../../../core/app/components/track/commands/update-track-file/update-track-file.handler';
 import { GetTrackHandler } from '../../../../../core/app/components/track/queries/get-track/get-track.handler';
 import { UpdateTrackFeatArtistsHandler } from '../../../../../core/app/components/track/commands/update-track-feat-artists/update-track-feat-artists.handler';
+import { TrackService } from '../../../../../core/app/components/track/track.service';
+import { TrackSubscriber } from '../../../../../core/app/components/track/events/track.subscriber';
+import { AlbumService } from '../../../../../core/app/components/album/album.service';
+import { ArtistService } from '../../../../../core/app/components/artist/artist.service';
 
 @Module({
   imports: [TmpFileStorageModule, ArtistFileStorageModule],
   providers: [
+    ArtistService,
+    AlbumService,
+    TrackService,
+    TrackSubscriber,
     CreateTrackHandler,
     DeleteTrackHandler,
     DeleteTrackFileHandler,

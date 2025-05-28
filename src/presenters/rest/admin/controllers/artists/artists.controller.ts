@@ -55,9 +55,8 @@ export class ArtistsController {
   @ApiCreatedResponse({ description: 'Artist', type: ArtistRO })
   @Post('/')
   async create(): Promise<ArtistRO> {
-    const { id } = await this._commandBus.execute(new CreateArtistCommand());
-
-    const createdArtist = await this._queryBus.execute(new GetArtistQuery(id));
+    const createdArtistId = await this._commandBus.execute(new CreateArtistCommand());
+    const createdArtist = await this._queryBus.execute(new GetArtistQuery(createdArtistId));
 
     if (!createdArtist) {
       throw new BadRequestException('Some error');
@@ -225,7 +224,7 @@ export class ArtistsController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete('/:id')
   async delete(@Param('id', ParseObjectIdPipe) id: string): Promise<void> {
-    return this._commandBus.execute(new DeleteArtistCommand(id));
+    await this._commandBus.execute(new DeleteArtistCommand(id));
   }
 
   @ApiOperation({ summary: 'Find an artist by id', operationId: 'findOne' })

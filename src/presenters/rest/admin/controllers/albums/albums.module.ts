@@ -10,10 +10,18 @@ import { UpdateAlbumHandler } from '../../../../../core/app/components/album/com
 import { UpdateAlbumCoverHandler } from '../../../../../core/app/components/album/commands/update-album-cover/update-album-cover.handler';
 import { GetAlbumHandler } from '../../../../../core/app/components/album/queries/get-album/get-album.handler';
 import { GetAlbumTracksHandler } from '../../../../../core/app/components/track/queries/get-album-tracks/get-album-tracks.handler';
+import { AlbumService } from '../../../../../core/app/components/album/album.service';
+import { AlbumSubscriber } from '../../../../../core/app/components/album/events/album.subscriber';
+import { TrackService } from '../../../../../core/app/components/track/track.service';
+import { ArtistService } from '../../../../../core/app/components/artist/artist.service';
 
 @Module({
   imports: [TmpFileStorageModule, ArtistFileStorageModule],
   providers: [
+    ArtistService,
+    AlbumService,
+    TrackService,
+    AlbumSubscriber,
     CreateAlbumHandler,
     DeleteAlbumHandler,
     DeleteAlbumCoverHandler,

@@ -11,12 +11,12 @@ import {
   AlbumTypes,
   getAlbumTypeLabelByValue,
 } from '../../../../../../core/domain/components/album/constants/album-types';
-import { AlbumDTO } from '../../../../../../core/app/components/album/queries/dtos/album.dto';
 import { TrackRO } from '../../tracks/ros/track.ro';
 import { OffsetLimitPaginationRO } from '../../../../common/ros/offset-limit-pagination.ro';
-import { TrackDTO } from '../../../../../../core/app/components/track/queries/dtos/track.dto';
 import { TracksRO } from '../../tracks/ros/tracks.ro';
 import { OffsetLimitPaginationResponseDTO } from '../../../../../../core/shared/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
+import { AlbumDTO } from '../../../../../../core/app/components/album/dtos/album.dto';
+import { TrackDTO } from '../../../../../../core/app/components/track/dtos/track.dto';
 
 export class AlbumRO {
   @ApiProperty({
