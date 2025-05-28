@@ -1,15 +1,15 @@
 import { Inject } from '@nestjs/common';
-import { FileStorage } from '../base/file-storage.abstract';
-import { ArtistId } from '../../../core/domain/components/artist/types';
-import { AlbumId } from '../../../core/domain/components/album/types';
-import { TrackId } from '../../../core/domain/components/track/types';
-import { ArtistFileStorage } from '../../../core/app/common/ports/file-storages/artist-file-storage.port';
+import { FileStorage } from './base/file-storage.abstract';
+import { ArtistId } from '../../core/domain/components/artist/types';
+import { AlbumId } from '../../core/domain/components/album/types';
+import { TrackId } from '../../core/domain/components/track/types';
+import { ArtistFileStorage } from '../../core/app/common/ports/file-storages/artist-file-storage.port';
 import {
   TMP_FILE_STORAGE_DI_TOKEN,
   TmpFileStorage,
-} from '../../../core/app/common/ports/file-storages/tmp-file-storage.port';
-import { StoredFileDTO } from '../../../core/app/common/ports/file-storages/common/dtos/stored-file.dto';
-import { TmpFileDTO } from '../../../core/app/common/ports/file-storages/common/dtos/tmp-file.dto';
+} from '../../core/app/common/ports/file-storages/tmp-file-storage.port';
+import { StoredFileDTO } from '../../core/app/common/ports/file-storages/common/dtos/stored-file.dto';
+import { TmpFileDTO } from '../../core/app/common/ports/file-storages/common/dtos/tmp-file.dto';
 
 export class ArtistFileStorageAdapter extends FileStorage implements ArtistFileStorage {
   constructor(@Inject(TMP_FILE_STORAGE_DI_TOKEN) private readonly _tmpFileStorage: TmpFileStorage) {

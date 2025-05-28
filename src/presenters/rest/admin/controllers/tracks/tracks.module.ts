@@ -1,6 +1,4 @@
 import { Module } from '@nestjs/common';
-import { TmpFileStorageModule } from '../../../../../infrastructure/storage/tmp-fs-storage/tmp-file-storage.module';
-import { ArtistFileStorageModule } from '../../../../../infrastructure/storage/artist-file-storage/artist-file-storage.module';
 import { TracksController } from './tracks.controller';
 import { CreateTrackHandler } from '../../../../../core/app/components/track/commands/create-track/create-track.handler';
 import { DeleteTrackHandler } from '../../../../../core/app/components/track/commands/delete-track/delete-track.handler';
@@ -15,7 +13,6 @@ import { AlbumService } from '../../../../../core/app/components/album/album.ser
 import { ArtistService } from '../../../../../core/app/components/artist/artist.service';
 
 @Module({
-  imports: [TmpFileStorageModule, ArtistFileStorageModule],
   providers: [
     ArtistService,
     AlbumService,

@@ -8,8 +8,6 @@ import { DeleteArtistAvatarHandler } from '../../../../../core/app/components/ar
 import { DeleteArtistCoverHandler } from '../../../../../core/app/components/artist/commands/delete-artist-cover/delete-artist-cover.handler';
 import { DeleteArtistHandler } from '../../../../../core/app/components/artist/commands/delete-artist/delete-artist.handler';
 import { GetArtistHandler } from '../../../../../core/app/components/artist/queries/get-artist/get-artist.handler';
-import { TmpFileStorageModule } from '../../../../../infrastructure/storage/tmp-fs-storage/tmp-file-storage.module';
-import { ArtistFileStorageModule } from '../../../../../infrastructure/storage/artist-file-storage/artist-file-storage.module';
 import { GetArtistAlbumsHandler } from '../../../../../core/app/components/album/queries/get-artist-albums/get-artist-albums.handler';
 import { GetArtistTracksHandler } from '../../../../../core/app/components/track/queries/get-artist-tracks/get-artist-tracks.handler';
 import { ArtistService } from '../../../../../core/app/components/artist/artist.service';
@@ -17,7 +15,6 @@ import { AlbumService } from '../../../../../core/app/components/album/album.ser
 import { TrackService } from '../../../../../core/app/components/track/track.service';
 
 @Module({
-  imports: [TmpFileStorageModule, ArtistFileStorageModule],
   providers: [
     ArtistService,
     AlbumService,

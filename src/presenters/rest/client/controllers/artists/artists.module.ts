@@ -5,12 +5,10 @@ import { GetArtistAlbumsHandler } from '../../../../../core/app/components/album
 import { GetArtistPublicStatusHandler } from '../../../../../core/app/components/artist/queries/get-artist-public-status/get-artist-public-status.handler';
 import { GetArtistTracksHandler } from '../../../../../core/app/components/track/queries/get-artist-tracks/get-artist-tracks.handler';
 import { ArtistService } from '../../../../../core/app/components/artist/artist.service';
-import { ArtistFileStorageModule } from '../../../../../infrastructure/storage/artist-file-storage/artist-file-storage.module';
 import { AlbumService } from '../../../../../core/app/components/album/album.service';
 import { TrackService } from '../../../../../core/app/components/track/track.service';
 
 @Module({
-  imports: [ArtistFileStorageModule],
   providers: [
     ArtistService,
     AlbumService,

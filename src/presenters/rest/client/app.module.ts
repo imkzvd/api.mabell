@@ -7,6 +7,7 @@ import { MongooseModule } from '../../../infrastructure/persistence/mongoose/mon
 import { UsersModule } from './controllers/users/users.module';
 import { ArtistsModule } from './controllers/artists/artists.module';
 import { IdModule } from '../../../infrastructure/services/id/id.module';
+import { StorageModule } from '../../../infrastructure/storage/storage.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { IdModule } from '../../../infrastructure/services/id/id.module';
     ConfigModule.forRoot(),
     CqrsModule.forRoot(),
     IdModule,
+    StorageModule,
     MongooseModule,
     UsersModule,
     ArtistsModule,

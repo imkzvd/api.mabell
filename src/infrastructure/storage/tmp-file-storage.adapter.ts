@@ -2,10 +2,10 @@ import * as path from 'path';
 import * as fsPromises from 'fs/promises';
 import * as process from 'process';
 import { v4 as uuidv4 } from 'uuid';
-import { redisClient } from '../../cache/redis/client';
-import { TmpFileStorage } from '../../../core/app/common/ports/file-storages/tmp-file-storage.port';
-import { TmpFileDTO } from '../../../core/app/common/ports/file-storages/common/dtos/tmp-file.dto';
-import { TmpFileId } from '../../../core/app/common/ports/file-storages/common/types';
+import { redisClient } from '../cache/redis/client';
+import { TmpFileStorage } from '../../core/app/common/ports/file-storages/tmp-file-storage.port';
+import { TmpFileDTO } from '../../core/app/common/ports/file-storages/common/dtos/tmp-file.dto';
+import { TmpFileId } from '../../core/app/common/ports/file-storages/common/types';
 
 export class TmpFileStorageAdapter implements TmpFileStorage {
   private readonly _dir: string = path.join(process.cwd(), '/tmp');

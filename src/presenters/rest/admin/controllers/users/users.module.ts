@@ -12,12 +12,10 @@ import { DeleteUserHandler } from '../../../../../core/app/components/user/comma
 import { GetUserHandler } from '../../../../../core/app/components/user/queries/get-user/get-user.handler';
 import { UpdateUserAvatarHandler } from '../../../../../core/app/components/user/commands/update-user-avatar/update-user-avatar.handler';
 import { DeleteUserAvatarHandler } from '../../../../../core/app/components/user/commands/delete-user-avatar/delete-user-avatar.handler';
-import { UserFileStorageModule } from '../../../../../infrastructure/storage/user-file-storage/user-file-storage.module';
-import { TmpFileStorageModule } from '../../../../../infrastructure/storage/tmp-fs-storage/tmp-file-storage.module';
 import { UserService } from '../../../../../core/app/components/user/user.service';
 
 @Module({
-  imports: [PasswordModule, TmpFileStorageModule, UserFileStorageModule],
+  imports: [PasswordModule],
   providers: [
     UserService,
     CreateUserHandler,
