@@ -3,12 +3,10 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Artist } from './artist.schema';
 import { ArtistWriteRepository } from '../../../../../core/domain/components/artist/repository/artist-write-repository.port';
-import {
-  Artist as DomainArtist,
-  ArtistId,
-} from '../../../../../core/domain/components/artist/artist.entity';
+import { Artist as DomainArtist } from '../../../../../core/domain/components/artist/artist.entity';
 import { ArtistDocument } from './types';
 import ArtistMapper from './artist.mapper';
+import { ArtistId } from '../../../../../core/domain/components/artist/types';
 
 @Injectable()
 export class ArtistWriteRepositoryAdapter implements ArtistWriteRepository {

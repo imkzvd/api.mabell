@@ -3,12 +3,10 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Admin } from './admin.schema';
 import AdminMapper from './admin.mapper';
-import {
-  Admin as DomainAdmin,
-  AdminId,
-} from '../../../../../core/domain/components/admin/admin.entity';
+import { Admin as DomainAdmin } from '../../../../../core/domain/components/admin/admin.entity';
 import { AdminWriteRepository } from '../../../../../core/domain/components/admin/repository/admin-write-repository.port';
 import { AdminDocument } from './types';
+import { AdminId } from '../../../../../core/domain/components/admin/types';
 
 @Injectable()
 export class AdminWriteRepositoryAdapter implements AdminWriteRepository {

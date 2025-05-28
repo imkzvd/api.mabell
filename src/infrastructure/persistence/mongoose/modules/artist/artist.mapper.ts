@@ -1,13 +1,11 @@
 import { Types } from 'mongoose';
 import { ReadMapper, WriteMapper } from '../../base/mapper.interface';
 import { Artist } from './artist.schema';
-import {
-  Artist as DomainArtist,
-  ArtistId,
-} from '../../../../../core/domain/components/artist/artist.entity';
+import { Artist as DomainArtist } from '../../../../../core/domain/components/artist/artist.entity';
 import { ArtistFactory } from '../../../../../core/domain/components/artist/artist.factory';
 import { ArtistDocument } from './types';
 import { ArtistDTO } from '../../../../../core/domain/components/artist/repository/dtos/artist.dto';
+import { ArtistId } from '../../../../../core/domain/components/artist/types';
 
 class ArtistMapper implements WriteMapper<Artist, DomainArtist>, ReadMapper<Artist, ArtistDTO> {
   toPersistenceEntity(entity: DomainArtist): Artist {
@@ -50,7 +48,7 @@ class ArtistMapper implements WriteMapper<Artist, DomainArtist>, ReadMapper<Arti
 
   toDTO(doc: Artist | ArtistDocument): ArtistDTO {
     return new ArtistDTO(
-      doc._id.toHexString(),
+      doc._id.toHexString() as ArtistId,
       doc.name,
       doc.birthName,
       doc.birthDate,

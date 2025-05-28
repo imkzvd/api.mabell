@@ -4,11 +4,9 @@ import { Model } from 'mongoose';
 import { Track } from './track.schema';
 import TrackMapper from './track.mapper';
 import { TrackWriteRepository } from '../../../../../core/domain/components/track/repository/track-write-repository.port';
-import {
-  Track as DomainTrack,
-  TrackId,
-} from '../../../../../core/domain/components/track/track.entity';
+import { Track as DomainTrack } from '../../../../../core/domain/components/track/track.entity';
 import { TrackDocument } from './types';
+import { TrackId } from '../../../../../core/domain/components/track/types';
 
 @Injectable()
 export class TrackWriteRepositoryAdapter implements TrackWriteRepository {
@@ -94,24 +92,28 @@ export class TrackWriteRepositoryAdapter implements TrackWriteRepository {
 
   async findByAlbumId(albumId: string): Promise<{
     items: DomainTrack[];
+    itemIds: TrackId[];
     total: number;
   }> {
     const foundDocs = await this._trackModel.find({ album: albumId }).lean<Track[]>().exec();
 
     return {
       items: foundDocs.map((doc) => TrackMapper.toDomainEntity(doc)),
+      itemIds: foundDocs.map((doc) => doc._id.toHexString() as TrackId),
       total: foundDocs.length,
     };
   }
 
   async findByFeatArtistId(artistId: string): Promise<{
     items: DomainTrack[];
+    itemIds: TrackId[];
     total: number;
   }> {
     const foundDocs = await this._trackModel.find({ featArtists: artistId }).lean<Track[]>().exec();
 
     return {
       items: foundDocs.map((doc) => TrackMapper.toDomainEntity(doc)),
+      itemIds: foundDocs.map((doc) => doc._id.toHexString() as TrackId),
       total: foundDocs.length,
     };
   }
@@ -123,8 +125,8 @@ export class TrackWriteRepositoryAdapter implements TrackWriteRepository {
   }
 
   async getNextAlbumTrackIndex(albumId: string): Promise<number> {
-    const docsTotal = await this._trackModel.countDocuments({ album: albumId });
+    let docsTotal = await this._trackModel.countDocuments({ album: albumId });
 
-    return docsTotal + 1;
+    return docsTotal === 0 ? docsTotal : docsTotal++;
   }
 }
