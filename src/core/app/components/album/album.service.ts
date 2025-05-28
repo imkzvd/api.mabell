@@ -26,13 +26,18 @@ import {
   ARTIST_FILE_STORAGE_DI_TOKEN,
   ArtistFileStorage,
 } from '../../common/ports/file-storages/artist-file-storage.port';
+import {
+  TMP_FILE_STORAGE_DI_TOKEN,
+  TmpFileStorage,
+} from '../../common/ports/file-storages/tmp-file-storage.port';
 
 export class AlbumService {
   constructor(
     @Inject(ALBUM_WRITE_REPOSITORY_DI_TOKEN) private readonly _albumWR: AlbumWriteRepository,
     @Inject(ALBUM_READ_REPOSITORY_DI_TOKEN) private readonly _albumRR: AlbumReadRepository,
     @Inject(ID_SERVICE_DI_TOKEN) private readonly _idService: IdService<AlbumId>,
-    @Inject(ARTIST_FILE_STORAGE_DI_TOKEN) private readonly _fs: ArtistFileStorage,
+    @Inject(TMP_FILE_STORAGE_DI_TOKEN) private readonly _tmpFS: TmpFileStorage,
+    @Inject(ARTIST_FILE_STORAGE_DI_TOKEN) private readonly _artistFS: ArtistFileStorage,
   ) {}
 
   async createAlbum(payload: CreateAlbumPayload): Promise<AlbumId> {
@@ -114,10 +119,16 @@ export class AlbumService {
     }
 
     if (payload.fileId) {
-      const storedFileData = await this._fs.saveAlbumCover(
+      const tmpFile = await this._tmpFS.findById(payload.fileId);
+
+      if (!tmpFile) {
+        throw new NotFoundException('File does not uploaded');
+      }
+
+      const storedFileData = await this._artistFS.saveAlbumCover(
         foundAlbum.getMainArtist(),
         foundAlbum.getId(),
-        payload.fileId,
+        tmpFile,
       );
 
       foundAlbum.updateCover(storedFileData.path);
@@ -143,7 +154,7 @@ export class AlbumService {
     foundAlbum.deleteColor();
 
     await this._albumWR.save(foundAlbum);
-    await this._fs.deleteAlbumCover(foundAlbum.getMainArtist(), foundAlbum.getId());
+    await this._artistFS.deleteAlbumCover(foundAlbum.getMainArtist(), foundAlbum.getId());
 
     return foundAlbum.getId();
   }

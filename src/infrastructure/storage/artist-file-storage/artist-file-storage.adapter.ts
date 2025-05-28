@@ -1,6 +1,5 @@
 import { Inject } from '@nestjs/common';
 import { FileStorage } from '../base/file-storage.abstract';
-import { BadRequestException } from '../../../core/shared/exceptions';
 import { ArtistId } from '../../../core/domain/components/artist/types';
 import { AlbumId } from '../../../core/domain/components/album/types';
 import { TrackId } from '../../../core/domain/components/track/types';
@@ -10,25 +9,21 @@ import {
   TmpFileStorage,
 } from '../../../core/app/common/ports/file-storages/tmp-file-storage.port';
 import { StoredFileDTO } from '../../../core/app/common/ports/file-storages/common/dtos/stored-file.dto';
+import { TmpFileDTO } from '../../../core/app/common/ports/file-storages/common/dtos/tmp-file.dto';
 
 export class ArtistFileStorageAdapter extends FileStorage implements ArtistFileStorage {
   constructor(@Inject(TMP_FILE_STORAGE_DI_TOKEN) private readonly _tmpFileStorage: TmpFileStorage) {
     super('artists');
   }
 
-  async saveArtistAvatar(artistId: ArtistId, fileId: string): Promise<StoredFileDTO> {
-    const tmpFileData = await this._tmpFileStorage.findById(fileId);
-
-    if (!tmpFileData) {
-      throw new BadRequestException('The file has not been uploaded');
-    }
-
+  async saveArtistAvatar(artistId: ArtistId, file: TmpFileDTO): Promise<StoredFileDTO> {
     await this.createArtistDirectoryById(artistId);
-    const { fileName, absPath, relPath } = this.getArtistAvatarMetaById(artistId);
-    await this.convertAndSaveImage(tmpFileData.path, absPath);
-    await this._tmpFileStorage.deleteById(tmpFileData.id);
 
-    return new StoredFileDTO(fileName, relPath, absPath, tmpFileData.size, tmpFileData.type);
+    const { fileName, absPath, relPath } = this.getArtistAvatarMetaById(artistId);
+    await this.convertAndSaveImage(file.path, absPath);
+    await this._tmpFileStorage.deleteById(file.id);
+
+    return new StoredFileDTO(fileName, relPath, absPath, file.size, file.type);
   }
 
   deleteArtistAvatar(id: ArtistId): Promise<void> {
@@ -37,19 +32,14 @@ export class ArtistFileStorageAdapter extends FileStorage implements ArtistFileS
     return this.deleteByPath(absPath);
   }
 
-  async saveArtistCover(id: ArtistId, fileId: string): Promise<StoredFileDTO> {
-    const tmpFileData = await this._tmpFileStorage.findById(fileId);
-
-    if (!tmpFileData) {
-      throw new BadRequestException('The file has not been uploaded');
-    }
-
+  async saveArtistCover(id: ArtistId, file: TmpFileDTO): Promise<StoredFileDTO> {
     await this.createArtistDirectoryById(id);
-    const { fileName, absPath, relPath } = this.getArtistCoverMetaById(id);
-    await this.convertAndSaveImage(tmpFileData.path, absPath);
-    await this._tmpFileStorage.deleteById(tmpFileData.id);
 
-    return new StoredFileDTO(fileName, relPath, absPath, tmpFileData.size, tmpFileData.type);
+    const { fileName, absPath, relPath } = this.getArtistCoverMetaById(id);
+    await this.convertAndSaveImage(file.path, absPath);
+    await this._tmpFileStorage.deleteById(file.id);
+
+    return new StoredFileDTO(fileName, relPath, absPath, file.size, file.type);
   }
 
   deleteArtistCover(id: ArtistId): Promise<void> {
@@ -94,19 +84,14 @@ export class ArtistFileStorageAdapter extends FileStorage implements ArtistFileS
     };
   }
 
-  async saveAlbumCover(id: ArtistId, albumId: AlbumId, fileId: string): Promise<StoredFileDTO> {
-    const tmpFileData = await this._tmpFileStorage.findById(fileId);
-
-    if (!tmpFileData) {
-      throw new BadRequestException('The file has not been uploaded');
-    }
-
+  async saveAlbumCover(id: ArtistId, albumId: AlbumId, file: TmpFileDTO): Promise<StoredFileDTO> {
     await this.createAlbumDirectoryById(id, albumId);
-    const { fileName, absPath, relPath } = this.getAlbumCoverMetaById(id, albumId);
-    await this.convertAndSaveImage(tmpFileData.path, absPath);
-    await this._tmpFileStorage.deleteById(tmpFileData.id);
 
-    return new StoredFileDTO(fileName, relPath, absPath, tmpFileData.size, tmpFileData.type);
+    const { fileName, absPath, relPath } = this.getAlbumCoverMetaById(id, albumId);
+    await this.convertAndSaveImage(file.path, absPath);
+    await this._tmpFileStorage.deleteById(file.id);
+
+    return new StoredFileDTO(fileName, relPath, absPath, file.size, file.type);
   }
 
   deleteAlbumCover(artistId: ArtistId, albumId: AlbumId): Promise<void> {
@@ -125,19 +110,14 @@ export class ArtistFileStorageAdapter extends FileStorage implements ArtistFileS
     id: ArtistId,
     albumId: AlbumId,
     trackId: TrackId,
-    fileId: string,
+    file: TmpFileDTO,
   ): Promise<StoredFileDTO> {
-    const tmpFileData = await this._tmpFileStorage.findById(fileId);
-
-    if (!tmpFileData) {
-      throw new BadRequestException('The file has not been uploaded');
-    }
-
     await this.createAlbumDirectoryById(id, albumId);
-    const { fileName, absPath, relPath } = this.getTrackMeta(id, albumId, trackId);
-    await this.moveFile(tmpFileData.path, absPath);
 
-    return new StoredFileDTO(fileName, relPath, absPath, tmpFileData.size, tmpFileData.type);
+    const { fileName, absPath, relPath } = this.getTrackMeta(id, albumId, trackId);
+    await this.moveFile(file.path, absPath);
+
+    return new StoredFileDTO(fileName, relPath, absPath, file.size, file.type);
   }
 
   deleteTrack(artistId: ArtistId, albumId: AlbumId, trackId: TrackId): Promise<void> {

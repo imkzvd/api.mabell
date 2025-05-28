@@ -18,13 +18,18 @@ import {
   ARTIST_FILE_STORAGE_DI_TOKEN,
   ArtistFileStorage,
 } from '../../common/ports/file-storages/artist-file-storage.port';
+import {
+  TMP_FILE_STORAGE_DI_TOKEN,
+  TmpFileStorage,
+} from '../../common/ports/file-storages/tmp-file-storage.port';
 
 export class ArtistService {
   constructor(
     @Inject(ARTIST_WRITE_REPOSITORY_DI_TOKEN) private readonly _wr: ArtistWriteRepository,
     @Inject(ARTIST_READ_REPOSITORY_DI_TOKEN) private readonly _rr: ArtistReadRepository,
     @Inject(ID_SERVICE_DI_TOKEN) private readonly _idService: IdService<ArtistId>,
-    @Inject(ARTIST_FILE_STORAGE_DI_TOKEN) private readonly _fs: ArtistFileStorage,
+    @Inject(TMP_FILE_STORAGE_DI_TOKEN) private readonly _tmpFS: TmpFileStorage,
+    @Inject(ARTIST_FILE_STORAGE_DI_TOKEN) private readonly _artistFS: ArtistFileStorage,
   ) {}
 
   async createArtist(): Promise<ArtistId> {
@@ -88,7 +93,13 @@ export class ArtistService {
     }
 
     if (payload.fileId) {
-      const storedFileData = await this._fs.saveArtistAvatar(foundArtist.getId(), payload.fileId);
+      const tmpFile = await this._tmpFS.findById(payload.fileId);
+
+      if (!tmpFile) {
+        throw new NotFoundException('File does not uploaded');
+      }
+
+      const storedFileData = await this._artistFS.saveArtistAvatar(foundArtist.getId(), tmpFile);
 
       foundArtist.updateAvatar(storedFileData.path);
     }
@@ -113,7 +124,7 @@ export class ArtistService {
     foundArtist.deleteAccentColor();
 
     await this._wr.save(foundArtist);
-    await this._fs.deleteArtistAvatar(foundArtist.getId());
+    await this._artistFS.deleteArtistAvatar(foundArtist.getId());
 
     return foundArtist.getId();
   }
@@ -126,7 +137,13 @@ export class ArtistService {
     }
 
     if (payload.fileId) {
-      const storedFileData = await this._fs.saveArtistCover(foundArtist.getId(), payload.fileId);
+      const tmpFile = await this._tmpFS.findById(payload.fileId);
+
+      if (!tmpFile) {
+        throw new NotFoundException('File does not uploaded');
+      }
+
+      const storedFileData = await this._artistFS.saveArtistCover(foundArtist.getId(), tmpFile);
 
       foundArtist.updateCover(storedFileData.path);
     }
@@ -150,7 +167,7 @@ export class ArtistService {
     foundArtist.deleteCover();
     foundArtist.deleteSecondaryColor();
     await this._wr.save(foundArtist);
-    await this._fs.deleteArtistCover(foundArtist.getId());
+    await this._artistFS.deleteArtistCover(foundArtist.getId());
 
     return foundArtist.getId();
   }
@@ -162,7 +179,7 @@ export class ArtistService {
       throw new NotFoundException('Artist does not exist');
     }
 
-    await this._fs.deleteArtistDirectory(deletedArtistId);
+    await this._artistFS.deleteArtistDirectory(deletedArtistId);
 
     return deletedArtistId;
   }

@@ -1,7 +1,8 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { TmpFileStorageAdapter } from './tmp-file-storage.adapter';
 import { TMP_FILE_STORAGE_DI_TOKEN } from '../../../core/app/common/ports/file-storages/tmp-file-storage.port';
 
+@Global()
 @Module({
   providers: [
     {

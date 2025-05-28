@@ -27,13 +27,18 @@ import {
   ARTIST_FILE_STORAGE_DI_TOKEN,
   ArtistFileStorage,
 } from '../../common/ports/file-storages/artist-file-storage.port';
+import {
+  TMP_FILE_STORAGE_DI_TOKEN,
+  TmpFileStorage,
+} from '../../common/ports/file-storages/tmp-file-storage.port';
 
 export class TrackService {
   constructor(
     @Inject(TRACK_WRITE_REPOSITORY_DI_TOKEN) private readonly _wr: TrackWriteRepository,
     @Inject(TRACK_READ_REPOSITORY_DI_TOKEN) private readonly _rr: TrackReadRepository,
     @Inject(ID_SERVICE_DI_TOKEN) private readonly _idService: IdService<TrackId>,
-    @Inject(ARTIST_FILE_STORAGE_DI_TOKEN) private readonly _fs: ArtistFileStorage,
+    @Inject(TMP_FILE_STORAGE_DI_TOKEN) private readonly _tmpFS: TmpFileStorage,
+    @Inject(ARTIST_FILE_STORAGE_DI_TOKEN) private readonly _artistFS: ArtistFileStorage,
   ) {}
 
   async createTrack(payload: CreateTrackPayload): Promise<TrackId> {
@@ -87,11 +92,17 @@ export class TrackService {
       throw new NotFoundException('Track does not exist');
     }
 
-    const storedFileData = await this._fs.saveTrack(
+    const tmpFile = await this._tmpFS.findById(payload.fileId);
+
+    if (!tmpFile) {
+      throw new NotFoundException('Track file does not uploaded');
+    }
+
+    const storedFileData = await this._artistFS.saveTrack(
       foundTrack.getMainArtist(),
       foundTrack.getAlbum(),
       foundTrack.getId(),
-      payload.fileId,
+      tmpFile,
     );
 
     foundTrack.updateFile(storedFileData.path);
@@ -114,7 +125,7 @@ export class TrackService {
     foundTrack.updateActiveStatus(false);
 
     await this._wr.save(foundTrack);
-    await this._fs.deleteTrack(
+    await this._artistFS.deleteTrack(
       foundTrack.getMainArtist(),
       foundTrack.getAlbum(),
       foundTrack.getId(),
@@ -175,7 +186,7 @@ export class TrackService {
     }
 
     await this._wr.deleteById(id);
-    await this._fs.deleteTrack(
+    await this._artistFS.deleteTrack(
       foundTrack.getMainArtist(),
       foundTrack.getAlbum(),
       foundTrack.getId(),
