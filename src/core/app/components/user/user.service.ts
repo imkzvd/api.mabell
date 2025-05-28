@@ -28,11 +28,11 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '../../../shared/exceptions';
+import { UserId } from '../../../domain/components/user/types';
 import {
   USER_FILE_STORAGE_DI_TOKEN,
   UserFileStorage,
-} from './ports/storage/user-file-storage.port';
-import { UserId } from '../../../domain/components/user/types';
+} from '../../common/ports/file-storages/user-file-storage.port';
 
 export class UserService {
   constructor(

@@ -15,11 +15,11 @@ import { PlaylistId } from '../../../domain/components/playlist/types';
 import { TrackId } from '../../../domain/components/track/types';
 import { PlaylistDTO } from './dtos/playlist.dto';
 import PlaylistMapper from './dtos/playlist.mapper';
+import { OffsetLimitPaginationDTO } from '../../../shared/dtos/offset-limit-pagination/offset-limit-pagination-payload.dto';
 import {
   USER_FILE_STORAGE_DI_TOKEN,
   UserFileStorage,
-} from '../user/ports/storage/user-file-storage.port';
-import { OffsetLimitPaginationDTO } from '../../../shared/dtos/offset-limit-pagination/offset-limit-pagination-payload.dto';
+} from '../../common/ports/file-storages/user-file-storage.port';
 
 export class PlaylistService {
   constructor(
