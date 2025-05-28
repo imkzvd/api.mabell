@@ -1,6 +1,5 @@
 import { Inject } from '@nestjs/common';
 import { UserFileStorage } from '../../../core/app/components/user/ports/storage/user-file-storage.port';
-import { UserId } from '../../../core/domain/components/user/user.entity';
 import { StoredFileDTO } from '../../../core/app/common/dtos/file/stored-file.dto';
 import { FileStorage } from '../base/file-storage.abstract';
 import {
@@ -8,7 +7,8 @@ import {
   TmpFileStorage,
 } from '../../../core/app/components/upload/storage/tmp-file-storage.port';
 import { BadRequestException } from '../../../core/shared/exceptions';
-import { PlaylistId } from '../../../core/domain/components/playlist/playlist.entity';
+import { PlaylistId } from '../../../core/domain/components/playlist/types';
+import { UserId } from '../../../core/domain/components/user/types';
 
 export class UserFileStorageAdapter extends FileStorage implements UserFileStorage {
   constructor(

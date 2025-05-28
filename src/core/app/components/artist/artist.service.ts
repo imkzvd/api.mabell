@@ -7,10 +7,6 @@ import { ID_SERVICE_DI_TOKEN, IdService } from '../../common/ports/id-service.po
 import { ArtistFactory } from '../../../domain/components/artist/artist.factory';
 import { UpdateArtistAvatarPayload, UpdateArtistCoverPayload, UpdateArtistPayload } from './types';
 import { NotFoundException } from '../../../shared/exceptions';
-import {
-  ARTIST_FILE_STORAGE_DI_TOKEN,
-  ArtistFileStorage,
-} from './ports/storage/artist-file-storage.port';
 import { ArtistDTO } from './dtos/artist.dto';
 import {
   ARTIST_READ_REPOSITORY_DI_TOKEN,
@@ -18,6 +14,10 @@ import {
 } from '../../../domain/components/artist/repository/artist-read-repository.port';
 import ArtistMapper from './dtos/artist.mapper';
 import { ArtistId } from '../../../domain/components/artist/types';
+import {
+  ARTIST_FILE_STORAGE_DI_TOKEN,
+  ArtistFileStorage,
+} from '../../common/ports/file-storages/artist-file-storage.port';
 
 export class ArtistService {
   constructor(

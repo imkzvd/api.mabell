@@ -13,10 +13,6 @@ import {
 import { ID_SERVICE_DI_TOKEN, IdService } from '../../common/ports/id-service.port';
 import { NotFoundException } from '../../../shared/exceptions';
 import { TrackFactory } from '../../../domain/components/track/track.factory';
-import {
-  ARTIST_FILE_STORAGE_DI_TOKEN,
-  ArtistFileStorage,
-} from '../artist/ports/storage/artist-file-storage.port';
 import { TrackDTO } from './dtos/track.dto';
 import {
   TRACK_READ_REPOSITORY_DI_TOKEN,
@@ -27,6 +23,10 @@ import { OffsetLimitPaginationResponseDTO } from '../../../shared/dtos/offset-li
 import { OffsetLimitPaginationDTO } from '../../../shared/dtos/offset-limit-pagination/offset-limit-pagination-payload.dto';
 import { TrackId } from '../../../domain/components/track/types';
 import { ArtistId } from '../../../domain/components/artist/types';
+import {
+  ARTIST_FILE_STORAGE_DI_TOKEN,
+  ArtistFileStorage,
+} from '../../common/ports/file-storages/artist-file-storage.port';
 
 export class TrackService {
   constructor(

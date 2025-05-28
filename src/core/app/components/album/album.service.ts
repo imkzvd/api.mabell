@@ -13,10 +13,6 @@ import {
 import { AlbumFactory } from '../../../domain/components/album/album.factory';
 import { BadRequestException, NotFoundException } from '../../../shared/exceptions';
 import {
-  ARTIST_FILE_STORAGE_DI_TOKEN,
-  ArtistFileStorage,
-} from '../artist/ports/storage/artist-file-storage.port';
-import {
   ALBUM_READ_REPOSITORY_DI_TOKEN,
   AlbumReadRepository,
 } from '../../../domain/components/album/repository/album-read-repository.port';
@@ -26,6 +22,10 @@ import { OffsetLimitPaginationResponseDTO } from '../../../shared/dtos/offset-li
 import { AlbumDTO } from './dtos/album.dto';
 import { AlbumId } from '../../../domain/components/album/types';
 import { ArtistId } from '../../../domain/components/artist/types';
+import {
+  ARTIST_FILE_STORAGE_DI_TOKEN,
+  ArtistFileStorage,
+} from '../../common/ports/file-storages/artist-file-storage.port';
 
 export class AlbumService {
   constructor(
