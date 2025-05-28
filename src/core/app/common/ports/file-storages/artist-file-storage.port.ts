@@ -1,7 +1,7 @@
-import { StoredFileDTO } from '../../dtos/file/stored-file.dto';
 import { ArtistId } from '../../../../domain/components/artist/types';
 import { AlbumId } from '../../../../domain/components/album/types';
 import { TrackId } from '../../../../domain/components/track/types';
+import { StoredFileDTO } from './common/dtos/stored-file.dto';
 
 export const ARTIST_FILE_STORAGE_DI_TOKEN = Symbol('ARTIST_FILE_STORAGE_DI_TOKEN');
 

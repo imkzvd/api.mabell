@@ -1,6 +1,8 @@
+import { TmpFileId } from '../types';
+
 export class TmpFileDTO {
   constructor(
-    public readonly id: string,
+    public readonly id: TmpFileId,
     public readonly name: string,
     public readonly originalName: string,
     public readonly fullPath: string,

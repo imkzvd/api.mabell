@@ -1,7 +1,7 @@
 import * as process from 'node:process';
 import { ApiProperty } from '@nestjs/swagger';
 import { faker } from '@faker-js/faker';
-import { TmpFileDTO } from '../../../../../../core/app/components/upload/dtos/tmp-file.dto';
+import { TmpFileDTO } from '../../../../../../core/app/common/ports/file-storages/common/dtos/tmp-file.dto';
 
 export class TmpFileRO {
   @ApiProperty({

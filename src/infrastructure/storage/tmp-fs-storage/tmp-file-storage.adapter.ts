@@ -2,9 +2,10 @@ import * as path from 'path';
 import * as fsPromises from 'fs/promises';
 import * as process from 'process';
 import { v4 as uuidv4 } from 'uuid';
-import { TmpFileStorage } from '../../../core/app/components/upload/storage/tmp-file-storage.port';
-import { TmpFileDTO } from '../../../core/app/components/upload/dtos/tmp-file.dto';
 import { redisClient } from '../../cache/redis/client';
+import { TmpFileStorage } from '../../../core/app/common/ports/file-storages/tmp-file-storage.port';
+import { TmpFileDTO } from '../../../core/app/common/ports/file-storages/common/dtos/tmp-file.dto';
+import { TmpFileId } from '../../../core/app/common/ports/file-storages/common/types';
 
 export class TmpFileStorageAdapter implements TmpFileStorage {
   private readonly _dir: string = path.join(process.cwd(), '/tmp');
@@ -14,7 +15,7 @@ export class TmpFileStorageAdapter implements TmpFileStorage {
   }
 
   async upload(file: Express.Multer.File): Promise<TmpFileDTO> {
-    const generatedId = uuidv4();
+    const generatedId = uuidv4() as TmpFileId;
     const fileExtension = path.extname(file.originalname);
     const originalFileName = file.originalname.replace(fileExtension, '');
     const uniqueFileName = `${generatedId}${fileExtension}`;
@@ -58,7 +59,7 @@ export class TmpFileStorageAdapter implements TmpFileStorage {
     return fileData ? (JSON.parse(fileData) as TmpFileDTO) : null;
   }
 
-  async deleteById(id: string): Promise<string | null> {
+  async deleteById(id: string): Promise<TmpFileId | null> {
     const fileData = await redisClient.get(`file:${id}`);
 
     if (!fileData) return null;

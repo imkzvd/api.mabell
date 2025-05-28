@@ -23,9 +23,9 @@ import { faker } from '@faker-js/faker';
 import { UploadFileDTO } from './dtos/upload-file.dto';
 import { TmpFileRO } from './ros/tmp-file.ro';
 import { UploadFileCommand } from '../../../../../core/app/components/upload/commands/upload-file/upload-file.command';
-import { GetFileByIdQuery } from '../../../../../core/app/components/upload/queries/get-file-by-id/get-file-by-id.query';
+import { GetFileQuery } from '../../../../../core/app/components/upload/queries/get-file/get-file.query';
 import { BadRequestException } from '../../../../../core/shared/exceptions';
-import { DeleteFileByIdCommand } from '../../../../../core/app/components/upload/commands/delete-file-by-id/delete-file-by-id.command';
+import { DeleteFileCommand } from '../../../../../core/app/components/upload/commands/delete-file/delete-file.command';
 import { DeleteAllFilesCommand } from '../../../../../core/app/components/upload/commands/delete-all-files/delete-all-files.command';
 
 @ApiTags('Uploads')
@@ -42,9 +42,9 @@ export class UploadsController {
   @UseInterceptors(FileInterceptor('file'))
   @Post('/')
   async upload(@UploadedFile() file: Express.Multer.File): Promise<TmpFileRO> {
-    const { id } = await this._commandBus.execute(new UploadFileCommand(file));
+    const uploadedFileId = await this._commandBus.execute(new UploadFileCommand(file));
 
-    const fileData = await this._queryBus.execute(new GetFileByIdQuery(id));
+    const fileData = await this._queryBus.execute(new GetFileQuery(uploadedFileId));
 
     if (!fileData) {
       throw new BadRequestException('The file has not been uploaded');
@@ -67,7 +67,7 @@ export class UploadsController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete('/:id')
   async delete(@Param('id') id: string): Promise<void> {
-    return this._commandBus.execute(new DeleteFileByIdCommand(id));
+    await this._commandBus.execute(new DeleteFileCommand(id));
   }
 
   @ApiOperation({ summary: 'Delete all tmp file', operationId: 'deleteAll' })
@@ -91,7 +91,7 @@ export class UploadsController {
   })
   @Get('/:id')
   async findOne(@Param('id') id: string): Promise<TmpFileRO> {
-    const fileData = await this._queryBus.execute(new GetFileByIdQuery(id));
+    const fileData = await this._queryBus.execute(new GetFileQuery(id));
 
     if (!fileData) {
       throw new BadRequestException('The file has not been uploaded');
