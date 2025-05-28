@@ -1,9 +1,10 @@
-import { Genre } from '../../../../../domain/common/constants/genres';
-import { UserDTO } from '../../../user/queries/dtos/user.dto';
+import { PlaylistId } from '../../../../domain/components/playlist/types';
+import { Genre } from '../../../../domain/common/constants/genres';
+import { UserDTO } from '../../user/dtos/user.dto';
 
 export class PlaylistDTO {
   constructor(
-    public readonly id: string,
+    public readonly id: PlaylistId,
     public readonly owner: UserDTO,
     public readonly name: string,
     public readonly genres: Genre[],

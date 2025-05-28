@@ -1,5 +1,5 @@
 import { PlaylistDTO } from './playlist.dto';
-import { PlaylistWithOwnerDTO } from '../../../../../domain/components/playlist/repository/dtos/playlist-with-owner.dto';
+import { PlaylistWithOwnerDTO } from '../../../../domain/components/playlist/repository/dtos/playlist-with-owner.dto';
 
 class PlaylistMapper {
   toDTO(dto: PlaylistWithOwnerDTO): PlaylistDTO {

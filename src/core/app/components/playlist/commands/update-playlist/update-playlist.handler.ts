@@ -1,42 +1,22 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
-import { NotFoundException } from '../../../../../shared/exceptions';
 import { UpdatePlaylistCommand } from './update-playlist.command';
-import {
-  PLAYLIST_WRITE_REPOSITORY_DI_TOKEN,
-  PlaylistWriteRepository,
-} from '../../../../../domain/components/playlist/repository/playlist-write-repository.port';
+import { PlaylistService } from '../../playlist.service';
+import { EVENT_BUS_DI_TOKEN, EventBus } from '../../../../common/ports/event-bus.port';
+import { PlaylistUpdatedEvent } from '../../../../common/events/playlist-updated.event';
 
 @CommandHandler(UpdatePlaylistCommand)
 export class UpdatePlaylistHandler implements ICommandHandler<UpdatePlaylistCommand> {
   constructor(
-    @Inject(PLAYLIST_WRITE_REPOSITORY_DI_TOKEN)
-    private readonly _playlistWriteRepository: PlaylistWriteRepository,
+    @Inject(PlaylistService) private readonly _playlistService: PlaylistService,
+    @Inject(EVENT_BUS_DI_TOKEN) private readonly _eb: EventBus,
   ) {}
 
   async execute({ id, payload }: UpdatePlaylistCommand) {
-    const foundPlaylist = await this._playlistWriteRepository.findById(id);
+    const updatedPlaylistId = await this._playlistService.updatePlaylist(id, payload);
 
-    if (!foundPlaylist) {
-      throw new NotFoundException(`There is no playlist with the specified ID`);
-    }
+    this._eb.publish(new PlaylistUpdatedEvent({ id: updatedPlaylistId }));
 
-    if (payload.name) {
-      foundPlaylist.updateName(payload.name);
-    }
-
-    if (payload.genres) {
-      foundPlaylist.updateGenres(payload.genres);
-    }
-
-    if (payload.description) {
-      foundPlaylist.updateDescription(payload.description);
-    }
-
-    if (typeof payload.isPublic === 'boolean') {
-      foundPlaylist.updatePublicStatus(payload.isPublic);
-    }
-
-    return this._playlistWriteRepository.save(foundPlaylist);
+    return updatedPlaylistId;
   }
 }

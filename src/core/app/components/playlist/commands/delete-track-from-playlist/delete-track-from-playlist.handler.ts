@@ -1,42 +1,36 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
 import { NotFoundException } from '../../../../../shared/exceptions';
-import {
-  PLAYLIST_WRITE_REPOSITORY_DI_TOKEN,
-  PlaylistWriteRepository,
-} from '../../../../../domain/components/playlist/repository/playlist-write-repository.port';
-import {
-  TRACK_WRITE_REPOSITORY_DI_TOKEN,
-  TrackWriteRepository,
-} from '../../../../../domain/components/track/repository/track-write-repository.port';
 import { DeleteTrackFromPlaylistCommand } from './delete-track-from-playlist.command';
+import { PlaylistService } from '../../playlist.service';
+import { EVENT_BUS_DI_TOKEN, EventBus } from '../../../../common/ports/event-bus.port';
+import { PlaylistUpdatedEvent } from '../../../../common/events/playlist-updated.event';
+import { TrackService } from '../../../track/track.service';
 
 @CommandHandler(DeleteTrackFromPlaylistCommand)
 export class DeleteTrackFromPlaylistHandler
   implements ICommandHandler<DeleteTrackFromPlaylistCommand>
 {
   constructor(
-    @Inject(PLAYLIST_WRITE_REPOSITORY_DI_TOKEN)
-    private readonly _playlistWriteRepository: PlaylistWriteRepository,
-    @Inject(TRACK_WRITE_REPOSITORY_DI_TOKEN)
-    private readonly _trackWriteRepository: TrackWriteRepository,
+    @Inject(PlaylistService) private readonly _playlistService: PlaylistService,
+    @Inject(TrackService) private readonly _trackService: TrackService,
+    @Inject(EVENT_BUS_DI_TOKEN) private readonly _eb: EventBus,
   ) {}
 
   async execute({ playlistId, trackId }: DeleteTrackFromPlaylistCommand) {
-    const foundPlaylist = await this._playlistWriteRepository.findById(playlistId);
+    const verifiedTrackId = await this._trackService.verifyTrackId(trackId);
 
-    if (!foundPlaylist) {
-      throw new NotFoundException('Playlist does not exist');
-    }
-
-    const existsTrackId = await this._trackWriteRepository.existsById(trackId);
-
-    if (!existsTrackId) {
+    if (!verifiedTrackId) {
       throw new NotFoundException('Track does not exist');
     }
 
-    foundPlaylist.deleteTrack(existsTrackId);
+    const updatedPlaylistId = await this._playlistService.deleteTrackFromPlaylist(
+      playlistId,
+      verifiedTrackId,
+    );
 
-    return this._playlistWriteRepository.save(foundPlaylist);
+    this._eb.publish(new PlaylistUpdatedEvent({ id: updatedPlaylistId }));
+
+    return updatedPlaylistId;
   }
 }

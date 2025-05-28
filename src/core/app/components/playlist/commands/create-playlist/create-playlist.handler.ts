@@ -2,49 +2,32 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
 import { NotFoundException } from '../../../../../shared/exceptions';
 import { CreatePlaylistCommand } from './create-playlist.command';
-import {
-  PLAYLIST_WRITE_REPOSITORY_DI_TOKEN,
-  PlaylistWriteRepository,
-} from '../../../../../domain/components/playlist/repository/playlist-write-repository.port';
-import {
-  USER_WRITE_REPOSITORY_DI_TOKEN,
-  UserWriteRepository,
-} from '../../../../../domain/components/user/repository/user-write-repository.port';
-import { PlaylistFactory } from '../../../../../domain/components/playlist/playlist.factory';
-import { ID_SERVICE_DI_TOKEN, IdService } from '../../../../common/services/id-service.port';
-import { PlaylistId } from '../../../../../domain/components/playlist/playlist.entity';
+import { PlaylistService } from '../../playlist.service';
+import { EVENT_BUS_DI_TOKEN, EventBus } from '../../../../common/ports/event-bus.port';
+import { UserService } from '../../../user/user.service';
+import { PlaylistCreatedEvent } from '../../../../common/events/playlist-created.event';
 
 @CommandHandler(CreatePlaylistCommand)
 export class CreatePlaylistHandler implements ICommandHandler<CreatePlaylistCommand> {
   constructor(
-    @Inject(PLAYLIST_WRITE_REPOSITORY_DI_TOKEN)
-    private readonly _playlistWriteRepository: PlaylistWriteRepository,
-    @Inject(USER_WRITE_REPOSITORY_DI_TOKEN)
-    private readonly _userWriteRepository: UserWriteRepository,
-    @Inject(ID_SERVICE_DI_TOKEN)
-    private readonly _idService: IdService<PlaylistId>,
+    @Inject(PlaylistService) private readonly _playlistService: PlaylistService,
+    @Inject(UserService) private readonly _userService: UserService,
+    @Inject(EVENT_BUS_DI_TOKEN) private readonly _eb: EventBus,
   ) {}
 
   async execute({ ownerId }: CreatePlaylistCommand) {
-    const existUserId = await this._userWriteRepository.existsById(ownerId);
+    const verifiedUserId = await this._userService.verifyUserId(ownerId);
 
-    if (!existUserId) {
+    if (!verifiedUserId) {
       throw new NotFoundException('User does not exist');
     }
 
-    const generatedId = this._idService.generate();
-    const nextPlaylistIndex =
-      await this._playlistWriteRepository.getNextPlaylistIndexByOwnerId(ownerId);
-    const createdPlaylist = PlaylistFactory.create({
-      id: generatedId,
-      owner: existUserId,
-      name: `Playlist #${nextPlaylistIndex}`,
+    const createdPlaylistId = await this._playlistService.createPlaylist({
+      ownerId: verifiedUserId,
     });
 
-    await this._playlistWriteRepository.save(createdPlaylist);
+    this._eb.publish(new PlaylistCreatedEvent({ id: createdPlaylistId }));
 
-    return {
-      id: createdPlaylist.getId(),
-    };
+    return createdPlaylistId;
   }
 }

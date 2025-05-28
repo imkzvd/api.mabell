@@ -1,12 +1,11 @@
 import { Command } from '@nestjs/cqrs';
+import { PlaylistId } from '../../../../../domain/components/playlist/types';
+import { UpdatePlaylistCoverPayload } from '../../types';
 
-export class UpdatePlaylistCoverCommand extends Command<void> {
+export class UpdatePlaylistCoverCommand extends Command<PlaylistId> {
   constructor(
     public readonly id: string,
-    public readonly payload: {
-      fileId: string;
-      color?: string | null;
-    },
+    public readonly payload: UpdatePlaylistCoverPayload,
   ) {
     super();
   }

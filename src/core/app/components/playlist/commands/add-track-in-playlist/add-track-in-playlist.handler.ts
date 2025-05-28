@@ -1,40 +1,34 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
 import { NotFoundException } from '../../../../../shared/exceptions';
-import {
-  PLAYLIST_WRITE_REPOSITORY_DI_TOKEN,
-  PlaylistWriteRepository,
-} from '../../../../../domain/components/playlist/repository/playlist-write-repository.port';
 import { AddTrackInPlaylistCommand } from './add-track-in-playlist.command';
-import {
-  TRACK_WRITE_REPOSITORY_DI_TOKEN,
-  TrackWriteRepository,
-} from '../../../../../domain/components/track/repository/track-write-repository.port';
+import { PlaylistService } from '../../playlist.service';
+import { EVENT_BUS_DI_TOKEN, EventBus } from '../../../../common/ports/event-bus.port';
+import { TrackService } from '../../../track/track.service';
+import { PlaylistUpdatedEvent } from '../../../../common/events/playlist-updated.event';
 
 @CommandHandler(AddTrackInPlaylistCommand)
 export class AddTrackInPlaylistHandler implements ICommandHandler<AddTrackInPlaylistCommand> {
   constructor(
-    @Inject(PLAYLIST_WRITE_REPOSITORY_DI_TOKEN)
-    private readonly _playlistWriteRepository: PlaylistWriteRepository,
-    @Inject(TRACK_WRITE_REPOSITORY_DI_TOKEN)
-    private readonly _trackWriteRepository: TrackWriteRepository,
+    @Inject(PlaylistService) private readonly _playlistService: PlaylistService,
+    @Inject(TrackService) private readonly _trackService: TrackService,
+    @Inject(EVENT_BUS_DI_TOKEN) private readonly _eb: EventBus,
   ) {}
 
   async execute({ playlistId, trackId }: AddTrackInPlaylistCommand) {
-    const foundPlaylist = await this._playlistWriteRepository.findById(playlistId);
+    const verifiedTrackId = await this._trackService.verifyTrackId(trackId);
 
-    if (!foundPlaylist) {
-      throw new NotFoundException('Playlist does not exist');
-    }
-
-    const existTrackId = await this._trackWriteRepository.existsById(trackId);
-
-    if (!existTrackId) {
+    if (!verifiedTrackId) {
       throw new NotFoundException('Track does not exist');
     }
 
-    foundPlaylist.addTrack(existTrackId);
+    const updatedPlaylistId = await this._playlistService.addTrackInPlaylist(
+      playlistId,
+      verifiedTrackId,
+    );
 
-    return this._playlistWriteRepository.save(foundPlaylist);
+    this._eb.publish(new PlaylistUpdatedEvent({ id: updatedPlaylistId }));
+
+    return updatedPlaylistId;
   }
 }
