@@ -1,14 +1,11 @@
 import { Command } from '@nestjs/cqrs';
+import { UpdateTrackPayload } from '../../types';
+import { TrackId } from '../../../../../domain/components/track/types';
 
-export class UpdateTrackCommand extends Command<void> {
+export class UpdateTrackCommand extends Command<TrackId> {
   constructor(
     public readonly id: string,
-    public readonly payload: Partial<{
-      name: string;
-      isExplicit: boolean;
-      isActive: boolean;
-      isPublic: boolean;
-    }>,
+    public readonly payload: UpdateTrackPayload,
   ) {
     super();
   }

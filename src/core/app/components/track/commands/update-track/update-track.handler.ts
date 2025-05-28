@@ -1,42 +1,22 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
-import { NotFoundException } from '../../../../../shared/exceptions';
 import { UpdateTrackCommand } from './update-track.command';
-import {
-  TRACK_WRITE_REPOSITORY_DI_TOKEN,
-  TrackWriteRepository,
-} from '../../../../../domain/components/track/repository/track-write-repository.port';
+import { EVENT_BUS_DI_TOKEN, EventBus } from '../../../../common/ports/event-bus.port';
+import { TrackService } from '../../track.service';
+import { TrackUpdatedEvent } from '../../../../common/events/track-updated.event';
 
 @CommandHandler(UpdateTrackCommand)
 export class UpdateTrackHandler implements ICommandHandler<UpdateTrackCommand> {
   constructor(
-    @Inject(TRACK_WRITE_REPOSITORY_DI_TOKEN)
-    private readonly _trackWriteRepository: TrackWriteRepository,
+    @Inject(TrackService) private readonly _trackService: TrackService,
+    @Inject(EVENT_BUS_DI_TOKEN) private readonly _eb: EventBus,
   ) {}
 
   async execute({ id, payload }: UpdateTrackCommand) {
-    const foundTrack = await this._trackWriteRepository.findById(id);
+    const updatedTrackId = await this._trackService.updateTrack(id, payload);
 
-    if (!foundTrack) {
-      throw new NotFoundException(`There is no track with the specified ID`);
-    }
+    this._eb.publish(new TrackUpdatedEvent({ id: updatedTrackId }));
 
-    if (payload.name) {
-      foundTrack.updateName(payload.name);
-    }
-
-    if (typeof payload.isExplicit === 'boolean') {
-      foundTrack.updateExplicitStatus(payload.isExplicit);
-    }
-
-    if (typeof payload.isActive === 'boolean') {
-      foundTrack.updateActiveStatus(payload.isActive);
-    }
-
-    if (typeof payload.isPublic === 'boolean') {
-      foundTrack.updatePublicStatus(payload.isPublic);
-    }
-
-    return this._trackWriteRepository.save(foundTrack);
+    return updatedTrackId;
   }
 }

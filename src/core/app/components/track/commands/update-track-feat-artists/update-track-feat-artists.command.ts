@@ -1,9 +1,10 @@
 import { Command } from '@nestjs/cqrs';
+import { TrackId } from '../../../../../domain/components/track/types';
 
-export class UpdateTrackFeatArtistsCommand extends Command<void> {
+export class UpdateTrackFeatArtistsCommand extends Command<TrackId> {
   constructor(
-    public readonly trackId: string,
-    public readonly artists: string[],
+    public readonly id: string,
+    public readonly artistIds: string[],
   ) {
     super();
   }

@@ -1,24 +1,13 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
 import { GetTrackQuery } from './get-track.query';
-import TrackMapper from '../dtos/track.mapper';
-import {
-  TRACK_READ_REPOSITORY_DI_TOKEN,
-  TrackReadRepository,
-} from '../../../../../domain/components/track/repository/track-read-repository.port';
+import { TrackService } from '../../track.service';
 
 @QueryHandler(GetTrackQuery)
 export class GetTrackHandler implements IQueryHandler<GetTrackQuery> {
-  constructor(
-    @Inject(TRACK_READ_REPOSITORY_DI_TOKEN)
-    private readonly _trackReadRepository: TrackReadRepository,
-  ) {}
+  constructor(@Inject(TrackService) private readonly _trackService: TrackService) {}
 
   async execute({ id, isPublic }: GetTrackQuery) {
-    const foundTrack = await this._trackReadRepository.findById(id, {
-      isPublic,
-    });
-
-    return foundTrack ? TrackMapper.toDTO(foundTrack) : null;
+    return this._trackService.getTrack(id, { isPublic });
   }
 }

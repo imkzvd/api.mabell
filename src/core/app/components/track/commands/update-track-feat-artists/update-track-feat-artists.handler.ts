@@ -1,42 +1,35 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
-import { NotFoundException } from '../../../../../shared/exceptions';
-import {
-  ARTIST_WRITE_REPOSITORY_DI_TOKEN,
-  ArtistWriteRepository,
-} from '../../../../../domain/components/artist/repository/artist-write-repository.port';
 import { UpdateTrackFeatArtistsCommand } from './update-track-feat-artists.command';
-import {
-  TRACK_WRITE_REPOSITORY_DI_TOKEN,
-  TrackWriteRepository,
-} from '../../../../../domain/components/track/repository/track-write-repository.port';
+import { EVENT_BUS_DI_TOKEN, EventBus } from '../../../../common/ports/event-bus.port';
+import { TrackService } from '../../track.service';
+import { TrackCreatedEvent } from '../../../../common/events/track-created.event';
+import { ArtistService } from '../../../artist/artist.service';
+import { NotFoundException } from '../../../../../shared/exceptions';
 
 @CommandHandler(UpdateTrackFeatArtistsCommand)
 export class UpdateTrackFeatArtistsHandler
   implements ICommandHandler<UpdateTrackFeatArtistsCommand>
 {
   constructor(
-    @Inject(TRACK_WRITE_REPOSITORY_DI_TOKEN)
-    private readonly _trackWriteRepository: TrackWriteRepository,
-    @Inject(ARTIST_WRITE_REPOSITORY_DI_TOKEN)
-    private readonly _artistWriteRepository: ArtistWriteRepository,
+    @Inject(ArtistService) private readonly _artistService: ArtistService,
+    @Inject(TrackService) private readonly _trackService: TrackService,
+    @Inject(EVENT_BUS_DI_TOKEN) private readonly _eb: EventBus,
   ) {}
 
-  async execute({ trackId, artists }: UpdateTrackFeatArtistsCommand) {
-    const foundTrack = await this._trackWriteRepository.findById(trackId);
+  async execute({ id, artistIds }: UpdateTrackFeatArtistsCommand) {
+    const verifiedArtistIds = await this._artistService.verifyArtistIds(artistIds);
 
-    if (!foundTrack) {
-      throw new NotFoundException(`There is no track with the specified ID`);
+    if (verifiedArtistIds.missingIds.length) {
+      throw new NotFoundException('Artist does not exist');
     }
 
-    const foundArtistsResp = await this._artistWriteRepository.existsByIds(artists);
+    const updatedTrackId = await this._trackService.updateFeatArtistsForTrack(id, {
+      artistIds: verifiedArtistIds.foundIds,
+    });
 
-    if (foundArtistsResp.missingIds.length) {
-      throw new NotFoundException(`There is no artist with the specified ID`);
-    }
+    this._eb.publish(new TrackCreatedEvent({ id: updatedTrackId }));
 
-    foundTrack.updateFeaturedArtists(foundArtistsResp.foundIds);
-
-    return this._trackWriteRepository.save(foundTrack);
+    return updatedTrackId;
   }
 }
