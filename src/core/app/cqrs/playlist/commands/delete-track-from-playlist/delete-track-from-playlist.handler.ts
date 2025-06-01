@@ -2,10 +2,10 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
 import { NotFoundException } from '../../../../../shared/exceptions';
 import { DeleteTrackFromPlaylistCommand } from './delete-track-from-playlist.command';
-import { PlaylistService } from '../../playlist.service';
 import { EVENT_BUS_DI_TOKEN, EventBus } from '../../../../common/ports/event-bus.port';
 import { PlaylistUpdatedEvent } from '../../../../common/events/playlist-updated.event';
-import { TrackService } from '../../../track/track.service';
+import { PlaylistService } from '../../../../components/playlist/playlist.service';
+import { TrackService } from '../../../../components/track/track.service';
 
 @CommandHandler(DeleteTrackFromPlaylistCommand)
 export class DeleteTrackFromPlaylistHandler

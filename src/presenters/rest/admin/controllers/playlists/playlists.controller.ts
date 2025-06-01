@@ -28,20 +28,20 @@ import { PlaylistRO } from './ros/playlist.ro';
 import { UpdatePlaylistCoverDTO } from './dtos/update-playlist-cover.dto';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreatePlaylistDTO } from './dtos/create-playlist.dto';
-import { CreatePlaylistCommand } from '../../../../../core/app/components/playlist/commands/create-playlist/create-playlist.command';
-import { GetPlaylistQuery } from '../../../../../core/app/components/playlist/queries/get-playlist/get-playlist.query';
 import { BadRequestException } from '../../../../../core/shared/exceptions';
 import { UpdatePlaylistDTO } from './dtos/update-playlist.dto';
 import { ParseObjectIdPipe } from '../../../common/pipes/parse-object-id.pipe';
-import { UpdatePlaylistCommand } from '../../../../../core/app/components/playlist/commands/update-playlist/update-playlist.command';
-import { UpdatePlaylistCoverCommand } from '../../../../../core/app/components/playlist/commands/update-playlist-cover/update-playlist-cover.command';
-import { DeletePlaylistCoverCommand } from '../../../../../core/app/components/playlist/commands/delete-playlist-cover/delete-playlist-cover.command';
-import { DeletePlaylistCommand } from '../../../../../core/app/components/playlist/commands/delete-playlist/delete-playlist.command';
 import { AddTrackInPlaylistDTO } from './dtos/add-track-in-playlist.dto';
-import { AddTrackInPlaylistCommand } from '../../../../../core/app/components/playlist/commands/add-track-in-playlist/add-track-in-playlist.command';
-import { DeleteTrackFromPlaylistCommand } from '../../../../../core/app/components/playlist/commands/delete-track-from-playlist/delete-track-from-playlist.command';
-import { GetPlaylistTracksQuery } from '../../../../../core/app/components/track/queries/get-playlist-tracks/get-playlist-tracks.query';
+import { CreatePlaylistCommand } from '../../../../../core/app/cqrs/playlist/commands/create-playlist/create-playlist.command';
+import { GetPlaylistQuery } from '../../../../../core/app/cqrs/playlist/queries/get-playlist/get-playlist.query';
+import { UpdatePlaylistCommand } from '../../../../../core/app/cqrs/playlist/commands/update-playlist/update-playlist.command';
+import { UpdatePlaylistCoverCommand } from '../../../../../core/app/cqrs/playlist/commands/update-playlist-cover/update-playlist-cover.command';
+import { DeletePlaylistCoverCommand } from '../../../../../core/app/cqrs/playlist/commands/delete-playlist-cover/delete-playlist-cover.command';
+import { DeletePlaylistCommand } from '../../../../../core/app/cqrs/playlist/commands/delete-playlist/delete-playlist.command';
+import { AddTrackInPlaylistCommand } from '../../../../../core/app/cqrs/playlist/commands/add-track-in-playlist/add-track-in-playlist.command';
+import { DeleteTrackFromPlaylistCommand } from '../../../../../core/app/cqrs/playlist/commands/delete-track-from-playlist/delete-track-from-playlist.command';
 import { PlaylistTracksRO } from '../tracks/ros/playlist-tracks.ro';
+import { OffsetLimitPaginationResponseDTO } from '../../../../../core/shared/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
 
 @ApiTags('Playlists')
 @Controller({ path: '/playlists' })
@@ -56,8 +56,8 @@ export class PlaylistsController {
   @ApiCreatedResponse({ description: 'Playlist', type: PlaylistRO })
   @Post('/')
   async create(@Body() { owner }: CreatePlaylistDTO): Promise<PlaylistRO> {
-    const createdPlaylist = await this._commandBus.execute(new CreatePlaylistCommand(owner));
-    const foundPlaylist = await this._queryBus.execute(new GetPlaylistQuery(createdPlaylist.id));
+    const createdPlaylistId = await this._commandBus.execute(new CreatePlaylistCommand(owner));
+    const foundPlaylist = await this._queryBus.execute(new GetPlaylistQuery(createdPlaylistId));
 
     if (!foundPlaylist) {
       throw new BadRequestException('Playlist does not created');
@@ -160,11 +160,11 @@ export class PlaylistsController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete('/:id')
   async delete(@Param('id', ParseObjectIdPipe) id: string): Promise<void> {
-    return this._commandBus.execute(new DeletePlaylistCommand(id));
+    await this._commandBus.execute(new DeletePlaylistCommand(id));
   }
 
   @ApiOperation({
-    summary: 'Add track in playlist',
+    summary: 'Add artist in playlist',
     operationId: 'addTrack',
   })
   @ApiParam({
@@ -192,7 +192,7 @@ export class PlaylistsController {
   }
 
   @ApiOperation({
-    summary: 'Delete track from the playlist',
+    summary: 'Delete artist from the playlist',
     operationId: 'deleteTrack',
   })
   @ApiParam({
@@ -204,7 +204,7 @@ export class PlaylistsController {
   @ApiParam({
     type: String,
     name: 'trackId',
-    description: 'Id of the track',
+    description: 'Id of the artist',
     example: faker.database.mongodbObjectId(),
   })
   @ApiNoContentResponse({
@@ -217,7 +217,7 @@ export class PlaylistsController {
     @Param('id', ParseObjectIdPipe) id: string,
     @Param('trackId', ParseObjectIdPipe) trackId: string,
   ): Promise<void> {
-    return this._commandBus.execute(new DeleteTrackFromPlaylistCommand(id, trackId));
+    await this._commandBus.execute(new DeleteTrackFromPlaylistCommand(id, trackId));
   }
 
   @ApiOperation({ summary: 'Get playlist by id', operationId: 'get' })
@@ -236,9 +236,7 @@ export class PlaylistsController {
       throw new NotFoundException(`The playlists does not exist`);
     }
 
-    const foundTracks = await this._queryBus.execute(new GetPlaylistTracksQuery(id));
-
-    return new PlaylistRO(foundPlaylist, foundTracks);
+    return new PlaylistRO(foundPlaylist);
   }
 
   @ApiOperation({ summary: 'Get playlist tracks', operationId: 'getTracks' })
@@ -267,20 +265,12 @@ export class PlaylistsController {
     type: PlaylistTracksRO,
   })
   @Get('/:id/tracks')
-  async getTracks(
+  getTracks(
     @Param('id', ParseObjectIdPipe) id: string,
     @Query('limit', new DefaultValuePipe(25), ParseIntPipe) limit: number,
     @Query('offset', new DefaultValuePipe(0), ParseIntPipe) offset: number,
-  ): Promise<PlaylistTracksRO> {
-    const foundTracks = await this._queryBus.execute(
-      new GetPlaylistTracksQuery(id, {
-        pagination: {
-          limit,
-          offset,
-        },
-      }),
-    );
-
-    return new PlaylistTracksRO(foundTracks);
+  ): PlaylistTracksRO {
+    console.log(id, limit, offset);
+    return new PlaylistTracksRO(new OffsetLimitPaginationResponseDTO([], 0, 50, 0, false));
   }
 }

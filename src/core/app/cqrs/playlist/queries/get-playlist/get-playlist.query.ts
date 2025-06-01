@@ -1,5 +1,5 @@
 import { Query } from '@nestjs/cqrs';
-import { PlaylistDTO } from '../../dtos/playlist.dto';
+import { PlaylistDTO } from '../../../../components/playlist/dtos/playlist.dto';
 
 export class GetPlaylistQuery extends Query<PlaylistDTO | null> {
   constructor(

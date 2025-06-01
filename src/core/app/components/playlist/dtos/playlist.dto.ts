@@ -1,6 +1,7 @@
 import { PlaylistId } from '../../../../domain/components/playlist/types';
 import { Genre } from '../../../../domain/common/constants/genres';
 import { UserDTO } from '../../user/dtos/user.dto';
+import { TrackId } from '../../../../domain/components/track/types';
 
 export class PlaylistDTO {
   constructor(
@@ -11,7 +12,7 @@ export class PlaylistDTO {
     public readonly cover: string | null,
     public readonly color: string | null,
     public readonly description: string,
-    public readonly tracks: { id: string; addedAt: Date }[],
+    public readonly tracks: { id: TrackId; addedAt: Date }[],
     public readonly isPublic: boolean,
     public readonly createdAt: Date,
     public readonly updatedAt: Date,

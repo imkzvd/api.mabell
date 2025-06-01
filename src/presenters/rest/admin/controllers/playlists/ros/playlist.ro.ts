@@ -7,11 +7,11 @@ import {
   Genres,
   getGenreLabelByValue,
 } from '../../../../../../core/domain/common/constants/genres';
-import { PlaylistDTO } from '../../../../../../core/app/components/playlist/queries/dtos/playlist.dto';
 import { OffsetLimitPaginationRO } from '../../../../common/ros/offset-limit-pagination.ro';
-import { PlaylistTrackDTO } from '../../../../../../core/app/components/track/queries/dtos/playlist-track.dto';
 import { PlaylistTracksRO } from '../../tracks/ros/playlist-tracks.ro';
 import { OffsetLimitPaginationResponseDTO } from '../../../../../../core/shared/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
+import { PlaylistTrackDTO } from '../../../../../../core/app/components/track/dtos/playlist-track.dto';
+import { PlaylistDTO } from '../../../../../../core/app/components/playlist/dtos/playlist.dto';
 
 export class PlaylistRO {
   @ApiProperty({

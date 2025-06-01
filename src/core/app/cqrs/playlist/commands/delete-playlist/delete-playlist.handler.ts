@@ -1,9 +1,9 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
 import { DeletePlaylistCommand } from './delete-playlist.command';
-import { PlaylistService } from '../../playlist.service';
 import { EVENT_BUS_DI_TOKEN, EventBus } from '../../../../common/ports/event-bus.port';
 import { PlaylistDeletedEvent } from '../../../../common/events/playlist-deleted.event';
+import { PlaylistService } from '../../../../components/playlist/playlist.service';
 
 @CommandHandler(DeletePlaylistCommand)
 export class DeletePlaylistHandler implements ICommandHandler<DeletePlaylistCommand> {

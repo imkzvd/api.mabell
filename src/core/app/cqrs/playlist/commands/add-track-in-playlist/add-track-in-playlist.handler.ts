@@ -2,10 +2,10 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
 import { NotFoundException } from '../../../../../shared/exceptions';
 import { AddTrackInPlaylistCommand } from './add-track-in-playlist.command';
-import { PlaylistService } from '../../playlist.service';
 import { EVENT_BUS_DI_TOKEN, EventBus } from '../../../../common/ports/event-bus.port';
-import { TrackService } from '../../../track/track.service';
 import { PlaylistUpdatedEvent } from '../../../../common/events/playlist-updated.event';
+import { PlaylistService } from '../../../../components/playlist/playlist.service';
+import { TrackService } from '../../../../components/track/track.service';
 
 @CommandHandler(AddTrackInPlaylistCommand)
 export class AddTrackInPlaylistHandler implements ICommandHandler<AddTrackInPlaylistCommand> {

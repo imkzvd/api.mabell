@@ -162,8 +162,13 @@ export class PlaylistService {
     return foundPlaylist.getId();
   }
 
-  async getPlaylist(id: string): Promise<PlaylistDTO | null> {
-    const foundPlaylist = await this._rr.findById(id);
+  async getPlaylist(
+    id: string,
+    options?: Partial<{
+      isPublic: boolean;
+    }>,
+  ): Promise<PlaylistDTO | null> {
+    const foundPlaylist = await this._rr.findById(id, options);
 
     return foundPlaylist ? PlaylistMapper.toDTO(foundPlaylist) : null;
   }
