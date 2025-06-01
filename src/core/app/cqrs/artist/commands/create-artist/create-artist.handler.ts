@@ -2,8 +2,8 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
 import { CreateArtistCommand } from './create-artist.command';
 import { EVENT_BUS_DI_TOKEN, EventBus } from '../../../../common/ports/event-bus.port';
-import { ArtistService } from '../../artist.service';
 import { ArtistCreatedEvent } from '../../../../common/events/artist-created.event';
+import { ArtistService } from '../../../../components/artist/artist.service';
 
 @CommandHandler(CreateArtistCommand)
 export class CreateArtistHandler implements ICommandHandler<CreateArtistCommand> {

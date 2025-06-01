@@ -28,23 +28,23 @@ import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { ArtistRO } from './ros/artist.ro';
 import { UpdateArtistImageDTO } from './dtos/update-artist-image.dto';
 import { UpdateArtistDTO } from './dtos/update-artist.dto';
-import { CreateArtistCommand } from '../../../../../core/app/components/artist/commands/create-artist/create-artist.command';
-import { GetArtistQuery } from '../../../../../core/app/components/artist/queries/get-artist/get-artist.query';
 import { BadRequestException } from '../../../../../core/shared/exceptions';
 import { ParseObjectIdPipe } from '../../../common/pipes/parse-object-id.pipe';
-import { UpdateArtistCommand } from '../../../../../core/app/components/artist/commands/update-artist/update-artist.command';
-import { UpdateArtistAvatarCommand } from '../../../../../core/app/components/artist/commands/update-artist-avatar/update-artist-avatar.command';
-import { UpdateArtistCoverCommand } from '../../../../../core/app/components/artist/commands/update-artist-cover/update-artist-cover.command';
-import { DeleteArtistAvatarCommand } from '../../../../../core/app/components/artist/commands/delete-artist-avatar/delete-artist-avatar.command';
-import { DeleteArtistCoverCommand } from '../../../../../core/app/components/artist/commands/delete-artist-cover/delete-artist-cover.command';
-import { DeleteArtistCommand } from '../../../../../core/app/components/artist/commands/delete-artist/delete-artist.command';
 import { TracksRO } from '../tracks/ros/tracks.ro';
 import { GetArtistTracksQuery } from '../../../../../core/app/components/track/queries/get-artist-tracks/get-artist-tracks.query';
 import { GetArtistAlbumsQuery } from '../../../../../core/app/components/album/queries/get-artist-albums/get-artist-albums.query';
 import { AlbumsRO } from '../albums/ros/albums.ro';
+import { CreateArtistCommand } from '../../../../../core/app/cqrs/artist/commands/create-artist/create-artist.command';
+import { GetArtistQuery } from '../../../../../core/app/cqrs/artist/queries/get-artist/get-artist.query';
+import { UpdateArtistCommand } from '../../../../../core/app/cqrs/artist/commands/update-artist/update-artist.command';
+import { UpdateArtistAvatarCommand } from '../../../../../core/app/cqrs/artist/commands/update-artist-avatar/update-artist-avatar.command';
+import { UpdateArtistCoverCommand } from '../../../../../core/app/cqrs/artist/commands/update-artist-cover/update-artist-cover.command';
+import { DeleteArtistAvatarCommand } from '../../../../../core/app/cqrs/artist/commands/delete-artist-avatar/delete-artist-avatar.command';
+import { DeleteArtistCoverCommand } from '../../../../../core/app/cqrs/artist/commands/delete-artist-cover/delete-artist-cover.command';
+import { DeleteArtistCommand } from '../../../../../core/app/cqrs/artist/commands/delete-artist/delete-artist.command';
 
 @ApiTags('Artists')
-@Controller({ path: '/artists' })
+@Controller({ path: '/artist' })
 export class ArtistsController {
   constructor(
     private readonly _commandBus: CommandBus,

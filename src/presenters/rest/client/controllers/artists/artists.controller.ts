@@ -11,16 +11,16 @@ import { ApiOkResponse, ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestj
 import { faker } from '@faker-js/faker';
 import { QueryBus } from '@nestjs/cqrs';
 import { ArtistRO } from './ros/artist.ro';
-import { GetArtistQuery } from '../../../../../core/app/components/artist/queries/get-artist/get-artist.query';
 import { ParseObjectIdPipe } from '../../../common/pipes/parse-object-id.pipe';
 import { AlbumsRO } from '../../../admin/controllers/albums/ros/albums.ro';
 import { GetArtistAlbumsQuery } from '../../../../../core/app/components/album/queries/get-artist-albums/get-artist-albums.query';
-import { GetArtistPublicStatusQuery } from '../../../../../core/app/components/artist/queries/get-artist-public-status/get-artist-public-status.query';
 import { TracksRO } from '../../../admin/controllers/tracks/ros/tracks.ro';
 import { GetArtistTracksQuery } from '../../../../../core/app/components/track/queries/get-artist-tracks/get-artist-tracks.query';
+import { GetArtistQuery } from '../../../../../core/app/cqrs/artist/queries/get-artist/get-artist.query';
+import { GetArtistPublicStatusQuery } from '../../../../../core/app/cqrs/artist/queries/get-artist-public-status/get-artist-public-status.query';
 
 @ApiTags('Artists')
-@Controller({ path: '/artists' })
+@Controller({ path: '/artist' })
 export class ArtistsController {
   constructor(private readonly _queryBus: QueryBus) {}
 

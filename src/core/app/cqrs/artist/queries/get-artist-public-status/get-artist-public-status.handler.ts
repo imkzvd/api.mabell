@@ -1,7 +1,7 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
 import { GetArtistPublicStatusQuery } from './get-artist-public-status.query';
-import { ArtistService } from '../../artist.service';
+import { ArtistService } from '../../../../components/artist/artist.service';
 
 @QueryHandler(GetArtistPublicStatusQuery)
 export class GetArtistPublicStatusHandler implements IQueryHandler<GetArtistPublicStatusQuery> {
