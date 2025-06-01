@@ -22,11 +22,11 @@ import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { faker } from '@faker-js/faker';
 import { UploadFileDTO } from './dtos/upload-file.dto';
 import { TmpFileRO } from './ros/tmp-file.ro';
-import { UploadFileCommand } from '../../../../../core/app/components/upload/commands/upload-file/upload-file.command';
-import { GetFileQuery } from '../../../../../core/app/components/upload/queries/get-file/get-file.query';
 import { BadRequestException } from '../../../../../core/shared/exceptions';
-import { DeleteFileCommand } from '../../../../../core/app/components/upload/commands/delete-file/delete-file.command';
-import { DeleteAllFilesCommand } from '../../../../../core/app/components/upload/commands/delete-all-files/delete-all-files.command';
+import { UploadFileCommand } from '../../../../../core/app/cqrs/upload/commands/upload-file/upload-file.command';
+import { GetFileQuery } from '../../../../../core/app/cqrs/upload/queries/get-file/get-file.query';
+import { DeleteFileCommand } from '../../../../../core/app/cqrs/upload/commands/delete-file/delete-file.command';
+import { DeleteAllFilesCommand } from '../../../../../core/app/cqrs/upload/commands/delete-all-files/delete-all-files.command';
 
 @ApiTags('Uploads')
 @Controller('/uploads')

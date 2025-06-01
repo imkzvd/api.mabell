@@ -2,7 +2,7 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
 import { DeleteFileCommand } from './delete-file.command';
 import { NotFoundException } from '../../../../../shared/exceptions';
-import { UploadService } from '../../upload.service';
+import { UploadService } from '../../../../components/upload/upload.service';
 
 @CommandHandler(DeleteFileCommand)
 export class DeleteFileHandler implements ICommandHandler<DeleteFileCommand> {

@@ -1,7 +1,7 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
 import { GetFileQuery } from './get-file.query';
-import { UploadService } from '../../upload.service';
+import { UploadService } from '../../../../components/upload/upload.service';
 
 @QueryHandler(GetFileQuery)
 export class GetFileHandler implements IQueryHandler<GetFileQuery> {
