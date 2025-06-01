@@ -4,7 +4,7 @@ import { faker } from '@faker-js/faker';
 import { UserRO } from './ros/user.ro';
 import { QueryBus } from '@nestjs/cqrs';
 import { ParseObjectIdPipe } from '../../../common/pipes/parse-object-id.pipe';
-import { GetUserQuery } from '../../../../../core/app/components/user/queries/get-user/get-user.query';
+import { GetUserQuery } from '../../../../../core/app/cqrs/user/queries/get-user/get-user.query';
 
 @ApiTags('Users')
 @Controller({ path: '/users' })

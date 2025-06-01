@@ -1,8 +1,8 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
 import { GetUserQuery } from './get-user.query';
-import UserMapper from '../../dtos/user.mapper';
-import { UserService } from '../../user.service';
+import { UserService } from '../../../../components/user/user.service';
+import UserMapper from '../../../../components/user/dtos/user.mapper';
 
 @QueryHandler(GetUserQuery)
 export class GetUserHandler implements IQueryHandler<GetUserQuery> {

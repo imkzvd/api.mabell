@@ -27,16 +27,16 @@ import { UpdateUserAvatarDTO } from './dtos/update-user-avatar.dto';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { ParseObjectIdPipe } from '../../../common/pipes/parse-object-id.pipe';
 import { UpdateUserDTO } from './dtos/update-user.dto';
-import { CreateUserCommand } from '../../../../../core/app/components/user/commands/create-user/create-user.command';
-import { UpdateUserCommand } from '../../../../../core/app/components/user/commands/update-user/update-user.command';
-import { UpdateUserUsernameCommand } from '../../../../../core/app/components/user/commands/update-user-username/update-user-username.command';
-import { UpdateUserEmailCommand } from '../../../../../core/app/components/user/commands/update-user-email/update-user-email.command';
-import { UpdateUserAvatarCommand } from '../../../../../core/app/components/user/commands/update-user-avatar/update-user-avatar.command';
-import { RefreshUserPasswordCommand } from '../../../../../core/app/components/user/commands/refresh-user-password/refresh-user-password.command';
-import { DeleteUserAvatarCommand } from '../../../../../core/app/components/user/commands/delete-user-avatar/delete-user-avatar.command';
-import { DeleteUserCommand } from '../../../../../core/app/components/user/commands/delete-user/delete-user.command';
-import { GetUserQuery } from '../../../../../core/app/components/user/queries/get-user/get-user.query';
 import { BadRequestException } from '../../../../../core/shared/exceptions';
+import { CreateUserCommand } from '../../../../../core/app/cqrs/user/commands/create-user/create-user.command';
+import { GetUserQuery } from '../../../../../core/app/cqrs/user/queries/get-user/get-user.query';
+import { UpdateUserCommand } from '../../../../../core/app/cqrs/user/commands/update-user/update-user.command';
+import { UpdateUserUsernameCommand } from '../../../../../core/app/cqrs/user/commands/update-user-username/update-user-username.command';
+import { UpdateUserEmailCommand } from '../../../../../core/app/cqrs/user/commands/update-user-email/update-user-email.command';
+import { UpdateUserAvatarCommand } from '../../../../../core/app/cqrs/user/commands/update-user-avatar/update-user-avatar.command';
+import { RefreshUserPasswordCommand } from '../../../../../core/app/cqrs/user/commands/refresh-user-password/refresh-user-password.command';
+import { DeleteUserAvatarCommand } from '../../../../../core/app/cqrs/user/commands/delete-user-avatar/delete-user-avatar.command';
+import { DeleteUserCommand } from '../../../../../core/app/cqrs/user/commands/delete-user/delete-user.command';
 
 @ApiTags('Users')
 @Controller({ path: '/users' })

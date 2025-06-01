@@ -1,9 +1,9 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
 import { UpdateUserPasswordCommand } from './update-user-password.command';
-import { UserService } from '../../user.service';
 import { EVENT_BUS_DI_TOKEN, EventBus } from '../../../../common/ports/event-bus.port';
 import { UserPasswordUpdatedEvent } from '../../../../common/events/user-password-updated.event';
+import { UserService } from '../../../../components/user/user.service';
 
 @CommandHandler(UpdateUserPasswordCommand)
 export class UpdateUserPasswordHandler implements ICommandHandler<UpdateUserPasswordCommand> {
