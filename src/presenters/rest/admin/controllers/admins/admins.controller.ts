@@ -31,14 +31,14 @@ import { ParseObjectIdPipe } from '../../../common/pipes/parse-object-id.pipe';
 import { UpdateAdminUsernameDTO } from './dtos/update-admin-username.dto';
 import { AdminRefreshedPasswordRO } from './ros/admin-refreshed-password.ro';
 import { UpdateAdminDTO } from './dtos/update-admin.dto';
-import { CreateAdminCommand } from '../../../../../core/app/components/admin/commands/create-admin/create-admin.command';
-import { UpdateAdminCommand } from '../../../../../core/app/components/admin/commands/update-admin/update-admin.command';
-import { UpdateAdminUsernameCommand } from '../../../../../core/app/components/admin/commands/update-admin-username/update-admin-username.command';
-import { RefreshAdminPasswordCommand } from '../../../../../core/app/components/admin/commands/refresh-admin-password/refresh-admin-password.command';
-import { DeleteAdminCommand } from '../../../../../core/app/components/admin/commands/delete-admin/delete-admin.command';
-import { GetAdminsQuery } from '../../../../../core/app/components/admin/queries/get-admins/get-admins.query';
-import { GetAdminQuery } from '../../../../../core/app/components/admin/queries/get-admin/get-admin.query';
 import { OffsetLimitPaginationDTO } from '../../../../../core/shared/dtos/offset-limit-pagination/offset-limit-pagination-payload.dto';
+import { CreateAdminCommand } from '../../../../../core/app/cqrs/admin/commands/create-admin/create-admin.command';
+import { GetAdminQuery } from '../../../../../core/app/cqrs/admin/queries/get-admin/get-admin.query';
+import { UpdateAdminCommand } from '../../../../../core/app/cqrs/admin/commands/update-admin/update-admin.command';
+import { UpdateAdminUsernameCommand } from '../../../../../core/app/cqrs/admin/commands/update-admin-username/update-admin-username.command';
+import { RefreshAdminPasswordCommand } from '../../../../../core/app/cqrs/admin/commands/refresh-admin-password/refresh-admin-password.command';
+import { DeleteAdminCommand } from '../../../../../core/app/cqrs/admin/commands/delete-admin/delete-admin.command';
+import { GetAdminsQuery } from '../../../../../core/app/cqrs/admin/queries/get-admins/get-admins.query';
 
 @ApiTags('Admins')
 @Controller('/admins')

@@ -1,7 +1,7 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
 import { GetAdminQuery } from './get-admin.query';
-import { AdminService } from '../../admin.service';
+import { AdminService } from '../../../../components/admin/admin.service';
 
 @QueryHandler(GetAdminQuery)
 export class GetAdminHandler implements IQueryHandler<GetAdminQuery> {

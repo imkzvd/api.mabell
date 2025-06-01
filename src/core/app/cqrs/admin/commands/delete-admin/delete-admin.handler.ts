@@ -1,9 +1,9 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
 import { DeleteAdminCommand } from './delete-admin.command';
-import { AdminService } from '../../admin.service';
 import { EVENT_BUS_DI_TOKEN, EventBus } from '../../../../common/ports/event-bus.port';
 import { AdminDeletedEvent } from '../../../../common/events/admin-deleted.event';
+import { AdminService } from '../../../../components/admin/admin.service';
 
 @CommandHandler(DeleteAdminCommand)
 export class DeleteAdminHandler implements ICommandHandler<DeleteAdminCommand> {
