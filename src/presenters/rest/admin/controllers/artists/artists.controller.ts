@@ -31,7 +31,6 @@ import { UpdateArtistDTO } from './dtos/update-artist.dto';
 import { BadRequestException } from '../../../../../core/shared/exceptions';
 import { ParseObjectIdPipe } from '../../../common/pipes/parse-object-id.pipe';
 import { TracksRO } from '../tracks/ros/tracks.ro';
-import { GetArtistTracksQuery } from '../../../../../core/app/components/track/queries/get-artist-tracks/get-artist-tracks.query';
 import { AlbumsRO } from '../albums/ros/albums.ro';
 import { CreateArtistCommand } from '../../../../../core/app/cqrs/artist/commands/create-artist/create-artist.command';
 import { GetArtistQuery } from '../../../../../core/app/cqrs/artist/queries/get-artist/get-artist.query';
@@ -42,6 +41,7 @@ import { DeleteArtistAvatarCommand } from '../../../../../core/app/cqrs/artist/c
 import { DeleteArtistCoverCommand } from '../../../../../core/app/cqrs/artist/commands/delete-artist-cover/delete-artist-cover.command';
 import { DeleteArtistCommand } from '../../../../../core/app/cqrs/artist/commands/delete-artist/delete-artist.command';
 import { GetArtistAlbumsQuery } from '../../../../../core/app/cqrs/album/queries/get-artist-albums/get-artist-albums.query';
+import { GetArtistTracksQuery } from '../../../../../core/app/cqrs/track/queries/get-artist-tracks/get-artist-tracks.query';
 
 @ApiTags('Artists')
 @Controller({ path: '/artist' })

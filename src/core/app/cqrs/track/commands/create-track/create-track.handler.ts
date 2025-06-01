@@ -2,10 +2,10 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
 import { CreateTrackCommand } from './create-track.command';
 import { EVENT_BUS_DI_TOKEN, EventBus } from '../../../../common/ports/event-bus.port';
-import { TrackService } from '../../track.service';
 import { TrackCreatedEvent } from '../../../../common/events/track-created.event';
-import { AlbumService } from '../../../album/album.service';
 import { NotFoundException } from '../../../../../shared/exceptions';
+import { AlbumService } from '../../../../components/album/album.service';
+import { TrackService } from '../../../../components/track/track.service';
 
 @CommandHandler(CreateTrackCommand)
 export class CreateTrackHandler implements ICommandHandler<CreateTrackCommand> {

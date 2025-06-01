@@ -32,7 +32,6 @@ import { UpdateAlbumArtistsDTO } from './dtos/update-album-artists.dto';
 import { UpdateAlbumCoverDTO } from './dtos/update-album-cover.dto';
 import { BadRequestException } from '../../../../../core/shared/exceptions';
 import { CreateAlbumDTO } from './dtos/create-album.dto';
-import { GetAlbumTracksQuery } from '../../../../../core/app/components/track/queries/get-album-tracks/get-album-tracks.query';
 import { TracksRO } from '../tracks/ros/tracks.ro';
 import { CreateAlbumCommand } from '../../../../../core/app/cqrs/album/commands/create-album/create-album.command';
 import { GetAlbumQuery } from '../../../../../core/app/cqrs/album/queries/get-album/get-album.query';
@@ -41,6 +40,7 @@ import { UpdateAlbumArtistsCommand } from '../../../../../core/app/cqrs/album/co
 import { UpdateAlbumCoverCommand } from '../../../../../core/app/cqrs/album/commands/update-album-cover/update-album-cover.command';
 import { DeleteAlbumCoverCommand } from '../../../../../core/app/cqrs/album/commands/delete-album-cover/delete-album-cover.command';
 import { DeleteAlbumCommand } from '../../../../../core/app/cqrs/album/commands/delete-album/delete-album.command';
+import { GetAlbumTracksQuery } from '../../../../../core/app/cqrs/track/queries/get-album-tracks/get-album-tracks.query';
 
 @ApiTags('Albums')
 @Controller({ path: '/albums' })

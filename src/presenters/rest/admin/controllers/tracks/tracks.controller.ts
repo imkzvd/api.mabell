@@ -24,17 +24,17 @@ import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateTrackDTO } from './dtos/create-track.dto';
 import { UpdateTrackFileDTO } from './dtos/update-track-file.dto';
 import { TrackRO } from './ros/track.ro';
-import { CreateTrackCommand } from '../../../../../core/app/components/track/commands/create-track/create-track.command';
 import { BadRequestException } from '../../../../../core/shared/exceptions';
-import { GetTrackQuery } from '../../../../../core/app/components/track/queries/get-track/get-track.query';
 import { UpdateTrackDTO } from './dtos/update-track.dto';
 import { ParseObjectIdPipe } from '../../../common/pipes/parse-object-id.pipe';
-import { UpdateTrackCommand } from '../../../../../core/app/components/track/commands/update-track/update-track.command';
-import { UpdateTrackFileCommand } from '../../../../../core/app/components/track/commands/update-track-file/update-track-file.command';
-import { DeleteTrackCommand } from '../../../../../core/app/components/track/commands/delete-track/delete-track.command';
-import { DeleteTrackFileCommand } from '../../../../../core/app/components/track/commands/delete-track-file/delete-track-file.command';
 import { UpdateTrackFeatArtistsDTO } from './dtos/update-track-feat-artists.dto';
-import { UpdateTrackFeatArtistsCommand } from '../../../../../core/app/components/track/commands/update-track-feat-artists/update-track-feat-artists.command';
+import { CreateTrackCommand } from '../../../../../core/app/cqrs/track/commands/create-track/create-track.command';
+import { GetTrackQuery } from '../../../../../core/app/cqrs/track/queries/get-track/get-track.query';
+import { UpdateTrackCommand } from '../../../../../core/app/cqrs/track/commands/update-track/update-track.command';
+import { UpdateTrackFeatArtistsCommand } from '../../../../../core/app/cqrs/track/commands/update-track-feat-artists/update-track-feat-artists.command';
+import { UpdateTrackFileCommand } from '../../../../../core/app/cqrs/track/commands/update-track-file/update-track-file.command';
+import { DeleteTrackFileCommand } from '../../../../../core/app/cqrs/track/commands/delete-track-file/delete-track-file.command';
+import { DeleteTrackCommand } from '../../../../../core/app/cqrs/track/commands/delete-track/delete-track.command';
 
 @ApiTags('Tracks')
 @Controller({ path: '/tracks' })

@@ -1,19 +1,19 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
-import { DeleteTrackFileCommand } from './delete-track-file.command';
+import { UpdateTrackFileCommand } from './update-track-file.command';
 import { EVENT_BUS_DI_TOKEN, EventBus } from '../../../../common/ports/event-bus.port';
-import { TrackService } from '../../track.service';
 import { TrackUpdatedEvent } from '../../../../common/events/track-updated.event';
+import { TrackService } from '../../../../components/track/track.service';
 
-@CommandHandler(DeleteTrackFileCommand)
-export class DeleteTrackFileHandler implements ICommandHandler<DeleteTrackFileCommand> {
+@CommandHandler(UpdateTrackFileCommand)
+export class UpdateTrackFileHandler implements ICommandHandler<UpdateTrackFileCommand> {
   constructor(
     @Inject(TrackService) private readonly _trackService: TrackService,
     @Inject(EVENT_BUS_DI_TOKEN) private readonly _eb: EventBus,
   ) {}
 
-  async execute({ id }: DeleteTrackFileCommand) {
-    const updatedTrackId = await this._trackService.deleteTrackFile(id);
+  async execute({ id, payload }: UpdateTrackFileCommand) {
+    const updatedTrackId = await this._trackService.updateTrackFile(id, payload);
 
     this._eb.publish(new TrackUpdatedEvent({ id: updatedTrackId }));
 

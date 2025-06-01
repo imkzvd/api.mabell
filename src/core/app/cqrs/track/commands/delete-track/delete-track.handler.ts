@@ -2,8 +2,8 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
 import { DeleteTrackCommand } from './delete-track.command';
 import { EVENT_BUS_DI_TOKEN, EventBus } from '../../../../common/ports/event-bus.port';
-import { TrackService } from '../../track.service';
 import { TrackDeletedEvent } from '../../../../common/events/track-deleted.event';
+import { TrackService } from '../../../../components/track/track.service';
 
 @CommandHandler(DeleteTrackCommand)
 export class DeleteTrackHandler implements ICommandHandler<DeleteTrackCommand> {

@@ -1,7 +1,7 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
 import { GetTrackQuery } from './get-track.query';
-import { TrackService } from '../../track.service';
+import { TrackService } from '../../../../components/track/track.service';
 
 @QueryHandler(GetTrackQuery)
 export class GetTrackHandler implements IQueryHandler<GetTrackQuery> {

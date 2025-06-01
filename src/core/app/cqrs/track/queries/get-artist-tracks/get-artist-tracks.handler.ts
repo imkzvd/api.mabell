@@ -1,7 +1,7 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
 import { GetArtistTracksQuery } from './get-artist-tracks.query';
-import { TrackService } from '../../track.service';
+import { TrackService } from '../../../../components/track/track.service';
 
 @QueryHandler(GetArtistTracksQuery)
 export class GetArtistTracksHandler implements IQueryHandler<GetArtistTracksQuery> {
