@@ -13,11 +13,11 @@ import { QueryBus } from '@nestjs/cqrs';
 import { ArtistRO } from './ros/artist.ro';
 import { ParseObjectIdPipe } from '../../../common/pipes/parse-object-id.pipe';
 import { AlbumsRO } from '../../../admin/controllers/albums/ros/albums.ro';
-import { GetArtistAlbumsQuery } from '../../../../../core/app/components/album/queries/get-artist-albums/get-artist-albums.query';
 import { TracksRO } from '../../../admin/controllers/tracks/ros/tracks.ro';
 import { GetArtistTracksQuery } from '../../../../../core/app/components/track/queries/get-artist-tracks/get-artist-tracks.query';
 import { GetArtistQuery } from '../../../../../core/app/cqrs/artist/queries/get-artist/get-artist.query';
 import { GetArtistPublicStatusQuery } from '../../../../../core/app/cqrs/artist/queries/get-artist-public-status/get-artist-public-status.query';
+import { GetArtistAlbumsQuery } from '../../../../../core/app/cqrs/album/queries/get-artist-albums/get-artist-albums.query';
 
 @ApiTags('Artists')
 @Controller({ path: '/artist' })

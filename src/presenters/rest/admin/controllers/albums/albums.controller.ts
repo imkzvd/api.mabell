@@ -28,19 +28,19 @@ import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { ParseObjectIdPipe } from '../../../common/pipes/parse-object-id.pipe';
 import { UpdateAlbumDTO } from './dtos/update-album.dto';
 import { AlbumRO } from './ros/album.ro';
-import { GetAlbumQuery } from '../../../../../core/app/components/album/queries/get-album/get-album.query';
 import { UpdateAlbumArtistsDTO } from './dtos/update-album-artists.dto';
-import { UpdateAlbumCommand } from '../../../../../core/app/components/album/commands/update-album/update-album.command';
-import { UpdateAlbumArtistsCommand } from '../../../../../core/app/components/album/commands/update-album-artists/update-album-artists.command';
 import { UpdateAlbumCoverDTO } from './dtos/update-album-cover.dto';
-import { UpdateAlbumCoverCommand } from '../../../../../core/app/components/album/commands/update-album-cover/update-album-cover.command';
-import { DeleteAlbumCoverCommand } from '../../../../../core/app/components/album/commands/delete-album-cover/delete-album-cover.command';
-import { DeleteAlbumCommand } from '../../../../../core/app/components/album/commands/delete-album/delete-album.command';
 import { BadRequestException } from '../../../../../core/shared/exceptions';
 import { CreateAlbumDTO } from './dtos/create-album.dto';
-import { CreateAlbumCommand } from '../../../../../core/app/components/album/commands/create-album/create-album.command';
 import { GetAlbumTracksQuery } from '../../../../../core/app/components/track/queries/get-album-tracks/get-album-tracks.query';
 import { TracksRO } from '../tracks/ros/tracks.ro';
+import { CreateAlbumCommand } from '../../../../../core/app/cqrs/album/commands/create-album/create-album.command';
+import { GetAlbumQuery } from '../../../../../core/app/cqrs/album/queries/get-album/get-album.query';
+import { UpdateAlbumCommand } from '../../../../../core/app/cqrs/album/commands/update-album/update-album.command';
+import { UpdateAlbumArtistsCommand } from '../../../../../core/app/cqrs/album/commands/update-album-artists/update-album-artists.command';
+import { UpdateAlbumCoverCommand } from '../../../../../core/app/cqrs/album/commands/update-album-cover/update-album-cover.command';
+import { DeleteAlbumCoverCommand } from '../../../../../core/app/cqrs/album/commands/delete-album-cover/delete-album-cover.command';
+import { DeleteAlbumCommand } from '../../../../../core/app/cqrs/album/commands/delete-album/delete-album.command';
 
 @ApiTags('Albums')
 @Controller({ path: '/albums' })

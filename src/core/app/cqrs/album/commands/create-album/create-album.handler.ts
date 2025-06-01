@@ -2,10 +2,10 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
 import { CreateAlbumCommand } from './create-album.command';
 import { EVENT_BUS_DI_TOKEN, EventBus } from '../../../../common/ports/event-bus.port';
-import { AlbumService } from '../../album.service';
 import { AlbumCreatedEvent } from '../../../../common/events/album-created.event';
-import { ArtistService } from '../../../artist/artist.service';
 import { NotFoundException } from '../../../../../shared/exceptions';
+import { ArtistService } from '../../../../components/artist/artist.service';
+import { AlbumService } from '../../../../components/album/album.service';
 
 @CommandHandler(CreateAlbumCommand)
 export class CreateAlbumHandler implements ICommandHandler<CreateAlbumCommand> {

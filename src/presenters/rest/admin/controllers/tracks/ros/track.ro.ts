@@ -35,27 +35,27 @@ export class TrackRO {
 
   @ApiProperty({
     type: [String],
-    description: 'Ids of artists',
+    description: 'Ids of artist',
     example: [faker.database.mongodbObjectId()],
   })
   artistIds: string[];
 
   @ApiProperty({
     type: () => [ArtistRO],
-    description: 'Primary artists',
+    description: 'Primary artist',
   })
   artists: ArtistRO[];
 
   @ApiProperty({
     type: [String],
-    description: 'Ids of featured artists',
+    description: 'Ids of featured artist',
     example: [faker.database.mongodbObjectId()],
   })
   featArtistIds: string[];
 
   @ApiProperty({
     type: () => [ArtistRO],
-    description: 'Featured artists',
+    description: 'Featured artist',
   })
   featArtists: ArtistRO[];
 

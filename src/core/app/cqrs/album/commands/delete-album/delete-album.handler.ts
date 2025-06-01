@@ -2,8 +2,8 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
 import { DeleteAlbumCommand } from './delete-album.command';
 import { EVENT_BUS_DI_TOKEN, EventBus } from '../../../../common/ports/event-bus.port';
-import { AlbumService } from '../../album.service';
 import { AlbumDeletedEvent } from '../../../../common/events/album-deleted.event';
+import { AlbumService } from '../../../../components/album/album.service';
 
 @CommandHandler(DeleteAlbumCommand)
 export class DeleteAlbumHandler implements ICommandHandler<DeleteAlbumCommand> {

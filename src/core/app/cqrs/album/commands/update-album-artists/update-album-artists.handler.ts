@@ -2,11 +2,11 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
 import { UpdateAlbumArtistsCommand } from './update-album-artists.command';
 import { EVENT_BUS_DI_TOKEN, EventBus } from '../../../../common/ports/event-bus.port';
-import { AlbumService } from '../../album.service';
 import { AlbumUpdatedEvent } from '../../../../common/events/album-updated.event';
 import { AlbumArtistsUpdatedEvent } from '../../../../common/events/album-artists-updated.event';
-import { ArtistService } from '../../../artist/artist.service';
 import { NotFoundException } from '../../../../../shared/exceptions';
+import { ArtistService } from '../../../../components/artist/artist.service';
+import { AlbumService } from '../../../../components/album/album.service';
 
 @CommandHandler(UpdateAlbumArtistsCommand)
 export class UpdateAlbumArtistsHandler implements ICommandHandler<UpdateAlbumArtistsCommand> {

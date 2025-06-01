@@ -2,9 +2,9 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
 import { DeleteAlbumCoverCommand } from './delete-album-cover.command';
 import { EVENT_BUS_DI_TOKEN, EventBus } from '../../../../common/ports/event-bus.port';
-import { AlbumService } from '../../album.service';
 import { AlbumUpdatedEvent } from '../../../../common/events/album-updated.event';
 import { AlbumCoverDeletedEvent } from '../../../../common/events/album-cover-deleted.event';
+import { AlbumService } from '../../../../components/album/album.service';
 
 @CommandHandler(DeleteAlbumCoverCommand)
 export class DeleteAlbumCoverHandler implements ICommandHandler<DeleteAlbumCoverCommand> {

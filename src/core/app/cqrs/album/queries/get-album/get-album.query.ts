@@ -1,5 +1,5 @@
 import { Query } from '@nestjs/cqrs';
-import { AlbumDTO } from '../../dtos/album.dto';
+import { AlbumDTO } from '../../../../components/album/dtos/album.dto';
 
 export class GetAlbumQuery extends Query<AlbumDTO | null> {
   constructor(

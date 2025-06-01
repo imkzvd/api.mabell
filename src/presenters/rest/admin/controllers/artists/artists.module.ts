@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { ArtistsController } from './artists.controller';
-import { GetArtistAlbumsHandler } from '../../../../../core/app/components/album/queries/get-artist-albums/get-artist-albums.handler';
 import { GetArtistTracksHandler } from '../../../../../core/app/components/track/queries/get-artist-tracks/get-artist-tracks.handler';
 import { ArtistService } from '../../../../../core/app/components/artist/artist.service';
 import { AlbumService } from '../../../../../core/app/components/album/album.service';
@@ -13,6 +12,7 @@ import { DeleteArtistAvatarHandler } from '../../../../../core/app/cqrs/artist/c
 import { DeleteArtistCoverHandler } from '../../../../../core/app/cqrs/artist/commands/delete-artist-cover/delete-artist-cover.handler';
 import { DeleteArtistHandler } from '../../../../../core/app/cqrs/artist/commands/delete-artist/delete-artist.handler';
 import { GetArtistHandler } from '../../../../../core/app/cqrs/artist/queries/get-artist/get-artist.handler';
+import { GetArtistAlbumsHandler } from '../../../../../core/app/cqrs/album/queries/get-artist-albums/get-artist-albums.handler';
 
 @Module({
   providers: [

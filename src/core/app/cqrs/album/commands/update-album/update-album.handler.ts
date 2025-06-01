@@ -2,8 +2,8 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
 import { UpdateAlbumCommand } from './update-album.command';
 import { EVENT_BUS_DI_TOKEN, EventBus } from '../../../../common/ports/event-bus.port';
-import { AlbumService } from '../../album.service';
 import { AlbumUpdatedEvent } from '../../../../common/events/album-updated.event';
+import { AlbumService } from '../../../../components/album/album.service';
 
 @CommandHandler(UpdateAlbumCommand)
 export class UpdateAlbumHandler implements ICommandHandler<UpdateAlbumCommand> {

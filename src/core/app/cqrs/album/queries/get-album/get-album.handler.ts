@@ -1,8 +1,8 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
 import { GetAlbumQuery } from './get-album.query';
-import AlbumMapper from '../../dtos/album.mapper';
-import { AlbumService } from '../../album.service';
+import { AlbumService } from '../../../../components/album/album.service';
+import AlbumMapper from '../../../../components/album/dtos/album.mapper';
 
 @QueryHandler(GetAlbumQuery)
 export class GetAlbumHandler implements IQueryHandler<GetAlbumQuery> {

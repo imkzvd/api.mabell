@@ -1,11 +1,11 @@
 import { Command } from '@nestjs/cqrs';
-import { UpdateAlbumCoverPayload } from '../../types';
 import { AlbumId } from '../../../../../domain/components/album/types';
+import { UpdateAlbumPayload } from '../../../../components/album/types';
 
-export class UpdateAlbumCoverCommand extends Command<AlbumId> {
+export class UpdateAlbumCommand extends Command<AlbumId> {
   constructor(
     public readonly id: string,
-    public readonly payload: UpdateAlbumCoverPayload,
+    public readonly payload: UpdateAlbumPayload,
   ) {
     super();
   }
