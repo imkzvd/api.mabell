@@ -1,8 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AlbumsController } from './albums.controller';
 import { AlbumService } from '../../../../../core/app/components/album/album.service';
-import { AlbumSubscriber } from '../../../../../core/app/components/album/events/album.subscriber';
-import { TrackService } from '../../../../../core/app/components/track/track.service';
 import { ArtistService } from '../../../../../core/app/components/artist/artist.service';
 import { CreateAlbumHandler } from '../../../../../core/app/cqrs/album/commands/create-album/create-album.handler';
 import { DeleteAlbumHandler } from '../../../../../core/app/cqrs/album/commands/delete-album/delete-album.handler';
@@ -11,14 +9,15 @@ import { UpdateAlbumArtistsHandler } from '../../../../../core/app/cqrs/album/co
 import { UpdateAlbumHandler } from '../../../../../core/app/cqrs/album/commands/update-album/update-album.handler';
 import { UpdateAlbumCoverHandler } from '../../../../../core/app/cqrs/album/commands/update-album-cover/update-album-cover.handler';
 import { GetAlbumHandler } from '../../../../../core/app/cqrs/album/queries/get-album/get-album.handler';
-import { GetAlbumTracksQuery } from '../../../../../core/app/cqrs/track/queries/get-album-tracks/get-album-tracks.query';
+import { AlbumEventSubscriber } from '../../../../../core/app/components/album/album.event-subscriber';
+import { GetAlbumTracksHandler } from '../../../../../core/app/cqrs/track/queries/get-album-tracks/get-album-tracks.handler';
+import { TrackService } from '../../../../../core/app/components/track/track.service';
 
 @Module({
   providers: [
     ArtistService,
     AlbumService,
     TrackService,
-    AlbumSubscriber,
     CreateAlbumHandler,
     DeleteAlbumHandler,
     DeleteAlbumCoverHandler,
@@ -26,7 +25,8 @@ import { GetAlbumTracksQuery } from '../../../../../core/app/cqrs/track/queries/
     UpdateAlbumHandler,
     UpdateAlbumCoverHandler,
     GetAlbumHandler,
-    GetAlbumTracksQuery,
+    GetAlbumTracksHandler,
+    AlbumEventSubscriber,
   ],
   controllers: [AlbumsController],
 })
