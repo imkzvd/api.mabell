@@ -1,9 +1,9 @@
 import { Inject } from '@nestjs/common';
-import { EVENT_BUS_DI_TOKEN, EventBus } from '../../../common/ports/event-bus.port';
-import { ArtistDeletedEvent } from '../../../common/events/artist-deleted.event';
-import { AlbumService } from '../album.service';
+import { EVENT_BUS_DI_TOKEN, EventBus } from '../../common/ports/event-bus.port';
+import { AlbumService } from './album.service';
+import { ArtistDeletedEvent } from '../../common/events/artist-deleted.event';
 
-export class AlbumSubscriber {
+export class AlbumEventSubscriber {
   constructor(
     @Inject(EVENT_BUS_DI_TOKEN) private readonly _eb: EventBus,
     @Inject(AlbumService) private readonly _albumService: AlbumService,
