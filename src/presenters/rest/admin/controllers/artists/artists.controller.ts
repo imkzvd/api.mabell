@@ -44,7 +44,7 @@ import { GetArtistAlbumsQuery } from '../../../../../core/app/cqrs/album/queries
 import { GetArtistTracksQuery } from '../../../../../core/app/cqrs/track/queries/get-artist-tracks/get-artist-tracks.query';
 
 @ApiTags('Artists')
-@Controller({ path: '/artist' })
+@Controller({ path: '/artists' })
 export class ArtistsController {
   constructor(
     private readonly _commandBus: CommandBus,
