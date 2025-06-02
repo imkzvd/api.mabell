@@ -10,5 +10,5 @@ export class CreatePlaylistDTO {
     example: faker.database.mongodbObjectId(),
   })
   @IsMongoId()
-  owner: string;
+  ownerId: string;
 }

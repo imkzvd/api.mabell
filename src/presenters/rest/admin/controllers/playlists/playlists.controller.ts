@@ -55,8 +55,8 @@ export class PlaylistsController {
   @ApiBody({ type: CreatePlaylistDTO })
   @ApiCreatedResponse({ description: 'Playlist', type: PlaylistRO })
   @Post('/')
-  async create(@Body() { owner }: CreatePlaylistDTO): Promise<PlaylistRO> {
-    const createdPlaylistId = await this._commandBus.execute(new CreatePlaylistCommand(owner));
+  async create(@Body() { ownerId }: CreatePlaylistDTO): Promise<PlaylistRO> {
+    const createdPlaylistId = await this._commandBus.execute(new CreatePlaylistCommand(ownerId));
     const foundPlaylist = await this._queryBus.execute(new GetPlaylistQuery(createdPlaylistId));
 
     if (!foundPlaylist) {
