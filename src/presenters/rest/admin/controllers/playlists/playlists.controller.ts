@@ -178,9 +178,9 @@ export class PlaylistsController {
   @Patch('/:id/tracks')
   async addTrack(
     @Param('id', ParseObjectIdPipe) id: string,
-    @Body() { track }: AddTrackInPlaylistDTO,
+    @Body() { trackId }: AddTrackInPlaylistDTO,
   ): Promise<PlaylistRO> {
-    await this._commandBus.execute(new AddTrackInPlaylistCommand(id, track));
+    await this._commandBus.execute(new AddTrackInPlaylistCommand(id, trackId));
 
     const foundPlaylist = await this._queryBus.execute(new GetPlaylistQuery(id));
 
