@@ -58,7 +58,7 @@ export class AlbumService {
     const foundAlbum = await this._albumWR.findById(id);
 
     if (!foundAlbum) {
-      throw new NotFoundException(`There is no artist with the specified ID`);
+      throw new NotFoundException('Album does not exist');
     }
 
     if (payload.name) {
