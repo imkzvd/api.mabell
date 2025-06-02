@@ -2,8 +2,8 @@ import { BadRequestException } from '../../../../shared/exceptions';
 
 export class BiographyVO {
   private constructor(public readonly value: string) {
-    if (value.length > 100) {
-      throw new BadRequestException('Biography max length - 100.');
+    if (value.length > 500) {
+      throw new BadRequestException('Biography max length - 500.');
     }
   }
 
