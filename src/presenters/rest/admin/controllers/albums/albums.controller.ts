@@ -54,8 +54,8 @@ export class AlbumsController {
   @ApiBody({ type: CreateAlbumDTO })
   @ApiCreatedResponse({ description: 'Album', type: AlbumRO })
   @Post('/')
-  async create(@Body() { artist }: CreateAlbumDTO): Promise<AlbumRO> {
-    const createdAlbumId = await this._commandBus.execute(new CreateAlbumCommand(artist));
+  async create(@Body() { artistId }: CreateAlbumDTO): Promise<AlbumRO> {
+    const createdAlbumId = await this._commandBus.execute(new CreateAlbumCommand(artistId));
     const createdAlbum = await this._queryBus.execute(new GetAlbumQuery(createdAlbumId));
 
     if (!createdAlbum) {

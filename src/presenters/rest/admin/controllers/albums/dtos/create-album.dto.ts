@@ -10,5 +10,5 @@ export class CreateAlbumDTO {
     example: faker.database.mongodbObjectId(),
   })
   @IsMongoId()
-  artist: string;
+  artistId: string;
 }
