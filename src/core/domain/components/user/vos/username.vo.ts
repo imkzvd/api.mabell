@@ -8,6 +8,6 @@ export class UsernameVO {
   }
 
   static create(username: string): UsernameVO {
-    return new UsernameVO(username.trim().toLowerCase());
+    return new UsernameVO(username.trim());
   }
 }
