@@ -11,12 +11,7 @@ import {
   AlbumTypes,
   getAlbumTypeLabelByValue,
 } from '../../../../../../core/domain/components/album/constants/album-types';
-import { TrackRO } from '../../tracks/ros/track.ro';
-import { OffsetLimitPaginationRO } from '../../../../common/ros/offset-limit-pagination.ro';
-import { TracksRO } from '../../tracks/ros/tracks.ro';
-import { OffsetLimitPaginationResponseDTO } from '../../../../../../core/shared/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
 import { AlbumDTO } from '../../../../../../core/app/components/album/dtos/album.dto';
-import { TrackDTO } from '../../../../../../core/app/components/track/dtos/track.dto';
 
 export class AlbumRO {
   @ApiProperty({
@@ -81,9 +76,6 @@ export class AlbumRO {
   })
   releaseAt: Date | null;
 
-  @ApiProperty({ type: () => OffsetLimitPaginationRO<TrackRO>, description: 'Album tracks' })
-  tracks: OffsetLimitPaginationRO<TrackRO>;
-
   @ApiProperty({ type: Boolean, description: 'Active', example: true })
   isActive: boolean;
 
@@ -104,7 +96,7 @@ export class AlbumRO {
   })
   updatedAt: Date;
 
-  constructor(album: AlbumDTO, tracks?: OffsetLimitPaginationResponseDTO<TrackDTO>) {
+  constructor(album: AlbumDTO) {
     this.id = album.id;
     this.name = album.name;
     this.artists = album.artists.map((i) => new ArtistRO(i));
@@ -114,7 +106,6 @@ export class AlbumRO {
     this.color = album.color;
     this.description = album.description;
     this.releaseAt = album.releaseAt;
-    this.tracks = tracks ? new TracksRO(tracks) : new OffsetLimitPaginationRO();
     this.isActive = album.isActive;
     this.isPublic = album.isPublic;
     this.createdAt = album.createdAt;
