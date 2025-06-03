@@ -223,7 +223,12 @@ export class TrackService {
     options?: Partial<{
       isPublic: boolean;
     }>,
-  ): Promise<{ items: TrackDTO[]; foundIds: string[]; total: number; missingIds: string[] }> {
+  ): Promise<{
+    items: (TrackDTO | null)[];
+    foundIds: string[];
+    total: number;
+    missingIds: string[];
+  }> {
     return await this._rr.findByIds(ids, options);
   }
 

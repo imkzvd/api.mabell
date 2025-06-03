@@ -44,7 +44,7 @@ export class TrackReadRepositoryAdapter implements TrackReadRepository {
     ids: string[],
     options?: Partial<{ isPublic: boolean }>,
   ): Promise<{
-    items: TrackWithAlbumAndArtistsDTO[];
+    items: (TrackWithAlbumAndArtistsDTO | null)[];
     foundIds: string[];
     total: number;
     missingIds: string[];
@@ -58,19 +58,20 @@ export class TrackReadRepositoryAdapter implements TrackReadRepository {
       .lean<TrackWithAlbumAndArtists[]>()
       .exec();
 
-    // TODO: Refactoring
-    const docsMap: Map<string, TrackWithAlbumAndArtists> = new Map(
+    const foundDocsMap: Map<string, TrackWithAlbumAndArtists> = new Map(
       foundDocs.map((doc) => [doc._id.toHexString(), doc]),
     );
-    const sortedDocs = ids.map((id) => docsMap.get(id)!);
-    const foundDocIds = sortedDocs.map((doc) => doc._id.toHexString());
-    const missingDocIds = ids.filter((id) => !foundDocIds.includes(id));
+    const itemsResult: (TrackWithAlbumAndArtistsDTO | null)[] = ids.map((id) => {
+      const doc = foundDocsMap.get(id);
+
+      return doc ? TrackMapper.toDTO(doc) : null;
+    });
 
     return {
-      items: sortedDocs.map((doc) => TrackMapper.toDTO(doc)),
-      foundIds: foundDocIds,
-      total: foundDocIds.length,
-      missingIds: missingDocIds,
+      items: itemsResult,
+      foundIds: [...foundDocsMap.keys()],
+      total: foundDocsMap.size,
+      missingIds: ids.filter((id) => !foundDocsMap.has(id)),
     };
   }
 
