@@ -206,12 +206,10 @@ export class AlbumsController {
     const foundAlbum = await this._queryBus.execute(new GetAlbumQuery(id));
 
     if (!foundAlbum) {
-      throw new NotFoundException(`There is no album with the specified ID`);
+      throw new NotFoundException('Album does not exist');
     }
 
-    const foundTracks = await this._queryBus.execute(new GetAlbumTracksQuery(id));
-
-    return new AlbumRO(foundAlbum, foundTracks);
+    return new AlbumRO(foundAlbum);
   }
 
   @ApiOperation({ summary: 'Get album tracks', operationId: 'getTracks' })
