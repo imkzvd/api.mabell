@@ -9,9 +9,16 @@ import { DeleteTrackFromPlaylistHandler } from '../../../../../core/app/cqrs/pla
 import { UpdatePlaylistHandler } from '../../../../../core/app/cqrs/playlist/commands/update-playlist/update-playlist.handler';
 import { UpdatePlaylistCoverHandler } from '../../../../../core/app/cqrs/playlist/commands/update-playlist-cover/update-playlist-cover.handler';
 import { GetPlaylistHandler } from '../../../../../core/app/cqrs/playlist/queries/get-playlist/get-playlist.handler';
+import { UserService } from '../../../../../core/app/components/user/user.service';
+import { PasswordModule } from '../../../../../infrastructure/security/password/password.module';
+import { PlaylistService } from '../../../../../core/app/components/playlist/playlist.service';
+import { GetPlaylistTracksHandler } from '../../../../../core/app/cqrs/track/queries/get-playlist-tracks/get-playlist-tracks.handler';
 
 @Module({
+  imports: [PasswordModule],
   providers: [
+    PlaylistService,
+    UserService,
     TrackService,
     AddTrackInPlaylistHandler,
     CreatePlaylistHandler,
@@ -21,6 +28,7 @@ import { GetPlaylistHandler } from '../../../../../core/app/cqrs/playlist/querie
     UpdatePlaylistHandler,
     UpdatePlaylistCoverHandler,
     GetPlaylistHandler,
+    GetPlaylistTracksHandler,
   ],
   controllers: [PlaylistsController],
 })

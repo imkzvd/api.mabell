@@ -41,7 +41,7 @@ import { DeletePlaylistCommand } from '../../../../../core/app/cqrs/playlist/com
 import { AddTrackInPlaylistCommand } from '../../../../../core/app/cqrs/playlist/commands/add-track-in-playlist/add-track-in-playlist.command';
 import { DeleteTrackFromPlaylistCommand } from '../../../../../core/app/cqrs/playlist/commands/delete-track-from-playlist/delete-track-from-playlist.command';
 import { PlaylistTracksRO } from '../tracks/ros/playlist-tracks.ro';
-import { OffsetLimitPaginationResponseDTO } from '../../../../../core/shared/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
+import { GetPlaylistTracksQuery } from '../../../../../core/app/cqrs/track/queries/get-playlist-tracks/get-playlist-tracks.query';
 
 @ApiTags('Playlists')
 @Controller({ path: '/playlists' })
@@ -265,12 +265,15 @@ export class PlaylistsController {
     type: PlaylistTracksRO,
   })
   @Get('/:id/tracks')
-  getTracks(
+  async getTracks(
     @Param('id', ParseObjectIdPipe) id: string,
     @Query('limit', new DefaultValuePipe(25), ParseIntPipe) limit: number,
     @Query('offset', new DefaultValuePipe(0), ParseIntPipe) offset: number,
-  ): PlaylistTracksRO {
-    console.log(id, limit, offset);
-    return new PlaylistTracksRO(new OffsetLimitPaginationResponseDTO([], 0, 50, 0, false));
+  ): Promise<PlaylistTracksRO> {
+    const foundTracks = await this._queryBus.execute(
+      new GetPlaylistTracksQuery(id, { pagination: { limit, offset } }),
+    );
+
+    return new PlaylistTracksRO(foundTracks);
   }
 }
