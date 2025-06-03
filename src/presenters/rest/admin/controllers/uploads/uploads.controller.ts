@@ -42,7 +42,7 @@ export class UploadsController {
   @UseInterceptors(FileInterceptor('file'))
   @Post('/')
   async upload(@UploadedFile() file: Express.Multer.File): Promise<TmpFileRO> {
-    const uploadedFileId = await this._commandBus.execute(new UploadFileCommand(file));
+    const uploadedFileId = await this._commandBus.execute(new UploadFileCommand({ file }));
 
     const fileData = await this._queryBus.execute(new GetFileQuery(uploadedFileId));
 

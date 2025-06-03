@@ -7,7 +7,7 @@ import { UploadService } from '../../../../components/upload/upload.service';
 export class UploadFileHandler implements ICommandHandler<UploadFileCommand> {
   constructor(@Inject(UploadService) private readonly _uploadService: UploadService) {}
 
-  async execute({ file }: UploadFileCommand) {
-    return await this._uploadService.uploadFile(file);
+  async execute({ payload }: UploadFileCommand) {
+    return await this._uploadService.uploadFile(payload);
   }
 }

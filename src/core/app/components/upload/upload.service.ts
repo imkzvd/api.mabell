@@ -6,14 +6,15 @@ import {
 import { TmpFileId } from '../../common/ports/file-storages/common/types';
 import { NotFoundException } from '../../../shared/exceptions';
 import { TmpFileDTO } from '../../common/ports/file-storages/common/dtos/tmp-file.dto';
+import { UploadFilePayload } from './types';
 
 export class UploadService {
   constructor(
     @Inject(TMP_FILE_STORAGE_DI_TOKEN) private readonly _tmpFileStorage: TmpFileStorage,
   ) {}
 
-  async uploadFile(file: Express.Multer.File): Promise<TmpFileId> {
-    const { id } = await this._tmpFileStorage.upload(file);
+  async uploadFile(payload: UploadFilePayload): Promise<TmpFileId> {
+    const { id } = await this._tmpFileStorage.upload(payload.file);
 
     return id;
   }
