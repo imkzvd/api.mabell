@@ -51,11 +51,11 @@ export class PlaylistsController {
     private readonly _queryBus: QueryBus,
   ) {}
 
-  @ApiOperation({ summary: 'Create an playlist', operationId: 'create' })
+  @ApiOperation({ summary: 'Create an playlist', operationId: 'createPlaylist' })
   @ApiBody({ type: CreatePlaylistDTO })
   @ApiCreatedResponse({ description: 'Playlist', type: PlaylistRO })
   @Post('/')
-  async create(@Body() { ownerId }: CreatePlaylistDTO): Promise<PlaylistRO> {
+  async createPlaylist(@Body() { ownerId }: CreatePlaylistDTO): Promise<PlaylistRO> {
     const createdPlaylistId = await this._commandBus.execute(new CreatePlaylistCommand(ownerId));
     const foundPlaylist = await this._queryBus.execute(new GetPlaylistQuery(createdPlaylistId));
 
@@ -66,10 +66,7 @@ export class PlaylistsController {
     return new PlaylistRO(foundPlaylist);
   }
 
-  @ApiOperation({
-    summary: 'Update playlist data',
-    operationId: 'update',
-  })
+  @ApiOperation({ summary: 'Update playlist data', operationId: 'updatePlaylist' })
   @ApiParam({
     type: String,
     name: 'id',
@@ -79,7 +76,7 @@ export class PlaylistsController {
   @ApiBody({ type: UpdatePlaylistDTO })
   @ApiOkResponse({ description: 'Playlist', type: PlaylistRO })
   @Patch('/:id')
-  async update(
+  async updatePlaylist(
     @Param('id', ParseObjectIdPipe) id: string,
     @Body() dto: UpdatePlaylistDTO,
   ): Promise<PlaylistRO> {
@@ -93,10 +90,7 @@ export class PlaylistsController {
     return new PlaylistRO(foundPlaylist);
   }
 
-  @ApiOperation({
-    summary: 'Update playlist cover',
-    operationId: 'updateCover',
-  })
+  @ApiOperation({ summary: 'Update playlist cover', operationId: 'updatePlaylistCover' })
   @ApiParam({
     type: String,
     name: 'id',
@@ -106,7 +100,7 @@ export class PlaylistsController {
   @ApiBody({ type: UpdatePlaylistCoverDTO })
   @ApiOkResponse({ description: 'Playlist', type: PlaylistRO })
   @Patch('/:id/cover')
-  async updateCover(
+  async updatePlaylistCover(
     @Param('id', ParseObjectIdPipe) id: string,
     @Body() dto: UpdatePlaylistCoverDTO,
   ): Promise<PlaylistRO> {
@@ -120,10 +114,7 @@ export class PlaylistsController {
     return new PlaylistRO(foundPlaylist);
   }
 
-  @ApiOperation({
-    summary: 'Delete cover of the playlist',
-    operationId: 'deleteCover',
-  })
+  @ApiOperation({ summary: 'Delete cover of the playlist', operationId: 'deletePlaylistCover' })
   @ApiParam({
     type: String,
     name: 'id',
@@ -132,7 +123,7 @@ export class PlaylistsController {
   })
   @ApiOkResponse({ description: 'Playlist', type: PlaylistRO })
   @Delete('/:id/cover')
-  async deleteCover(@Param('id', ParseObjectIdPipe) id: string): Promise<PlaylistRO> {
+  async deletePlaylistCover(@Param('id', ParseObjectIdPipe) id: string): Promise<PlaylistRO> {
     await this._commandBus.execute(new DeletePlaylistCoverCommand(id));
     const foundPlaylist = await this._queryBus.execute(new GetPlaylistQuery(id));
 
@@ -143,30 +134,21 @@ export class PlaylistsController {
     return new PlaylistRO(foundPlaylist);
   }
 
-  @ApiOperation({
-    summary: 'Delete an playlist by id',
-    operationId: 'delete',
-  })
+  @ApiOperation({ summary: 'Delete an playlist by id', operationId: 'deletePlaylist' })
   @ApiParam({
     type: String,
     name: 'id',
     description: 'Id',
     example: faker.database.mongodbObjectId(),
   })
-  @ApiNoContentResponse({
-    description: 'Playlist has been deleted',
-    schema: { format: 'json' },
-  })
+  @ApiNoContentResponse({ description: 'Playlist has been deleted', schema: { format: 'json' } })
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete('/:id')
-  async delete(@Param('id', ParseObjectIdPipe) id: string): Promise<void> {
+  async deletePlaylist(@Param('id', ParseObjectIdPipe) id: string): Promise<void> {
     await this._commandBus.execute(new DeletePlaylistCommand(id));
   }
 
-  @ApiOperation({
-    summary: 'Add artist in playlist',
-    operationId: 'addTrack',
-  })
+  @ApiOperation({ summary: 'Add artist in playlist', operationId: 'addTrackInPlaylist' })
   @ApiParam({
     type: String,
     name: 'id',
@@ -176,7 +158,7 @@ export class PlaylistsController {
   @ApiBody({ type: AddTrackInPlaylistDTO })
   @ApiOkResponse({ description: 'Playlist', type: PlaylistRO })
   @Patch('/:id/tracks')
-  async addTrack(
+  async addTrackInPlaylist(
     @Param('id', ParseObjectIdPipe) id: string,
     @Body() { trackId }: AddTrackInPlaylistDTO,
   ): Promise<PlaylistRO> {
@@ -193,7 +175,7 @@ export class PlaylistsController {
 
   @ApiOperation({
     summary: 'Delete artist from the playlist',
-    operationId: 'deleteTrack',
+    operationId: 'deleteTrackFromPlaylist',
   })
   @ApiParam({
     type: String,
@@ -207,20 +189,17 @@ export class PlaylistsController {
     description: 'Id of the artist',
     example: faker.database.mongodbObjectId(),
   })
-  @ApiNoContentResponse({
-    description: 'Track has been deleted',
-    schema: { format: 'json' },
-  })
+  @ApiNoContentResponse({ description: 'Track has been deleted', schema: { format: 'json' } })
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete('/:id/tracks/:trackId')
-  async deleteTrack(
+  async deleteTrackFromPlaylist(
     @Param('id', ParseObjectIdPipe) id: string,
     @Param('trackId', ParseObjectIdPipe) trackId: string,
   ): Promise<void> {
     await this._commandBus.execute(new DeleteTrackFromPlaylistCommand(id, trackId));
   }
 
-  @ApiOperation({ summary: 'Get playlist by id', operationId: 'get' })
+  @ApiOperation({ summary: 'Get playlist by id', operationId: 'getPlaylist' })
   @ApiParam({
     type: String,
     name: 'id',
@@ -229,7 +208,7 @@ export class PlaylistsController {
   })
   @ApiOkResponse({ description: 'Playlist', type: PlaylistRO })
   @Get('/:id')
-  async getOne(@Param('id', ParseObjectIdPipe) id: string): Promise<PlaylistRO> {
+  async getPlaylist(@Param('id', ParseObjectIdPipe) id: string): Promise<PlaylistRO> {
     const foundPlaylist = await this._queryBus.execute(new GetPlaylistQuery(id));
 
     if (!foundPlaylist) {
@@ -239,33 +218,18 @@ export class PlaylistsController {
     return new PlaylistRO(foundPlaylist);
   }
 
-  @ApiOperation({ summary: 'Get playlist tracks', operationId: 'getTracks' })
+  @ApiOperation({ summary: 'Get playlist tracks', operationId: 'getPlaylistTracks' })
   @ApiParam({
     type: String,
     name: 'id',
     description: 'Id',
     example: faker.database.mongodbObjectId(),
   })
-  @ApiQuery({
-    required: false,
-    type: String,
-    name: 'limit',
-    description: 'Limit',
-    example: 50,
-  })
-  @ApiQuery({
-    required: false,
-    type: String,
-    name: 'offset',
-    description: 'Offset',
-    example: 0,
-  })
-  @ApiOkResponse({
-    description: 'Playlist tracks',
-    type: PlaylistTracksRO,
-  })
+  @ApiQuery({ required: false, type: String, name: 'limit', description: 'Limit', example: 50 })
+  @ApiQuery({ required: false, type: String, name: 'offset', description: 'Offset', example: 0 })
+  @ApiOkResponse({ description: 'Playlist tracks', type: PlaylistTracksRO })
   @Get('/:id/tracks')
-  async getTracks(
+  async getPlaylistTracks(
     @Param('id', ParseObjectIdPipe) id: string,
     @Query('limit', new DefaultValuePipe(25), ParseIntPipe) limit: number,
     @Query('offset', new DefaultValuePipe(0), ParseIntPipe) offset: number,

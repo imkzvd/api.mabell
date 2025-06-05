@@ -51,10 +51,10 @@ export class ArtistsController {
     private readonly _queryBus: QueryBus,
   ) {}
 
-  @ApiOperation({ summary: 'Create an artist', operationId: 'create' })
+  @ApiOperation({ summary: 'Create an artist', operationId: 'createArtist' })
   @ApiCreatedResponse({ description: 'Artist', type: ArtistRO })
   @Post('/')
-  async create(): Promise<ArtistRO> {
+  async createArtist(): Promise<ArtistRO> {
     const createdArtistId = await this._commandBus.execute(new CreateArtistCommand());
     const createdArtist = await this._queryBus.execute(new GetArtistQuery(createdArtistId));
 
@@ -65,10 +65,7 @@ export class ArtistsController {
     return new ArtistRO(createdArtist);
   }
 
-  @ApiOperation({
-    summary: 'Update artist data',
-    operationId: 'update',
-  })
+  @ApiOperation({ summary: 'Update artist data', operationId: 'updateArtist' })
   @ApiParam({
     type: String,
     name: 'id',
@@ -78,7 +75,7 @@ export class ArtistsController {
   @ApiBody({ type: UpdateArtistDTO })
   @ApiOkResponse({ description: 'Artist', type: ArtistRO })
   @Patch('/:id')
-  async update(
+  async updateArtist(
     @Param('id', ParseObjectIdPipe) id: string,
     @Body() dto: UpdateArtistDTO,
   ): Promise<ArtistRO> {
@@ -93,10 +90,7 @@ export class ArtistsController {
     return new ArtistRO(updatedArtist);
   }
 
-  @ApiOperation({
-    summary: "Update artist's avatar",
-    operationId: 'updateAvatar',
-  })
+  @ApiOperation({ summary: "Update artist's avatar", operationId: 'updateArtistAvatar' })
   @ApiParam({
     type: String,
     name: 'id',
@@ -106,7 +100,7 @@ export class ArtistsController {
   @ApiBody({ type: UpdateArtistImageDTO })
   @ApiOkResponse({ description: 'Artist', type: ArtistRO })
   @Patch('/:id/avatar')
-  async updateAvatar(
+  async updateArtistAvatar(
     @Param('id', ParseObjectIdPipe) id: string,
     @Body() { fileId, color }: UpdateArtistImageDTO,
   ): Promise<ArtistRO> {
@@ -126,10 +120,7 @@ export class ArtistsController {
     return new ArtistRO(updatedArtist);
   }
 
-  @ApiOperation({
-    summary: "Update artist's cover",
-    operationId: 'updateCover',
-  })
+  @ApiOperation({ summary: "Update artist's cover", operationId: 'updateArtistCover' })
   @ApiParam({
     type: String,
     name: 'id',
@@ -139,7 +130,7 @@ export class ArtistsController {
   @ApiBody({ type: UpdateArtistImageDTO })
   @ApiOkResponse({ description: 'Artist', type: ArtistRO })
   @Patch('/:id/cover')
-  async updateCover(
+  async updateArtistCover(
     @Param('id', ParseObjectIdPipe) id: string,
     @Body() { fileId, color }: UpdateArtistImageDTO,
   ): Promise<ArtistRO> {
@@ -159,10 +150,7 @@ export class ArtistsController {
     return new ArtistRO(updatedArtist);
   }
 
-  @ApiOperation({
-    summary: "Delete artist's avatar",
-    operationId: 'deleteAvatar',
-  })
+  @ApiOperation({ summary: "Delete artist's avatar", operationId: 'deleteArtistAvatar' })
   @ApiParam({
     type: String,
     name: 'id',
@@ -171,7 +159,7 @@ export class ArtistsController {
   })
   @ApiOkResponse({ description: "Artist's avatar has been deleted", type: ArtistRO })
   @Delete('/:id/avatar')
-  async deleteAvatar(@Param('id', ParseObjectIdPipe) id: string): Promise<ArtistRO> {
+  async deleteArtistAvatar(@Param('id', ParseObjectIdPipe) id: string): Promise<ArtistRO> {
     await this._commandBus.execute(new DeleteArtistAvatarCommand(id));
 
     const updatedArtist = await this._queryBus.execute(new GetArtistQuery(id));
@@ -183,10 +171,7 @@ export class ArtistsController {
     return new ArtistRO(updatedArtist);
   }
 
-  @ApiOperation({
-    summary: "Delete artist's cover",
-    operationId: 'deleteCover',
-  })
+  @ApiOperation({ summary: "Delete artist's cover", operationId: 'deleteArtistCover' })
   @ApiParam({
     type: String,
     name: 'id',
@@ -195,7 +180,7 @@ export class ArtistsController {
   })
   @ApiOkResponse({ description: "Artist's cover has been deleted", type: ArtistRO })
   @Delete('/:id/cover')
-  async deleteCover(@Param('id', ParseObjectIdPipe) id: string): Promise<ArtistRO> {
+  async deleteArtistCover(@Param('id', ParseObjectIdPipe) id: string): Promise<ArtistRO> {
     await this._commandBus.execute(new DeleteArtistCoverCommand(id));
 
     const updatedArtist = await this._queryBus.execute(new GetArtistQuery(id));
@@ -207,27 +192,21 @@ export class ArtistsController {
     return new ArtistRO(updatedArtist);
   }
 
-  @ApiOperation({
-    summary: 'Delete an artist by id',
-    operationId: 'delete',
-  })
+  @ApiOperation({ summary: 'Delete an artist by id', operationId: 'deleteArtist' })
   @ApiParam({
     type: String,
     name: 'id',
     description: 'Id',
     example: faker.database.mongodbObjectId(),
   })
-  @ApiNoContentResponse({
-    description: 'Artist has been deleted',
-    schema: { format: 'json' },
-  })
+  @ApiNoContentResponse({ description: 'Artist has been deleted', schema: { format: 'json' } })
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete('/:id')
-  async delete(@Param('id', ParseObjectIdPipe) id: string): Promise<void> {
+  async deleteArtist(@Param('id', ParseObjectIdPipe) id: string): Promise<void> {
     await this._commandBus.execute(new DeleteArtistCommand(id));
   }
 
-  @ApiOperation({ summary: 'Find an artist by id', operationId: 'findOne' })
+  @ApiOperation({ summary: 'Get an artist by id', operationId: 'getArtist' })
   @ApiParam({
     type: String,
     name: 'id',
@@ -236,7 +215,7 @@ export class ArtistsController {
   })
   @ApiOkResponse({ description: 'Artist', type: ArtistRO })
   @Get('/:id')
-  async findOne(@Param('id', ParseObjectIdPipe) id: string): Promise<ArtistRO> {
+  async getArtist(@Param('id', ParseObjectIdPipe) id: string): Promise<ArtistRO> {
     const foundArtist = await this._queryBus.execute(new GetArtistQuery(id));
 
     if (!foundArtist) {
@@ -246,30 +225,18 @@ export class ArtistsController {
     return new ArtistRO(foundArtist);
   }
 
-  @ApiOperation({ summary: 'Get artist albums', operationId: 'getAlbums' })
+  @ApiOperation({ summary: 'Get artist albums', operationId: 'getArtistAlbums' })
   @ApiParam({
     type: String,
     name: 'id',
     description: 'Id',
     example: faker.database.mongodbObjectId(),
   })
-  @ApiQuery({
-    required: false,
-    type: Number,
-    name: 'limit',
-    description: 'Limit',
-    example: 50,
-  })
-  @ApiQuery({
-    required: false,
-    type: Number,
-    name: 'offset',
-    description: 'Offset',
-    example: 0,
-  })
+  @ApiQuery({ required: false, type: Number, name: 'limit', description: 'Limit', example: 50 })
+  @ApiQuery({ required: false, type: Number, name: 'offset', description: 'Offset', example: 0 })
   @ApiOkResponse({ description: 'Artist albums', type: AlbumsRO })
   @Get('/:id/albums')
-  async getAlbums(
+  async getArtistAlbums(
     @Param('id', ParseObjectIdPipe) id: string,
     @Query('limit', new DefaultValuePipe(50), ParseIntPipe) limit: number,
     @Query('offset', new DefaultValuePipe(0), ParseIntPipe) offset: number,
@@ -281,30 +248,18 @@ export class ArtistsController {
     return new AlbumsRO(foundAlbums);
   }
 
-  @ApiOperation({ summary: 'Get artist tracks', operationId: 'getTracks' })
+  @ApiOperation({ summary: 'Get artist tracks', operationId: 'getArtistTracks' })
   @ApiParam({
     type: String,
     name: 'id',
     description: 'Id',
     example: faker.database.mongodbObjectId(),
   })
-  @ApiQuery({
-    required: false,
-    type: Number,
-    name: 'limit',
-    description: 'Limit',
-    example: 50,
-  })
-  @ApiQuery({
-    required: false,
-    type: Number,
-    name: 'offset',
-    description: 'Offset',
-    example: 0,
-  })
+  @ApiQuery({ required: false, type: Number, name: 'limit', description: 'Limit', example: 50 })
+  @ApiQuery({ required: false, type: Number, name: 'offset', description: 'Offset', example: 0 })
   @ApiOkResponse({ description: 'Artist tracks', type: TracksRO })
   @Get('/:id/tracks')
-  async getTracks(
+  async getArtistTracks(
     @Param('id', ParseObjectIdPipe) id: string,
     @Query('limit', new DefaultValuePipe(50), ParseIntPipe) limit: number,
     @Query('offset', new DefaultValuePipe(0), ParseIntPipe) offset: number,

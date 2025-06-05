@@ -44,11 +44,11 @@ export class TracksController {
     private readonly _queryBus: QueryBus,
   ) {}
 
-  @ApiOperation({ summary: 'Create an artist', operationId: 'create' })
+  @ApiOperation({ summary: 'Create an track', operationId: 'createTrack' })
   @ApiBody({ type: CreateTrackDTO })
   @ApiCreatedResponse({ description: 'Track', type: TrackRO })
   @Post('/')
-  async create(@Body() { albumId }: CreateTrackDTO): Promise<TrackRO> {
+  async createTrack(@Body() { albumId }: CreateTrackDTO): Promise<TrackRO> {
     const createdTrackId = await this._commandBus.execute(new CreateTrackCommand(albumId));
     const createdTrack = await this._queryBus.execute(new GetTrackQuery(createdTrackId));
 
@@ -59,10 +59,7 @@ export class TracksController {
     return new TrackRO(createdTrack);
   }
 
-  @ApiOperation({
-    summary: 'Update artist data',
-    operationId: 'update',
-  })
+  @ApiOperation({ summary: 'Update track data', operationId: 'updateTrack' })
   @ApiParam({
     type: String,
     name: 'id',
@@ -72,7 +69,7 @@ export class TracksController {
   @ApiBody({ type: UpdateTrackDTO })
   @ApiOkResponse({ description: 'Updated artist', type: TrackRO })
   @Patch('/:id')
-  async update(
+  async updateTrack(
     @Param('id', ParseObjectIdPipe) id: string,
     @Body() dto: UpdateTrackDTO,
   ): Promise<TrackRO> {
@@ -87,10 +84,7 @@ export class TracksController {
     return new TrackRO(updatedTrack);
   }
 
-  @ApiOperation({
-    summary: 'Update artist feat. artists',
-    operationId: 'updateFeatArtists',
-  })
+  @ApiOperation({ summary: 'Update track feat. artists', operationId: 'updateTrackFeatArtists' })
   @ApiParam({
     type: String,
     name: 'id',
@@ -100,7 +94,7 @@ export class TracksController {
   @ApiBody({ type: UpdateTrackFeatArtistsDTO })
   @ApiOkResponse({ description: 'Updated artist', type: TrackRO })
   @Patch('/:id/featured-artists')
-  async updateFeatArtists(
+  async updateTrackFeatArtists(
     @Param('id', ParseObjectIdPipe) id: string,
     @Body() dto: UpdateTrackFeatArtistsDTO,
   ): Promise<TrackRO> {
@@ -115,10 +109,7 @@ export class TracksController {
     return new TrackRO(updatedTrack);
   }
 
-  @ApiOperation({
-    summary: 'Update file of the artist',
-    operationId: 'updateFile',
-  })
+  @ApiOperation({ summary: 'Update track file', operationId: 'updateTrackFile' })
   @ApiParam({
     type: String,
     name: 'id',
@@ -128,7 +119,7 @@ export class TracksController {
   @ApiBody({ type: UpdateTrackFileDTO })
   @ApiOkResponse({ description: 'Updated artist', type: TrackRO })
   @Patch('/:id/file')
-  async updateFile(
+  async updateTrackFile(
     @Param('id', ParseObjectIdPipe) id: string,
     @Body() dto: UpdateTrackFileDTO,
   ): Promise<TrackRO> {
@@ -143,10 +134,7 @@ export class TracksController {
     return new TrackRO(updatedTrack);
   }
 
-  @ApiOperation({
-    summary: 'Delete file of the artist',
-    operationId: 'deleteFile',
-  })
+  @ApiOperation({ summary: 'Delete track file', operationId: 'deleteTrackFile' })
   @ApiParam({
     type: String,
     name: 'id',
@@ -155,7 +143,7 @@ export class TracksController {
   })
   @ApiOkResponse({ description: 'Updated artist', type: TrackRO })
   @Delete('/:id/file')
-  async deleteFile(@Param('id', ParseObjectIdPipe) id: string): Promise<TrackRO> {
+  async deleteTrackFile(@Param('id', ParseObjectIdPipe) id: string): Promise<TrackRO> {
     await this._commandBus.execute(new DeleteTrackFileCommand(id));
 
     const updatedTrack = await this._queryBus.execute(new GetTrackQuery(id));
@@ -167,27 +155,21 @@ export class TracksController {
     return new TrackRO(updatedTrack);
   }
 
-  @ApiOperation({
-    summary: 'Delete an artist by id',
-    operationId: 'deleteById',
-  })
+  @ApiOperation({ summary: 'Delete an track by id', operationId: 'deleteTrack' })
   @ApiParam({
     type: String,
     name: 'id',
     description: 'Id',
     example: faker.database.mongodbObjectId(),
   })
-  @ApiNoContentResponse({
-    description: 'TrackEntity has been deleted',
-    schema: { format: 'json' },
-  })
+  @ApiNoContentResponse({ description: 'TrackEntity has been deleted', schema: { format: 'json' } })
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete('/:id')
-  async deleteById(@Param('id', ParseObjectIdPipe) id: string): Promise<void> {
+  async deleteTrack(@Param('id', ParseObjectIdPipe) id: string): Promise<void> {
     await this._commandBus.execute(new DeleteTrackCommand(id));
   }
 
-  @ApiOperation({ summary: 'Get an artist by id', operationId: 'getById' })
+  @ApiOperation({ summary: 'Get an track by id', operationId: 'getTrack' })
   @ApiParam({
     type: String,
     name: 'id',
@@ -196,7 +178,7 @@ export class TracksController {
   })
   @ApiOkResponse({ description: 'Track', type: TrackRO })
   @Get('/:id')
-  async getById(@Param('id', ParseObjectIdPipe) id: string): Promise<TrackRO> {
+  async getTrack(@Param('id', ParseObjectIdPipe) id: string): Promise<TrackRO> {
     const foundTrack = await this._queryBus.execute(new GetTrackQuery(id));
 
     if (!foundTrack) {

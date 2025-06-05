@@ -62,10 +62,7 @@ export class AdminsController {
     return new AdminRO(createdAdmin);
   }
 
-  @ApiOperation({
-    summary: 'Update admin data',
-    operationId: 'updateAdmin',
-  })
+  @ApiOperation({ summary: 'Update admin data', operationId: 'updateAdmin' })
   @ApiParam({
     type: String,
     name: 'id',
@@ -90,10 +87,7 @@ export class AdminsController {
     return new AdminRO(updatedAdmin);
   }
 
-  @ApiOperation({
-    summary: 'Update admin username',
-    operationId: 'updateAdminUsername',
-  })
+  @ApiOperation({ summary: 'Update admin username', operationId: 'updateAdminUsername' })
   @ApiParam({
     type: String,
     name: 'id',
@@ -118,10 +112,7 @@ export class AdminsController {
     return new AdminRO(updatedAdmin);
   }
 
-  @ApiOperation({
-    summary: 'Refresh admin password',
-    operationId: 'refreshAdminPassword',
-  })
+  @ApiOperation({ summary: 'Refresh admin password', operationId: 'refreshAdminPassword' })
   @ApiParam({
     type: String,
     name: 'id',
@@ -145,10 +136,7 @@ export class AdminsController {
     description: 'Admin id',
     example: faker.database.mongodbObjectId(),
   })
-  @ApiNoContentResponse({
-    description: 'Admin has been deleted',
-    schema: { format: 'json' },
-  })
+  @ApiNoContentResponse({ description: 'Admin has been deleted', schema: { format: 'json' } })
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete('/:id')
   async deleteAdmin(@Param('id', ParseObjectIdPipe) id: string): Promise<void> {

@@ -24,7 +24,7 @@ import { GetArtistTracksQuery } from '../../../../../core/app/cqrs/track/queries
 export class ArtistsController {
   constructor(private readonly _queryBus: QueryBus) {}
 
-  @ApiOperation({ summary: 'Get an artist by id', operationId: 'getById' })
+  @ApiOperation({ summary: 'Get an artist by id', operationId: 'getArtist' })
   @ApiParam({
     type: String,
     name: 'id',
@@ -33,7 +33,7 @@ export class ArtistsController {
   })
   @ApiOkResponse({ description: 'Artist', type: ArtistRO })
   @Get('/:id')
-  async getById(@Param('id', ParseObjectIdPipe) id: string): Promise<ArtistRO> {
+  async getArtist(@Param('id', ParseObjectIdPipe) id: string): Promise<ArtistRO> {
     const foundArtist = await this._queryBus.execute(new GetArtistQuery(id, { isPublic: true }));
 
     if (!foundArtist) {
@@ -43,32 +43,18 @@ export class ArtistsController {
     return new ArtistRO(foundArtist);
   }
 
-  @ApiOperation({ summary: 'Get an artist albums', operationId: 'getAlbums' })
+  @ApiOperation({ summary: 'Get artist public albums', operationId: 'getArtistAlbums' })
   @ApiParam({
     type: String,
     name: 'id',
     description: 'Id',
     example: faker.database.mongodbObjectId(),
   })
-  @ApiQuery({
-    required: false,
-    type: Number,
-    name: 'limit',
-    description: 'Limit',
-    example: 25,
-    default: 50,
-  })
-  @ApiQuery({
-    required: false,
-    type: Number,
-    name: 'offset',
-    description: 'Offset',
-    example: 10,
-    default: 0,
-  })
+  @ApiQuery({ required: false, type: Number, description: 'Limit', example: 25, default: 50 })
+  @ApiQuery({ required: false, type: Number, description: 'Offset', example: 10, default: 0 })
   @ApiOkResponse({ description: 'Albums', type: AlbumsRO })
   @Get('/:id/albums')
-  async getAlbums(
+  async getArtistAlbums(
     @Param('id', ParseObjectIdPipe) id: string,
     @Query('limit', new DefaultValuePipe(50), ParseIntPipe) limit: number,
     @Query('offset', new DefaultValuePipe(0), ParseIntPipe) offset: number,
@@ -89,32 +75,18 @@ export class ArtistsController {
     return new AlbumsRO(foundAlbums);
   }
 
-  @ApiOperation({ summary: 'Get an artist tracks', operationId: 'getTracks' })
+  @ApiOperation({ summary: 'Get artist public tracks', operationId: 'getArtistTracks' })
   @ApiParam({
     type: String,
     name: 'id',
     description: 'Id',
     example: faker.database.mongodbObjectId(),
   })
-  @ApiQuery({
-    required: false,
-    type: Number,
-    name: 'limit',
-    description: 'Limit',
-    example: 25,
-    default: 50,
-  })
-  @ApiQuery({
-    required: false,
-    type: Number,
-    name: 'offset',
-    description: 'Offset',
-    example: 10,
-    default: 0,
-  })
+  @ApiQuery({ required: false, type: Number, description: 'Limit', example: 25, default: 50 })
+  @ApiQuery({ required: false, type: Number, description: 'Offset', example: 10, default: 0 })
   @ApiOkResponse({ description: 'Tracks', type: TracksRO })
   @Get('/:id/tracks')
-  async getTracks(
+  async getArtistTracks(
     @Param('id', ParseObjectIdPipe) id: string,
     @Query('limit', new DefaultValuePipe(50), ParseIntPipe) limit: number,
     @Query('offset', new DefaultValuePipe(0), ParseIntPipe) offset: number,
