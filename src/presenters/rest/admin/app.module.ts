@@ -10,11 +10,11 @@ import { UsersModule } from './controllers/users/users.module';
 import { ArtistsModule } from './controllers/artists/artists.module';
 import { AlbumsModule } from './controllers/albums/albums.module';
 import { TracksModule } from './controllers/tracks/tracks.module';
-import { PlaylistsModule } from './controllers/playlists/playlists.module';
 import { IdModule } from '../../../infrastructure/services/id/id.module';
 import { MetadataModule } from './controllers/metadata/metadata.module';
-import { TypesenseModule } from '../../../infrastructure/services/search/typesense/typesense.module';
 import { InMemoryEventBusModule } from '../../../infrastructure/event-bus/in-memory-event-bus/in-memory-event-bus.module';
+import { StorageModule } from '../../../infrastructure/storage/storage.module';
+import { PlaylistsModule } from './controllers/playlists/playlists.module';
 
 @Module({
   imports: [
@@ -30,11 +30,11 @@ import { InMemoryEventBusModule } from '../../../infrastructure/event-bus/in-mem
     CqrsModule.forRoot(),
     MongooseModule,
     InMemoryEventBusModule,
-    TypesenseModule,
+    StorageModule,
     IdModule,
     MetadataModule,
-    AdminsModule,
     UploadsModule,
+    AdminsModule,
     UsersModule,
     ArtistsModule,
     AlbumsModule,
