@@ -116,7 +116,6 @@ export class PlaylistService {
     }
 
     foundPlaylist.deleteCover();
-    foundPlaylist.deleteColor();
     await this._wr.save(foundPlaylist);
     await this._userFS.deletePlaylistCover(foundPlaylist.getOwner(), foundPlaylist.getId());
 
