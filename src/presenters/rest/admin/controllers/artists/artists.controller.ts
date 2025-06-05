@@ -240,7 +240,7 @@ export class ArtistsController {
     const foundArtist = await this._queryBus.execute(new GetArtistQuery(id));
 
     if (!foundArtist) {
-      throw new NotFoundException(`There is no artist with the specified ID`);
+      throw new NotFoundException('Artist does not exist');
     }
 
     return new ArtistRO(foundArtist);
