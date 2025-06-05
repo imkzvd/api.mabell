@@ -45,9 +45,9 @@ export class AdminService {
     const nextAdminIndex = await this._wr.getNextIndex();
     const createdAdmin = AdminFactory.create({
       id: generatedId,
-      username: `guest${nextAdminIndex}`,
+      username: `account${nextAdminIndex}`,
       password: hashPassword,
-      name: `Guest #${nextAdminIndex}`,
+      name: `Account #${nextAdminIndex}`,
     });
 
     await this._wr.save(createdAdmin);
