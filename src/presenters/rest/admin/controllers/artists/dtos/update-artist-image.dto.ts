@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { faker } from '@faker-js/faker';
-import { IsNotEmpty, IsOptional } from 'class-validator';
+import { IsHexColor, IsOptional } from 'class-validator';
 
 export class UpdateArtistImageDTO {
   @ApiProperty({
@@ -20,7 +20,7 @@ export class UpdateArtistImageDTO {
     example: faker.color.rgb(),
     nullable: true,
   })
-  @IsNotEmpty()
+  @IsHexColor()
   @IsOptional()
   color?: string | null;
 }
