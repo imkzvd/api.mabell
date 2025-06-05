@@ -161,6 +161,12 @@ export class PlaylistService {
     return foundPlaylist.getId();
   }
 
+  async deletePlaylistsByOwnerId(ownerId: string): Promise<PlaylistId[]> {
+    const { deletedIds } = await this._wr.deleteByOwnerId(ownerId);
+
+    return deletedIds;
+  }
+
   async getPlaylist(
     id: string,
     options?: Partial<{
