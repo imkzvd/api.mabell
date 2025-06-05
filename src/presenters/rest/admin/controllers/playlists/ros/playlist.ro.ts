@@ -7,10 +7,6 @@ import {
   Genres,
   getGenreLabelByValue,
 } from '../../../../../../core/domain/common/constants/genres';
-import { OffsetLimitPaginationRO } from '../../../../common/ros/offset-limit-pagination.ro';
-import { PlaylistTracksRO } from '../../tracks/ros/playlist-tracks.ro';
-import { OffsetLimitPaginationResponseDTO } from '../../../../../../core/shared/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
-import { PlaylistTrackDTO } from '../../../../../../core/app/components/track/dtos/playlist-track.dto';
 import { PlaylistDTO } from '../../../../../../core/app/components/playlist/dtos/playlist.dto';
 
 export class PlaylistRO {
@@ -64,9 +60,6 @@ export class PlaylistRO {
   })
   description: string;
 
-  @ApiProperty({ type: () => PlaylistTracksRO, description: 'Album tracks' })
-  tracks: PlaylistTracksRO;
-
   @ApiProperty({ type: Boolean, description: 'Public', example: false })
   isPublic: boolean;
 
@@ -82,7 +75,7 @@ export class PlaylistRO {
   })
   updatedAt: Date;
 
-  constructor(dto: PlaylistDTO, tracks?: OffsetLimitPaginationResponseDTO<PlaylistTrackDTO>) {
+  constructor(dto: PlaylistDTO) {
     this.id = dto.id;
     this.name = dto.name;
     this.owner = new UserRO(dto.owner);
@@ -90,7 +83,6 @@ export class PlaylistRO {
     this.cover = dto.cover ? `${process.env.HOST}${dto.cover}` : null;
     this.color = dto.color;
     this.description = dto.description;
-    this.tracks = tracks ? new PlaylistTracksRO(tracks) : new OffsetLimitPaginationRO();
     this.isPublic = dto.isPublic;
     this.createdAt = dto.createdAt;
     this.updatedAt = dto.updatedAt;
