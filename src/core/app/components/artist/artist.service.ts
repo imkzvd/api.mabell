@@ -121,7 +121,6 @@ export class ArtistService {
     }
 
     foundArtist.deleteAvatar();
-    foundArtist.deleteAccentColor();
 
     await this._wr.save(foundArtist);
     await this._artistFS.deleteArtistAvatar(foundArtist.getId());
@@ -165,7 +164,6 @@ export class ArtistService {
     }
 
     foundArtist.deleteCover();
-    foundArtist.deleteSecondaryColor();
     await this._wr.save(foundArtist);
     await this._artistFS.deleteArtistCover(foundArtist.getId());
 
