@@ -31,6 +31,18 @@ export class PlaylistWriteRepositoryAdapter implements PlaylistWriteRepository {
     return result.deletedCount ? (id as PlaylistId) : null;
   }
 
+  async deleteByOwnerId(ownerId: string): Promise<{ deletedIds: PlaylistId[]; total: number }> {
+    const queryFilter = { owner: ownerId };
+    const foundDocs = await this._playlistModel.find(queryFilter, '_id').lean().exec();
+
+    await this._playlistModel.deleteMany(queryFilter).exec();
+
+    return {
+      deletedIds: foundDocs.map((doc) => doc._id.toHexString() as PlaylistId),
+      total: foundDocs.length,
+    };
+  }
+
   async findById(id: string): Promise<DomainPlaylist | null> {
     const foundDoc = await this._playlistModel.findOne({ _id: id }).lean<Playlist>().exec();
 
