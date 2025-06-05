@@ -10,5 +10,5 @@ export class AddTrackInPlaylistDTO {
     example: faker.database.mongodbObjectId(),
   })
   @IsMongoId()
-  track: string;
+  trackId: string;
 }

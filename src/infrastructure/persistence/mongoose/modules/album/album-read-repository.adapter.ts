@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { AlbumReadRepository } from '../../../../../core/app/components/album/ports/repository/album-read-repository.port';
 import AlbumMapper from './album.mapper';
 import { AlbumDocument, AlbumWithArtists, AlbumWithArtistsDocument } from './types';
-import { AlbumWithArtistsDTO } from '../../../../../core/app/components/album/ports/repository/dtos/album-with-artists.dto';
-import { OffsetLimitPaginationDTO } from '../../../../../core/app/common/dtos/offset-limit-pagination/offset-limit-pagination-payload.dto';
-import { OffsetLimitPaginationResponseDTO } from '../../../../../core/app/common/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
 import { POPULATE_OPTIONS } from './constants';
 import { Album } from './album.schema';
 import { NotFoundException } from '../../../../../core/shared/exceptions';
+import { AlbumReadRepository } from '../../../../../core/domain/components/album/repository/album-read-repository.port';
+import { AlbumWithArtistsDTO } from '../../../../../core/domain/components/album/repository/dtos/album-with-artists.dto';
+import { OffsetLimitPaginationDTO } from '../../../../../core/shared/dtos/offset-limit-pagination/offset-limit-pagination-payload.dto';
+import { OffsetLimitPaginationResponseDTO } from '../../../../../core/shared/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
 
 @Injectable()
 export class AlbumReadRepositoryAdapter implements AlbumReadRepository {

@@ -1,10 +1,8 @@
-import { EntityId } from '../../common/types/entity-id.type';
 import { NameVO } from './vos/name.vo';
 import { DurationVO } from './vos/duration.vo';
-import { AlbumId } from '../album/album.entity';
-import { ArtistId } from '../artist/artist.entity';
-
-export type TrackId = EntityId<'Track'>;
+import { TrackId } from './types';
+import { AlbumId } from '../album/types';
+import { ArtistId } from '../artist/types';
 
 export class Track {
   constructor(

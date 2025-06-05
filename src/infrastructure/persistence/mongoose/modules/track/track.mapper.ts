@@ -2,16 +2,14 @@ import { Types } from 'mongoose';
 import { ReadMapper, WriteMapper } from '../../base/mapper.interface';
 import { Track } from './track.schema';
 import ArtistMapper from '../artist/artist.mapper';
-import {
-  Track as DomainArtist,
-  TrackId,
-} from '../../../../../core/domain/components/track/track.entity';
+import { Track as DomainArtist } from '../../../../../core/domain/components/track/track.entity';
 import { TrackFactory } from '../../../../../core/domain/components/track/track.factory';
-import { AlbumId } from '../../../../../core/domain/components/album/album.entity';
-import { ArtistId } from '../../../../../core/domain/components/artist/artist.entity';
 import { TrackDocument, TrackWithAlbumAndArtists, TrackWithAlbumAndArtistsDocument } from './types';
-import { TrackWithAlbumAndArtistsDTO } from '../../../../../core/app/components/track/ports/repository/dtos/track-with-album-and-artists.dto';
 import AlbumMapper from '../album/album.mapper';
+import { TrackWithAlbumAndArtistsDTO } from '../../../../../core/domain/components/track/repository/dtos/track-with-album-and-artists.dto';
+import { TrackId } from '../../../../../core/domain/components/track/types';
+import { AlbumId } from '../../../../../core/domain/components/album/types';
+import { ArtistId } from '../../../../../core/domain/components/artist/types';
 
 class TrackMapper
   implements
@@ -56,7 +54,7 @@ class TrackMapper
 
   toDTO(doc: TrackWithAlbumAndArtists): TrackWithAlbumAndArtistsDTO {
     return new TrackWithAlbumAndArtistsDTO(
-      doc._id.toHexString(),
+      doc._id.toHexString() as TrackId,
       doc.name,
       AlbumMapper.toDTO(doc.album),
       doc.trackNumber,

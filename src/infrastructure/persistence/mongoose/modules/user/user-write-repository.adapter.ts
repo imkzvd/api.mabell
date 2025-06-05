@@ -3,9 +3,10 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from './user.schema';
 import UserMapper from './user.mapper';
-import { User as DomainUser, UserId } from '../../../../../core/domain/components/user/user.entity';
+import { User as DomainUser } from '../../../../../core/domain/components/user/user.entity';
 import { UserWriteRepository } from '../../../../../core/domain/components/user/repository/user-write-repository.port';
 import { UserDocument } from './types';
+import { UserId } from '../../../../../core/domain/components/user/types';
 
 @Injectable()
 export class UserWriteRepositoryAdapter implements UserWriteRepository {

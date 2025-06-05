@@ -4,7 +4,7 @@ import { Admin, AdminSchema } from './admin.schema';
 import { AdminWriteRepositoryAdapter } from './admin-write-repository.adapter';
 import { AdminReadRepositoryAdapter } from './admin-read-repository.adapter';
 import { ADMIN_WRITE_REPOSITORY_DI_TOKEN } from '../../../../../core/domain/components/admin/repository/admin-write-repository.port';
-import { ADMIN_READ_REPOSITORY_DI_TOKEN } from '../../../../../core/app/components/admin/repository/admin-read-repository.port';
+import { ADMIN_READ_REPOSITORY_DI_TOKEN } from '../../../../../core/domain/components/admin/repository/admin-read-repository.port';
 
 @Module({
   imports: [MongooseModule.forFeature([{ name: Admin.name, schema: AdminSchema }])],

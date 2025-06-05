@@ -1,11 +1,12 @@
 import { Types } from 'mongoose';
 import type { User } from './user.schema';
 import { ReadMapper, WriteMapper } from '../../base/mapper.interface';
-import { User as DomainUser, UserId } from '../../../../../core/domain/components/user/user.entity';
+import { User as DomainUser } from '../../../../../core/domain/components/user/user.entity';
 import { UserFactory } from '../../../../../core/domain/components/user/user.factory';
 import { HashedPasswordVO } from '../../../../../core/domain/common/vos/hashed-password.vo';
-import { UserDTO } from '../../../../../core/app/components/user/ports/repository/dtos/user.dto';
 import { UserDocument } from './types';
+import { UserDTO } from '../../../../../core/domain/components/user/repository/dtos/user.dto';
+import { UserId } from '../../../../../core/domain/components/user/types';
 
 class UserMapper implements WriteMapper<User, DomainUser>, ReadMapper<User, UserDTO> {
   toPersistenceEntity(entity: DomainUser): User {
@@ -52,7 +53,7 @@ class UserMapper implements WriteMapper<User, DomainUser>, ReadMapper<User, User
 
   toDTO(doc: User | UserDocument): UserDTO {
     return new UserDTO(
-      doc._id.toHexString(),
+      doc._id.toHexString() as UserId,
       doc.username,
       doc.name,
       doc.email,

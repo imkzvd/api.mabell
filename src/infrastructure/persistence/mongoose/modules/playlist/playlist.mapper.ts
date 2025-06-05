@@ -2,14 +2,12 @@ import { Types } from 'mongoose';
 import { Playlist } from './playlist.schema';
 import { PlaylistDocument, PlaylistWithOwner, PlaylistWithOwnerDocument } from './types';
 import { ReadMapper, WriteMapper } from '../../base/mapper.interface';
-import {
-  Playlist as DomainPlaylist,
-  PlaylistId,
-} from '../../../../../core/domain/components/playlist/playlist.entity';
-import { PlaylistWithOwnerDTO } from '../../../../../core/app/components/playlist/ports/repository/dtos/playlist-with-owner.dto';
+import { Playlist as DomainPlaylist } from '../../../../../core/domain/components/playlist/playlist.entity';
 import { PlaylistFactory } from '../../../../../core/domain/components/playlist/playlist.factory';
-import { UserId } from '../../../../../core/domain/components/user/user.entity';
 import UserMapper from '../user/user.mapper';
+import { PlaylistWithOwnerDTO } from '../../../../../core/domain/components/playlist/repository/dtos/playlist-with-owner.dto';
+import { PlaylistId } from '../../../../../core/domain/components/playlist/types';
+import { UserId } from '../../../../../core/domain/components/user/types';
 
 class PlaylistMapper
   implements
@@ -53,7 +51,7 @@ class PlaylistMapper
 
   toDTO(doc: PlaylistWithOwner | PlaylistWithOwnerDocument): PlaylistWithOwnerDTO {
     return new PlaylistWithOwnerDTO(
-      doc._id.toHexString(),
+      doc._id.toHexString() as PlaylistId,
       UserMapper.toDTO(doc.owner),
       doc.name,
       doc.genres,

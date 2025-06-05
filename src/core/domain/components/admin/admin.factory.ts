@@ -1,9 +1,10 @@
-import { Admin, AdminId } from './admin.entity';
+import { Admin } from './admin.entity';
 import { AdminRoles } from './constants/admin-roles';
 import { AdminRoleVO } from './vos/admin-role.vo';
 import { UsernameVO } from './vos/username.vo';
 import { NameVO } from './vos/name.vo';
 import { HashedPasswordVO } from '../../common/vos/hashed-password.vo';
+import { AdminId } from './types';
 
 export class AdminFactory {
   static create(props: {

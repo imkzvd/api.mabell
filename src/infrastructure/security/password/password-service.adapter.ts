@@ -1,7 +1,7 @@
 import * as bcrypt from 'bcrypt';
 import * as generatePassword from 'generate-password';
 import * as process from 'process';
-import { PasswordService } from '../../../core/app/common/services/password-service.port';
+import { PasswordService } from '../../../core/app/common/ports/password-service.port';
 import { HashedPasswordVO } from '../../../core/domain/common/vos/hashed-password.vo';
 
 export class PasswordServiceAdapter implements PasswordService {

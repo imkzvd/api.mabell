@@ -4,6 +4,7 @@ import { Schema, Types } from 'mongoose';
 import { Genre, Genres } from '../../../../../core/domain/common/constants/genres';
 import { User } from '../user/user.schema';
 import { BaseSchema } from '../../base/base.schema';
+import { TrackId } from '../../../../../core/domain/components/track/types';
 
 @SchemaDecorator({ versionKey: false, timestamps: true })
 export class Playlist extends BaseSchema {
@@ -35,7 +36,7 @@ export class Playlist extends BaseSchema {
       },
     ],
   })
-  tracks: { id: string; addedAt: Date }[];
+  tracks: { id: TrackId; addedAt: Date }[];
 
   @Prop({ required: false, type: Boolean, default: false })
   isPublic: boolean;

@@ -1,16 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { faker } from '@faker-js/faker';
-import { IsHexColor, IsNotEmpty, IsOptional } from 'class-validator';
+import { IsHexColor, IsOptional } from 'class-validator';
 
 export class UpdatePlaylistCoverDTO {
   @ApiProperty({
-    required: true,
+    required: false,
     type: String,
     description: 'Id of the uploaded file',
     example: faker.image.url(),
+    nullable: true,
   })
-  @IsNotEmpty()
-  fileId: string;
+  @IsOptional()
+  fileId?: string | null;
 
   @ApiProperty({
     required: false,

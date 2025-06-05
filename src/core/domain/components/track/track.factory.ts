@@ -1,8 +1,9 @@
 import { NameVO } from './vos/name.vo';
-import { ArtistId } from '../artist/artist.entity';
-import { Track, TrackId } from './track.entity';
-import { AlbumId } from '../album/album.entity';
+import { Track } from './track.entity';
 import { DurationVO } from './vos/duration.vo';
+import { TrackId } from './types';
+import { AlbumId } from '../album/types';
+import { ArtistId } from '../artist/types';
 
 export class TrackFactory {
   static create(props: {

@@ -24,17 +24,17 @@ import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateTrackDTO } from './dtos/create-track.dto';
 import { UpdateTrackFileDTO } from './dtos/update-track-file.dto';
 import { TrackRO } from './ros/track.ro';
-import { CreateTrackCommand } from '../../../../../core/app/components/track/commands/create-track/create-track.command';
 import { BadRequestException } from '../../../../../core/shared/exceptions';
-import { GetTrackQuery } from '../../../../../core/app/components/track/queries/get-track/get-track.query';
 import { UpdateTrackDTO } from './dtos/update-track.dto';
 import { ParseObjectIdPipe } from '../../../common/pipes/parse-object-id.pipe';
-import { UpdateTrackCommand } from '../../../../../core/app/components/track/commands/update-track/update-track.command';
-import { UpdateTrackFileCommand } from '../../../../../core/app/components/track/commands/update-track-file/update-track-file.command';
-import { DeleteTrackCommand } from '../../../../../core/app/components/track/commands/delete-track/delete-track.command';
-import { DeleteTrackFileCommand } from '../../../../../core/app/components/track/commands/delete-track-file/delete-track-file.command';
 import { UpdateTrackFeatArtistsDTO } from './dtos/update-track-feat-artists.dto';
-import { UpdateTrackFeatArtistsCommand } from '../../../../../core/app/components/track/commands/update-track-feat-artists/update-track-feat-artists.command';
+import { CreateTrackCommand } from '../../../../../core/app/cqrs/track/commands/create-track/create-track.command';
+import { GetTrackQuery } from '../../../../../core/app/cqrs/track/queries/get-track/get-track.query';
+import { UpdateTrackCommand } from '../../../../../core/app/cqrs/track/commands/update-track/update-track.command';
+import { UpdateTrackFeatArtistsCommand } from '../../../../../core/app/cqrs/track/commands/update-track-feat-artists/update-track-feat-artists.command';
+import { UpdateTrackFileCommand } from '../../../../../core/app/cqrs/track/commands/update-track-file/update-track-file.command';
+import { DeleteTrackFileCommand } from '../../../../../core/app/cqrs/track/commands/delete-track-file/delete-track-file.command';
+import { DeleteTrackCommand } from '../../../../../core/app/cqrs/track/commands/delete-track/delete-track.command';
 
 @ApiTags('Tracks')
 @Controller({ path: '/tracks' })
@@ -44,14 +44,13 @@ export class TracksController {
     private readonly _queryBus: QueryBus,
   ) {}
 
-  @ApiOperation({ summary: 'Create an track', operationId: 'create' })
+  @ApiOperation({ summary: 'Create an track', operationId: 'createTrack' })
   @ApiBody({ type: CreateTrackDTO })
   @ApiCreatedResponse({ description: 'Track', type: TrackRO })
   @Post('/')
-  async create(@Body() { albumId, name }: CreateTrackDTO): Promise<TrackRO> {
-    const { id } = await this._commandBus.execute(new CreateTrackCommand(albumId, name));
-
-    const createdTrack = await this._queryBus.execute(new GetTrackQuery(id));
+  async createTrack(@Body() { albumId }: CreateTrackDTO): Promise<TrackRO> {
+    const createdTrackId = await this._commandBus.execute(new CreateTrackCommand(albumId));
+    const createdTrack = await this._queryBus.execute(new GetTrackQuery(createdTrackId));
 
     if (!createdTrack) {
       throw new BadRequestException('Some error');
@@ -60,10 +59,7 @@ export class TracksController {
     return new TrackRO(createdTrack);
   }
 
-  @ApiOperation({
-    summary: 'Update track data',
-    operationId: 'update',
-  })
+  @ApiOperation({ summary: 'Update track data', operationId: 'updateTrack' })
   @ApiParam({
     type: String,
     name: 'id',
@@ -71,9 +67,9 @@ export class TracksController {
     example: faker.database.mongodbObjectId(),
   })
   @ApiBody({ type: UpdateTrackDTO })
-  @ApiOkResponse({ description: 'Updated track', type: TrackRO })
+  @ApiOkResponse({ description: 'Updated artist', type: TrackRO })
   @Patch('/:id')
-  async update(
+  async updateTrack(
     @Param('id', ParseObjectIdPipe) id: string,
     @Body() dto: UpdateTrackDTO,
   ): Promise<TrackRO> {
@@ -88,10 +84,7 @@ export class TracksController {
     return new TrackRO(updatedTrack);
   }
 
-  @ApiOperation({
-    summary: 'Update track feat. artists',
-    operationId: 'updateFeatArtists',
-  })
+  @ApiOperation({ summary: 'Update track feat. artists', operationId: 'updateTrackFeatArtists' })
   @ApiParam({
     type: String,
     name: 'id',
@@ -99,9 +92,9 @@ export class TracksController {
     example: faker.database.mongodbObjectId(),
   })
   @ApiBody({ type: UpdateTrackFeatArtistsDTO })
-  @ApiOkResponse({ description: 'Updated track', type: TrackRO })
+  @ApiOkResponse({ description: 'Updated artist', type: TrackRO })
   @Patch('/:id/featured-artists')
-  async updateFeatArtists(
+  async updateTrackFeatArtists(
     @Param('id', ParseObjectIdPipe) id: string,
     @Body() dto: UpdateTrackFeatArtistsDTO,
   ): Promise<TrackRO> {
@@ -116,10 +109,7 @@ export class TracksController {
     return new TrackRO(updatedTrack);
   }
 
-  @ApiOperation({
-    summary: 'Update file of the track',
-    operationId: 'updateFile',
-  })
+  @ApiOperation({ summary: 'Update track file', operationId: 'updateTrackFile' })
   @ApiParam({
     type: String,
     name: 'id',
@@ -127,9 +117,9 @@ export class TracksController {
     example: faker.database.mongodbObjectId(),
   })
   @ApiBody({ type: UpdateTrackFileDTO })
-  @ApiOkResponse({ description: 'Updated track', type: TrackRO })
+  @ApiOkResponse({ description: 'Updated artist', type: TrackRO })
   @Patch('/:id/file')
-  async updateFile(
+  async updateTrackFile(
     @Param('id', ParseObjectIdPipe) id: string,
     @Body() dto: UpdateTrackFileDTO,
   ): Promise<TrackRO> {
@@ -144,19 +134,16 @@ export class TracksController {
     return new TrackRO(updatedTrack);
   }
 
-  @ApiOperation({
-    summary: 'Delete file of the track',
-    operationId: 'deleteFile',
-  })
+  @ApiOperation({ summary: 'Delete track file', operationId: 'deleteTrackFile' })
   @ApiParam({
     type: String,
     name: 'id',
     description: 'Id',
     example: faker.database.mongodbObjectId(),
   })
-  @ApiOkResponse({ description: 'Updated track', type: TrackRO })
+  @ApiOkResponse({ description: 'Updated artist', type: TrackRO })
   @Delete('/:id/file')
-  async deleteFile(@Param('id', ParseObjectIdPipe) id: string): Promise<TrackRO> {
+  async deleteTrackFile(@Param('id', ParseObjectIdPipe) id: string): Promise<TrackRO> {
     await this._commandBus.execute(new DeleteTrackFileCommand(id));
 
     const updatedTrack = await this._queryBus.execute(new GetTrackQuery(id));
@@ -168,27 +155,21 @@ export class TracksController {
     return new TrackRO(updatedTrack);
   }
 
-  @ApiOperation({
-    summary: 'Delete an track by id',
-    operationId: 'deleteById',
-  })
+  @ApiOperation({ summary: 'Delete an track by id', operationId: 'deleteTrack' })
   @ApiParam({
     type: String,
     name: 'id',
     description: 'Id',
     example: faker.database.mongodbObjectId(),
   })
-  @ApiNoContentResponse({
-    description: 'TrackEntity has been deleted',
-    schema: { format: 'json' },
-  })
+  @ApiNoContentResponse({ description: 'TrackEntity has been deleted', schema: { format: 'json' } })
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete('/:id')
-  async deleteById(@Param('id', ParseObjectIdPipe) id: string): Promise<void> {
+  async deleteTrack(@Param('id', ParseObjectIdPipe) id: string): Promise<void> {
     await this._commandBus.execute(new DeleteTrackCommand(id));
   }
 
-  @ApiOperation({ summary: 'Get an track by id', operationId: 'getById' })
+  @ApiOperation({ summary: 'Get an track by id', operationId: 'getTrack' })
   @ApiParam({
     type: String,
     name: 'id',
@@ -197,11 +178,11 @@ export class TracksController {
   })
   @ApiOkResponse({ description: 'Track', type: TrackRO })
   @Get('/:id')
-  async getById(@Param('id', ParseObjectIdPipe) id: string): Promise<TrackRO> {
+  async getTrack(@Param('id', ParseObjectIdPipe) id: string): Promise<TrackRO> {
     const foundTrack = await this._queryBus.execute(new GetTrackQuery(id));
 
     if (!foundTrack) {
-      throw new NotFoundException(`There is no track with the specified ID`);
+      throw new NotFoundException('Track does not exist');
     }
 
     return new TrackRO(foundTrack);

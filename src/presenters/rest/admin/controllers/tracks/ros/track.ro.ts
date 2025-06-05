@@ -1,9 +1,9 @@
 import * as process from 'process';
 import { ApiProperty } from '@nestjs/swagger';
 import { faker } from '@faker-js/faker';
-import { TrackDTO } from '../../../../../../core/app/components/track/queries/dtos/track.dto';
 import { AlbumRO } from '../../albums/ros/album.ro';
 import { ArtistRO } from '../../artists/ros/artist.ro';
+import { TrackDTO } from '../../../../../../core/app/components/track/dtos/track.dto';
 
 export class TrackRO {
   @ApiProperty({
@@ -35,27 +35,27 @@ export class TrackRO {
 
   @ApiProperty({
     type: [String],
-    description: 'Ids of artists',
+    description: 'Ids of artist',
     example: [faker.database.mongodbObjectId()],
   })
   artistIds: string[];
 
   @ApiProperty({
     type: () => [ArtistRO],
-    description: 'Primary artists',
+    description: 'Primary artist',
   })
   artists: ArtistRO[];
 
   @ApiProperty({
     type: [String],
-    description: 'Ids of featured artists',
+    description: 'Ids of featured artist',
     example: [faker.database.mongodbObjectId()],
   })
   featArtistIds: string[];
 
   @ApiProperty({
     type: () => [ArtistRO],
-    description: 'Featured artists',
+    description: 'Featured artist',
   })
   featArtists: ArtistRO[];
 

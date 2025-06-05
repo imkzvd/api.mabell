@@ -1,14 +1,12 @@
 import { Types } from 'mongoose';
 import type { Admin } from './admin.schema';
 import { ReadMapper, WriteMapper } from '../../base/mapper.interface';
-import {
-  Admin as DomainEntity,
-  AdminId,
-} from '../../../../../core/domain/components/admin/admin.entity';
+import { Admin as DomainEntity } from '../../../../../core/domain/components/admin/admin.entity';
 import { AdminFactory } from '../../../../../core/domain/components/admin/admin.factory';
 import { HashedPasswordVO } from '../../../../../core/domain/common/vos/hashed-password.vo';
-import { AdminDTO } from '../../../../../core/app/components/admin/repository/dtos/admin.dto';
 import { AdminDocument } from './types';
+import { AdminDTO } from '../../../../../core/domain/components/admin/repository/dtos/admin.dto';
+import { AdminId } from '../../../../../core/domain/components/admin/types';
 
 class AdminMapper implements WriteMapper<Admin, DomainEntity>, ReadMapper<Admin, AdminDTO> {
   toPersistenceEntity(entity: DomainEntity): Admin {
@@ -39,7 +37,7 @@ class AdminMapper implements WriteMapper<Admin, DomainEntity>, ReadMapper<Admin,
 
   toDTO(doc: AdminDocument | Admin): AdminDTO {
     return new AdminDTO(
-      doc._id.toHexString(),
+      doc._id.toHexString() as AdminId,
       doc.username,
       doc.name,
       doc.isBlocked,

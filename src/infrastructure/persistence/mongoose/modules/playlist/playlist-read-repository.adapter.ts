@@ -3,13 +3,13 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Playlist } from './playlist.schema';
 import { PlaylistWithOwner, PlaylistWithOwnerDocument } from './types';
-import { PlaylistWithOwnerDTO } from '../../../../../core/app/components/playlist/ports/repository/dtos/playlist-with-owner.dto';
-import { PlaylistReadRepository } from '../../../../../core/app/components/playlist/ports/repository/playlist-read-repository.port';
 import PlaylistMapper from './playlist.mapper';
 import { POPULATE_OPTIONS } from './constants';
-import { OffsetLimitPaginationDTO } from '../../../../../core/app/common/dtos/offset-limit-pagination/offset-limit-pagination-payload.dto';
-import { OffsetLimitPaginationResponseDTO } from '../../../../../core/app/common/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
 import { NotFoundException } from '../../../../../core/shared/exceptions';
+import { PlaylistReadRepository } from '../../../../../core/domain/components/playlist/repository/playlist-read-repository.port';
+import { PlaylistWithOwnerDTO } from '../../../../../core/domain/components/playlist/repository/dtos/playlist-with-owner.dto';
+import { OffsetLimitPaginationDTO } from '../../../../../core/shared/dtos/offset-limit-pagination/offset-limit-pagination-payload.dto';
+import { OffsetLimitPaginationResponseDTO } from '../../../../../core/shared/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
 
 @Injectable()
 export class PlaylistReadRepositoryAdapter implements PlaylistReadRepository {

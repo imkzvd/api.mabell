@@ -1,4 +1,4 @@
-import { IdService } from '../../../core/app/common/services/id-service.port';
+import { IdService } from '../../../core/app/common/ports/id-service.port';
 import { Types } from 'mongoose';
 
 export class IdServiceAdapter implements IdService {

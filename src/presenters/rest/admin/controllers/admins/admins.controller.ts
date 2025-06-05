@@ -31,15 +31,14 @@ import { ParseObjectIdPipe } from '../../../common/pipes/parse-object-id.pipe';
 import { UpdateAdminUsernameDTO } from './dtos/update-admin-username.dto';
 import { AdminRefreshedPasswordRO } from './ros/admin-refreshed-password.ro';
 import { UpdateAdminDTO } from './dtos/update-admin.dto';
-import { CreatedAdminWithPasswordRO } from './ros/created-admin-with-password.ro';
-import { CreateAdminCommand } from '../../../../../core/app/components/admin/commands/create-admin/create-admin.command';
-import { UpdateAdminCommand } from '../../../../../core/app/components/admin/commands/update-admin/update-admin.command';
-import { UpdateAdminUsernameCommand } from '../../../../../core/app/components/admin/commands/update-admin-username/update-admin-username.command';
-import { RefreshAdminPasswordCommand } from '../../../../../core/app/components/admin/commands/refresh-admin-password/refresh-admin-password.command';
-import { DeleteAdminCommand } from '../../../../../core/app/components/admin/commands/delete-admin/delete-admin.command';
-import { GetAdminsQuery } from '../../../../../core/app/components/admin/queries/get-admins/get-admins.query';
-import { OffsetLimitPaginationDTO } from '../../../../../core/app/common/dtos/offset-limit-pagination/offset-limit-pagination-payload.dto';
-import { GetAdminQuery } from '../../../../../core/app/components/admin/queries/get-admin/get-admin.query';
+import { OffsetLimitPaginationDTO } from '../../../../../core/shared/dtos/offset-limit-pagination/offset-limit-pagination-payload.dto';
+import { CreateAdminCommand } from '../../../../../core/app/cqrs/admin/commands/create-admin/create-admin.command';
+import { GetAdminQuery } from '../../../../../core/app/cqrs/admin/queries/get-admin/get-admin.query';
+import { UpdateAdminCommand } from '../../../../../core/app/cqrs/admin/commands/update-admin/update-admin.command';
+import { UpdateAdminUsernameCommand } from '../../../../../core/app/cqrs/admin/commands/update-admin-username/update-admin-username.command';
+import { RefreshAdminPasswordCommand } from '../../../../../core/app/cqrs/admin/commands/refresh-admin-password/refresh-admin-password.command';
+import { DeleteAdminCommand } from '../../../../../core/app/cqrs/admin/commands/delete-admin/delete-admin.command';
+import { GetAdminsQuery } from '../../../../../core/app/cqrs/admin/queries/get-admins/get-admins.query';
 
 @ApiTags('Admins')
 @Controller('/admins')
@@ -49,24 +48,21 @@ export class AdminsController {
     private readonly _queryBus: QueryBus,
   ) {}
 
-  @ApiOperation({ summary: 'Create an admin', operationId: 'create' })
-  @ApiCreatedResponse({ type: CreatedAdminWithPasswordRO, description: 'Created admin' })
+  @ApiOperation({ summary: 'Create an admin', operationId: 'createAdmin' })
+  @ApiCreatedResponse({ type: AdminRO, description: 'Created admin' })
   @Post('/')
-  async create(): Promise<CreatedAdminWithPasswordRO> {
-    const { id, password } = await this._commandBus.execute(new CreateAdminCommand());
-    const createdAdmin = await this._queryBus.execute(new GetAdminQuery(id));
+  async createAdmin(): Promise<AdminRO> {
+    const createdAdminId = await this._commandBus.execute(new CreateAdminCommand());
+    const createdAdmin = await this._queryBus.execute(new GetAdminQuery(createdAdminId));
 
     if (!createdAdmin) {
       throw new NotFoundException('Admin does not exist');
     }
 
-    return new CreatedAdminWithPasswordRO(createdAdmin, password);
+    return new AdminRO(createdAdmin);
   }
 
-  @ApiOperation({
-    summary: 'Update admin data',
-    operationId: 'update',
-  })
+  @ApiOperation({ summary: 'Update admin data', operationId: 'updateAdmin' })
   @ApiParam({
     type: String,
     name: 'id',
@@ -76,7 +72,7 @@ export class AdminsController {
   @ApiBody({ type: UpdateAdminDTO })
   @ApiOkResponse({ description: 'Admin has been updated', type: AdminRO })
   @Patch('/:id')
-  async update(
+  async updateAdmin(
     @Param('id', ParseObjectIdPipe) id: string,
     @Body() dto: UpdateAdminDTO,
   ): Promise<AdminRO> {
@@ -91,10 +87,7 @@ export class AdminsController {
     return new AdminRO(updatedAdmin);
   }
 
-  @ApiOperation({
-    summary: 'Update admin username',
-    operationId: 'updateUsername',
-  })
+  @ApiOperation({ summary: 'Update admin username', operationId: 'updateAdminUsername' })
   @ApiParam({
     type: String,
     name: 'id',
@@ -104,7 +97,7 @@ export class AdminsController {
   @ApiBody({ type: UpdateAdminUsernameDTO })
   @ApiOkResponse({ description: 'Admin username has been updated', type: AdminRO })
   @Patch('/:id/username')
-  async updateUsername(
+  async updateAdminUsername(
     @Param('id', ParseObjectIdPipe) id: string,
     @Body() { username }: UpdateAdminUsernameDTO,
   ): Promise<AdminRO> {
@@ -119,10 +112,7 @@ export class AdminsController {
     return new AdminRO(updatedAdmin);
   }
 
-  @ApiOperation({
-    summary: 'Refresh admin password',
-    operationId: 'refreshPassword',
-  })
+  @ApiOperation({ summary: 'Refresh admin password', operationId: 'refreshAdminPassword' })
   @ApiParam({
     type: String,
     name: 'id',
@@ -131,7 +121,7 @@ export class AdminsController {
   })
   @ApiOkResponse({ type: AdminRefreshedPasswordRO })
   @Patch('/:id/password')
-  async refreshPassword(
+  async refreshAdminPassword(
     @Param('id', ParseObjectIdPipe) id: string,
   ): Promise<AdminRefreshedPasswordRO> {
     const { password } = await this._commandBus.execute(new RefreshAdminPasswordCommand(id));
@@ -139,24 +129,21 @@ export class AdminsController {
     return new AdminRefreshedPasswordRO(password);
   }
 
-  @ApiOperation({ summary: 'Delete an admin by id', operationId: 'delete' })
+  @ApiOperation({ summary: 'Delete an admin by id', operationId: 'deleteAdmin' })
   @ApiParam({
     type: String,
     name: 'id',
     description: 'Admin id',
     example: faker.database.mongodbObjectId(),
   })
-  @ApiNoContentResponse({
-    description: 'Admin has been deleted',
-    schema: { format: 'json' },
-  })
+  @ApiNoContentResponse({ description: 'Admin has been deleted', schema: { format: 'json' } })
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete('/:id')
-  async delete(@Param('id', ParseObjectIdPipe) id: string): Promise<void> {
-    return this._commandBus.execute(new DeleteAdminCommand(id));
+  async deleteAdmin(@Param('id', ParseObjectIdPipe) id: string): Promise<void> {
+    await this._commandBus.execute(new DeleteAdminCommand(id));
   }
 
-  @ApiOperation({ summary: 'Find admins', operationId: 'find' })
+  @ApiOperation({ summary: 'Get admins', operationId: 'getAdmins' })
   @ApiQuery({
     required: false,
     type: Number,
@@ -175,7 +162,7 @@ export class AdminsController {
   })
   @ApiOkResponse({ type: AdminsRO })
   @Get('/')
-  async find(
+  async getAdmins(
     @Query('limit', new DefaultValuePipe(50), ParseIntPipe) limit: number,
     @Query('offset', new DefaultValuePipe(0), ParseIntPipe) offset: number,
   ): Promise<AdminsRO> {
@@ -186,7 +173,7 @@ export class AdminsController {
     return new AdminsRO(resp);
   }
 
-  @ApiOperation({ summary: 'Find an admin by id', operationId: 'findOne' })
+  @ApiOperation({ summary: 'Get admin', operationId: 'getAdmin' })
   @ApiOkResponse({ type: AdminRO })
   @ApiParam({
     type: String,
@@ -195,7 +182,7 @@ export class AdminsController {
     example: faker.database.mongodbObjectId(),
   })
   @Get('/:id')
-  async findOne(@Param('id', ParseObjectIdPipe) id: string): Promise<AdminRO> {
+  async getAdmin(@Param('id', ParseObjectIdPipe) id: string): Promise<AdminRO> {
     const foundAdmin = await this._queryBus.execute(new GetAdminQuery(id));
 
     if (!foundAdmin) {

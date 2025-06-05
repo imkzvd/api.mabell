@@ -2,13 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Album } from './album.schema';
-import {
-  Album as DomainAlbum,
-  AlbumId,
-} from '../../../../../core/domain/components/album/album.entity';
+import { Album as DomainAlbum } from '../../../../../core/domain/components/album/album.entity';
 import { AlbumWriteRepository } from '../../../../../core/domain/components/album/repository/album-write-repository.port';
 import AlbumMapper from './album.mapper';
 import { AlbumDocument } from './types';
+import { AlbumId } from '../../../../../core/domain/components/album/types';
 
 @Injectable()
 export class AlbumWriteRepositoryAdapter implements AlbumWriteRepository {
@@ -57,5 +55,11 @@ export class AlbumWriteRepositoryAdapter implements AlbumWriteRepository {
     const totalDocs = await this._albumModel.countDocuments({ artists: artistId }).exec();
 
     return totalDocs + 1;
+  }
+
+  async existsById(id: string): Promise<AlbumId | null> {
+    const foundDoc = await this._albumModel.exists({ _id: id });
+
+    return foundDoc ? (foundDoc._id.toHexString() as AlbumId) : null;
   }
 }

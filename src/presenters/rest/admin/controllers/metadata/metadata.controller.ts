@@ -5,13 +5,10 @@ import { MetadataRO } from './ros/metadata.ro';
 @ApiCookieAuth()
 @Controller('/metadata')
 export class MetadataController {
-  @ApiOperation({
-    summary: 'Get all metadata',
-    operationId: 'getAll',
-  })
+  @ApiOperation({ summary: 'Get metadata', operationId: 'getMetadata' })
   @ApiOkResponse({ description: 'Metadata', type: MetadataRO })
   @Get('/')
-  getAll(): MetadataRO {
+  getMetadata(): MetadataRO {
     return new MetadataRO();
   }
 }

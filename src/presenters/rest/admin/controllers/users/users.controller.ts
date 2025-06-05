@@ -27,16 +27,16 @@ import { UpdateUserAvatarDTO } from './dtos/update-user-avatar.dto';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { ParseObjectIdPipe } from '../../../common/pipes/parse-object-id.pipe';
 import { UpdateUserDTO } from './dtos/update-user.dto';
-import { CreateUserCommand } from '../../../../../core/app/components/user/commands/create-user/create-user.command';
-import { UpdateUserCommand } from '../../../../../core/app/components/user/commands/update-user/update-user.command';
-import { UpdateUserUsernameCommand } from '../../../../../core/app/components/user/commands/update-user-username/update-user-username.command';
-import { UpdateUserEmailCommand } from '../../../../../core/app/components/user/commands/update-user-email/update-user-email.command';
-import { UpdateUserAvatarCommand } from '../../../../../core/app/components/user/commands/update-user-avatar/update-user-avatar.command';
-import { RefreshUserPasswordCommand } from '../../../../../core/app/components/user/commands/refresh-user-password/refresh-user-password.command';
-import { DeleteUserAvatarCommand } from '../../../../../core/app/components/user/commands/delete-user-avatar/delete-user-avatar.command';
-import { DeleteUserCommand } from '../../../../../core/app/components/user/commands/delete-user/delete-user.command';
-import { GetUserQuery } from '../../../../../core/app/components/user/queries/get-user/get-user.query';
 import { BadRequestException } from '../../../../../core/shared/exceptions';
+import { CreateUserCommand } from '../../../../../core/app/cqrs/user/commands/create-user/create-user.command';
+import { GetUserQuery } from '../../../../../core/app/cqrs/user/queries/get-user/get-user.query';
+import { UpdateUserCommand } from '../../../../../core/app/cqrs/user/commands/update-user/update-user.command';
+import { UpdateUserUsernameCommand } from '../../../../../core/app/cqrs/user/commands/update-user-username/update-user-username.command';
+import { UpdateUserEmailCommand } from '../../../../../core/app/cqrs/user/commands/update-user-email/update-user-email.command';
+import { UpdateUserAvatarCommand } from '../../../../../core/app/cqrs/user/commands/update-user-avatar/update-user-avatar.command';
+import { RefreshUserPasswordCommand } from '../../../../../core/app/cqrs/user/commands/refresh-user-password/refresh-user-password.command';
+import { DeleteUserAvatarCommand } from '../../../../../core/app/cqrs/user/commands/delete-user-avatar/delete-user-avatar.command';
+import { DeleteUserCommand } from '../../../../../core/app/cqrs/user/commands/delete-user/delete-user.command';
 
 @ApiTags('Users')
 @Controller({ path: '/users' })
@@ -46,12 +46,12 @@ export class UsersController {
     private readonly _queryBus: QueryBus,
   ) {}
 
-  @ApiOperation({ summary: 'Create user', operationId: 'create' })
+  @ApiOperation({ summary: 'Create user', operationId: 'createUser' })
   @ApiCreatedResponse({ description: 'Id of the created user', type: UserRO })
   @Post('/')
-  async create(): Promise<UserRO> {
-    const { id } = await this._commandBus.execute(new CreateUserCommand());
-    const createdUser = await this._queryBus.execute(new GetUserQuery(id));
+  async createUser(): Promise<UserRO> {
+    const createdUserId = await this._commandBus.execute(new CreateUserCommand());
+    const createdUser = await this._queryBus.execute(new GetUserQuery(createdUserId));
 
     if (!createdUser) {
       throw new BadRequestException('Some error');
@@ -60,10 +60,7 @@ export class UsersController {
     return new UserRO(createdUser);
   }
 
-  @ApiOperation({
-    summary: 'Update user data',
-    operationId: 'update',
-  })
+  @ApiOperation({ summary: 'Update user data', operationId: 'updateUser' })
   @ApiParam({
     type: String,
     name: 'id',
@@ -73,7 +70,7 @@ export class UsersController {
   @ApiBody({ type: UpdateUserDTO })
   @ApiOkResponse({ description: 'User has been updated', type: UserRO })
   @Patch('/:id')
-  async update(
+  async updateUser(
     @Param('id', ParseObjectIdPipe) id: string,
     @Body() dto: UpdateUserDTO,
   ): Promise<UserRO> {
@@ -88,10 +85,7 @@ export class UsersController {
     return new UserRO(updatedUser);
   }
 
-  @ApiOperation({
-    summary: "Update user's username",
-    operationId: 'updateUsername',
-  })
+  @ApiOperation({ summary: "Update user's username", operationId: 'updateUserUsername' })
   @ApiParam({
     type: String,
     name: 'id',
@@ -101,7 +95,7 @@ export class UsersController {
   @ApiBody({ type: UpdateUserUsernameDTO })
   @ApiOkResponse({ description: "User's username has been updated", type: UserRO })
   @Patch('/:id/username')
-  async updateUsername(
+  async updateUserUsername(
     @Param('id', ParseObjectIdPipe) id: string,
     @Body() { username }: UpdateUserUsernameDTO,
   ): Promise<UserRO> {
@@ -116,10 +110,7 @@ export class UsersController {
     return new UserRO(updatedUser);
   }
 
-  @ApiOperation({
-    summary: "Update user's email",
-    operationId: 'updateEmail',
-  })
+  @ApiOperation({ summary: "Update user's email", operationId: 'updateUserEmail' })
   @ApiParam({
     type: String,
     name: 'id',
@@ -129,7 +120,7 @@ export class UsersController {
   @ApiBody({ type: UpdateUserEmailDTO })
   @ApiOkResponse({ description: "User's email has been updated", type: UserRO })
   @Patch('/:id/email')
-  async updateEmail(
+  async updateUserEmail(
     @Param('id', ParseObjectIdPipe) id: string,
     @Body() { email }: UpdateUserEmailDTO,
   ): Promise<UserRO> {
@@ -144,10 +135,7 @@ export class UsersController {
     return new UserRO(updatedUser);
   }
 
-  @ApiOperation({
-    summary: "Update user's avatar",
-    operationId: 'updateAvatar',
-  })
+  @ApiOperation({ summary: "Update user's avatar", operationId: 'updateUserAvatar' })
   @ApiParam({
     type: String,
     name: 'id',
@@ -157,7 +145,7 @@ export class UsersController {
   @ApiBody({ type: UpdateUserAvatarDTO })
   @ApiOkResponse({ description: "User's avatar has been updated", type: UserRO })
   @Patch('/:id/avatar')
-  async updateAvatar(
+  async updateUserAvatar(
     @Param('id', ParseObjectIdPipe) id: string,
     @Body() { fileId, color }: UpdateUserAvatarDTO,
   ): Promise<UserRO> {
@@ -177,30 +165,21 @@ export class UsersController {
     return new UserRO(updatedUser);
   }
 
-  @ApiOperation({
-    summary: "Refresh user's password",
-    operationId: 'refreshPassword',
-  })
+  @ApiOperation({ summary: "Refresh user's password", operationId: 'refreshUserPassword' })
   @ApiParam({
     type: String,
     name: 'id',
     description: 'Id',
     example: faker.database.mongodbObjectId(),
   })
-  @ApiNoContentResponse({
-    description: 'Password has been reset',
-    schema: { format: 'json' },
-  })
+  @ApiNoContentResponse({ description: 'Password has been reset', schema: { format: 'json' } })
   @HttpCode(HttpStatus.NO_CONTENT)
   @Patch('/:id/password/refresh')
-  async refreshPassword(@Param('id', ParseObjectIdPipe) id: string): Promise<void> {
+  async refreshUserPassword(@Param('id', ParseObjectIdPipe) id: string): Promise<void> {
     await this._commandBus.execute(new RefreshUserPasswordCommand(id));
   }
 
-  @ApiOperation({
-    summary: "Delete user's avatar",
-    operationId: 'deleteAvatar',
-  })
+  @ApiOperation({ summary: "Delete user's avatar", operationId: 'deleteUserAvatar' })
   @ApiParam({
     type: String,
     name: 'id',
@@ -209,7 +188,7 @@ export class UsersController {
   })
   @ApiOkResponse({ description: "User's avatar has been deleted", type: UserRO })
   @Delete('/:id/avatar')
-  async deleteAvatar(@Param('id', ParseObjectIdPipe) id: string): Promise<UserRO> {
+  async deleteUserAvatar(@Param('id', ParseObjectIdPipe) id: string): Promise<UserRO> {
     await this._commandBus.execute(new DeleteUserAvatarCommand(id));
 
     const updatedUser = await this._queryBus.execute(new GetUserQuery(id));
@@ -221,30 +200,21 @@ export class UsersController {
     return new UserRO(updatedUser);
   }
 
-  @ApiOperation({
-    summary: 'Delete user',
-    operationId: 'delete',
-  })
+  @ApiOperation({ summary: 'Delete user', operationId: 'deleteUser' })
   @ApiParam({
     type: String,
     name: 'id',
     description: 'Id',
     example: faker.database.mongodbObjectId(),
   })
-  @ApiNoContentResponse({
-    description: 'User has been deleted',
-    schema: { format: 'json' },
-  })
+  @ApiNoContentResponse({ description: 'User has been deleted', schema: { format: 'json' } })
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete('/:id')
-  async delete(@Param('id', ParseObjectIdPipe) id: string): Promise<void> {
-    return this._commandBus.execute(new DeleteUserCommand(id));
+  async deleteUser(@Param('id', ParseObjectIdPipe) id: string): Promise<void> {
+    await this._commandBus.execute(new DeleteUserCommand(id));
   }
 
-  @ApiOperation({
-    summary: 'Find user by id',
-    operationId: 'findOne',
-  })
+  @ApiOperation({ summary: 'Get user by id', operationId: 'getUser' })
   @ApiParam({
     type: String,
     name: 'id',
@@ -253,7 +223,7 @@ export class UsersController {
   })
   @ApiOkResponse({ description: 'User', type: UserRO })
   @Get('/:id')
-  async findOne(@Param('id', ParseObjectIdPipe) id: string): Promise<UserRO> {
+  async getUser(@Param('id', ParseObjectIdPipe) id: string): Promise<UserRO> {
     const foundUser = await this._queryBus.execute(new GetUserQuery(id));
 
     if (!foundUser) {

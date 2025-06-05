@@ -4,12 +4,11 @@ import { Model } from 'mongoose';
 import TrackMapper from './track.mapper';
 import { Track } from './track.schema';
 import { TrackWithAlbumAndArtistsDocument, TrackWithAlbumAndArtists } from './types';
-import { TrackReadRepository } from '../../../../../core/app/components/track/ports/repository/track-read-repository.port';
-
-import { TrackWithAlbumAndArtistsDTO } from '../../../../../core/app/components/track/ports/repository/dtos/track-with-album-and-artists.dto';
 import { POPULATE_OPTIONS } from './constants';
-import { OffsetLimitPaginationDTO } from '../../../../../core/app/common/dtos/offset-limit-pagination/offset-limit-pagination-payload.dto';
-import { OffsetLimitPaginationResponseDTO } from '../../../../../core/app/common/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
+import { TrackReadRepository } from '../../../../../core/domain/components/track/repository/track-read-repository.port';
+import { TrackWithAlbumAndArtistsDTO } from '../../../../../core/domain/components/track/repository/dtos/track-with-album-and-artists.dto';
+import { OffsetLimitPaginationDTO } from '../../../../../core/shared/dtos/offset-limit-pagination/offset-limit-pagination-payload.dto';
+import { OffsetLimitPaginationResponseDTO } from '../../../../../core/shared/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
 
 @Injectable()
 export class TrackReadRepositoryAdapter implements TrackReadRepository {
@@ -38,8 +37,6 @@ export class TrackReadRepositoryAdapter implements TrackReadRepository {
       return null;
     }
 
-    console.log(foundDoc);
-
     return TrackMapper.toDTO(foundDoc);
   }
 
@@ -47,7 +44,7 @@ export class TrackReadRepositoryAdapter implements TrackReadRepository {
     ids: string[],
     options?: Partial<{ isPublic: boolean }>,
   ): Promise<{
-    items: TrackWithAlbumAndArtistsDTO[];
+    items: (TrackWithAlbumAndArtistsDTO | null)[];
     foundIds: string[];
     total: number;
     missingIds: string[];
@@ -61,19 +58,20 @@ export class TrackReadRepositoryAdapter implements TrackReadRepository {
       .lean<TrackWithAlbumAndArtists[]>()
       .exec();
 
-    // TODO: Refactoring
-    const docsMap: Map<string, TrackWithAlbumAndArtists> = new Map(
+    const foundDocsMap: Map<string, TrackWithAlbumAndArtists> = new Map(
       foundDocs.map((doc) => [doc._id.toHexString(), doc]),
     );
-    const sortedDocs = ids.map((id) => docsMap.get(id)!);
-    const foundDocIds = sortedDocs.map((doc) => doc._id.toHexString());
-    const missingDocIds = ids.filter((id) => !foundDocIds.includes(id));
+    const itemsResult: (TrackWithAlbumAndArtistsDTO | null)[] = ids.map((id) => {
+      const doc = foundDocsMap.get(id);
+
+      return doc ? TrackMapper.toDTO(doc) : null;
+    });
 
     return {
-      items: sortedDocs.map((doc) => TrackMapper.toDTO(doc)),
-      foundIds: foundDocIds,
-      total: foundDocIds.length,
-      missingIds: missingDocIds,
+      items: itemsResult,
+      foundIds: [...foundDocsMap.keys()],
+      total: foundDocsMap.size,
+      missingIds: ids.filter((id) => !foundDocsMap.has(id)),
     };
   }
 

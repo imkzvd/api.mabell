@@ -1,12 +1,10 @@
-import { EntityId } from '../../common/types/entity-id.type';
 import { GenreVO } from '../../common/vos/genre.vo';
 import { HexColorVO } from '../../common/vos/hex-color.vo';
-import { TrackId } from '../track/track.entity';
-import { UserId } from '../user/user.entity';
 import { DescriptionVO } from './vos/description.vo';
 import { NameVO } from './vos/name.vo';
-
-export type PlaylistId = EntityId<'Playlist'>;
+import { PlaylistId } from './types';
+import { UserId } from '../user/types';
+import { TrackId } from '../track/types';
 
 export class Playlist {
   constructor(

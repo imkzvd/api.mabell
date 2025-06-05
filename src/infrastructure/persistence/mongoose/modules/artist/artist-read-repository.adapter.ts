@@ -2,11 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import ArtistMapper from './artist.mapper';
-import { ArtistReadRepository } from '../../../../../core/app/components/artist/ports/repository/artist-read-repository.port';
-import { ArtistDTO } from '../../../../../core/app/components/artist/ports/repository/dtos/artist.dto';
 import { Artist } from './artist.schema';
 import { ArtistDocument } from './types';
 import { NotFoundException } from '../../../../../core/shared/exceptions';
+import { ArtistReadRepository } from '../../../../../core/domain/components/artist/repository/artist-read-repository.port';
+import { ArtistDTO } from '../../../../../core/domain/components/artist/repository/dtos/artist.dto';
 
 @Injectable()
 export class ArtistReadRepositoryAdapter implements ArtistReadRepository {

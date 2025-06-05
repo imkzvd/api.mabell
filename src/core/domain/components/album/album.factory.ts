@@ -1,12 +1,13 @@
 import { NameVO } from './vos/name.vo';
 import { GenreVO } from '../../common/vos/genre.vo';
 import { HexColorVO } from '../../common/vos/hex-color.vo';
-import { Album, AlbumId } from './album.entity';
-import { ArtistId } from '../artist/artist.entity';
+import { Album } from './album.entity';
 import { AlbumTypeVO } from './vos/album-type.vo';
 import { AlbumTypes } from './constants/album-types';
 import { DescriptionVO } from './vos/description.vo';
 import { ReleaseDateVO } from './vos/release-date.vo';
+import { AlbumId } from './types';
+import { ArtistId } from '../artist/types';
 
 export class AlbumFactory {
   static create(props: {
