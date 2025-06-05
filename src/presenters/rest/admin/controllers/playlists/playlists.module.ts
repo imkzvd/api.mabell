@@ -13,6 +13,7 @@ import { UserService } from '../../../../../core/app/components/user/user.servic
 import { PasswordModule } from '../../../../../infrastructure/security/password/password.module';
 import { PlaylistService } from '../../../../../core/app/components/playlist/playlist.service';
 import { GetPlaylistTracksHandler } from '../../../../../core/app/cqrs/track/queries/get-playlist-tracks/get-playlist-tracks.handler';
+import { PlaylistEventSubscriber } from '../../../../../core/app/components/playlist/playlist.event-subscriber';
 
 @Module({
   imports: [PasswordModule],
@@ -29,6 +30,7 @@ import { GetPlaylistTracksHandler } from '../../../../../core/app/cqrs/track/que
     UpdatePlaylistCoverHandler,
     GetPlaylistHandler,
     GetPlaylistTracksHandler,
+    PlaylistEventSubscriber,
   ],
   controllers: [PlaylistsController],
 })
