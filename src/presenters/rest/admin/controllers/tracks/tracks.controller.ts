@@ -200,7 +200,7 @@ export class TracksController {
     const foundTrack = await this._queryBus.execute(new GetTrackQuery(id));
 
     if (!foundTrack) {
-      throw new NotFoundException(`There is no track with the specified ID`);
+      throw new NotFoundException('Track does not exist');
     }
 
     return new TrackRO(foundTrack);
