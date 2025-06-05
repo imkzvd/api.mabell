@@ -151,8 +151,6 @@ export class AlbumService {
     }
 
     foundAlbum.deleteCover();
-    foundAlbum.deleteColor();
-
     await this._albumWR.save(foundAlbum);
     await this._artistFS.deleteAlbumCover(foundAlbum.getMainArtist(), foundAlbum.getId());
 
