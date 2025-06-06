@@ -37,9 +37,17 @@ import {
   TMP_FILE_STORAGE_DI_TOKEN,
   TmpFileStorage,
 } from '../../common/ports/file-storages/tmp-file-storage.port';
+import { EVENT_BUS_DI_TOKEN, EventBus } from '../../common/ports/event-bus.port';
+import { UserCreatedEvent } from '../../common/events/user-created.event';
+import { UserRegisteredEvent } from '../../common/events/user-registered.event';
+import { UserUpdatedEvent } from '../../common/events/user-updated.event';
+import { UserDeletedEvent } from '../../common/events/user-deleted.event';
+import { UserEmailUpdatedEvent } from '../../common/events/user-email-updated.event';
+import { UserPasswordUpdatedEvent } from '../../common/events/user-password-updated.event';
 
 export class UserService {
   constructor(
+    @Inject(EVENT_BUS_DI_TOKEN) private readonly _EB: EventBus,
     @Inject(USER_WRITE_REPOSITORY_DI_TOKEN) private readonly _wr: UserWriteRepository,
     @Inject(USER_READ_REPOSITORY_DI_TOKEN) private readonly _rr: UserReadRepository,
     @Inject(ID_SERVICE_DI_TOKEN) private readonly _idService: IdService<UserId>,
@@ -63,8 +71,9 @@ export class UserService {
     });
 
     await this._wr.save(createdUser);
+    this._EB.publish(new UserCreatedEvent({ id: generatedId }));
 
-    return createdUser.getId();
+    return generatedId;
   }
 
   async registerUser(payload: RegisterUserPayload): Promise<UserId> {
@@ -86,8 +95,9 @@ export class UserService {
     });
 
     await this._wr.save(createdUser);
+    this._EB.publish(new UserRegisteredEvent({ id: generatedId }));
 
-    return createdUser.getId();
+    return generatedId;
   }
 
   async updateUser(id: string, payload: UpdateUserPayload): Promise<UserId> {
@@ -125,6 +135,7 @@ export class UserService {
     }
 
     await this._wr.save(foundUser);
+    this._EB.publish(new UserUpdatedEvent({ id: foundUser.getId() }));
 
     return foundUser.getId();
   }
@@ -149,6 +160,7 @@ export class UserService {
     foundUser.updateUsername(username);
 
     await this._wr.save(foundUser);
+    this._EB.publish(new UserUpdatedEvent({ id: foundUser.getId() }));
 
     return foundUser.getId();
   }
@@ -173,6 +185,8 @@ export class UserService {
     foundUser.updateEmail(email);
 
     await this._wr.save(foundUser);
+    this._EB.publish(new UserEmailUpdatedEvent({ id: foundUser.getId() }));
+    this._EB.publish(new UserUpdatedEvent({ id: foundUser.getId() }));
 
     return foundUser.getId();
   }
@@ -202,6 +216,7 @@ export class UserService {
     foundUser.updatePassword(hashedNewPassword);
 
     await this._wr.save(foundUser);
+    this._EB.publish(new UserPasswordUpdatedEvent({ id: foundUser.getId() }));
 
     return foundUser.getId();
   }
@@ -221,6 +236,7 @@ export class UserService {
     foundUser.updatePassword(hashPassword);
 
     await this._wr.save(foundUser);
+    this._EB.publish(new UserUpdatedEvent({ id: foundUser.getId() }));
 
     return { id: foundUser.getId(), password };
   }
@@ -249,6 +265,7 @@ export class UserService {
     }
 
     await this._wr.save(foundUser);
+    this._EB.publish(new UserUpdatedEvent({ id: foundUser.getId() }));
 
     return foundUser.getId();
   }
@@ -264,6 +281,7 @@ export class UserService {
     foundUser.deleteColor();
     await this._wr.save(foundUser);
     await this._userFS.deleteUserAvatar(foundUser.getId());
+    this._EB.publish(new UserUpdatedEvent({ id: foundUser.getId() }));
 
     return foundUser.getId();
   }
@@ -276,6 +294,7 @@ export class UserService {
     }
 
     await this._userFS.deleteUserDirectory(deletedUserId);
+    this._EB.publish(new UserDeletedEvent({ id: deletedUserId }));
 
     return deletedUserId;
   }

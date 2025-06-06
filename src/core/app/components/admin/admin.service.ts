@@ -22,9 +22,15 @@ import { OffsetLimitPaginationDTO } from '../../../shared/dtos/offset-limit-pagi
 import { AdminDTO } from './dtos/admin.dto';
 import { UpdateAdminPayload } from './types';
 import { AdminId } from '../../../domain/components/admin/types';
+import { EVENT_BUS_DI_TOKEN, EventBus } from '../../common/ports/event-bus.port';
+import { AdminCreatedEvent } from '../../common/events/admin-created.event';
+import { AdminUpdatedEvent } from '../../common/events/admin-updated.event';
+import { AdminDeletedEvent } from '../../common/events/admin-deleted.event';
+import { AdminPasswordRefreshedEvent } from '../../common/events/admin-password-refreshed.event';
 
 export class AdminService {
   constructor(
+    @Inject(EVENT_BUS_DI_TOKEN) private readonly _EB: EventBus,
     @Inject(ADMIN_WRITE_REPOSITORY_DI_TOKEN)
     private readonly _wr: AdminWriteRepository,
     @Inject(ADMIN_READ_REPOSITORY_DI_TOKEN)
@@ -51,6 +57,7 @@ export class AdminService {
     });
 
     await this._wr.save(createdAdmin);
+    this._EB.publish(new AdminCreatedEvent({ id: generatedId }));
 
     return createdAdmin.getId();
   }
@@ -75,6 +82,7 @@ export class AdminService {
     }
 
     await this._wr.save(foundAdmin);
+    this._EB.publish(new AdminUpdatedEvent({ id: foundAdmin.getId() }));
 
     return foundAdmin.getId();
   }
@@ -93,8 +101,8 @@ export class AdminService {
     }
 
     foundAdmin.updateUsername(username);
-
     await this._wr.save(foundAdmin);
+    this._EB.publish(new AdminUpdatedEvent({ id: foundAdmin.getId() }));
 
     return foundAdmin.getId();
   }
@@ -113,6 +121,7 @@ export class AdminService {
     foundAdmin.updatePassword(hashPassword);
 
     await this._wr.save(foundAdmin);
+    this._EB.publish(new AdminPasswordRefreshedEvent({ id: foundAdmin.getId(), password }));
 
     return { id: foundAdmin.getId(), password };
   }
@@ -133,6 +142,8 @@ export class AdminService {
     if (!deletedAdminId) {
       throw new NotFoundException('Admin does not exist');
     }
+
+    this._EB.publish(new AdminDeletedEvent({ id: deletedAdminId }));
 
     return deletedAdminId;
   }
