@@ -30,9 +30,17 @@ import {
   TMP_FILE_STORAGE_DI_TOKEN,
   TmpFileStorage,
 } from '../../common/ports/file-storages/tmp-file-storage.port';
+import { EVENT_BUS_DI_TOKEN, EventBus } from '../../common/ports/event-bus.port';
+import { AlbumCreatedEvent } from '../../common/events/album-created.event';
+import { AlbumUpdatedEvent } from '../../common/events/album-updated.event';
+import { AlbumDeletedEvent } from '../../common/events/album-deleted.event';
+import { AlbumsDeletedEvent } from '../../common/events/albums-deleted.event';
+import { AlbumCoverDeletedEvent } from '../../common/events/album-cover-deleted.event';
+import { AlbumArtistsUpdatedEvent } from '../../common/events/album-artists-updated.event';
 
 export class AlbumService {
   constructor(
+    @Inject(EVENT_BUS_DI_TOKEN) private readonly _EB: EventBus,
     @Inject(ALBUM_WRITE_REPOSITORY_DI_TOKEN) private readonly _albumWR: AlbumWriteRepository,
     @Inject(ALBUM_READ_REPOSITORY_DI_TOKEN) private readonly _albumRR: AlbumReadRepository,
     @Inject(ID_SERVICE_DI_TOKEN) private readonly _idService: IdService<AlbumId>,
@@ -51,7 +59,9 @@ export class AlbumService {
 
     await this._albumWR.save(createdAlbum);
 
-    return createdAlbum.getId();
+    this._EB.publish(new AlbumCreatedEvent({ id: generatedId }));
+
+    return generatedId;
   }
 
   async updateAlbum(id: string, payload: UpdateAlbumPayload): Promise<AlbumId> {
@@ -90,6 +100,7 @@ export class AlbumService {
     }
 
     await this._albumWR.save(foundAlbum);
+    this._EB.publish(new AlbumUpdatedEvent({ id: foundAlbum.getId() }));
 
     return foundAlbum.getId();
   }
@@ -107,6 +118,8 @@ export class AlbumService {
 
     foundAlbum.updateArtists(payload.artists);
     await this._albumWR.save(foundAlbum);
+    this._EB.publish(new AlbumArtistsUpdatedEvent({ id: foundAlbum.getId() }));
+    this._EB.publish(new AlbumUpdatedEvent({ id: foundAlbum.getId() }));
 
     return foundAlbum.getId();
   }
@@ -139,6 +152,7 @@ export class AlbumService {
     }
 
     await this._albumWR.save(foundAlbum);
+    this._EB.publish(new AlbumUpdatedEvent({ id: foundAlbum.getId() }));
 
     return foundAlbum.getId();
   }
@@ -153,6 +167,8 @@ export class AlbumService {
     foundAlbum.deleteCover();
     await this._albumWR.save(foundAlbum);
     await this._artistFS.deleteAlbumCover(foundAlbum.getMainArtist(), foundAlbum.getId());
+    this._EB.publish(new AlbumCoverDeletedEvent({ id: foundAlbum.getId() }));
+    this._EB.publish(new AlbumUpdatedEvent({ id: foundAlbum.getId() }));
 
     return foundAlbum.getId();
   }
@@ -164,11 +180,15 @@ export class AlbumService {
       throw new NotFoundException('Album does not exist');
     }
 
+    this._EB.publish(new AlbumDeletedEvent({ id: deletedAlbumId }));
+
     return deletedAlbumId;
   }
 
   async deleteAlbumsByArtistId(id: string): Promise<AlbumId[]> {
     const { deletedIds } = await this._albumWR.deleteByArtistId(id);
+
+    this._EB.publish(new AlbumsDeletedEvent({ ids: deletedIds }));
 
     return deletedIds;
   }

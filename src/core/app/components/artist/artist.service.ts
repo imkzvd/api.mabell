@@ -22,9 +22,14 @@ import {
   TMP_FILE_STORAGE_DI_TOKEN,
   TmpFileStorage,
 } from '../../common/ports/file-storages/tmp-file-storage.port';
+import { EVENT_BUS_DI_TOKEN, EventBus } from '../../common/ports/event-bus.port';
+import { ArtistCreatedEvent } from '../../common/events/artist-created.event';
+import { ArtistUpdatedEvent } from '../../common/events/artist-updated.event';
+import { ArtistDeletedEvent } from '../../common/events/artist-deleted.event';
 
 export class ArtistService {
   constructor(
+    @Inject(EVENT_BUS_DI_TOKEN) private readonly _EB: EventBus,
     @Inject(ARTIST_WRITE_REPOSITORY_DI_TOKEN) private readonly _wr: ArtistWriteRepository,
     @Inject(ARTIST_READ_REPOSITORY_DI_TOKEN) private readonly _rr: ArtistReadRepository,
     @Inject(ID_SERVICE_DI_TOKEN) private readonly _idService: IdService<ArtistId>,
@@ -41,8 +46,9 @@ export class ArtistService {
     });
 
     await this._wr.save(createdArtist);
+    this._EB.publish(new ArtistCreatedEvent({ id: generatedId }));
 
-    return createdArtist.getId();
+    return generatedId;
   }
 
   async updateArtist(id: string, payload: UpdateArtistPayload): Promise<ArtistId> {
@@ -81,6 +87,7 @@ export class ArtistService {
     }
 
     await this._wr.save(foundArtist);
+    this._EB.publish(new ArtistUpdatedEvent({ id: foundArtist.getId() }));
 
     return foundArtist.getId();
   }
@@ -109,6 +116,7 @@ export class ArtistService {
     }
 
     await this._wr.save(foundArtist);
+    this._EB.publish(new ArtistUpdatedEvent({ id: foundArtist.getId() }));
 
     return foundArtist.getId();
   }
@@ -124,6 +132,7 @@ export class ArtistService {
 
     await this._wr.save(foundArtist);
     await this._artistFS.deleteArtistAvatar(foundArtist.getId());
+    this._EB.publish(new ArtistUpdatedEvent({ id: foundArtist.getId() }));
 
     return foundArtist.getId();
   }
@@ -152,6 +161,7 @@ export class ArtistService {
     }
 
     await this._wr.save(foundArtist);
+    this._EB.publish(new ArtistUpdatedEvent({ id: foundArtist.getId() }));
 
     return foundArtist.getId();
   }
@@ -166,6 +176,7 @@ export class ArtistService {
     foundArtist.deleteCover();
     await this._wr.save(foundArtist);
     await this._artistFS.deleteArtistCover(foundArtist.getId());
+    this._EB.publish(new ArtistUpdatedEvent({ id: foundArtist.getId() }));
 
     return foundArtist.getId();
   }
@@ -178,6 +189,7 @@ export class ArtistService {
     }
 
     await this._artistFS.deleteArtistDirectory(deletedArtistId);
+    this._EB.publish(new ArtistDeletedEvent({ id: deletedArtistId }));
 
     return deletedArtistId;
   }

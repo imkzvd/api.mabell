@@ -24,9 +24,15 @@ import {
   TMP_FILE_STORAGE_DI_TOKEN,
   TmpFileStorage,
 } from '../../common/ports/file-storages/tmp-file-storage.port';
+import { EVENT_BUS_DI_TOKEN, EventBus } from '../../common/ports/event-bus.port';
+import { PlaylistCreatedEvent } from '../../common/events/playlist-created.event';
+import { PlaylistUpdatedEvent } from '../../common/events/playlist-updated.event';
+import { PlaylistDeletedEvent } from '../../common/events/playlist-deleted.event';
+import { PlaylistsDeletedEvent } from '../../common/events/playlists-deleted.event';
 
 export class PlaylistService {
   constructor(
+    @Inject(EVENT_BUS_DI_TOKEN) private readonly _EB: EventBus,
     @Inject(PLAYLIST_WRITE_REPOSITORY_DI_TOKEN) private readonly _wr: PlaylistWriteRepository,
     @Inject(PLAYLIST_READ_REPOSITORY_DI_TOKEN) private readonly _rr: PlaylistReadRepository,
     @Inject(ID_SERVICE_DI_TOKEN) private readonly _idService: IdService<PlaylistId>,
@@ -44,8 +50,9 @@ export class PlaylistService {
     });
 
     await this._wr.save(createdPlaylist);
+    this._EB.publish(new PlaylistCreatedEvent({ id: generatedId }));
 
-    return createdPlaylist.getId();
+    return generatedId;
   }
 
   async updatePlaylist(id: string, payload: UpdatePlaylistPayload): Promise<PlaylistId> {
@@ -72,6 +79,7 @@ export class PlaylistService {
     }
 
     await this._wr.save(foundPlaylist);
+    this._EB.publish(new PlaylistUpdatedEvent({ id: foundPlaylist.getId() }));
 
     return foundPlaylist.getId();
   }
@@ -104,6 +112,7 @@ export class PlaylistService {
     }
 
     await this._wr.save(foundPlaylist);
+    this._EB.publish(new PlaylistUpdatedEvent({ id: foundPlaylist.getId() }));
 
     return foundPlaylist.getId();
   }
@@ -118,6 +127,7 @@ export class PlaylistService {
     foundPlaylist.deleteCover();
     await this._wr.save(foundPlaylist);
     await this._userFS.deletePlaylistCover(foundPlaylist.getOwner(), foundPlaylist.getId());
+    this._EB.publish(new PlaylistUpdatedEvent({ id: foundPlaylist.getId() }));
 
     return foundPlaylist.getId();
   }
@@ -131,6 +141,7 @@ export class PlaylistService {
 
     await this._wr.deleteById(id);
     await this._userFS.deletePlaylistDirectory(foundPlaylist.getOwner(), foundPlaylist.getId());
+    this._EB.publish(new PlaylistDeletedEvent({ id: foundPlaylist.getId() }));
 
     return foundPlaylist.getId();
   }
@@ -144,6 +155,7 @@ export class PlaylistService {
 
     foundPlaylist.addTrack(trackId);
     await this._wr.save(foundPlaylist);
+    this._EB.publish(new PlaylistUpdatedEvent({ id: foundPlaylist.getId() }));
 
     return foundPlaylist.getId();
   }
@@ -157,12 +169,15 @@ export class PlaylistService {
 
     foundPlaylist.deleteTrack(trackId);
     await this._wr.save(foundPlaylist);
+    this._EB.publish(new PlaylistUpdatedEvent({ id: foundPlaylist.getId() }));
 
     return foundPlaylist.getId();
   }
 
   async deletePlaylistsByOwnerId(ownerId: string): Promise<PlaylistId[]> {
     const { deletedIds } = await this._wr.deleteByOwnerId(ownerId);
+
+    this._EB.publish(new PlaylistsDeletedEvent({ ids: deletedIds }));
 
     return deletedIds;
   }
