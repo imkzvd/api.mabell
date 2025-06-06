@@ -9,6 +9,8 @@ import { GetTrackQuery } from '../../../../../core/app/cqrs/track/queries/get-tr
 import { TracksDeletedEvent } from '../../../../../core/app/common/events/tracks-deleted.event';
 import { TracksUpdatedEvent } from '../../../../../core/app/common/events/tracks-updated.event';
 import { GetTracksByIdsQuery } from '../../../../../core/app/cqrs/track/queries/get-tracks-by-ids/get-tracks-by-ids.query';
+import { AlbumUpdatedEvent } from '../../../../../core/app/common/events/album-updated.event';
+import { GetAlbumTracksQuery } from '../../../../../core/app/cqrs/track/queries/get-album-tracks/get-album-tracks.query';
 
 export class TrackEventSubscriber {
   constructor(
@@ -32,6 +34,15 @@ export class TrackEventSubscriber {
     });
     this._EB.subscribe(TracksDeletedEvent, ({ ids }) => {
       return this._collection.deleteByIds(ids);
+    });
+    this._EB.subscribe(AlbumUpdatedEvent, async ({ id }) => {
+      const foundTracks = await this._QB.execute(new GetAlbumTracksQuery(id));
+
+      if (!foundTracks.total) {
+        return;
+      }
+
+      await this._collection.saveMany(foundTracks.items);
     });
   }
 
