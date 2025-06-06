@@ -15,6 +15,7 @@ import { MetadataModule } from './controllers/metadata/metadata.module';
 import { InMemoryEventBusModule } from '../../../infrastructure/event-bus/in-memory-event-bus/in-memory-event-bus.module';
 import { StorageModule } from '../../../infrastructure/storage/storage.module';
 import { PlaylistsModule } from './controllers/playlists/playlists.module';
+import { SearchModule } from './controllers/search/search.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { PlaylistsModule } from './controllers/playlists/playlists.module';
     AlbumsModule,
     TracksModule,
     PlaylistsModule,
+    SearchModule,
   ],
 })
 export class AdminAppModule {}
