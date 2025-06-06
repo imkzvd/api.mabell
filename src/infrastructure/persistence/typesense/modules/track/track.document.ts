@@ -1,8 +1,10 @@
+import { AlbumType } from '../../../../../core/domain/components/album/constants/album-types';
+
 export class TrackDocument {
   constructor(
     public readonly id: string,
     public readonly name: string,
-    public readonly album: { id: string; name: string; type: string; releaseAt?: Date },
+    public readonly album: { id: string; name: string; type: AlbumType; releaseAt?: Date },
     public readonly albumName: string,
     public readonly artists: { id: string; name: string }[],
     public readonly featArtists: { id: string; name: string }[],

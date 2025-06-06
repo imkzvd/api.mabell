@@ -2,6 +2,8 @@ import * as process from 'process';
 import { ApiProperty } from '@nestjs/swagger';
 import { faker } from '@faker-js/faker';
 import { IndexedTrackDTO } from '../../../../../../core/app/components/search/ports/search-service/dtos/indexed-track.dto';
+import { LabelValueRO } from '../../../../common/ros/label-value.ro';
+import { getAlbumTypeLabelByValue } from '../../../../../../core/domain/components/album/constants/album-types';
 
 export class IndexedTrackRO {
   @ApiProperty({ description: 'Id', example: faker.database.mongodbObjectId() })
@@ -21,7 +23,7 @@ export class IndexedTrackRO {
       },
     ],
   })
-  album: { id: string; name: string; type: string; releaseAt: Date | null };
+  album: { id: string; name: string; type: LabelValueRO; releaseAt: Date | null };
 
   @ApiProperty({
     description: 'Artists of the album',
@@ -61,7 +63,7 @@ export class IndexedTrackRO {
     this.album = {
       id: dto.album.id,
       name: dto.album.name,
-      type: dto.album.type,
+      type: new LabelValueRO(dto.album.type, getAlbumTypeLabelByValue(dto.album.type)),
       releaseAt: dto.album.releaseAt,
     };
     this.artists = dto.artists;

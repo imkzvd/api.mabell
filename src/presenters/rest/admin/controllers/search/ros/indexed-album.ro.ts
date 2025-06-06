@@ -2,6 +2,11 @@ import * as process from 'process';
 import { ApiProperty } from '@nestjs/swagger';
 import { faker } from '@faker-js/faker';
 import { IndexedAlbumDTO } from '../../../../../../core/app/components/search/ports/search-service/dtos/indexed-album.dto';
+import { LabelValueRO } from '../../../../common/ros/label-value.ro';
+import {
+  AlbumTypes,
+  getAlbumTypeLabelByValue,
+} from '../../../../../../core/domain/components/album/constants/album-types';
 
 export class IndexedAlbumRO {
   @ApiProperty({ description: 'Id', example: faker.database.mongodbObjectId() })
@@ -15,6 +20,13 @@ export class IndexedAlbumRO {
     example: [{ id: faker.database.mongodbObjectId(), name: faker.person.firstName() }],
   })
   artists: { id: string; name: string }[];
+
+  @ApiProperty({
+    type: () => LabelValueRO,
+    description: 'Type',
+    example: new LabelValueRO(AlbumTypes['Album'], getAlbumTypeLabelByValue(AlbumTypes['Album'])),
+  })
+  type: LabelValueRO;
 
   @ApiProperty({
     type: String,
@@ -39,6 +51,7 @@ export class IndexedAlbumRO {
     this.id = dto.id;
     this.name = dto.name;
     this.artists = dto.artists;
+    this.type = new LabelValueRO(dto.type, getAlbumTypeLabelByValue(dto.type));
     this.cover = dto.cover ? `${process.env.HOST}${dto.cover}` : null;
     this.isPublic = dto.isPublic;
     this.releaseAt = dto.releaseAt;
