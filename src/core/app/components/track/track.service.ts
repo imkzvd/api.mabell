@@ -244,6 +244,7 @@ export class TrackService {
     }>,
   ): Promise<{
     items: (TrackDTO | null)[];
+    foundItems: TrackDTO[];
     foundIds: string[];
     total: number;
     missingIds: string[];

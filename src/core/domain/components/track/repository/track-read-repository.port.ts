@@ -19,6 +19,7 @@ export interface TrackReadRepository {
     }>,
   ): Promise<{
     items: (TrackWithAlbumAndArtistsDTO | null)[];
+    foundItems: TrackWithAlbumAndArtistsDTO[];
     foundIds: string[];
     total: number;
     missingIds: string[];

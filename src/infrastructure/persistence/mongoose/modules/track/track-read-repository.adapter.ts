@@ -45,6 +45,7 @@ export class TrackReadRepositoryAdapter implements TrackReadRepository {
     options?: Partial<{ isPublic: boolean }>,
   ): Promise<{
     items: (TrackWithAlbumAndArtistsDTO | null)[];
+    foundItems: TrackWithAlbumAndArtistsDTO[];
     foundIds: string[];
     total: number;
     missingIds: string[];
@@ -69,6 +70,7 @@ export class TrackReadRepositoryAdapter implements TrackReadRepository {
 
     return {
       items: itemsResult,
+      foundItems: itemsResult.filter((i) => i !== null),
       foundIds: [...foundDocsMap.keys()],
       total: foundDocsMap.size,
       missingIds: ids.filter((id) => !foundDocsMap.has(id)),
