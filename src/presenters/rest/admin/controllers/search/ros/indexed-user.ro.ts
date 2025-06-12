@@ -7,7 +7,7 @@ export class IndexedUserRO {
   @ApiProperty({ description: 'Id', example: faker.database.mongodbObjectId() })
   id: string;
 
-  @ApiProperty({ description: 'Name', example: faker.internet.userName() })
+  @ApiProperty({ description: 'Name', example: faker.internet.username() })
   name: string;
 
   @ApiProperty({
