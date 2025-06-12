@@ -1,9 +1,8 @@
-export class ArtistDocument {
+export class Artist {
   constructor(
     public readonly id: string,
     public readonly name: string,
-    public readonly isPublic: boolean,
-    public readonly birthName?: string,
-    public readonly avatar?: string,
+    public readonly avatar: string | undefined,
+    public readonly isGlobal: boolean = false,
   ) {}
 }

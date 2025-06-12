@@ -10,9 +10,6 @@ export class IndexedArtistRO {
   @ApiProperty({ description: 'Name', example: faker.person.firstName() })
   name: string;
 
-  @ApiProperty({ description: 'Birth name', example: faker.person.fullName(), nullable: true })
-  birthName: string | null;
-
   @ApiProperty({
     type: String,
     description: 'Avatar',
@@ -21,14 +18,9 @@ export class IndexedArtistRO {
   })
   avatar: string | null;
 
-  @ApiProperty({ type: Boolean, description: 'Public', example: true })
-  isPublic: boolean;
-
   constructor(dto: IndexedArtistDTO) {
     this.id = dto.id;
     this.name = dto.name;
-    this.birthName = dto.birthName;
     this.avatar = dto.avatar ? `${process.env.HOST}${dto.avatar}` : null;
-    this.isPublic = dto.isPublic;
   }
 }

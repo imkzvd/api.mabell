@@ -7,6 +7,7 @@ import {
   AlbumTypes,
   getAlbumTypeLabelByValue,
 } from '../../../../../../core/domain/components/album/constants/album-types';
+import { IndexedSimplifiedArtistRO } from './indexed-simplified-artist.ro';
 
 export class IndexedAlbumRO {
   @ApiProperty({ description: 'Id', example: faker.database.mongodbObjectId() })
@@ -17,9 +18,9 @@ export class IndexedAlbumRO {
 
   @ApiProperty({
     description: 'Artists of the album',
-    example: [{ id: faker.database.mongodbObjectId(), name: faker.person.firstName() }],
+    type: () => [IndexedSimplifiedArtistRO],
   })
-  artists: { id: string; name: string }[];
+  artists: IndexedSimplifiedArtistRO[];
 
   @ApiProperty({
     type: () => LabelValueRO,
@@ -36,24 +37,11 @@ export class IndexedAlbumRO {
   })
   cover: string | null;
 
-  @ApiProperty({ type: Boolean, description: 'Public', example: true })
-  isPublic: boolean;
-
-  @ApiProperty({
-    type: Date,
-    description: 'Release date',
-    example: faker.date.past().toISOString(),
-    nullable: true,
-  })
-  releaseAt: Date | null;
-
   constructor(dto: IndexedAlbumDTO) {
     this.id = dto.id;
     this.name = dto.name;
-    this.artists = dto.artists;
+    this.artists = dto.artists.map((i) => new IndexedSimplifiedArtistRO(i));
     this.type = new LabelValueRO(dto.type, getAlbumTypeLabelByValue(dto.type));
     this.cover = dto.cover ? `${process.env.HOST}${dto.cover}` : null;
-    this.isPublic = dto.isPublic;
-    this.releaseAt = dto.releaseAt;
   }
 }

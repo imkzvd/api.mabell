@@ -96,7 +96,9 @@ export class TrackRO {
     this.name = dto.name;
     this.album = new AlbumRO(dto.album);
     this.artists = dto.artists.map((i) => new ArtistRO(i));
+    this.artistIds = dto.artists.map(({ id }) => id);
     this.featArtists = dto.featArtists.map((i) => new ArtistRO(i));
+    this.featArtistIds = dto.featArtists.map(({ id }) => id);
     this.file = dto.file ? `${process.env.HOST}${dto.file}` : null;
     this.duration = dto.duration;
     this.isExplicit = dto.isExplicit;
