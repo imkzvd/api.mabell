@@ -32,6 +32,13 @@ export class AlbumRO {
   artists: ArtistRO[];
 
   @ApiProperty({
+    type: [String],
+    description: 'Artist ids',
+    example: [faker.database.mongodbObjectId()],
+  })
+  artistIds: string[];
+
+  @ApiProperty({
     type: () => LabelValueRO,
     description: 'Type',
     example: new LabelValueRO(AlbumTypes['Album'], getAlbumTypeLabelByValue(AlbumTypes['Album'])),
@@ -100,6 +107,7 @@ export class AlbumRO {
     this.id = album.id;
     this.name = album.name;
     this.artists = album.artists.map((i) => new ArtistRO(i));
+    this.artistIds = album.artists.map(({ id }) => id);
     this.type = new LabelValueRO(album.type, getAlbumTypeLabelByValue(album.type));
     this.genres = album.genres.map((genre) => new LabelValueRO(genre, getGenreLabelByValue(genre)));
     this.cover = album.cover ? `${process.env.HOST}${album.cover}` : null;
