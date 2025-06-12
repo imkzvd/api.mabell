@@ -1,6 +1,6 @@
 import { CollectionCreateSchema } from 'typesense/lib/Typesense/Collections';
 import { TypeSenseClient } from '../../client';
-import { AlbumDocument } from './album.document';
+import { Album } from './album.document';
 import { BaseCollection } from '../../base/base-collection.interface';
 import { IndexedAlbumDTO } from '../../../../../core/app/components/search/ports/search-service/dtos/indexed-album.dto';
 import AlbumMapper from './album.mapper';
@@ -13,11 +13,7 @@ export class AlbumCollection implements BaseCollection<IndexedAlbumDTO, AlbumWit
     enable_nested_fields: true,
     fields: [
       { name: 'name', type: 'string' },
-      { name: 'artists', type: 'object[]' },
       { name: 'artistNames', type: 'string[]' },
-      { name: 'isPublic', type: 'bool' },
-      { name: 'cover', type: 'string', optional: true },
-      { name: 'releaseAt', type: 'string', optional: true },
     ],
   };
 
@@ -28,13 +24,11 @@ export class AlbumCollection implements BaseCollection<IndexedAlbumDTO, AlbumWit
   async save(dto: AlbumWithArtistsDTO): Promise<void> {
     const mappedDoc = AlbumMapper.toDocument(dto);
 
-    await TypeSenseClient.collections<AlbumDocument>(this._collectionName)
-      .documents()
-      .upsert(mappedDoc);
+    await TypeSenseClient.collections<Album>(this._collectionName).documents().upsert(mappedDoc);
   }
 
   async searchByQuery(q: string): Promise<IndexedAlbumDTO[]> {
-    const result = await TypeSenseClient.collections<AlbumDocument>(this._collectionName)
+    const result = await TypeSenseClient.collections<Album>(this._collectionName)
       .documents()
       .search({ q, query_by: 'name,artistNames' });
 
@@ -42,15 +36,13 @@ export class AlbumCollection implements BaseCollection<IndexedAlbumDTO, AlbumWit
   }
 
   async deleteById(id: string): Promise<void> {
-    await TypeSenseClient.collections<AlbumDocument>(this._collectionName).documents(id).delete();
+    await TypeSenseClient.collections<Album>(this._collectionName).documents(id).delete();
   }
 
   async deleteByIds(ids: string[]): Promise<void> {
     const promiseQueue = Promise.all(
       ids.map((id) => {
-        return TypeSenseClient.collections<AlbumDocument>(this._collectionName)
-          .documents(id)
-          .delete();
+        return TypeSenseClient.collections<Album>(this._collectionName).documents(id).delete();
       }),
     );
 
@@ -62,7 +54,6 @@ export class AlbumCollection implements BaseCollection<IndexedAlbumDTO, AlbumWit
 
     if (isExistCollection) return;
 
-    // await TypeSenseClient.collections(this._collectionName).delete();
     await TypeSenseClient.collections().create(this._collectionSchema);
   }
 }
