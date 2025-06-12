@@ -31,7 +31,7 @@ export class SearchController {
 
   @ApiOperation({ summary: 'User search', operationId: 'userSearch' })
   @ApiQuery({ required: true, type: String, name: 'q', description: 'Query', example: 'james007' })
-  @ApiOkResponse({ description: 'Result', type: () => [IndexedUserRO] })
+  @ApiOkResponse({ description: 'Result', type: [IndexedUserRO] })
   @Get('/users')
   async userSearch(@Query('q') q: string): Promise<IndexedUserRO[]> {
     const result = await this._queryBus.execute(new GetUsersQuery(q));
@@ -51,7 +51,7 @@ export class SearchController {
 
   @ApiOperation({ summary: 'Album search', operationId: 'albumSearch' })
   @ApiQuery({ required: true, type: String, name: 'q', description: 'Query', example: 'kamikaze' })
-  @ApiOkResponse({ description: 'Result', type: () => [IndexedAlbumRO] })
+  @ApiOkResponse({ description: 'Result', type: [IndexedAlbumRO] })
   @Get('/albums')
   async albumSearch(@Query('q') q: string): Promise<IndexedAlbumRO[]> {
     const result = await this._queryBus.execute(new GetAlbumsQuery(q));
@@ -61,7 +61,7 @@ export class SearchController {
 
   @ApiOperation({ summary: 'Track search', operationId: 'trackSearch' })
   @ApiQuery({ required: true, type: String, name: 'q', description: 'Query', example: 'lucky you' })
-  @ApiOkResponse({ description: 'Result', type: () => [IndexedTrackRO] })
+  @ApiOkResponse({ description: 'Result', type: [IndexedTrackRO] })
   @Get('/tracks')
   async trackSearch(@Query('q') q: string): Promise<IndexedTrackRO[]> {
     const result = await this._queryBus.execute(new GetTracksQuery(q));
@@ -77,7 +77,7 @@ export class SearchController {
     description: 'Query',
     example: 'hip-hop 2025',
   })
-  @ApiOkResponse({ description: 'Result', type: () => [IndexedPlaylistRO] })
+  @ApiOkResponse({ description: 'Result', type: [IndexedPlaylistRO] })
   @Get('/playlists')
   async playlistSearch(@Query('q') q: string): Promise<IndexedPlaylistRO[]> {
     const result = await this._queryBus.execute(new GetPlaylistsQuery(q));
