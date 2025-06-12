@@ -1,6 +1,6 @@
 import { CollectionCreateSchema } from 'typesense/lib/Typesense/Collections';
 import { TypeSenseClient } from '../../client';
-import { TrackDocument } from './track.document';
+import { Track } from './track.document';
 import { BaseCollection } from '../../base/base-collection.interface';
 import { IndexedTrackDTO } from '../../../../../core/app/components/search/ports/search-service/dtos/indexed-track.dto';
 import TrackMapper from './track.mapper';
@@ -13,16 +13,9 @@ export class TrackCollection implements BaseCollection<IndexedTrackDTO, TrackDTO
     enable_nested_fields: true,
     fields: [
       { name: 'name', type: 'string' },
-      { name: 'album', type: 'object' },
       { name: 'albumName', type: 'string' },
-      { name: 'artists', type: 'object[]' },
-      { name: 'featArtists', type: 'object[]' },
       { name: 'allArtistNames', type: 'string[]' },
-      { name: 'isPublic', type: 'bool' },
-      { name: 'isExplicit', type: 'bool' },
-      { name: 'file', type: 'string', optional: true },
-      { name: 'duration', type: 'int32', optional: true },
-      { name: 'cover', type: 'string', optional: true },
+      { name: 'isGlobal', type: 'bool' },
     ],
   };
 
@@ -33,16 +26,14 @@ export class TrackCollection implements BaseCollection<IndexedTrackDTO, TrackDTO
   async save(dto: TrackDTO): Promise<void> {
     const mappedDoc = TrackMapper.toDocument(dto);
 
-    await TypeSenseClient.collections<TrackDocument>(this._collectionName)
-      .documents()
-      .upsert(mappedDoc);
+    await TypeSenseClient.collections<Track>(this._collectionName).documents().upsert(mappedDoc);
   }
 
   async saveMany(dtos: TrackDTO[]): Promise<void> {
     const docs = dtos.map((dto) => TrackMapper.toDocument(dto));
     const promiseQueue = Promise.all(
       docs.map((doc) =>
-        TypeSenseClient.collections<TrackDocument>(this._collectionName).documents().upsert(doc),
+        TypeSenseClient.collections<Track>(this._collectionName).documents().upsert(doc),
       ),
     );
 
@@ -50,8 +41,7 @@ export class TrackCollection implements BaseCollection<IndexedTrackDTO, TrackDTO
   }
 
   async searchByQuery(q: string): Promise<IndexedTrackDTO[]> {
-    console.log(q);
-    const result = await TypeSenseClient.collections<TrackDocument>(this._collectionName)
+    const result = await TypeSenseClient.collections<Track>(this._collectionName)
       .documents()
       .search({ q, query_by: 'name,albumName,allArtistNames' });
 
@@ -59,15 +49,13 @@ export class TrackCollection implements BaseCollection<IndexedTrackDTO, TrackDTO
   }
 
   async deleteById(id: string): Promise<void> {
-    await TypeSenseClient.collections<TrackDocument>(this._collectionName).documents(id).delete();
+    await TypeSenseClient.collections<Track>(this._collectionName).documents(id).delete();
   }
 
   async deleteByIds(ids: string[]): Promise<void> {
     const promiseQueue = Promise.all(
       ids.map((id) => {
-        return TypeSenseClient.collections<TrackDocument>(this._collectionName)
-          .documents(id)
-          .delete();
+        return TypeSenseClient.collections<Track>(this._collectionName).documents(id).delete();
       }),
     );
 
@@ -79,7 +67,6 @@ export class TrackCollection implements BaseCollection<IndexedTrackDTO, TrackDTO
 
     if (isExistCollection) return;
 
-    // await TypeSenseClient.collections(this._collectionName).delete();
     await TypeSenseClient.collections().create(this._collectionSchema);
   }
 }

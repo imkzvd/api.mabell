@@ -1,44 +1,29 @@
-import { TrackDocument } from './track.document';
+import { Track } from './track.document';
 import { IndexedTrackDTO } from '../../../../../core/app/components/search/ports/search-service/dtos/indexed-track.dto';
 import { TrackDTO } from '../../../../../core/app/components/track/dtos/track.dto';
+import { IndexedAlbumDTO } from '../../../../../core/app/components/search/ports/search-service/dtos/indexed-album.dto';
+import { TrackFactory } from './track.factory';
+import { IndexedSimplifiedArtistDTO } from '../../../../../core/app/components/search/ports/search-service/dtos/indexed-simplified-artist.dto';
 
 class TrackMapper {
-  toDocument(dto: TrackDTO): TrackDocument {
-    return new TrackDocument(
-      dto.id,
-      dto.name,
-      {
-        id: dto.album.id,
-        name: dto.album.name,
-        type: dto.album.type,
-        releaseAt: dto.album.releaseAt || undefined,
-      },
-      dto.album.name,
-      dto.artists.map(({ id, name }) => ({ id, name })),
-      dto.featArtists.map(({ id, name }) => ({ id, name })),
-      [...dto.artists.map(({ name }) => name), ...dto.featArtists.map(({ name }) => name)],
-      dto.isPublic,
-      dto.isExplicit,
-      dto.file || undefined,
-      dto.duration || undefined,
-      dto.album.cover || undefined,
-    );
+  toDocument(dto: TrackDTO): Track {
+    return TrackFactory.create(dto);
   }
 
-  toDTO(doc: TrackDocument): IndexedTrackDTO {
+  toDTO(doc: Track): IndexedTrackDTO {
     return new IndexedTrackDTO(
       doc.id,
       doc.name,
-      {
-        ...doc.album,
-        releaseAt: doc.album.releaseAt || null,
-      },
-      doc.artists,
-      doc.featArtists,
-      doc.cover || null,
+      new IndexedAlbumDTO(
+        doc.album.id,
+        doc.album.name,
+        doc.album.artists.map(({ id, name }) => new IndexedSimplifiedArtistDTO(id, name)),
+        doc.album.type,
+        doc.album.cover || null,
+      ),
+      doc.featArtists.map(({ id, name }) => new IndexedSimplifiedArtistDTO(id, name)),
       doc.file || null,
       doc.duration || null,
-      doc.isPublic,
       doc.isExplicit,
     );
   }
