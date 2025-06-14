@@ -3,7 +3,7 @@ import { Genre } from '../../../domain/common/constants/genres';
 
 export type UpdateUserPayload = Partial<{
   name: string;
-  birthDate: Date;
+  birthDate: Date | null;
   region: Region;
   genres: Genre[];
   isPremium: boolean;

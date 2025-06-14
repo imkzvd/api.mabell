@@ -8,7 +8,7 @@ export class UserDTO {
     public readonly username: string,
     public readonly name: string,
     public readonly email: string | null,
-    public readonly birthDate: Date,
+    public readonly birthDate: Date | null,
     public readonly region: Region,
     public readonly genres: Genre[],
     public readonly avatar: string | null,

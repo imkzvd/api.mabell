@@ -31,11 +31,12 @@ export class UpdateUserDTO {
     type: Date,
     description: 'Birth date',
     example: faker.date.birthdate(),
+    nullable: true,
   })
   @IsDateString()
   @IsNotEmpty()
   @IsOptional()
-  birthDate?: Date;
+  birthDate?: Date | null;
 
   @ApiProperty({
     required: false,

@@ -111,7 +111,7 @@ export class UserService {
       foundUser.updateName(payload.name);
     }
 
-    if (payload.birthDate) {
+    if (payload.birthDate !== undefined) {
       foundUser.updateBirthDate(payload.birthDate);
     }
 

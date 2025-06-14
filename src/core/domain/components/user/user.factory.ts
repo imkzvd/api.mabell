@@ -7,6 +7,7 @@ import { EmailVO } from '../../common/vos/email.vo';
 import { RegionVO } from '../../common/vos/region.vo';
 import { GenreVO } from '../../common/vos/genre.vo';
 import { UserId } from './types';
+import { BirthDateVO } from './vos/birth-date.vo';
 
 export class UserFactory {
   static create(props: {
@@ -16,7 +17,7 @@ export class UserFactory {
     name?: string;
     email?: string | null;
     isBlocked?: boolean;
-    birthDate?: Date;
+    birthDate?: Date | null;
     region?: string;
     genres?: string[];
     avatar?: string | null;
@@ -33,7 +34,7 @@ export class UserFactory {
       props.password,
       NameVO.create(props.name || props.username),
       props.email ? EmailVO.create(props.email) : null,
-      props.birthDate || new Date(),
+      props.birthDate ? BirthDateVO.create(props.birthDate) : null,
       RegionVO.create(props.region || Regions['Russian Federation']),
       props.genres?.map((genre: string) => GenreVO.create(genre)) || [],
       props.avatar || null,
