@@ -5,6 +5,7 @@ import { GenreVO } from '../../common/vos/genre.vo';
 import { EmailVO } from '../../common/vos/email.vo';
 import { HashedPasswordVO } from '../../common/vos/hashed-password.vo';
 import { UserId } from './types';
+import { BirthDateVO } from './vos/birth-date.vo';
 
 export class User {
   constructor(
@@ -13,7 +14,7 @@ export class User {
     private _password: HashedPasswordVO,
     private _name: NameVO,
     private _email: EmailVO | null,
-    private _birthDate: Date,
+    private _birthDate: BirthDateVO | null,
     private _region: RegionVO,
     private _genres: GenreVO[],
     private _avatar: string | null,
@@ -81,12 +82,12 @@ export class User {
     return this;
   }
 
-  getBirthDate(): Date {
+  getBirthDate(): BirthDateVO | null {
     return this._birthDate;
   }
 
-  updateBirthDate(value: Date): User {
-    this._birthDate = value;
+  updateBirthDate(value: Date | null): User {
+    this._birthDate = value ? BirthDateVO.create(value) : null;
     this.refreshUpdatedAt();
 
     return this;
