@@ -78,14 +78,4 @@ export class UpdateUserDTO {
   @IsBoolean()
   @IsOptional()
   isBlocked?: boolean;
-
-  @ApiProperty({
-    required: false,
-    type: Boolean,
-    description: 'Public',
-    example: false,
-  })
-  @IsBoolean()
-  @IsOptional()
-  isPublic?: boolean;
 }

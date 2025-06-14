@@ -130,10 +130,6 @@ export class UserService {
       foundUser.updateBlockedStatus(payload.isBlocked);
     }
 
-    if (typeof payload.isPublic === 'boolean') {
-      foundUser.updatePublicStatus(payload.isPublic);
-    }
-
     await this._wr.save(foundUser);
     this._EB.publish(new UserUpdatedEvent({ id: foundUser.getId() }));
 
