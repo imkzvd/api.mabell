@@ -46,8 +46,9 @@ export class UserRO {
     type: Date,
     description: 'Birth date',
     example: faker.date.birthdate(),
+    nullable: true,
   })
-  birthDate: Date;
+  birthDate: Date | null;
 
   @ApiProperty({
     type: () => LabelValueRO,
