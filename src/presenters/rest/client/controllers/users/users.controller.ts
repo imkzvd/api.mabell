@@ -11,7 +11,7 @@ import { GetUserQuery } from '../../../../../core/app/cqrs/user/queries/get-user
 export class UsersController {
   constructor(private readonly _queryBus: QueryBus) {}
 
-  @ApiOperation({ summary: 'Get user by id', operationId: 'getById' })
+  @ApiOperation({ summary: 'Get user by id', operationId: 'getUser' })
   @ApiParam({
     type: String,
     name: 'id',
@@ -20,7 +20,7 @@ export class UsersController {
   })
   @ApiOkResponse({ description: 'User', type: UserRO })
   @Get('/:id')
-  async getById(@Param('id', ParseObjectIdPipe) id: string): Promise<UserRO> {
+  async getUser(@Param('id', ParseObjectIdPipe) id: string): Promise<UserRO> {
     const foundUser = await this._queryBus.execute(new GetUserQuery(id, { isPublic: true }));
 
     if (!foundUser || foundUser.isBlocked) {
