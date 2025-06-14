@@ -9,8 +9,8 @@ export class User extends BasePersonSchema {
   @Prop({ required: false, type: String, default: null })
   email: string | null;
 
-  @Prop({ required: false, type: Date, default: new Date() })
-  birthDate: Date;
+  @Prop({ required: false, type: Date, default: null })
+  birthDate: Date | null;
 
   @Prop({
     required: false,

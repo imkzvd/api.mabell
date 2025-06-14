@@ -16,7 +16,7 @@ class UserMapper implements WriteMapper<User, DomainUser>, ReadMapper<User, User
       password: entity.getPassword().value,
       email: entity.getEmail()?.value || null,
       name: entity.getName().value,
-      birthDate: entity.getBirthDate(),
+      birthDate: entity.getBirthDate()?.value || null,
       region: entity.getRegion().value,
       genres: entity.getGenres().map(({ value }) => value),
       avatar: entity.getAvatar(),
