@@ -66,7 +66,7 @@ export class ArtistService {
       foundArtist.updateBirthName(payload.birthName);
     }
 
-    if (payload.birthDate) {
+    if (payload.birthDate !== undefined) {
       foundArtist.updateBirthDate(payload.birthDate);
     }
 
