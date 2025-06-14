@@ -8,7 +8,6 @@ export type UpdateUserPayload = Partial<{
   genres: Genre[];
   isPremium: boolean;
   isBlocked: boolean;
-  isPublic: boolean;
 }>;
 
 export type RegisterUserPayload = {
