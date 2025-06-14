@@ -1,5 +1,4 @@
 export const Regions = {
-  Global: 'GLB',
   Afghanistan: 'AFG',
   'Aland Islands': 'ALA',
   Albania: 'ALB',
