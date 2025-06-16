@@ -44,6 +44,8 @@ import { UserUpdatedEvent } from '../../common/events/user-updated.event';
 import { UserDeletedEvent } from '../../common/events/user-deleted.event';
 import { UserEmailUpdatedEvent } from '../../common/events/user-email-updated.event';
 import { UserPasswordUpdatedEvent } from '../../common/events/user-password-updated.event';
+import { UserBlockedEvent } from '../../common/events/user-blocked.event';
+import { UserUnblockedEvent } from '../../common/events/user-unblocked.event';
 
 export class UserService {
   constructor(
@@ -128,6 +130,12 @@ export class UserService {
 
     if (typeof payload.isBlocked === 'boolean') {
       foundUser.updateBlockedStatus(payload.isBlocked);
+
+      this._EB.publish(
+        payload.isBlocked
+          ? new UserBlockedEvent({ id: foundUser.getId() })
+          : new UserUnblockedEvent({ id: foundUser.getId() }),
+      );
     }
 
     await this._wr.save(foundUser);
