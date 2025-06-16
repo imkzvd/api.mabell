@@ -17,5 +17,6 @@ export interface PasswordService {
         }
   >;
   hash: (password: string) => Promise<HashedPasswordVO>;
-  validate: (password: string, hashedPassword: HashedPasswordVO) => Promise<boolean>;
+
+  validate: (password: string, hashedPassword: string) => Promise<boolean>;
 }
