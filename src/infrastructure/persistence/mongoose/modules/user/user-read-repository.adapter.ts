@@ -32,4 +32,14 @@ export class UserReadRepositoryAdapter implements UserReadRepository {
 
     return UserMapper.toDTO(foundDoc);
   }
+
+  async findByUsername(username: string): Promise<UserDTO | null> {
+    const foundDoc = await this._userModel.findOne({ username }).lean<User>().exec();
+
+    if (!foundDoc) {
+      return null;
+    }
+
+    return UserMapper.toDTO(foundDoc);
+  }
 }

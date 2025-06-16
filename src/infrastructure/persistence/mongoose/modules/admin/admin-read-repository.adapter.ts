@@ -26,6 +26,17 @@ export class AdminReadRepositoryAdapter implements AdminReadRepository {
     return AdminMapper.toDTO(foundDoc);
   }
 
+  async findByUsername(username: string): Promise<AdminDTO | null> {
+    const filter = { username };
+    const foundDoc = await this._adminModel.findOne(filter).lean<Admin>().exec();
+
+    if (!foundDoc) {
+      return null;
+    }
+
+    return AdminMapper.toDTO(foundDoc);
+  }
+
   async find(
     options?: Partial<{
       pagination: OffsetLimitPaginationDTO;
