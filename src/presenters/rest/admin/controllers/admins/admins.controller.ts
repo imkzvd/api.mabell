@@ -1,17 +1,17 @@
 import {
+  Body,
   Controller,
   DefaultValuePipe,
+  Delete,
   Get,
-  ParseIntPipe,
-  Post,
-  Query,
-  Param,
-  NotFoundException,
-  Patch,
-  Body,
   HttpCode,
   HttpStatus,
-  Delete,
+  NotFoundException,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+  Query,
 } from '@nestjs/common';
 import {
   ApiBody,
@@ -39,6 +39,7 @@ import { UpdateAdminUsernameCommand } from '../../../../../core/app/cqrs/admin/c
 import { RefreshAdminPasswordCommand } from '../../../../../core/app/cqrs/admin/commands/refresh-admin-password/refresh-admin-password.command';
 import { DeleteAdminCommand } from '../../../../../core/app/cqrs/admin/commands/delete-admin/delete-admin.command';
 import { GetAdminsQuery } from '../../../../../core/app/cqrs/admin/queries/get-admins/get-admins.query';
+import { GetOwnerTokensQuery } from '../../../../../core/app/cqrs/token/queries/get-owner-tokens/get-owner-tokens.query';
 
 @ApiTags('Admins')
 @Controller('/admins')
@@ -190,5 +191,18 @@ export class AdminsController {
     }
 
     return new AdminRO(foundAdmin);
+  }
+
+  @ApiOperation({ summary: 'Get admin sessions', operationId: 'getAdminSessions' })
+  @ApiOkResponse({ type: AdminRO })
+  @ApiParam({
+    type: String,
+    name: 'id',
+    description: 'Admin id',
+    example: faker.database.mongodbObjectId(),
+  })
+  @Get('/:id/sessions')
+  async getAdminSessions(@Param('id', ParseObjectIdPipe) id: string): Promise<any> {
+    return await this._queryBus.execute(new GetOwnerTokensQuery(id));
   }
 }
