@@ -17,6 +17,7 @@ import { StorageModule } from '../../../infrastructure/storage/storage.module';
 import { PlaylistsModule } from './controllers/playlists/playlists.module';
 import { SearchModule } from './controllers/search/search.module';
 import { LoginModule } from './controllers/login/login.module';
+import { SessionModule } from './controllers/session/session.module';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { LoginModule } from './controllers/login/login.module';
     TracksModule,
     PlaylistsModule,
     SearchModule,
+    SessionModule,
   ],
 })
 export class AdminAppModule {}
