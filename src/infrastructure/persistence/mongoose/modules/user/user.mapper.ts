@@ -55,6 +55,7 @@ class UserMapper implements WriteMapper<User, DomainUser>, ReadMapper<User, User
     return new UserDTO(
       doc._id.toHexString() as UserId,
       doc.username,
+      doc.password,
       doc.name,
       doc.email,
       doc.birthDate,

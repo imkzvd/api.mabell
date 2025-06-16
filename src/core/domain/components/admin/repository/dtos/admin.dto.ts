@@ -5,6 +5,7 @@ export class AdminDTO {
   constructor(
     public readonly id: AdminId,
     public readonly username: string,
+    public readonly password: string,
     public readonly name: string,
     public readonly isBlocked: boolean,
     public readonly role: AdminRole,

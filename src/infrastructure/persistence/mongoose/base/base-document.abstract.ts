@@ -12,5 +12,5 @@ export abstract class BaseDocument {
   public readonly createdAt: Date;
 
   @Prop({ required: false, type: Date, default: () => new Date() })
-  public readonly updatedAt: Date;
+  public readonly updatedAt?: Date;
 }

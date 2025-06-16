@@ -7,6 +7,8 @@ export const ADMIN_READ_REPOSITORY_DI_TOKEN = Symbol('ADMIN_READ_REPOSITORY_DI_T
 export interface AdminReadRepository {
   findById(id: string): Promise<AdminDTO | null>;
 
+  findByUsername(username: string): Promise<AdminDTO | null>;
+
   find(
     options?: Partial<{
       pagination: OffsetLimitPaginationDTO;

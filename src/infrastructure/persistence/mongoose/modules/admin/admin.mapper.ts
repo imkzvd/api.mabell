@@ -39,6 +39,7 @@ class AdminMapper implements WriteMapper<Admin, DomainEntity>, ReadMapper<Admin,
     return new AdminDTO(
       doc._id.toHexString() as AdminId,
       doc.username,
+      doc.password,
       doc.name,
       doc.isBlocked,
       doc.role,

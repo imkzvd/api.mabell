@@ -9,4 +9,6 @@ export interface UserReadRepository {
       isPublic: boolean;
     }>,
   ): Promise<UserDTO | null>;
+
+  findByUsername(username: string): Promise<UserDTO | null>;
 }
