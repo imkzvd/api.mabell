@@ -27,6 +27,8 @@ import { AdminCreatedEvent } from '../../common/events/admin-created.event';
 import { AdminUpdatedEvent } from '../../common/events/admin-updated.event';
 import { AdminDeletedEvent } from '../../common/events/admin-deleted.event';
 import { AdminPasswordRefreshedEvent } from '../../common/events/admin-password-refreshed.event';
+import { AdminBlockedEvent } from '../../common/events/admin-blocked.event';
+import { AdminUnblockedEvent } from '../../common/events/admin-unblocked.event';
 
 export class AdminService {
   constructor(
@@ -79,6 +81,12 @@ export class AdminService {
 
     if (typeof payload.isBlocked === 'boolean') {
       foundAdmin.updateBlockedStatus(payload.isBlocked);
+
+      this._EB.publish(
+        payload.isBlocked
+          ? new AdminBlockedEvent({ id: foundAdmin.getId() })
+          : new AdminUnblockedEvent({ id: foundAdmin.getId() }),
+      );
     }
 
     await this._wr.save(foundAdmin);
