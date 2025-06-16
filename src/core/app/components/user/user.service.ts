@@ -204,7 +204,7 @@ export class UserService {
 
     const isValidPassword = await this._passwordService.validate(
       payload.password,
-      foundUser.getPassword(),
+      foundUser.getPassword().value,
     );
 
     if (!isValidPassword) {

@@ -16,6 +16,8 @@ import { InMemoryEventBusModule } from '../../../infrastructure/event-bus/in-mem
 import { StorageModule } from '../../../infrastructure/storage/storage.module';
 import { PlaylistsModule } from './controllers/playlists/playlists.module';
 import { SearchModule } from './controllers/search/search.module';
+import { LoginModule } from './controllers/login/login.module';
+import { SessionModule } from './controllers/session/session.module';
 
 @Module({
   imports: [
@@ -33,6 +35,7 @@ import { SearchModule } from './controllers/search/search.module';
     InMemoryEventBusModule,
     StorageModule,
     IdModule,
+    LoginModule,
     MetadataModule,
     UploadsModule,
     AdminsModule,
@@ -42,6 +45,7 @@ import { SearchModule } from './controllers/search/search.module';
     TracksModule,
     PlaylistsModule,
     SearchModule,
+    SessionModule,
   ],
 })
 export class AdminAppModule {}

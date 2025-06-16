@@ -9,6 +9,7 @@ import { ArtistsModule } from './controllers/artists/artists.module';
 import { IdModule } from '../../../infrastructure/services/id/id.module';
 import { StorageModule } from '../../../infrastructure/storage/storage.module';
 import { InMemoryEventBusModule } from '../../../infrastructure/event-bus/in-memory-event-bus/in-memory-event-bus.module';
+import { LoginModule } from './controllers/login/login.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { InMemoryEventBusModule } from '../../../infrastructure/event-bus/in-mem
     InMemoryEventBusModule,
     StorageModule,
     MongooseModule,
+    LoginModule,
     UsersModule,
     ArtistsModule,
   ],

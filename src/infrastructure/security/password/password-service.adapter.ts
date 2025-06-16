@@ -42,7 +42,7 @@ export class PasswordServiceAdapter implements PasswordService {
     return HashedPasswordVO.create(hashPassword);
   }
 
-  validate(password: string, hashedPassword: HashedPasswordVO): Promise<boolean> {
-    return bcrypt.compare(password, hashedPassword.value);
+  validate(password: string, hashedPassword: string): Promise<boolean> {
+    return bcrypt.compare(password, hashedPassword);
   }
 }
