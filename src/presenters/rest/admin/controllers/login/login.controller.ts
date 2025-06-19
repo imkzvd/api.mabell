@@ -7,8 +7,11 @@ import { LoginAdminCommand } from '../../../../../core/app/cqrs/admin/commands/l
 import { LoginAdminDTO } from './dtos/login-admin.dto';
 import { CreateAdminAccessTokenCommand } from '../../../../../core/app/cqrs/token/commands/create-admin-access-token/create-admin-access-token.command';
 import { CreateAdminRefreshTokenCommand } from '../../../../../core/app/cqrs/token/commands/create-admin-refresh-token/create-admin-refresh-token.command';
+import { ACCESS_TOKEN_COOKIE_NAME, REFRESH_TOKEN_COOKIE_NAME } from '../../constants';
+import { IsPublic } from '../../decorators/is-public.decorator';
 
 @ApiTags('Login')
+@IsPublic()
 @Controller('/login')
 export class LoginController {
   constructor(private readonly _commandBus: CommandBus) {}
@@ -24,7 +27,7 @@ export class LoginController {
     @Res({ passthrough: true }) res: Response,
   ): Promise<void> {
     const userAgent = req.headers['user-agent'] as string;
-    const userIp = req.ip as string;
+    const userIp = req.headers['x-real-ip'] as string;
 
     const loggedAdminId = await this._commandBus.execute(new LoginAdminCommand(dto));
     const accessToken = await this._commandBus.execute(
@@ -38,7 +41,7 @@ export class LoginController {
       }),
     );
 
-    res.cookie('accessToken', accessToken, {
+    res.cookie(ACCESS_TOKEN_COOKIE_NAME, accessToken, {
       httpOnly: true,
       sameSite: true,
       maxAge:
@@ -47,7 +50,7 @@ export class LoginController {
           : 300) * 1000,
     });
 
-    res.cookie('refreshToken', refreshToken, {
+    res.cookie(REFRESH_TOKEN_COOKIE_NAME, refreshToken, {
       httpOnly: true,
       sameSite: true,
       maxAge:

@@ -41,8 +41,11 @@ import { UpdateAlbumCoverCommand } from '../../../../../core/app/cqrs/album/comm
 import { DeleteAlbumCoverCommand } from '../../../../../core/app/cqrs/album/commands/delete-album-cover/delete-album-cover.command';
 import { DeleteAlbumCommand } from '../../../../../core/app/cqrs/album/commands/delete-album/delete-album.command';
 import { GetAlbumTracksQuery } from '../../../../../core/app/cqrs/track/queries/get-album-tracks/get-album-tracks.query';
+import { Roles } from '../../decorators/roles.decorator';
+import { AdminRoles } from '../../../../../core/domain/components/admin/constants/admin-roles';
 
 @ApiTags('Albums')
+@Roles(AdminRoles.Owner, AdminRoles.Admin)
 @Controller({ path: '/albums' })
 export class AlbumsController {
   constructor(
@@ -182,6 +185,7 @@ export class AlbumsController {
     description: 'Id',
     example: faker.database.mongodbObjectId(),
   })
+  @Roles(AdminRoles.Guest)
   @ApiOkResponse({ description: 'Album', type: AlbumRO })
   @Get('/:id')
   async getAlbum(@Param('id', ParseObjectIdPipe) id: string): Promise<AlbumRO> {
@@ -204,6 +208,7 @@ export class AlbumsController {
   @ApiQuery({ required: false, type: Number, name: 'limit', description: 'Limit', example: 50 })
   @ApiQuery({ required: false, type: Number, name: 'offset', description: 'Offset', example: 0 })
   @ApiOkResponse({ description: 'Album tracks', type: TracksRO })
+  @Roles(AdminRoles.Guest)
   @Get('/:id/tracks')
   async getAlbumTracks(
     @Param('id', ParseObjectIdPipe) id: string,
