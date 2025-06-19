@@ -7,7 +7,7 @@ import { ArtistModule } from './modules/artist/artist.module';
 import { AlbumModule } from './modules/album/album.module';
 import { TrackModule } from './modules/track/track.module';
 import { PlaylistModule } from './modules/playlist/playlist.module';
-import { RefreshTokenModule } from './modules/refresh-token/refresh-token.module';
+import { AdminRefreshTokenModule } from './modules/admin-refresh-token/admin-refresh-token.module';
 
 @Global()
 @Module({
@@ -21,7 +21,7 @@ import { RefreshTokenModule } from './modules/refresh-token/refresh-token.module
     AlbumModule,
     TrackModule,
     PlaylistModule,
-    RefreshTokenModule,
+    AdminRefreshTokenModule,
   ],
   exports: [
     AdminModule,
@@ -30,7 +30,7 @@ import { RefreshTokenModule } from './modules/refresh-token/refresh-token.module
     AlbumModule,
     TrackModule,
     PlaylistModule,
-    RefreshTokenModule,
+    AdminRefreshTokenModule,
   ],
 })
 export class MongooseModule {}
