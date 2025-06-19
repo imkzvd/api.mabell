@@ -1,8 +1,9 @@
-import { Command } from '@nestjs/cqrs';
+import { Query } from '@nestjs/cqrs';
 
-export class CreateAdminRefreshTokenCommand extends Command<string> {
+export class ValidateRefreshTokenQuery extends Query<boolean> {
   constructor(
     public readonly payload: {
+      tokenId: string;
       adminId: string;
       ip: string;
       userAgent: string;
