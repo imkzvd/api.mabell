@@ -22,6 +22,7 @@ import { SessionModule } from './controllers/session/session.module';
 import { AccessTokenStrategy } from './strategies/access-token.strategy';
 import { AccessTokenGuard } from './guards/access-token.guard';
 import { RolesGuard } from './guards/roles.guard';
+import { MeModule } from './controllers/me/me.module';
 
 @Module({
   imports: [
@@ -40,8 +41,7 @@ import { RolesGuard } from './guards/roles.guard';
     StorageModule,
     IdModule,
     AuthModule,
-    MetadataModule,
-    UploadsModule,
+    MeModule,
     AdminsModule,
     UsersModule,
     ArtistsModule,
@@ -50,6 +50,8 @@ import { RolesGuard } from './guards/roles.guard';
     PlaylistsModule,
     SearchModule,
     SessionModule,
+    UploadsModule,
+    MetadataModule,
   ],
   providers: [
     AccessTokenStrategy,
