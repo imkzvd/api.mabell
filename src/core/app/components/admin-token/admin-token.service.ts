@@ -12,11 +12,11 @@ import {
   ADMIN_REFRESH_TOKEN_READ_REPOSITORY_DI_TOKEN,
   AdminRefreshTokenReadRepository,
 } from '../../../domain/components/admin-refresh-token/repository/admin-refresh-token-read-repository.port';
-import { NotFoundException, UnauthorizedException } from '../../../shared/exceptions';
 import {
   AccessTokenCustomPayload,
   CreateAccessTokenPayload,
   CreateRefreshTokenPayload,
+  RefreshTokenPayload,
 } from './types';
 import { AdminRefreshTokenDTO } from './dtos/admin-refresh-token.dto';
 import AdminRefreshTokenMapper from './dtos/admin-refresh-token.mapper';
@@ -72,33 +72,42 @@ export class AdminTokenService {
   }
 
   async validateRefreshToken(payload: {
-    tokenId: string;
-    adminId: string;
+    token: string;
     ip: string;
     userAgent: string;
-  }): Promise<boolean> {
-    const foundRefreshToken = await this._RR.findById(payload.tokenId);
+  }): Promise<AdminRefreshTokenDTO | null> {
+    const refreshTokenPayload = this._JWTService.decode<RefreshTokenPayload>(
+      payload.token,
+      process.env.REFRESH_TOKEN_SECRET || 'refreshSecret',
+    );
+
+    if (!refreshTokenPayload) {
+      return null;
+    }
+
+    const foundRefreshToken = await this._RR.findById(refreshTokenPayload.jti);
 
     if (
       !foundRefreshToken ||
-      foundRefreshToken.owner !== payload.adminId ||
+      foundRefreshToken.owner !== refreshTokenPayload.sub ||
       foundRefreshToken.ip !== payload.ip ||
       foundRefreshToken.userAgent !== payload.userAgent
     ) {
-      throw new UnauthorizedException();
+      return null;
     }
 
-    return true;
+    return AdminRefreshTokenMapper.toDTO(foundRefreshToken);
   }
 
-  async deleteRefreshToken(id: string): Promise<AdminRefreshTokenId> {
-    const deletedRefreshTokenId = await this._WR.deleteById(id);
+  async deleteRefreshToken(token: string): Promise<void> {
+    const tokenPayload = this._JWTService.decode<RefreshTokenPayload>(
+      token,
+      process.env.REFRESH_TOKEN_SECRET || 'refreshSecret',
+    );
 
-    if (!deletedRefreshTokenId) {
-      throw new NotFoundException('Token does not exist');
-    }
+    if (!tokenPayload) return;
 
-    return deletedRefreshTokenId;
+    await this._WR.deleteById(tokenPayload.jti);
   }
 
   async deleteRefreshTokensByAdminId(id: string): Promise<void> {
