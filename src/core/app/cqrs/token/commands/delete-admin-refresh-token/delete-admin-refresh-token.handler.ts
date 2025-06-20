@@ -9,7 +9,7 @@ export class DeleteAdminRefreshTokenHandler
 {
   constructor(@Inject(AdminTokenService) private readonly _adminTokenService: AdminTokenService) {}
 
-  async execute({ id }: DeleteAdminRefreshTokenCommand) {
-    return await this._adminTokenService.deleteRefreshToken(id);
+  async execute({ token }: DeleteAdminRefreshTokenCommand) {
+    await this._adminTokenService.deleteRefreshToken(token);
   }
 }

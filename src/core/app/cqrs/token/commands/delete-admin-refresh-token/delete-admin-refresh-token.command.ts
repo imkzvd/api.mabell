@@ -1,8 +1,7 @@
 import { Command } from '@nestjs/cqrs';
-import { AdminRefreshTokenId } from '../../../../../domain/components/admin-refresh-token/types';
 
-export class DeleteAdminRefreshTokenCommand extends Command<AdminRefreshTokenId> {
-  constructor(public readonly id: string) {
+export class DeleteAdminRefreshTokenCommand extends Command<void> {
+  constructor(public readonly token: string) {
     super();
   }
 }
