@@ -16,7 +16,7 @@ import { InMemoryEventBusModule } from '../../../infrastructure/event-bus/in-mem
 import { StorageModule } from '../../../infrastructure/storage/storage.module';
 import { PlaylistsModule } from './controllers/playlists/playlists.module';
 import { SearchModule } from './controllers/search/search.module';
-import { LoginModule } from './controllers/login/login.module';
+import { AuthModule } from './controllers/auth/auth.module';
 import { SessionModule } from './controllers/session/session.module';
 
 @Module({
@@ -35,7 +35,7 @@ import { SessionModule } from './controllers/session/session.module';
     InMemoryEventBusModule,
     StorageModule,
     IdModule,
-    LoginModule,
+    AuthModule,
     MetadataModule,
     UploadsModule,
     AdminsModule,
