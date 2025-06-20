@@ -13,8 +13,11 @@ import { GetTracksQuery } from '../../../../../core/app/components/search/querie
 import { IndexedPlaylistRO } from './ros/indexed-playlist.ro';
 import { GetPlaylistsQuery } from '../../../../../core/app/components/search/queries/get-playlists/get-playlists.query';
 import { GetItemsQuery } from '../../../../../core/app/components/search/queries/get-items/get-items.query';
+import { Roles } from '../../decorators/roles.decorator';
+import { AdminRoles } from '../../../../../core/domain/components/admin/constants/admin-roles';
 
 @ApiTags('Search')
+@Roles(AdminRoles.Owner, AdminRoles.Admin, AdminRoles.Guest)
 @Controller('/search')
 export class SearchController {
   constructor(private readonly _queryBus: QueryBus) {}

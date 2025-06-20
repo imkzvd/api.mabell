@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { ConfigModule } from '@nestjs/config';
+import { APP_GUARD } from '@nestjs/core';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import * as path from 'path';
 import { MongooseModule } from '../../../infrastructure/persistence/mongoose/mongoose.module';
@@ -16,8 +17,11 @@ import { InMemoryEventBusModule } from '../../../infrastructure/event-bus/in-mem
 import { StorageModule } from '../../../infrastructure/storage/storage.module';
 import { PlaylistsModule } from './controllers/playlists/playlists.module';
 import { SearchModule } from './controllers/search/search.module';
-import { LoginModule } from './controllers/login/login.module';
+import { AuthModule } from './controllers/auth/auth.module';
 import { SessionModule } from './controllers/session/session.module';
+import { AccessTokenStrategy } from './strategies/access-token.strategy';
+import { AccessTokenGuard } from './guards/access-token.guard';
+import { RolesGuard } from './guards/roles.guard';
 
 @Module({
   imports: [
@@ -35,7 +39,7 @@ import { SessionModule } from './controllers/session/session.module';
     InMemoryEventBusModule,
     StorageModule,
     IdModule,
-    LoginModule,
+    AuthModule,
     MetadataModule,
     UploadsModule,
     AdminsModule,
@@ -46,6 +50,17 @@ import { SessionModule } from './controllers/session/session.module';
     PlaylistsModule,
     SearchModule,
     SessionModule,
+  ],
+  providers: [
+    AccessTokenStrategy,
+    {
+      provide: APP_GUARD,
+      useClass: AccessTokenGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
   ],
 })
 export class AdminAppModule {}

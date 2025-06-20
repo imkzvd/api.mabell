@@ -42,8 +42,11 @@ import { DeleteArtistCoverCommand } from '../../../../../core/app/cqrs/artist/co
 import { DeleteArtistCommand } from '../../../../../core/app/cqrs/artist/commands/delete-artist/delete-artist.command';
 import { GetArtistAlbumsQuery } from '../../../../../core/app/cqrs/album/queries/get-artist-albums/get-artist-albums.query';
 import { GetArtistTracksQuery } from '../../../../../core/app/cqrs/track/queries/get-artist-tracks/get-artist-tracks.query';
+import { Roles } from '../../decorators/roles.decorator';
+import { AdminRoles } from '../../../../../core/domain/components/admin/constants/admin-roles';
 
 @ApiTags('Artists')
+@Roles(AdminRoles.Owner, AdminRoles.Admin)
 @Controller({ path: '/artists' })
 export class ArtistsController {
   constructor(
@@ -214,6 +217,7 @@ export class ArtistsController {
     example: faker.database.mongodbObjectId(),
   })
   @ApiOkResponse({ description: 'Artist', type: ArtistRO })
+  @Roles(AdminRoles.Guest)
   @Get('/:id')
   async getArtist(@Param('id', ParseObjectIdPipe) id: string): Promise<ArtistRO> {
     const foundArtist = await this._queryBus.execute(new GetArtistQuery(id));
@@ -235,6 +239,7 @@ export class ArtistsController {
   @ApiQuery({ required: false, type: Number, name: 'limit', description: 'Limit', example: 50 })
   @ApiQuery({ required: false, type: Number, name: 'offset', description: 'Offset', example: 0 })
   @ApiOkResponse({ description: 'Artist albums', type: AlbumsRO })
+  @Roles(AdminRoles.Guest)
   @Get('/:id/albums')
   async getArtistAlbums(
     @Param('id', ParseObjectIdPipe) id: string,
@@ -258,6 +263,7 @@ export class ArtistsController {
   @ApiQuery({ required: false, type: Number, name: 'limit', description: 'Limit', example: 50 })
   @ApiQuery({ required: false, type: Number, name: 'offset', description: 'Offset', example: 0 })
   @ApiOkResponse({ description: 'Artist tracks', type: TracksRO })
+  @Roles(AdminRoles.Guest)
   @Get('/:id/tracks')
   async getArtistTracks(
     @Param('id', ParseObjectIdPipe) id: string,

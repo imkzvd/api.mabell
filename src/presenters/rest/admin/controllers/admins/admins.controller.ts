@@ -39,9 +39,12 @@ import { UpdateAdminUsernameCommand } from '../../../../../core/app/cqrs/admin/c
 import { RefreshAdminPasswordCommand } from '../../../../../core/app/cqrs/admin/commands/refresh-admin-password/refresh-admin-password.command';
 import { DeleteAdminCommand } from '../../../../../core/app/cqrs/admin/commands/delete-admin/delete-admin.command';
 import { GetAdminsQuery } from '../../../../../core/app/cqrs/admin/queries/get-admins/get-admins.query';
-import { GetOwnerTokensQuery } from '../../../../../core/app/cqrs/token/queries/get-owner-tokens/get-owner-tokens.query';
+import { GetAdminTokensQuery } from '../../../../../core/app/cqrs/token/queries/get-admin-tokens/get-admin-tokens.query';
+import { Roles } from '../../decorators/roles.decorator';
+import { AdminRoles } from '../../../../../core/domain/components/admin/constants/admin-roles';
 
 @ApiTags('Admins')
+@Roles(AdminRoles.Owner)
 @Controller('/admins')
 export class AdminsController {
   constructor(
@@ -203,6 +206,6 @@ export class AdminsController {
   })
   @Get('/:id/sessions')
   async getAdminSessions(@Param('id', ParseObjectIdPipe) id: string): Promise<any> {
-    return await this._queryBus.execute(new GetOwnerTokensQuery(id));
+    return await this._queryBus.execute(new GetAdminTokensQuery(id));
   }
 }

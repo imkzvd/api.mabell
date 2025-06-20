@@ -9,15 +9,15 @@ import { RefreshAdminPasswordHandler } from '../../../../../core/app/cqrs/admin/
 import { DeleteAdminHandler } from '../../../../../core/app/cqrs/admin/commands/delete-admin/delete-admin.handler';
 import { GetAdminsHandler } from '../../../../../core/app/cqrs/admin/queries/get-admins/get-admins.handler';
 import { GetAdminHandler } from '../../../../../core/app/cqrs/admin/queries/get-admin/get-admin.handler';
-import { GetOwnerTokensHandler } from '../../../../../core/app/cqrs/token/queries/get-owner-tokens/get-owner-tokens.handler';
-import { TokenService } from '../../../../../core/app/components/token/token.service';
+import { GetAdminTokensHandler } from '../../../../../core/app/cqrs/token/queries/get-admin-tokens/get-admin-tokens.handler';
+import { AdminTokenService } from '../../../../../core/app/components/admin-token/admin-token.service';
 import { JWTModule } from '../../../../../infrastructure/security/jwt/jwt.module';
 
 @Module({
   imports: [PasswordModule, JWTModule],
   providers: [
     AdminService,
-    TokenService,
+    AdminTokenService,
     CreateAdminHandler,
     UpdateAdminHandler,
     UpdateAdminUsernameHandler,
@@ -25,7 +25,7 @@ import { JWTModule } from '../../../../../infrastructure/security/jwt/jwt.module
     DeleteAdminHandler,
     GetAdminsHandler,
     GetAdminHandler,
-    GetOwnerTokensHandler,
+    GetAdminTokensHandler,
   ],
   controllers: [AdminsController],
 })

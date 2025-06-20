@@ -1,7 +1,7 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
 import { CreateAdminAccessTokenCommand } from './create-admin-access-token.command';
-import { TokenService } from '../../../../components/token/token.service';
+import { AdminTokenService } from '../../../../components/admin-token/admin-token.service';
 import { AdminService } from '../../../../components/admin/admin.service';
 import { UnauthorizedException } from '../../../../../shared/exceptions';
 
@@ -11,7 +11,7 @@ export class CreateAdminAccessTokenHandler
 {
   constructor(
     @Inject(AdminService) private readonly _adminService: AdminService,
-    @Inject(TokenService) private readonly _tokenService: TokenService,
+    @Inject(AdminTokenService) private readonly _adminTokenService: AdminTokenService,
   ) {}
 
   async execute({ adminId }: CreateAdminAccessTokenCommand) {
@@ -21,7 +21,7 @@ export class CreateAdminAccessTokenHandler
       throw new UnauthorizedException();
     }
 
-    return this._tokenService.createAdminAccessToken({
+    return this._adminTokenService.createAccessToken({
       adminId: foundAdmin.id,
       role: foundAdmin.role,
     });

@@ -27,8 +27,11 @@ import { UploadFileCommand } from '../../../../../core/app/cqrs/upload/commands/
 import { GetFileQuery } from '../../../../../core/app/cqrs/upload/queries/get-file/get-file.query';
 import { DeleteFileCommand } from '../../../../../core/app/cqrs/upload/commands/delete-file/delete-file.command';
 import { DeleteAllFilesCommand } from '../../../../../core/app/cqrs/upload/commands/delete-all-files/delete-all-files.command';
+import { Roles } from '../../decorators/roles.decorator';
+import { AdminRoles } from '../../../../../core/domain/components/admin/constants/admin-roles';
 
 @ApiTags('Uploads')
+@Roles(AdminRoles.Owner, AdminRoles.Admin)
 @Controller('/uploads')
 export class UploadsController {
   constructor(

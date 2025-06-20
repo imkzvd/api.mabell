@@ -42,8 +42,11 @@ import { AddTrackInPlaylistCommand } from '../../../../../core/app/cqrs/playlist
 import { DeleteTrackFromPlaylistCommand } from '../../../../../core/app/cqrs/playlist/commands/delete-track-from-playlist/delete-track-from-playlist.command';
 import { PlaylistTracksRO } from '../tracks/ros/playlist-tracks.ro';
 import { GetPlaylistTracksQuery } from '../../../../../core/app/cqrs/track/queries/get-playlist-tracks/get-playlist-tracks.query';
+import { Roles } from '../../decorators/roles.decorator';
+import { AdminRoles } from '../../../../../core/domain/components/admin/constants/admin-roles';
 
 @ApiTags('Playlists')
+@Roles(AdminRoles.Owner, AdminRoles.Admin)
 @Controller({ path: '/playlists' })
 export class PlaylistsController {
   constructor(
@@ -206,6 +209,7 @@ export class PlaylistsController {
     description: 'Id',
     example: faker.database.mongodbObjectId(),
   })
+  @Roles(AdminRoles.Guest)
   @ApiOkResponse({ description: 'Playlist', type: PlaylistRO })
   @Get('/:id')
   async getPlaylist(@Param('id', ParseObjectIdPipe) id: string): Promise<PlaylistRO> {
@@ -228,6 +232,7 @@ export class PlaylistsController {
   @ApiQuery({ required: false, type: String, name: 'limit', description: 'Limit', example: 50 })
   @ApiQuery({ required: false, type: String, name: 'offset', description: 'Offset', example: 0 })
   @ApiOkResponse({ description: 'Playlist tracks', type: PlaylistTracksRO })
+  @Roles(AdminRoles.Guest)
   @Get('/:id/tracks')
   async getPlaylistTracks(
     @Param('id', ParseObjectIdPipe) id: string,

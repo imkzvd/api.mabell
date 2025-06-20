@@ -1,0 +1,38 @@
+import { Schema, Types } from 'mongoose';
+import * as process from 'process';
+import { Schema as SchemaDecorator } from '@nestjs/mongoose/dist/decorators/schema.decorator';
+import { Prop, SchemaFactory } from '@nestjs/mongoose';
+
+@SchemaDecorator({
+  versionKey: false,
+  timestamps: { updatedAt: false },
+  collection: 'admin-refresh-tokens',
+})
+export class AdminRefreshToken {
+  @Prop({ required: true, type: Schema.Types.ObjectId })
+  public readonly _id: Types.ObjectId;
+
+  @Prop({ required: true, type: String })
+  public readonly owner: string;
+
+  @Prop({ required: true, type: String })
+  public readonly role: string;
+
+  @Prop({ required: true, type: String })
+  public readonly ip: string;
+
+  @Prop({ required: true, type: String })
+  public readonly userAgent: string;
+
+  @Prop({
+    required: false,
+    type: Date,
+    default: Date.now(),
+    expires: process.env.REFRESH_TOKEN_EXPIRATION
+      ? parseInt(process.env.REFRESH_TOKEN_EXPIRATION)
+      : 86400,
+  })
+  public readonly createdAt: Date;
+}
+
+export const AdminRefreshTokenSchema = SchemaFactory.createForClass(AdminRefreshToken);

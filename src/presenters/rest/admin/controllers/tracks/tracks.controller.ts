@@ -35,8 +35,11 @@ import { UpdateTrackFeatArtistsCommand } from '../../../../../core/app/cqrs/trac
 import { UpdateTrackFileCommand } from '../../../../../core/app/cqrs/track/commands/update-track-file/update-track-file.command';
 import { DeleteTrackFileCommand } from '../../../../../core/app/cqrs/track/commands/delete-track-file/delete-track-file.command';
 import { DeleteTrackCommand } from '../../../../../core/app/cqrs/track/commands/delete-track/delete-track.command';
+import { Roles } from '../../decorators/roles.decorator';
+import { AdminRoles } from '../../../../../core/domain/components/admin/constants/admin-roles';
 
 @ApiTags('Tracks')
+@Roles(AdminRoles.Owner, AdminRoles.Admin)
 @Controller({ path: '/tracks' })
 export class TracksController {
   constructor(
@@ -177,6 +180,7 @@ export class TracksController {
     example: faker.database.mongodbObjectId(),
   })
   @ApiOkResponse({ description: 'Track', type: TrackRO })
+  @Roles(AdminRoles.Guest)
   @Get('/:id')
   async getTrack(@Param('id', ParseObjectIdPipe) id: string): Promise<TrackRO> {
     const foundTrack = await this._queryBus.execute(new GetTrackQuery(id));

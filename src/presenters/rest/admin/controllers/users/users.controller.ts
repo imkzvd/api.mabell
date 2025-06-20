@@ -37,8 +37,11 @@ import { UpdateUserAvatarCommand } from '../../../../../core/app/cqrs/user/comma
 import { RefreshUserPasswordCommand } from '../../../../../core/app/cqrs/user/commands/refresh-user-password/refresh-user-password.command';
 import { DeleteUserAvatarCommand } from '../../../../../core/app/cqrs/user/commands/delete-user-avatar/delete-user-avatar.command';
 import { DeleteUserCommand } from '../../../../../core/app/cqrs/user/commands/delete-user/delete-user.command';
+import { Roles } from '../../decorators/roles.decorator';
+import { AdminRoles } from '../../../../../core/domain/components/admin/constants/admin-roles';
 
 @ApiTags('Users')
+@Roles(AdminRoles.Owner, AdminRoles.Admin)
 @Controller({ path: '/users' })
 export class UsersController {
   constructor(
@@ -222,6 +225,7 @@ export class UsersController {
     example: faker.database.mongodbObjectId(),
   })
   @ApiOkResponse({ description: 'User', type: UserRO })
+  @Roles(AdminRoles.Guest)
   @Get('/:id')
   async getUser(@Param('id', ParseObjectIdPipe) id: string): Promise<UserRO> {
     const foundUser = await this._queryBus.execute(new GetUserQuery(id));
