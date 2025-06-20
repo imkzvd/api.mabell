@@ -1,9 +1,10 @@
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as cookieParser from 'cookie-parser';
-import { AdminAppModule } from './presenters/rest/admin/app.module';
 import { ValidationPipe } from '@nestjs/common';
+import { AdminAppModule } from './presenters/rest/admin/app.module';
 import { ClientAppModule } from './presenters/rest/client/app.module';
+import { HttpExceptionFilter } from './presenters/rest/common/filters/http-exception.filter';
 
 async function runAdminApp() {
   const app = await NestFactory.create(AdminAppModule);
@@ -23,6 +24,7 @@ async function runAdminApp() {
       skipNullProperties: true,
     }),
   );
+  app.useGlobalFilters(new HttpExceptionFilter());
 
   await app.listen(process.env.ADMIN_APP_PORT ?? 3000);
 }
@@ -45,6 +47,7 @@ async function runClientApp() {
       skipNullProperties: true,
     }),
   );
+  app.useGlobalFilters(new HttpExceptionFilter());
 
   await app.listen(process.env.CLIENT_APP_PORT ?? 4000);
 }
