@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as cookieParser from 'cookie-parser';
+import * as process from 'process';
 import { ValidationPipe } from '@nestjs/common';
 import { AdminAppModule } from './presenters/rest/admin/app.module';
 import { ClientAppModule } from './presenters/rest/client/app.module';
@@ -17,6 +18,10 @@ async function runAdminApp() {
   const documentFactory = () => SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('swagger', app, documentFactory);
 
+  app.enableCors({
+    origin: [process.env.ADMIN_PANEL_ORIGIN],
+    credentials: true,
+  });
   app.use(cookieParser());
   app.useGlobalPipes(
     new ValidationPipe({
