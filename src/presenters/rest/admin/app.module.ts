@@ -23,9 +23,19 @@ import { AccessTokenStrategy } from './strategies/access-token.strategy';
 import { AccessTokenGuard } from './guards/access-token.guard';
 import { RolesGuard } from './guards/roles.guard';
 import { MeModule } from './controllers/me/me.module';
+import appConfig from './config/app.config';
+import corsConfig from './config/cors.config';
+import databaseConfig from './config/database.config';
+import jwtConfig from './config/jwt.config';
+import mailConfig from './config/mail.config';
+import redisConfig from './config/redis.config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      load: [appConfig, corsConfig, databaseConfig, jwtConfig, mailConfig, redisConfig],
+    }),
     ServeStaticModule.forRoot({
       rootPath: path.join(process.cwd(), 'tmp'),
       serveRoot: '/tmp',
@@ -34,7 +44,6 @@ import { MeModule } from './controllers/me/me.module';
       rootPath: path.join(process.cwd(), 'storages'),
       serveRoot: '/storages',
     }),
-    ConfigModule.forRoot(),
     CqrsModule.forRoot(),
     MongooseModule,
     InMemoryEventBusModule,
