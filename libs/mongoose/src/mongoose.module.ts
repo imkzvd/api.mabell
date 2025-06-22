@@ -1,14 +1,14 @@
 import { Global, Module } from '@nestjs/common';
 import { MongooseModule as MongooseNestModule } from '@nestjs/mongoose';
 import { ConfigService } from '@nestjs/config';
-import { AdminModule } from './modules/admin/admin.module';
-import { UserModule } from './modules/user/user.module';
-import { ArtistModule } from './modules/artist/artist.module';
-import { AlbumModule } from './modules/album/album.module';
-import { TrackModule } from './modules/track/track.module';
-import { PlaylistModule } from './modules/playlist/playlist.module';
-import { AdminRefreshTokenModule } from './modules/admin-refresh-token/admin-refresh-token.module';
-import { UserRefreshTokenModule } from './modules/user-refresh-token/user-refresh-token.module';
+import { AdminModule } from 'infrastructure/mongoose/services/admin/admin.module';
+import { UserModule } from 'infrastructure/mongoose/services/user/user.module';
+import { ArtistModule } from 'infrastructure/mongoose/services/artist/artist.module';
+import { AlbumModule } from 'infrastructure/mongoose/services/album/album.module';
+import { TrackModule } from 'infrastructure/mongoose/services/track/track.module';
+import { PlaylistModule } from 'infrastructure/mongoose/services/playlist/playlist.module';
+import { AdminRefreshTokenModule } from 'infrastructure/mongoose/services/admin-refresh-token/admin-refresh-token.module';
+import { UserRefreshTokenModule } from 'infrastructure/mongoose/services/user-refresh-token/user-refresh-token.module';
 
 @Global()
 @Module({
