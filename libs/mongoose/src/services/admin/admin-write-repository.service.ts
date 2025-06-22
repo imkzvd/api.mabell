@@ -9,7 +9,7 @@ import { AdminDocument } from './types';
 import { AdminId } from '../../../../../core/domain/components/admin/types';
 
 @Injectable()
-export class AdminWriteRepositoryAdapter implements AdminWriteRepository {
+export class AdminWriteRepositoryServices implements AdminWriteRepository {
   constructor(
     @InjectModel(Admin.name)
     private readonly _adminModel: Model<AdminDocument>,

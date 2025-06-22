@@ -9,7 +9,7 @@ import RefreshTokenMapper from './admin-refresh-token.mapper';
 import { AdminRefreshTokenId } from '../../../../../core/domain/components/admin-refresh-token/types';
 
 @Injectable()
-export class AdminRefreshTokenWriteRepositoryAdapter implements AdminRefreshTokenWriteRepository {
+export class AdminRefreshTokenWriteRepositoryServices implements AdminRefreshTokenWriteRepository {
   constructor(
     @InjectModel(AdminRefreshToken.name) private readonly _model: Model<AdminRefreshTokenDocument>,
   ) {}

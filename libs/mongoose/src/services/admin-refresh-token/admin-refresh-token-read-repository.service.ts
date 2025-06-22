@@ -8,7 +8,7 @@ import { AdminRefreshTokenDTO } from '../../../../../core/domain/components/admi
 import AdminRefreshTokenMapper from './admin-refresh-token.mapper';
 
 @Injectable()
-export class AdminRefreshTokenReadRepositoryAdapter implements AdminRefreshTokenReadRepository {
+export class AdminRefreshTokenReadRepositoryServices implements AdminRefreshTokenReadRepository {
   constructor(
     @InjectModel(AdminRefreshToken.name) private readonly _model: Model<AdminRefreshTokenDocument>,
   ) {}

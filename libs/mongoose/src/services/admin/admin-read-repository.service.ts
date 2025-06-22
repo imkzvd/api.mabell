@@ -10,7 +10,7 @@ import { OffsetLimitPaginationDTO } from '../../../../../core/shared/dtos/offset
 import { OffsetLimitPaginationResponseDTO } from '../../../../../core/shared/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
 
 @Injectable()
-export class AdminReadRepositoryAdapter implements AdminReadRepository {
+export class AdminReadRepositoryServices implements AdminReadRepository {
   constructor(
     @InjectModel(Admin.name)
     private readonly _adminModel: Model<AdminDocument>,
