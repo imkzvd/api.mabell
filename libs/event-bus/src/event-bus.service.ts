@@ -1,13 +1,13 @@
 import { EventEmitter } from 'eventemitter3';
 import {
   Event,
-  EventBus,
+  EventBus as EventBusPort,
   EventConstructor,
   EventHandler,
   EventPayload,
-} from '../../../core/app/common/ports/event-bus.port';
+} from '../../../src/core/app/common/ports/event-bus.port';
 
-export class EventBusService implements EventBus {
+export class EventBus implements EventBusPort {
   private readonly emitter: EventEmitter;
 
   constructor() {
