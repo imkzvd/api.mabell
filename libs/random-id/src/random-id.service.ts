@@ -1,7 +1,7 @@
 import { Types } from 'mongoose';
-import { IdService as IdServicePort } from '../../../core/app/common/ports/id.service.port';
+import { IdService } from '../../../src/core/app/common/ports/id.service.port';
 
-export class IdService implements IdServicePort {
+export class RandomIdService implements IdService {
   generate(): string {
     return new Types.ObjectId().toHexString();
   }
