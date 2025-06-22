@@ -1,7 +1,7 @@
 import * as jwt from 'jsonwebtoken';
-import { JWTService } from '../../../core/app/common/ports/jwt.service.port';
+import { JWTService as JWTServicePort } from '../../../src/core/app/common/ports/jwt.service.port';
 
-export class JwtService implements JWTService {
+export class JWTService implements JWTServicePort {
   create<CustomPayload extends Record<string, any>>(options: {
     type: 'access' | 'refresh';
     subject: string;
