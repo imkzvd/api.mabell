@@ -1,13 +1,13 @@
 import { Types } from 'mongoose';
 import { ReadMapper, WriteMapper } from '../../base/mapper.interface';
 import { Album } from './album.schema';
-import { Album as DomainAlbum } from '../../../../../core/domain/components/album/album.entity';
-import { AlbumFactory } from '../../../../../core/domain/components/album/album.factory';
+import { Album as DomainAlbum } from '../../../../../src/core/domain/components/album/album.entity';
 import ArtistMapper from '../artist/artist.mapper';
 import { AlbumDocument, AlbumWithArtists, AlbumWithArtistsDocument } from './types';
-import { AlbumWithArtistsDTO } from '../../../../../core/domain/components/album/repository/dtos/album-with-artists.dto';
-import { AlbumId } from '../../../../../core/domain/components/album/types';
-import { ArtistId } from '../../../../../core/domain/components/artist/types';
+import { AlbumWithArtistsDTO } from '../../../../../src/core/domain/components/album/repository/dtos/album-with-artists.dto';
+import { AlbumFactory } from '../../../../../src/core/domain/components/album/album.factory';
+import { AlbumId } from '../../../../../src/core/domain/components/album/types';
+import { ArtistId } from '../../../../../src/core/domain/components/artist/types';
 
 class AlbumMapper
   implements

@@ -1,20 +1,12 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from './user.schema';
-import { UserWriteRepositoryAdapter } from './user-write-repository.adapter';
-import { UserReadRepositoryAdapter } from './user-read-repository.adapter';
-import { USER_WRITE_REPOSITORY_DI_TOKEN } from '../../../../../core/domain/components/user/repository/user-write-repository.port';
-import { USER_READ_REPOSITORY_DI_TOKEN } from '../../../../../core/domain/components/user/repository/user-read-repository.port';
+import { UserWriteRepository } from './user-write-repository.service';
+import { UserReadRepository } from './user-read-repository.service';
 
 @Module({
   imports: [MongooseModule.forFeature([{ name: User.name, schema: UserSchema }])],
-  providers: [
-    { provide: USER_WRITE_REPOSITORY_DI_TOKEN, useClass: UserWriteRepositoryAdapter },
-    { provide: USER_READ_REPOSITORY_DI_TOKEN, useClass: UserReadRepositoryAdapter },
-  ],
-  exports: [
-    { provide: USER_WRITE_REPOSITORY_DI_TOKEN, useClass: UserWriteRepositoryAdapter },
-    { provide: USER_READ_REPOSITORY_DI_TOKEN, useClass: UserReadRepositoryAdapter },
-  ],
+  providers: [UserWriteRepository, UserReadRepository],
+  exports: [UserWriteRepository, UserReadRepository],
 })
 export class UserModule {}

@@ -1,20 +1,12 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Album, AlbumSchema } from './album.schema';
-import { ALBUM_WRITE_REPOSITORY_DI_TOKEN } from '../../../../../core/domain/components/album/repository/album-write-repository.port';
-import { AlbumWriteRepositoryAdapter } from './album-write-repository.adapter';
-import { AlbumReadRepositoryAdapter } from './album-read-repository.adapter';
-import { ALBUM_READ_REPOSITORY_DI_TOKEN } from '../../../../../core/domain/components/album/repository/album-read-repository.port';
+import { AlbumWriteRepository } from './album-write-repository.service';
+import { AlbumReadRepository } from './album-read-repository.service';
 
 @Module({
   imports: [MongooseModule.forFeature([{ name: Album.name, schema: AlbumSchema }])],
-  providers: [
-    { provide: ALBUM_WRITE_REPOSITORY_DI_TOKEN, useClass: AlbumWriteRepositoryAdapter },
-    { provide: ALBUM_READ_REPOSITORY_DI_TOKEN, useClass: AlbumReadRepositoryAdapter },
-  ],
-  exports: [
-    { provide: ALBUM_WRITE_REPOSITORY_DI_TOKEN, useClass: AlbumWriteRepositoryAdapter },
-    { provide: ALBUM_READ_REPOSITORY_DI_TOKEN, useClass: AlbumReadRepositoryAdapter },
-  ],
+  providers: [AlbumWriteRepository, AlbumReadRepository],
+  exports: [AlbumWriteRepository, AlbumReadRepository],
 })
 export class AlbumModule {}

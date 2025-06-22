@@ -4,13 +4,13 @@ import type { Model } from 'mongoose';
 import { Admin } from './admin.schema';
 import AdminMapper from './admin.mapper';
 import { AdminDocument } from './types';
-import { AdminReadRepository } from '../../../../../core/domain/components/admin/repository/admin-read-repository.port';
-import { AdminDTO } from '../../../../../core/domain/components/admin/repository/dtos/admin.dto';
-import { OffsetLimitPaginationDTO } from '../../../../../core/shared/dtos/offset-limit-pagination/offset-limit-pagination-payload.dto';
-import { OffsetLimitPaginationResponseDTO } from '../../../../../core/shared/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
+import { AdminReadRepository as AdminReadRepositoryPort } from '../../../../../src/core/domain/components/admin/repository/admin-read-repository.port';
+import { AdminDTO } from '../../../../../src/core/domain/components/admin/repository/dtos/admin.dto';
+import { OffsetLimitPaginationDTO } from '../../../../../src/core/shared/dtos/offset-limit-pagination/offset-limit-pagination-payload.dto';
+import { OffsetLimitPaginationResponseDTO } from '../../../../../src/core/shared/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
 
 @Injectable()
-export class AdminReadRepositoryServices implements AdminReadRepository {
+export class AdminReadRepository implements AdminReadRepositoryPort {
   constructor(
     @InjectModel(Admin.name)
     private readonly _adminModel: Model<AdminDocument>,

@@ -2,14 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import UserRefreshTokenMapper from './user-refresh-token.mapper';
-import { UserRefreshToken as DomainUserRefreshToken } from '../../../../../core/domain/components/user-refresh-token/user-refresh-token.entity';
-import { UserRefreshTokenWriteRepository } from '../../../../../core/domain/components/user-refresh-token/user-refresh-token-write-repository.port';
 import { UserRefreshToken } from './user-refresh-token.schema';
 import { UserRefreshTokenDocument } from './types';
-import { UserRefreshTokenId } from '../../../../../core/domain/components/user-refresh-token/types';
+import { UserRefreshToken as DomainUserRefreshToken } from '../../../../../src/core/domain/components/user-refresh-token/user-refresh-token.entity';
+import { UserRefreshTokenWriteRepository as UserRefreshTokenWriteRepositoryPort } from '../../../../../src/core/domain/components/user-refresh-token/user-refresh-token-write-repository.port';
+import { UserRefreshTokenId } from '../../../../../src/core/domain/components/user-refresh-token/types';
 
 @Injectable()
-export class UserRefreshTokenWriteRepositoryAdapter implements UserRefreshTokenWriteRepository {
+export class UserRefreshTokenWriteRepository implements UserRefreshTokenWriteRepositoryPort {
   constructor(
     @InjectModel(UserRefreshToken.name) private readonly _model: Model<UserRefreshTokenDocument>,
   ) {}

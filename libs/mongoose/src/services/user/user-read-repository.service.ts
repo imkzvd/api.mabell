@@ -4,11 +4,11 @@ import { Model } from 'mongoose';
 import UserMapper from './user.mapper';
 import { User } from './user.schema';
 import { UserDocument } from './types';
-import { UserReadRepository } from '../../../../../core/domain/components/user/repository/user-read-repository.port';
-import { UserDTO } from '../../../../../core/domain/components/user/repository/dtos/user.dto';
+import { UserReadRepository as UserReadRepositoryPort } from '../../../../../src/core/domain/components/user/repository/user-read-repository.port';
+import { UserDTO } from '../../../../../src/core/domain/components/user/repository/dtos/user.dto';
 
 @Injectable()
-export class UserReadRepositoryAdapter implements UserReadRepository {
+export class UserReadRepository implements UserReadRepositoryPort {
   constructor(
     @InjectModel(User.name)
     private readonly _userModel: Model<UserDocument>,

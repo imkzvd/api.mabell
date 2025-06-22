@@ -2,14 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Playlist } from './playlist.schema';
-import { Playlist as DomainPlaylist } from '../../../../../core/domain/components/playlist/playlist.entity';
-import { PlaylistWriteRepository } from '../../../../../core/domain/components/playlist/repository/playlist-write-repository.port';
 import PlaylistMapper from './playlist.mapper';
 import { PlaylistDocument } from './types';
-import { PlaylistId } from '../../../../../core/domain/components/playlist/types';
+import { Playlist as DomainPlaylist } from '../../../../../src/core/domain/components/playlist/playlist.entity';
+import { PlaylistWriteRepository as PlaylistWriteRepositoryPort } from '../../../../../src/core/domain/components/playlist/repository/playlist-write-repository.port';
+import { PlaylistId } from '../../../../../src/core/domain/components/playlist/types';
 
 @Injectable()
-export class PlaylistWriteRepositoryAdapter implements PlaylistWriteRepository {
+export class PlaylistWriteRepository implements PlaylistWriteRepositoryPort {
   constructor(
     @InjectModel(Playlist.name)
     private readonly _playlistModel: Model<PlaylistDocument>,

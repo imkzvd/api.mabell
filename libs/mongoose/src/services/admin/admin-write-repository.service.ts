@@ -3,19 +3,19 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Admin } from './admin.schema';
 import AdminMapper from './admin.mapper';
-import { Admin as DomainAdmin } from '../../../../../core/domain/components/admin/admin.entity';
-import { AdminWriteRepository } from '../../../../../core/domain/components/admin/repository/admin-write-repository.port';
 import { AdminDocument } from './types';
-import { AdminId } from '../../../../../core/domain/components/admin/types';
+import { Admin as AdminDomainEntity } from '../../../../../src/core/domain/components/admin/admin.entity';
+import { AdminWriteRepository as AdminWriteRepositoryPort } from '../../../../../src/core/domain/components/admin/repository/admin-write-repository.port';
+import { AdminId } from '../../../../../src/core/domain/components/admin/types';
 
 @Injectable()
-export class AdminWriteRepositoryServices implements AdminWriteRepository {
+export class AdminWriteRepository implements AdminWriteRepositoryPort {
   constructor(
     @InjectModel(Admin.name)
     private readonly _adminModel: Model<AdminDocument>,
   ) {}
 
-  async save(entity: DomainAdmin): Promise<void> {
+  async save(entity: AdminDomainEntity): Promise<void> {
     const mappedDoc = AdminMapper.toPersistenceEntity(entity);
 
     return this._adminModel.findByIdAndUpdate({ _id: mappedDoc._id }, mappedDoc, {
@@ -31,7 +31,7 @@ export class AdminWriteRepositoryServices implements AdminWriteRepository {
     return result.deletedCount ? (id as AdminId) : null;
   }
 
-  async findById(id: string): Promise<DomainAdmin | null> {
+  async findById(id: string): Promise<AdminDomainEntity | null> {
     const foundDoc = await this._adminModel.findOne({ _id: id }).lean<Admin>().exec();
 
     return foundDoc ? AdminMapper.toDomainEntity(foundDoc) : null;

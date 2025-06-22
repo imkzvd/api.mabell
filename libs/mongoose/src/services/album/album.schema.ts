@@ -1,13 +1,13 @@
 import { Prop, SchemaFactory } from '@nestjs/mongoose';
 import { Schema as SchemaDecorator } from '@nestjs/mongoose/dist/decorators/schema.decorator';
 import { Schema, Types } from 'mongoose';
+import { BaseSchema } from '../../base/base.schema';
+import { Artist } from '../artist/artist.schema';
 import {
   AlbumType,
   AlbumTypes,
-} from '../../../../../core/domain/components/album/constants/album-types';
-import { Genre, Genres } from '../../../../../core/domain/common/constants/genres';
-import { BaseSchema } from '../../base/base.schema';
-import { Artist } from '../artist/artist.schema';
+} from '../../../../../src/core/domain/components/album/constants/album-types';
+import { Genre, Genres } from '../../../../../src/core/domain/common/constants/genres';
 
 @SchemaDecorator({ versionKey: false, timestamps: true })
 export class Album extends BaseSchema {

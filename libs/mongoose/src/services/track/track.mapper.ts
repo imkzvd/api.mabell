@@ -2,14 +2,14 @@ import { Types } from 'mongoose';
 import { ReadMapper, WriteMapper } from '../../base/mapper.interface';
 import { Track } from './track.schema';
 import ArtistMapper from '../artist/artist.mapper';
-import { Track as DomainArtist } from '../../../../../core/domain/components/track/track.entity';
-import { TrackFactory } from '../../../../../core/domain/components/track/track.factory';
 import { TrackDocument, TrackWithAlbumAndArtists, TrackWithAlbumAndArtistsDocument } from './types';
 import AlbumMapper from '../album/album.mapper';
-import { TrackWithAlbumAndArtistsDTO } from '../../../../../core/domain/components/track/repository/dtos/track-with-album-and-artists.dto';
-import { TrackId } from '../../../../../core/domain/components/track/types';
-import { AlbumId } from '../../../../../core/domain/components/album/types';
-import { ArtistId } from '../../../../../core/domain/components/artist/types';
+import { Track as DomainArtist } from '../../../../../src/core/domain/components/track/track.entity';
+import { TrackFactory } from '../../../../../src/core/domain/components/track/track.factory';
+import { TrackWithAlbumAndArtistsDTO } from '../../../../../src/core/domain/components/track/repository/dtos/track-with-album-and-artists.dto';
+import { TrackId } from '../../../../../src/core/domain/components/track/types';
+import { AlbumId } from '../../../../../src/core/domain/components/album/types';
+import { ArtistId } from '../../../../../src/core/domain/components/artist/types';
 
 class TrackMapper
   implements

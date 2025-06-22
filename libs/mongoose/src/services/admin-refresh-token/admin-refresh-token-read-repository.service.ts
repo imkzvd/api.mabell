@@ -2,13 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import type { Model } from 'mongoose';
 import { AdminRefreshTokenDocument } from './types';
-import { AdminRefreshTokenReadRepository } from '../../../../../core/domain/components/admin-refresh-token/repository/admin-refresh-token-read-repository.port';
 import { AdminRefreshToken } from './admin-refresh-token.schema';
-import { AdminRefreshTokenDTO } from '../../../../../core/domain/components/admin-refresh-token/repository/dtos/admin-refresh-token.dto';
 import AdminRefreshTokenMapper from './admin-refresh-token.mapper';
+import { AdminRefreshTokenReadRepository as AdminRefreshTokenReadRepositoryPort } from '../../../../../src/core/domain/components/admin-refresh-token/repository/admin-refresh-token-read-repository.port';
+import { AdminRefreshTokenDTO } from '../../../../../src/core/domain/components/admin-refresh-token/repository/dtos/admin-refresh-token.dto';
 
 @Injectable()
-export class AdminRefreshTokenReadRepositoryServices implements AdminRefreshTokenReadRepository {
+export class AdminRefreshTokenReadRepository implements AdminRefreshTokenReadRepositoryPort {
   constructor(
     @InjectModel(AdminRefreshToken.name) private readonly _model: Model<AdminRefreshTokenDocument>,
   ) {}

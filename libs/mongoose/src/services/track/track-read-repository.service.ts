@@ -5,13 +5,13 @@ import TrackMapper from './track.mapper';
 import { Track } from './track.schema';
 import { TrackWithAlbumAndArtistsDocument, TrackWithAlbumAndArtists } from './types';
 import { POPULATE_OPTIONS } from './constants';
-import { TrackReadRepository } from '../../../../../core/domain/components/track/repository/track-read-repository.port';
-import { TrackWithAlbumAndArtistsDTO } from '../../../../../core/domain/components/track/repository/dtos/track-with-album-and-artists.dto';
-import { OffsetLimitPaginationDTO } from '../../../../../core/shared/dtos/offset-limit-pagination/offset-limit-pagination-payload.dto';
-import { OffsetLimitPaginationResponseDTO } from '../../../../../core/shared/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
+import { TrackReadRepository as TrackReadRepositoryPort } from '../../../../../src/core/domain/components/track/repository/track-read-repository.port';
+import { TrackWithAlbumAndArtistsDTO } from '../../../../../src/core/domain/components/track/repository/dtos/track-with-album-and-artists.dto';
+import { OffsetLimitPaginationDTO } from '../../../../../src/core/shared/dtos/offset-limit-pagination/offset-limit-pagination-payload.dto';
+import { OffsetLimitPaginationResponseDTO } from '../../../../../src/core/shared/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
 
 @Injectable()
-export class TrackReadRepositoryAdapter implements TrackReadRepository {
+export class TrackReadRepository implements TrackReadRepositoryPort {
   constructor(
     @InjectModel(Track.name)
     private readonly _trackModel: Model<Track>,

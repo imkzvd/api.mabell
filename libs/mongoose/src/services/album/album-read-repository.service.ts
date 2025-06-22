@@ -5,14 +5,14 @@ import AlbumMapper from './album.mapper';
 import { AlbumDocument, AlbumWithArtists, AlbumWithArtistsDocument } from './types';
 import { POPULATE_OPTIONS } from './constants';
 import { Album } from './album.schema';
-import { NotFoundException } from '../../../../../core/shared/exceptions';
-import { AlbumReadRepository } from '../../../../../core/domain/components/album/repository/album-read-repository.port';
-import { AlbumWithArtistsDTO } from '../../../../../core/domain/components/album/repository/dtos/album-with-artists.dto';
-import { OffsetLimitPaginationDTO } from '../../../../../core/shared/dtos/offset-limit-pagination/offset-limit-pagination-payload.dto';
-import { OffsetLimitPaginationResponseDTO } from '../../../../../core/shared/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
+import { NotFoundException } from '../../../../../src/core/shared/exceptions';
+import { AlbumReadRepository as AlbumReadRepositoryPort } from '../../../../../src/core/domain/components/album/repository/album-read-repository.port';
+import { AlbumWithArtistsDTO } from '../../../../../src/core/domain/components/album/repository/dtos/album-with-artists.dto';
+import { OffsetLimitPaginationDTO } from '../../../../../src/core/shared/dtos/offset-limit-pagination/offset-limit-pagination-payload.dto';
+import { OffsetLimitPaginationResponseDTO } from '../../../../../src/core/shared/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
 
 @Injectable()
-export class AlbumReadRepositoryAdapter implements AlbumReadRepository {
+export class AlbumReadRepository implements AlbumReadRepositoryPort {
   constructor(
     @InjectModel(Album.name)
     private readonly _albumModel: Model<AlbumDocument>,

@@ -1,12 +1,12 @@
-import { ReadMapper, WriteMapper } from '../../base/mapper.interface';
-import { UserRefreshToken as DomainUserRefreshToken } from '../../../../../core/domain/components/user-refresh-token/user-refresh-token.entity';
-import { UserRefreshToken } from './user-refresh-token.schema';
 import { Types } from 'mongoose';
+import { ReadMapper, WriteMapper } from '../../base/mapper.interface';
+import { UserRefreshToken } from './user-refresh-token.schema';
 import { UserRefreshTokenDocument } from './types';
-import { UserRefreshTokenDTO } from '../../../../../core/domain/components/user-refresh-token/dtos/user-refresh-token.dto';
-import { UserRefreshTokenFactory } from '../../../../../core/domain/components/user-refresh-token/user-refresh-token.factory';
-import { UserRefreshTokenId } from '../../../../../core/domain/components/user-refresh-token/types';
-import { UserId } from '../../../../../core/domain/components/user/types';
+import { UserRefreshToken as DomainUserRefreshToken } from '../../../../../src/core/domain/components/user-refresh-token/user-refresh-token.entity';
+import { UserRefreshTokenDTO } from '../../../../../src/core/domain/components/user-refresh-token/dtos/user-refresh-token.dto';
+import { UserRefreshTokenFactory } from '../../../../../src/core/domain/components/user-refresh-token/user-refresh-token.factory';
+import { UserRefreshTokenId } from '../../../../../src/core/domain/components/user-refresh-token/types';
+import { UserId } from '../../../../../src/core/domain/components/user/types';
 
 class UserRefreshTokenMapper
   implements

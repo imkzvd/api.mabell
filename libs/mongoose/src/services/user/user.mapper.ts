@@ -1,12 +1,12 @@
 import { Types } from 'mongoose';
 import type { User } from './user.schema';
-import { ReadMapper, WriteMapper } from '../../base/mapper.interface';
-import { User as DomainUser } from '../../../../../core/domain/components/user/user.entity';
-import { UserFactory } from '../../../../../core/domain/components/user/user.factory';
-import { HashedPasswordVO } from '../../../../../core/domain/common/vos/hashed-password.vo';
 import { UserDocument } from './types';
-import { UserDTO } from '../../../../../core/domain/components/user/repository/dtos/user.dto';
-import { UserId } from '../../../../../core/domain/components/user/types';
+import { ReadMapper, WriteMapper } from '../../base/mapper.interface';
+import { User as DomainUser } from '../../../../../src/core/domain/components/user/user.entity';
+import { UserFactory } from '../../../../../src/core/domain/components/user/user.factory';
+import { HashedPasswordVO } from '../../../../../src/core/domain/common/vos/hashed-password.vo';
+import { UserDTO } from '../../../../../src/core/domain/components/user/repository/dtos/user.dto';
+import { UserId } from '../../../../../src/core/domain/components/user/types';
 
 class UserMapper implements WriteMapper<User, DomainUser>, ReadMapper<User, UserDTO> {
   toPersistenceEntity(entity: DomainUser): User {

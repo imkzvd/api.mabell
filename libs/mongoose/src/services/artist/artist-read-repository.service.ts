@@ -4,12 +4,12 @@ import { Model } from 'mongoose';
 import ArtistMapper from './artist.mapper';
 import { Artist } from './artist.schema';
 import { ArtistDocument } from './types';
-import { NotFoundException } from '../../../../../core/shared/exceptions';
-import { ArtistReadRepository } from '../../../../../core/domain/components/artist/repository/artist-read-repository.port';
-import { ArtistDTO } from '../../../../../core/domain/components/artist/repository/dtos/artist.dto';
+import { NotFoundException } from '../../../../../src/core/shared/exceptions';
+import { ArtistReadRepository as ArtistReadRepositoryPort } from '../../../../../src/core/domain/components/artist/repository/artist-read-repository.port';
+import { ArtistDTO } from '../../../../../src/core/domain/components/artist/repository/dtos/artist.dto';
 
 @Injectable()
-export class ArtistReadRepositoryAdapter implements ArtistReadRepository {
+export class ArtistReadRepository implements ArtistReadRepositoryPort {
   constructor(
     @InjectModel(Artist.name)
     private readonly _artistModel: Model<ArtistDocument>,
