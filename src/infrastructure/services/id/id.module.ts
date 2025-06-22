@@ -1,5 +1,5 @@
 import { Global, Module } from '@nestjs/common';
-import { IdServiceAdapter } from './id-service.adapter';
+import { IdService } from './id.service';
 import { ID_SERVICE_DI_TOKEN } from '../../../core/app/common/ports/id.service.port';
 
 @Global()
@@ -7,13 +7,13 @@ import { ID_SERVICE_DI_TOKEN } from '../../../core/app/common/ports/id.service.p
   providers: [
     {
       provide: ID_SERVICE_DI_TOKEN,
-      useClass: IdServiceAdapter,
+      useClass: IdService,
     },
   ],
   exports: [
     {
       provide: ID_SERVICE_DI_TOKEN,
-      useClass: IdServiceAdapter,
+      useClass: IdService,
     },
   ],
 })
