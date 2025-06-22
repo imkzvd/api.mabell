@@ -1,18 +1,18 @@
 import { Module } from '@nestjs/common';
 import { JWT_SERVICE_DI_TOKEN } from '../../../core/app/common/ports/jwt.service.port';
-import { JWTServiceAdapter } from './jwt.service.adapter';
+import { JwtService } from './jwt.service';
 
 @Module({
   providers: [
     {
       provide: JWT_SERVICE_DI_TOKEN,
-      useClass: JWTServiceAdapter,
+      useClass: JwtService,
     },
   ],
   exports: [
     {
       provide: JWT_SERVICE_DI_TOKEN,
-      useClass: JWTServiceAdapter,
+      useClass: JwtService,
     },
   ],
 })
