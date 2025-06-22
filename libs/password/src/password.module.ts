@@ -1,18 +1,18 @@
 import { Module } from '@nestjs/common';
-import { PasswordServiceAdapter } from './password-service.adapter';
+import { PasswordService } from './password.service';
 import { PASSWORD_SERVICE_DI_TOKEN } from '../../../core/app/common/ports/password-service.port';
 
 @Module({
   providers: [
     {
       provide: PASSWORD_SERVICE_DI_TOKEN,
-      useClass: PasswordServiceAdapter,
+      useClass: PasswordService,
     },
   ],
   exports: [
     {
       provide: PASSWORD_SERVICE_DI_TOKEN,
-      useClass: PasswordServiceAdapter,
+      useClass: PasswordService,
     },
   ],
 })

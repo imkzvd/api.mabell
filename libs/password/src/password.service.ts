@@ -4,7 +4,7 @@ import * as process from 'process';
 import { PasswordService } from '../../../core/app/common/ports/password-service.port';
 import { HashedPasswordVO } from '../../../core/domain/common/vos/hashed-password.vo';
 
-export class PasswordServiceAdapter implements PasswordService {
+export class PasswordService implements PasswordService {
   generate(options: { hash: false }): Promise<string>;
   generate(options: { hash: true }): Promise<{ password: string; hashPassword: HashedPasswordVO }>;
   async generate(options?: Partial<{ length: number; hash: boolean }>): Promise<
