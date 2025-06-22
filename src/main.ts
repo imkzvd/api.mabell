@@ -1,14 +1,15 @@
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as cookieParser from 'cookie-parser';
-import * as process from 'process';
 import { ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { AdminAppModule } from './presenters/rest/admin/app.module';
 import { ClientAppModule } from './presenters/rest/client/app.module';
 import { HttpExceptionFilter } from './presenters/rest/common/filters/http-exception.filter';
 
 async function runAdminApp() {
   const app = await NestFactory.create(AdminAppModule);
+  const configService = app.get(ConfigService);
 
   const swaggerConfig = new DocumentBuilder()
     .setTitle('Admin API')
@@ -19,7 +20,7 @@ async function runAdminApp() {
   SwaggerModule.setup('swagger', app, documentFactory);
 
   app.enableCors({
-    origin: [process.env.ADMIN_PANEL_ORIGIN],
+    origin: configService.get<string[]>('cors.origin'),
     credentials: true,
   });
   app.use(cookieParser());
@@ -31,11 +32,14 @@ async function runAdminApp() {
   );
   app.useGlobalFilters(new HttpExceptionFilter());
 
-  await app.listen(process.env.ADMIN_APP_PORT ?? 3000);
+  const port = configService.get<number>('app.port');
+
+  await app.listen(port ?? 3000);
 }
 
 async function runClientApp() {
   const app = await NestFactory.create(ClientAppModule);
+  const configService = app.get(ConfigService);
 
   const swaggerConfig = new DocumentBuilder()
     .setTitle('Client API')
@@ -54,7 +58,7 @@ async function runClientApp() {
   );
   app.useGlobalFilters(new HttpExceptionFilter());
 
-  await app.listen(process.env.CLIENT_APP_PORT ?? 4000);
+  await app.listen(configService.get<number>('app.port') ?? 4000);
 }
 
 void runAdminApp().then(() => {
