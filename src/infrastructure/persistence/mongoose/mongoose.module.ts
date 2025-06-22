@@ -1,6 +1,6 @@
-import * as process from 'process';
 import { Global, Module } from '@nestjs/common';
 import { MongooseModule as MongooseNestModule } from '@nestjs/mongoose';
+import { ConfigService } from '@nestjs/config';
 import { AdminModule } from './modules/admin/admin.module';
 import { UserModule } from './modules/user/user.module';
 import { ArtistModule } from './modules/artist/artist.module';
@@ -13,9 +13,19 @@ import { UserRefreshTokenModule } from './modules/user-refresh-token/user-refres
 @Global()
 @Module({
   imports: [
-    MongooseNestModule.forRoot(
-      `mongodb://${process.env.MONGO_INITDB_ROOT_USERNAME}:${process.env.MONGO_INITDB_ROOT_PASSWORD}@${process.env.MONGO_INITDB_HOST}`,
-    ),
+    MongooseNestModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        const host = configService.get<string>('database.host');
+        const port = configService.get<number>('database.port');
+        const user = configService.get<string>('database.user');
+        const password = configService.get<string>('database.password');
+
+        return {
+          uri: `mongodb://${user}:${password}@${host}:${port}`,
+        };
+      },
+    }),
     AdminModule,
     UserModule,
     ArtistModule,
