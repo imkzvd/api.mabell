@@ -7,7 +7,7 @@ import {
   EventPayload,
 } from '../../../core/app/common/ports/event-bus.port';
 
-export class InMemoryEventBusAdapter implements EventBus {
+export class EventBusService implements EventBus {
   private readonly emitter: EventEmitter;
 
   constructor() {

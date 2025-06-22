@@ -1,5 +1,5 @@
 import { Global, Module } from '@nestjs/common';
-import { InMemoryEventBusAdapter } from './in-memory-event-bus.adapter';
+import { EventBusService } from './event-bus.service';
 import { EVENT_BUS_DI_TOKEN } from '../../../core/app/common/ports/event-bus.port';
 
 @Global()
@@ -7,14 +7,14 @@ import { EVENT_BUS_DI_TOKEN } from '../../../core/app/common/ports/event-bus.por
   providers: [
     {
       provide: EVENT_BUS_DI_TOKEN,
-      useClass: InMemoryEventBusAdapter,
+      useClass: EventBusService,
     },
   ],
   exports: [
     {
       provide: EVENT_BUS_DI_TOKEN,
-      useClass: InMemoryEventBusAdapter,
+      useClass: EventBusService,
     },
   ],
 })
-export class InMemoryEventBusModule {}
+export class EventBusModule {}
