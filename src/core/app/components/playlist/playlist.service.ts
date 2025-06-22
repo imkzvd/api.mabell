@@ -9,7 +9,7 @@ import {
 } from '../../../domain/components/playlist/repository/playlist-read-repository.port';
 import { PlaylistFactory } from '../../../domain/components/playlist/playlist.factory';
 import { CreatePlaylistPayload, UpdatePlaylistCoverPayload, UpdatePlaylistPayload } from './types';
-import { ID_SERVICE_DI_TOKEN, IdService } from '../../common/ports/id-service.port';
+import { ID_SERVICE_DI_TOKEN, IdService } from '../../common/ports/id.service.port';
 import { NotFoundException } from '../../../shared/exceptions';
 import { PlaylistId } from '../../../domain/components/playlist/types';
 import { TrackId } from '../../../domain/components/track/types';

@@ -4,7 +4,7 @@ import {
   AdminWriteRepository,
 } from '../../../domain/components/admin/repository/admin-write-repository.port';
 import { AdminFactory } from '../../../domain/components/admin/admin.factory';
-import { ID_SERVICE_DI_TOKEN, IdService } from '../../common/ports/id-service.port';
+import { ID_SERVICE_DI_TOKEN, IdService } from '../../common/ports/id.service.port';
 import { ADMIN_PASSWORD_LENGTH } from './constants';
 import {
   PASSWORD_SERVICE_DI_TOKEN,

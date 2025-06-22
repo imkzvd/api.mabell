@@ -11,7 +11,7 @@ import {
   UserReadRepository,
 } from '../../../domain/components/user/repository/user-read-repository.port';
 import UserMapper from './dtos/user.mapper';
-import { ID_SERVICE_DI_TOKEN, IdService } from '../../common/ports/id-service.port';
+import { ID_SERVICE_DI_TOKEN, IdService } from '../../common/ports/id.service.port';
 import {
   PASSWORD_SERVICE_DI_TOKEN,
   PasswordService,

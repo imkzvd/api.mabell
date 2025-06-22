@@ -10,7 +10,7 @@ import {
   TRACK_WRITE_REPOSITORY_DI_TOKEN,
   TrackWriteRepository,
 } from '../../../domain/components/track/repository/track-write-repository.port';
-import { ID_SERVICE_DI_TOKEN, IdService } from '../../common/ports/id-service.port';
+import { ID_SERVICE_DI_TOKEN, IdService } from '../../common/ports/id.service.port';
 import { NotFoundException } from '../../../shared/exceptions';
 import { TrackFactory } from '../../../domain/components/track/track.factory';
 import { TrackDTO } from './dtos/track.dto';

@@ -3,7 +3,7 @@ import {
   ARTIST_WRITE_REPOSITORY_DI_TOKEN,
   ArtistWriteRepository,
 } from '../../../domain/components/artist/repository/artist-write-repository.port';
-import { ID_SERVICE_DI_TOKEN, IdService } from '../../common/ports/id-service.port';
+import { ID_SERVICE_DI_TOKEN, IdService } from '../../common/ports/id.service.port';
 import { ArtistFactory } from '../../../domain/components/artist/artist.factory';
 import { UpdateArtistAvatarPayload, UpdateArtistCoverPayload, UpdateArtistPayload } from './types';
 import { NotFoundException } from '../../../shared/exceptions';

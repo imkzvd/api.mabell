@@ -1,7 +1,7 @@
 import { Inject } from '@nestjs/common';
 import * as process from 'process';
 import { JWT_SERVICE_DI_TOKEN, JWTService, TokenTypes } from '../../common/ports/jwt.service.port';
-import { ID_SERVICE_DI_TOKEN, IdService } from '../../common/ports/id-service.port';
+import { ID_SERVICE_DI_TOKEN, IdService } from '../../common/ports/id.service.port';
 import { NotFoundException, UnauthorizedException } from '../../../shared/exceptions';
 import { UserRefreshTokenId } from '../../../domain/components/user-refresh-token/types';
 import { UserRefreshTokenFactory } from '../../../domain/components/user-refresh-token/user-refresh-token.factory';

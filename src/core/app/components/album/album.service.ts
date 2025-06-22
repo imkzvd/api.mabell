@@ -3,7 +3,7 @@ import {
   ALBUM_WRITE_REPOSITORY_DI_TOKEN,
   AlbumWriteRepository,
 } from '../../../domain/components/album/repository/album-write-repository.port';
-import { ID_SERVICE_DI_TOKEN, IdService } from '../../common/ports/id-service.port';
+import { ID_SERVICE_DI_TOKEN, IdService } from '../../common/ports/id.service.port';
 import {
   CreateAlbumPayload,
   UpdateAlbumArtistsPayload,
