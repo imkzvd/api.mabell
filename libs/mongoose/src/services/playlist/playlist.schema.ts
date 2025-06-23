@@ -1,10 +1,10 @@
 import { Prop, SchemaFactory } from '@nestjs/mongoose';
 import { Schema as SchemaDecorator } from '@nestjs/mongoose/dist/decorators/schema.decorator';
 import { Schema, Types } from 'mongoose';
-import { Genre, Genres } from '../../../../../core/domain/common/constants/genres';
+import { Genre, Genres } from '@core/domain/common/constants/genres';
+import { TrackId } from '@core/domain/components/track/types';
 import { User } from '../user/user.schema';
 import { BaseSchema } from '../../base/base.schema';
-import { TrackId } from '../../../../../core/domain/components/track/types';
 
 @SchemaDecorator({ versionKey: false, timestamps: true })
 export class Playlist extends BaseSchema {

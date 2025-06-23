@@ -1,10 +1,7 @@
 import { Schema } from '@nestjs/mongoose/dist/decorators/schema.decorator';
 import { Prop, SchemaFactory } from '@nestjs/mongoose';
+import { AdminRole, AdminRoles } from '@core/domain/components/admin/constants/admin-roles';
 import { BasePersonSchema } from '../../base/base-person.schema';
-import {
-  AdminRole,
-  AdminRoles,
-} from '../../../../../src/core/domain/components/admin/constants/admin-roles';
 
 @Schema({ versionKey: false, timestamps: true })
 export class Admin extends BasePersonSchema {

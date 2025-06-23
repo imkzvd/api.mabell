@@ -3,10 +3,10 @@ import * as path from 'path';
 import * as fsPromises from 'fs/promises';
 import * as process from 'process';
 import { v4 as uuidv4 } from 'uuid';
-import { CacheService } from '../../../../src/core/app/common/ports/cache.service.port';
-import { TmpFileStorage as TmpFileStoragePort } from '../../../../src/core/app/common/ports/file-storages/tmp-file-storage.port';
-import { TmpFileDTO } from '../../../../src/core/app/common/ports/file-storages/common/dtos/tmp-file.dto';
-import { TmpFileId } from '../../../../src/core/app/common/ports/file-storages/common/types';
+import { CacheService } from '@core/app/common/ports/cache.service.port';
+import { TmpFileStorage as TmpFileStoragePort } from '@core/app/common/ports/file-storages/tmp-file-storage.port';
+import { TmpFileDTO } from '@core/app/common/ports/file-storages/common/dtos/tmp-file.dto';
+import { TmpFileId } from '@core/app/common/ports/file-storages/common/types';
 
 @Injectable()
 export class TmpFileStorage implements TmpFileStoragePort {

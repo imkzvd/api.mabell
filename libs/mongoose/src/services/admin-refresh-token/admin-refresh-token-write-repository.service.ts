@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { AdminRefreshTokenWriteRepository as AdminRefreshTokenWriteRepositoryPort } from '@core/domain/components/admin-refresh-token/repository/admin-refresh-token-write-repository.port';
+import { AdminRefreshToken as DomainAdminRefreshToken } from '@core/domain/components/admin-refresh-token/admin-refresh-token.entity';
+import { AdminRefreshTokenId } from '@core/domain/components/admin-refresh-token/types';
 import { AdminRefreshTokenDocument } from './types';
 import { AdminRefreshToken } from './admin-refresh-token.schema';
 import RefreshTokenMapper from './admin-refresh-token.mapper';
-import { AdminRefreshTokenWriteRepository as AdminRefreshTokenWriteRepositoryPort } from '../../../../../src/core/domain/components/admin-refresh-token/repository/admin-refresh-token-write-repository.port';
-import { AdminRefreshToken as DomainAdminRefreshToken } from '../../../../../src/core/domain/components/admin-refresh-token/admin-refresh-token.entity';
-import { AdminRefreshTokenId } from '../../../../../src/core/domain/components/admin-refresh-token/types';
 
 @Injectable()
 export class AdminRefreshTokenWriteRepository implements AdminRefreshTokenWriteRepositoryPort {

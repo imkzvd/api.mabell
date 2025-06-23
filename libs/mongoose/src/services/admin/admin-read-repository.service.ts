@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import type { Model } from 'mongoose';
+import { AdminReadRepository as AdminReadRepositoryPort } from '@core/domain/components/admin/repository/admin-read-repository.port';
+import { AdminDTO } from '@core/domain/components/admin/repository/dtos/admin.dto';
+import { OffsetLimitPaginationDTO } from '@core/shared/dtos/offset-limit-pagination/offset-limit-pagination-payload.dto';
+import { OffsetLimitPaginationResponseDTO } from '@core/shared/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
 import { Admin } from './admin.schema';
 import AdminMapper from './admin.mapper';
 import { AdminDocument } from './types';
-import { AdminReadRepository as AdminReadRepositoryPort } from '../../../../../src/core/domain/components/admin/repository/admin-read-repository.port';
-import { AdminDTO } from '../../../../../src/core/domain/components/admin/repository/dtos/admin.dto';
-import { OffsetLimitPaginationDTO } from '../../../../../src/core/shared/dtos/offset-limit-pagination/offset-limit-pagination-payload.dto';
-import { OffsetLimitPaginationResponseDTO } from '../../../../../src/core/shared/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
 
 @Injectable()
 export class AdminReadRepository implements AdminReadRepositoryPort {

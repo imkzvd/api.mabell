@@ -1,8 +1,8 @@
 import * as bcrypt from 'bcrypt';
 import * as generatePassword from 'generate-password';
 import * as process from 'process';
-import { PasswordService as PasswordServicePort } from '../../../src/core/app/common/ports/password-service.port';
-import { HashedPasswordVO } from '../../../src/core/domain/common/vos/hashed-password.vo';
+import { PasswordService as PasswordServicePort } from '@core/app/common/ports/password-service.port';
+import { HashedPasswordVO } from '@core/domain/common/vos/hashed-password.vo';
 
 export class PasswordService implements PasswordServicePort {
   generate(options: { hash: false }): Promise<string>;

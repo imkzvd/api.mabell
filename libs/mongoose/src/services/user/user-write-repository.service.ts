@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { User as DomainUser } from '@core/domain/components/user/user.entity';
+import { UserWriteRepository as UserWriteRepositoryPort } from '@core/domain/components/user/repository/user-write-repository.port';
+import { UserId } from '@core/domain/components/user/types';
 import { User } from './user.schema';
 import UserMapper from './user.mapper';
 import { UserDocument } from './types';
-import { User as DomainUser } from '../../../../../src/core/domain/components/user/user.entity';
-import { UserWriteRepository as UserWriteRepositoryPort } from '../../../../../src/core/domain/components/user/repository/user-write-repository.port';
-import { UserId } from '../../../../../src/core/domain/components/user/types';
 
 @Injectable()
 export class UserWriteRepository implements UserWriteRepositoryPort {

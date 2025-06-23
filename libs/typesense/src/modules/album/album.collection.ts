@@ -1,10 +1,10 @@
 import { CollectionCreateSchema } from 'typesense/lib/Typesense/Collections';
-import { TypeSenseClient } from '../../client';
+import { IndexedAlbumDTO } from '@core/app/components/search/ports/search-service/dtos/indexed-album.dto';
+import { AlbumWithArtistsDTO } from '@core/domain/components/album/repository/dtos/album-with-artists.dto';
 import { Album } from './album.document';
 import AlbumMapper from './album.mapper';
+import { TypeSenseClient } from '../../client';
 import { BaseCollection } from '../../base/base-collection.interface';
-import { IndexedAlbumDTO } from '../../../../../src/core/app/components/search/ports/search-service/dtos/indexed-album.dto';
-import { AlbumWithArtistsDTO } from '../../../../../src/core/domain/components/album/repository/dtos/album-with-artists.dto';
 
 export class AlbumCollection implements BaseCollection<IndexedAlbumDTO, AlbumWithArtistsDTO> {
   private readonly _collectionName = 'albums';

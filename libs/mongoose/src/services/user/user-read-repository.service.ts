@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { UserReadRepository as UserReadRepositoryPort } from '@core/domain/components/user/repository/user-read-repository.port';
+import { UserDTO } from '@core/domain/components/user/repository/dtos/user.dto';
 import UserMapper from './user.mapper';
 import { User } from './user.schema';
 import { UserDocument } from './types';
-import { UserReadRepository as UserReadRepositoryPort } from '../../../../../src/core/domain/components/user/repository/user-read-repository.port';
-import { UserDTO } from '../../../../../src/core/domain/components/user/repository/dtos/user.dto';
 
 @Injectable()
 export class UserReadRepository implements UserReadRepositoryPort {

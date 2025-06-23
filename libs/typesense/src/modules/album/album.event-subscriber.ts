@@ -1,11 +1,11 @@
 import { QueryBus } from '@nestjs/cqrs';
+import { EventBus } from '@core/app/common/ports/event-bus.port';
+import { AlbumCreatedEvent } from '@core/app/common/events/album-created.event';
+import { GetAlbumQuery } from '@core/app/cqrs/album/queries/get-album/get-album.query';
+import { AlbumUpdatedEvent } from '@core/app/common/events/album-updated.event';
+import { AlbumDeletedEvent } from '@core/app/common/events/album-deleted.event';
+import { AlbumsDeletedEvent } from '@core/app/common/events/albums-deleted.event';
 import { AlbumCollection } from './album.collection';
-import { EventBus } from '../../../../../src/core/app/common/ports/event-bus.port';
-import { AlbumCreatedEvent } from '../../../../../src/core/app/common/events/album-created.event';
-import { GetAlbumQuery } from '../../../../../src/core/app/cqrs/album/queries/get-album/get-album.query';
-import { AlbumUpdatedEvent } from '../../../../../src/core/app/common/events/album-updated.event';
-import { AlbumDeletedEvent } from '../../../../../src/core/app/common/events/album-deleted.event';
-import { AlbumsDeletedEvent } from '../../../../../src/core/app/common/events/albums-deleted.event';
 
 export class AlbumEventSubscriber {
   constructor(

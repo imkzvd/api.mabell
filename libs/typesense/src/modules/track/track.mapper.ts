@@ -1,9 +1,9 @@
+import { IndexedTrackDTO } from '@core/app/components/search/ports/search-service/dtos/indexed-track.dto';
+import { TrackDTO } from '@core/app/components/track/dtos/track.dto';
+import { IndexedAlbumDTO } from '@core/app/components/search/ports/search-service/dtos/indexed-album.dto';
+import { IndexedSimplifiedArtistDTO } from '@core/app/components/search/ports/search-service/dtos/indexed-simplified-artist.dto';
 import { Track } from './track.document';
 import { TrackFactory } from './track.factory';
-import { IndexedTrackDTO } from '../../../../../src/core/app/components/search/ports/search-service/dtos/indexed-track.dto';
-import { TrackDTO } from '../../../../../src/core/app/components/track/dtos/track.dto';
-import { IndexedAlbumDTO } from '../../../../../src/core/app/components/search/ports/search-service/dtos/indexed-album.dto';
-import { IndexedSimplifiedArtistDTO } from '../../../../../src/core/app/components/search/ports/search-service/dtos/indexed-simplified-artist.dto';
 
 class TrackMapper {
   toDocument(dto: TrackDTO): Track {

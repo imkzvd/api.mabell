@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { TrackWriteRepository as TrackWriteRepositoryPort } from '@core/domain/components/track/repository/track-write-repository.port';
+import { Track as DomainTrack } from '@core/domain/components/track/track.entity';
+import { TrackId } from '@core/domain/components/track/types';
 import { Track } from './track.schema';
 import TrackMapper from './track.mapper';
 import { TrackDocument } from './types';
-import { TrackWriteRepository as TrackWriteRepositoryPort } from '../../../../../src/core/domain/components/track/repository/track-write-repository.port';
-import { Track as DomainTrack } from '../../../../../src/core/domain/components/track/track.entity';
-import { TrackId } from '../../../../../src/core/domain/components/track/types';
 
 @Injectable()
 export class TrackWriteRepository implements TrackWriteRepositoryPort {

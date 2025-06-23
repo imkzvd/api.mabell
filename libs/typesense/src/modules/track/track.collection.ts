@@ -1,10 +1,10 @@
 import { CollectionCreateSchema } from 'typesense/lib/Typesense/Collections';
+import { IndexedTrackDTO } from '@core/app/components/search/ports/search-service/dtos/indexed-track.dto';
+import { TrackDTO } from '@core/app/components/track/dtos/track.dto';
 import { Track } from './track.document';
 import TrackMapper from './track.mapper';
 import { TypeSenseClient } from '../../client';
 import { BaseCollection } from '../../base/base-collection.interface';
-import { IndexedTrackDTO } from '../../../../../src/core/app/components/search/ports/search-service/dtos/indexed-track.dto';
-import { TrackDTO } from '../../../../../src/core/app/components/track/dtos/track.dto';
 
 export class TrackCollection implements BaseCollection<IndexedTrackDTO, TrackDTO> {
   private readonly _collectionName = 'tracks';

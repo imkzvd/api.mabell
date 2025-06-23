@@ -1,8 +1,8 @@
 import { Prop, SchemaFactory } from '@nestjs/mongoose';
 import { Schema } from '@nestjs/mongoose/dist/decorators/schema.decorator';
+import { Regions, Region } from '@core/domain/common/constants/regions';
+import { Genre, Genres } from '@core/domain/common/constants/genres';
 import { BasePersonSchema } from '../../base/base-person.schema';
-import { Regions, Region } from '../../../../../src/core/domain/common/constants/regions';
-import { Genre, Genres } from '../../../../../src/core/domain/common/constants/genres';
 
 @Schema({ versionKey: false, timestamps: true })
 export class User extends BasePersonSchema {

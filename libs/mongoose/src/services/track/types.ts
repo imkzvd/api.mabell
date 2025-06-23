@@ -1,7 +1,7 @@
 import { Overwrite } from 'utility-types';
+import { HydratedDocument } from 'mongoose';
 import type { Track } from './track.schema';
 import { AlbumWithArtists, AlbumWithArtistsDocument } from '../album/types';
-import { HydratedDocument } from 'mongoose';
 import { ArtistDocument } from '../artist/types';
 import { Artist } from '../artist/artist.schema';
 

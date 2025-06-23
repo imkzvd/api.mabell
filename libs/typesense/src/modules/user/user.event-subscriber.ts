@@ -1,11 +1,11 @@
 import { QueryBus } from '@nestjs/cqrs';
+import { EventBus } from '@core/app/common/ports/event-bus.port';
+import { UserCreatedEvent } from '@core/app/common/events/user-created.event';
+import { GetUserQuery } from '@core/app/cqrs/user/queries/get-user/get-user.query';
+import { UserDeletedEvent } from '@core/app/common/events/user-deleted.event';
+import { UserUpdatedEvent } from '@core/app/common/events/user-updated.event';
+import { UserRegisteredEvent } from '@core/app/common/events/user-registered.event';
 import { UserCollection } from './user.collection';
-import { EventBus } from '../../../../../src/core/app/common/ports/event-bus.port';
-import { UserCreatedEvent } from '../../../../../src/core/app/common/events/user-created.event';
-import { GetUserQuery } from '../../../../../src/core/app/cqrs/user/queries/get-user/get-user.query';
-import { UserDeletedEvent } from '../../../../../src/core/app/common/events/user-deleted.event';
-import { UserUpdatedEvent } from '../../../../../src/core/app/common/events/user-updated.event';
-import { UserRegisteredEvent } from '../../../../../src/core/app/common/events/user-registered.event';
 
 export class UserEventSubscriber {
   constructor(

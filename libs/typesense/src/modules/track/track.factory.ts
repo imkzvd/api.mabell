@@ -1,5 +1,5 @@
+import { TrackDTO } from '@core/app/components/track/dtos/track.dto';
 import { Track } from './track.document';
-import { TrackDTO } from '../../../../../src/core/app/components/track/dtos/track.dto';
 
 export class TrackFactory {
   static create(dto: TrackDTO) {

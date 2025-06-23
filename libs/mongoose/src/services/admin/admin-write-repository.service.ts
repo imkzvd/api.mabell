@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { Admin as AdminDomainEntity } from '@core/domain/components/admin/admin.entity';
+import { AdminWriteRepository as AdminWriteRepositoryPort } from '@core/domain/components/admin/repository/admin-write-repository.port';
+import { AdminId } from '@core/domain/components/admin/types';
 import { Admin } from './admin.schema';
 import AdminMapper from './admin.mapper';
 import { AdminDocument } from './types';
-import { Admin as AdminDomainEntity } from '../../../../../src/core/domain/components/admin/admin.entity';
-import { AdminWriteRepository as AdminWriteRepositoryPort } from '../../../../../src/core/domain/components/admin/repository/admin-write-repository.port';
-import { AdminId } from '../../../../../src/core/domain/components/admin/types';
 
 @Injectable()
 export class AdminWriteRepository implements AdminWriteRepositoryPort {

@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { Album as DomainAlbum } from '@core/domain/components/album/album.entity';
+import { AlbumWriteRepository as AlbumWriteRepositoryPort } from '@core/domain/components/album/repository/album-write-repository.port';
+import { AlbumId } from '@core/domain/components/album/types';
 import { Album } from './album.schema';
-import { Album as DomainAlbum } from '../../../../../src/core/domain/components/album/album.entity';
-import { AlbumWriteRepository as AlbumWriteRepositoryPort } from '../../../../../src/core/domain/components/album/repository/album-write-repository.port';
 import AlbumMapper from './album.mapper';
 import { AlbumDocument } from './types';
-import { AlbumId } from '../../../../../src/core/domain/components/album/types';
 
 @Injectable()
 export class AlbumWriteRepository implements AlbumWriteRepositoryPort {

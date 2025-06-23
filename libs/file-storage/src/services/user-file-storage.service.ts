@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { FileStorage } from '@infrastructure/file-storage/base/file-storage.abstract';
-import { UserFileStorage as UserFileStoragePort } from '../../../../src/core/app/common/ports/file-storages/user-file-storage.port';
-import { TmpFileStorage as TmpFileStoragePort } from '../../../../src/core/app/common/ports/file-storages/tmp-file-storage.port';
-import { UserId } from '../../../../src/core/domain/components/user/types';
-import { TmpFileDTO } from '../../../../src/core/app/common/ports/file-storages/common/dtos/tmp-file.dto';
-import { StoredFileDTO } from '../../../../src/core/app/common/ports/file-storages/common/dtos/stored-file.dto';
-import { PlaylistId } from '../../../../src/core/domain/components/playlist/types';
+import { UserFileStorage as UserFileStoragePort } from '@core/app/common/ports/file-storages/user-file-storage.port';
+import { TmpFileStorage as TmpFileStoragePort } from '@core/app/common/ports/file-storages/tmp-file-storage.port';
+import { UserId } from '@core/domain/components/user/types';
+import { TmpFileDTO } from '@core/app/common/ports/file-storages/common/dtos/tmp-file.dto';
+import { StoredFileDTO } from '@core/app/common/ports/file-storages/common/dtos/stored-file.dto';
+import { PlaylistId } from '@core/domain/components/playlist/types';
 
 @Injectable()
 export class UserFileStorage extends FileStorage implements UserFileStoragePort {

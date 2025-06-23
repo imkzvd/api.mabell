@@ -1,11 +1,11 @@
 import { Types } from 'mongoose';
+import { Artist as DomainArtist } from '@core/domain/components/artist/artist.entity';
+import { ArtistFactory } from '@core/domain/components/artist/artist.factory';
+import { ArtistDTO } from '@core/domain/components/artist/repository/dtos/artist.dto';
+import { ArtistId } from '@core/domain/components/artist/types';
 import { ReadMapper, WriteMapper } from '../../base/mapper.interface';
 import { Artist } from './artist.schema';
 import { ArtistDocument } from './types';
-import { Artist as DomainArtist } from '../../../../../src/core/domain/components/artist/artist.entity';
-import { ArtistFactory } from '../../../../../src/core/domain/components/artist/artist.factory';
-import { ArtistDTO } from '../../../../../src/core/domain/components/artist/repository/dtos/artist.dto';
-import { ArtistId } from '../../../../../src/core/domain/components/artist/types';
 
 class ArtistMapper implements WriteMapper<Artist, DomainArtist>, ReadMapper<Artist, ArtistDTO> {
   toPersistenceEntity(entity: DomainArtist): Artist {

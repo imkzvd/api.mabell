@@ -5,7 +5,7 @@ import {
   EventConstructor,
   EventHandler,
   EventPayload,
-} from '../../../src/core/app/common/ports/event-bus.port';
+} from '@core/app/common/ports/event-bus.port';
 
 export class EventBus implements EventBusPort {
   private readonly emitter: EventEmitter;

@@ -1,6 +1,6 @@
 import { Prop, SchemaFactory } from '@nestjs/mongoose';
 import { Schema as SchemaDecorator } from '@nestjs/mongoose/dist/decorators/schema.decorator';
-import { Genre } from '../../../../../core/domain/common/constants/genres';
+import { Genre } from '@core/domain/common/constants/genres';
 import { BaseSchema } from '../../base/base.schema';
 
 @SchemaDecorator({ versionKey: false, timestamps: true })

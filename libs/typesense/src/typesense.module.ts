@@ -1,10 +1,10 @@
 import { Global, Module } from '@nestjs/common';
+import { ArtistService } from '@core/app/components/artist/artist.service';
 import { TypesenseService } from './typesense.service';
 import { ArtistModule } from './modules/artist/artist.module';
 import { AlbumModule } from './modules/album/album.module';
 import { TrackModule } from './modules/track/track.module';
 import { UserModule } from './modules/user/user.module';
-import { ArtistService } from '../../../src/core/app/components/artist/artist.service';
 
 @Global()
 @Module({

@@ -1,12 +1,12 @@
 import { Types } from 'mongoose';
+import { Admin as DomainEntity } from '@core/domain/components/admin/admin.entity';
+import { AdminFactory } from '@core/domain/components/admin/admin.factory';
+import { AdminId } from '@core/domain/components/admin/types';
+import { HashedPasswordVO } from '@core/domain/common/vos/hashed-password.vo';
+import { AdminDTO } from '@core/domain/components/admin/repository/dtos/admin.dto';
 import type { Admin } from './admin.schema';
 import { ReadMapper, WriteMapper } from '../../base/mapper.interface';
-import { Admin as DomainEntity } from '../../../../../src/core/domain/components/admin/admin.entity';
 import { AdminDocument } from './types';
-import { AdminFactory } from '../../../../../src/core/domain/components/admin/admin.factory';
-import { AdminId } from '../../../../../src/core/domain/components/admin/types';
-import { HashedPasswordVO } from '../../../../../src/core/domain/common/vos/hashed-password.vo';
-import { AdminDTO } from '../../../../../src/core/domain/components/admin/repository/dtos/admin.dto';
 
 class AdminMapper implements WriteMapper<Admin, DomainEntity>, ReadMapper<Admin, AdminDTO> {
   toPersistenceEntity(entity: DomainEntity): Admin {

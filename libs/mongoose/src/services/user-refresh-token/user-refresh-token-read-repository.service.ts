@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import type { Model } from 'mongoose';
+import { UserRefreshTokenReadRepository as UserRefreshTokenReadRepositoryPort } from '@core/domain/components/user-refresh-token/user-refresh-token-read-repository.port';
+import { UserRefreshTokenDTO } from '@core/domain/components/user-refresh-token/dtos/user-refresh-token.dto';
 import UserRefreshTokenMapper from './user-refresh-token.mapper';
 import { UserRefreshToken } from './user-refresh-token.schema';
 import { UserRefreshTokenDocument } from './types';
-import { UserRefreshTokenReadRepository as UserRefreshTokenReadRepositoryPort } from '../../../../../src/core/domain/components/user-refresh-token/user-refresh-token-read-repository.port';
-import { UserRefreshTokenDTO } from '../../../../../src/core/domain/components/user-refresh-token/dtos/user-refresh-token.dto';
 
 @Injectable()
 export class UserRefreshTokenReadRepository implements UserRefreshTokenReadRepositoryPort {

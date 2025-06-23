@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { NotFoundException } from '@core/shared/exceptions';
+import { ArtistReadRepository as ArtistReadRepositoryPort } from '@core/domain/components/artist/repository/artist-read-repository.port';
+import { ArtistDTO } from '@core/domain/components/artist/repository/dtos/artist.dto';
 import ArtistMapper from './artist.mapper';
 import { Artist } from './artist.schema';
 import { ArtistDocument } from './types';
-import { NotFoundException } from '../../../../../src/core/shared/exceptions';
-import { ArtistReadRepository as ArtistReadRepositoryPort } from '../../../../../src/core/domain/components/artist/repository/artist-read-repository.port';
-import { ArtistDTO } from '../../../../../src/core/domain/components/artist/repository/dtos/artist.dto';
 
 @Injectable()
 export class ArtistReadRepository implements ArtistReadRepositoryPort {

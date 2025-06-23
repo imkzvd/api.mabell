@@ -1,13 +1,13 @@
 import { Types } from 'mongoose';
+import { Playlist as DomainPlaylist } from '@core/domain/components/playlist/playlist.entity';
+import { PlaylistFactory } from '@core/domain/components/playlist/playlist.factory';
+import { PlaylistWithOwnerDTO } from '@core/domain/components/playlist/repository/dtos/playlist-with-owner.dto';
+import { PlaylistId } from '@core/domain/components/playlist/types';
+import { UserId } from '@core/domain/components/user/types';
 import { Playlist } from './playlist.schema';
 import { PlaylistDocument, PlaylistWithOwner, PlaylistWithOwnerDocument } from './types';
 import { ReadMapper, WriteMapper } from '../../base/mapper.interface';
 import UserMapper from '../user/user.mapper';
-import { Playlist as DomainPlaylist } from '../../../../../src/core/domain/components/playlist/playlist.entity';
-import { PlaylistFactory } from '../../../../../src/core/domain/components/playlist/playlist.factory';
-import { PlaylistWithOwnerDTO } from '../../../../../src/core/domain/components/playlist/repository/dtos/playlist-with-owner.dto';
-import { PlaylistId } from '../../../../../src/core/domain/components/playlist/types';
-import { UserId } from '../../../../../src/core/domain/components/user/types';
 
 class PlaylistMapper
   implements

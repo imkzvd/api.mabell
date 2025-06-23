@@ -1,10 +1,10 @@
 import { QueryBus } from '@nestjs/cqrs';
+import { EventBus } from '@core/app/common/ports/event-bus.port';
+import { ArtistCreatedEvent } from '@core/app/common/events/artist-created.event';
+import { ArtistUpdatedEvent } from '@core/app/common/events/artist-updated.event';
+import { ArtistDeletedEvent } from '@core/app/common/events/artist-deleted.event';
+import { GetArtistQuery } from '@core/app/cqrs/artist/queries/get-artist/get-artist.query';
 import { ArtistCollection } from './artist.collection';
-import { EventBus } from '../../../../../src/core/app/common/ports/event-bus.port';
-import { ArtistCreatedEvent } from '../../../../../src/core/app/common/events/artist-created.event';
-import { ArtistUpdatedEvent } from '../../../../../src/core/app/common/events/artist-updated.event';
-import { ArtistDeletedEvent } from '../../../../../src/core/app/common/events/artist-deleted.event';
-import { GetArtistQuery } from '../../../../../src/core/app/cqrs/artist/queries/get-artist/get-artist.query';
 
 export class ArtistEventSubscriber {
   constructor(

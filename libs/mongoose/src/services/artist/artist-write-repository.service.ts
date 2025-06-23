@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { ArtistWriteRepository as ArtistWriteRepositoryPort } from '@core/domain/components/artist/repository/artist-write-repository.port';
+import { Artist as DomainArtist } from '@core/domain/components/artist/artist.entity';
+import { ArtistId } from '@core/domain/components/artist/types';
 import { Artist } from './artist.schema';
 import { ArtistDocument } from './types';
 import ArtistMapper from './artist.mapper';
-import { ArtistWriteRepository as ArtistWriteRepositoryPort } from '../../../../../src/core/domain/components/artist/repository/artist-write-repository.port';
-import { Artist as DomainArtist } from '../../../../../src/core/domain/components/artist/artist.entity';
-import { ArtistId } from '../../../../../src/core/domain/components/artist/types';
 
 @Injectable()
 export class ArtistWriteRepository implements ArtistWriteRepositoryPort {
