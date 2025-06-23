@@ -1,6 +1,6 @@
-import { AlbumType } from '../../../domain/components/album/constants/album-types';
-import { Genre } from '../../../domain/common/constants/genres';
-import { ArtistId } from '../../../domain/components/artist/types';
+import { AlbumType } from '@core/domain/components/album/constants/album-types';
+import { Genre } from '@core/domain/common/constants/genres';
+import { ArtistId } from '@core/domain/components/artist/types';
 
 export type CreateAlbumPayload = {
   artistId: ArtistId;

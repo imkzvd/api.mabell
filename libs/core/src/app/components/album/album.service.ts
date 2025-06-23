@@ -1,36 +1,23 @@
-import { Inject } from '@nestjs/common';
-import {
-  ALBUM_WRITE_REPOSITORY_DI_TOKEN,
-  AlbumWriteRepository,
-} from '../../../domain/components/album/repository/album-write-repository.port';
-import { ID_SERVICE_DI_TOKEN, IdService } from '../../common/ports/id.service.port';
+import { BadRequestException, NotFoundException } from '@core/shared/exceptions';
+import { OffsetLimitPaginationDTO } from '@core/shared/dtos/offset-limit-pagination/offset-limit-pagination-payload.dto';
+import { OffsetLimitPaginationResponseDTO } from '@core/shared/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
+import { AlbumWriteRepository } from '@core/domain/components/album/repository/album-write-repository.port';
+import { AlbumReadRepository } from '@core/domain/components/album/repository/album-read-repository.port';
+import { AlbumId } from '@core/domain/components/album/types';
+import { AlbumFactory } from '@core/domain/components/album/album.factory';
+import { ArtistId } from '@core/domain/components/artist/types';
+import { IdService } from '../../common/ports/id.service.port';
 import {
   CreateAlbumPayload,
   UpdateAlbumArtistsPayload,
   UpdateAlbumCoverPayload,
   UpdateAlbumPayload,
 } from './types';
-import { AlbumFactory } from '../../../domain/components/album/album.factory';
-import { BadRequestException, NotFoundException } from '../../../shared/exceptions';
-import {
-  ALBUM_READ_REPOSITORY_DI_TOKEN,
-  AlbumReadRepository,
-} from '../../../domain/components/album/repository/album-read-repository.port';
 import AlbumMapper from './dtos/album.mapper';
-import { OffsetLimitPaginationDTO } from '../../../shared/dtos/offset-limit-pagination/offset-limit-pagination-payload.dto';
-import { OffsetLimitPaginationResponseDTO } from '../../../shared/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
 import { AlbumDTO } from './dtos/album.dto';
-import { AlbumId } from '../../../domain/components/album/types';
-import { ArtistId } from '../../../domain/components/artist/types';
-import {
-  ARTIST_FILE_STORAGE_DI_TOKEN,
-  ArtistFileStorage,
-} from '../../common/ports/file-storages/artist-file-storage.port';
-import {
-  TMP_FILE_STORAGE_DI_TOKEN,
-  TmpFileStorage,
-} from '../../common/ports/file-storages/tmp-file-storage.port';
-import { EVENT_BUS_DI_TOKEN, EventBus } from '../../common/ports/event-bus.port';
+import { ArtistFileStorage } from '../../common/ports/file-storages/artist-file-storage.port';
+import { TmpFileStorage } from '../../common/ports/file-storages/tmp-file-storage.port';
+import { EventBus } from '../../common/ports/event-bus.port';
 import { AlbumCreatedEvent } from '../../common/events/album-created.event';
 import { AlbumUpdatedEvent } from '../../common/events/album-updated.event';
 import { AlbumDeletedEvent } from '../../common/events/album-deleted.event';
@@ -40,24 +27,24 @@ import { AlbumArtistsUpdatedEvent } from '../../common/events/album-artists-upda
 
 export class AlbumService {
   constructor(
-    @Inject(EVENT_BUS_DI_TOKEN) private readonly _EB: EventBus,
-    @Inject(ALBUM_WRITE_REPOSITORY_DI_TOKEN) private readonly _albumWR: AlbumWriteRepository,
-    @Inject(ALBUM_READ_REPOSITORY_DI_TOKEN) private readonly _albumRR: AlbumReadRepository,
-    @Inject(ID_SERVICE_DI_TOKEN) private readonly _idService: IdService<AlbumId>,
-    @Inject(TMP_FILE_STORAGE_DI_TOKEN) private readonly _tmpFS: TmpFileStorage,
-    @Inject(ARTIST_FILE_STORAGE_DI_TOKEN) private readonly _artistFS: ArtistFileStorage,
+    private readonly _EB: EventBus,
+    private readonly _WR: AlbumWriteRepository,
+    private readonly _RR: AlbumReadRepository,
+    private readonly _idService: IdService<AlbumId>,
+    private readonly _tmpFS: TmpFileStorage,
+    private readonly _artistFS: ArtistFileStorage,
   ) {}
 
   async createAlbum(payload: CreateAlbumPayload): Promise<AlbumId> {
     const generatedId = this._idService.generate();
-    const nextAlbumIndex = await this._albumWR.getNextArtistAlbumIndex(payload.artistId);
+    const nextAlbumIndex = await this._WR.getNextArtistAlbumIndex(payload.artistId);
     const createdAlbum = AlbumFactory.create({
       id: generatedId,
       name: `Album #${nextAlbumIndex}`,
       artists: [payload.artistId],
     });
 
-    await this._albumWR.save(createdAlbum);
+    await this._WR.save(createdAlbum);
 
     this._EB.publish(new AlbumCreatedEvent({ id: generatedId }));
 
@@ -65,7 +52,7 @@ export class AlbumService {
   }
 
   async updateAlbum(id: string, payload: UpdateAlbumPayload): Promise<AlbumId> {
-    const foundAlbum = await this._albumWR.findById(id);
+    const foundAlbum = await this._WR.findById(id);
 
     if (!foundAlbum) {
       throw new NotFoundException('Album does not exist');
@@ -99,14 +86,14 @@ export class AlbumService {
       foundAlbum.updatePublicStatus(payload.isPublic);
     }
 
-    await this._albumWR.save(foundAlbum);
+    await this._WR.save(foundAlbum);
     this._EB.publish(new AlbumUpdatedEvent({ id: foundAlbum.getId() }));
 
     return foundAlbum.getId();
   }
 
   async updateAlbumArtists(id: string, payload: UpdateAlbumArtistsPayload): Promise<AlbumId> {
-    const foundAlbum = await this._albumWR.findById(id);
+    const foundAlbum = await this._WR.findById(id);
 
     if (!foundAlbum) {
       throw new NotFoundException('Album does not exist');
@@ -117,7 +104,7 @@ export class AlbumService {
     }
 
     foundAlbum.updateArtists(payload.artists);
-    await this._albumWR.save(foundAlbum);
+    await this._WR.save(foundAlbum);
     this._EB.publish(new AlbumArtistsUpdatedEvent({ id: foundAlbum.getId() }));
     this._EB.publish(new AlbumUpdatedEvent({ id: foundAlbum.getId() }));
 
@@ -125,7 +112,7 @@ export class AlbumService {
   }
 
   async updateAlbumCover(id: string, payload: UpdateAlbumCoverPayload): Promise<AlbumId> {
-    const foundAlbum = await this._albumWR.findById(id);
+    const foundAlbum = await this._WR.findById(id);
 
     if (!foundAlbum) {
       throw new NotFoundException('Album does not exist');
@@ -151,21 +138,21 @@ export class AlbumService {
       foundAlbum.updateColor(payload.color);
     }
 
-    await this._albumWR.save(foundAlbum);
+    await this._WR.save(foundAlbum);
     this._EB.publish(new AlbumUpdatedEvent({ id: foundAlbum.getId() }));
 
     return foundAlbum.getId();
   }
 
   async deleteAlbumCover(id: string): Promise<AlbumId> {
-    const foundAlbum = await this._albumWR.findById(id);
+    const foundAlbum = await this._WR.findById(id);
 
     if (!foundAlbum) {
       throw new NotFoundException('Album does not exist');
     }
 
     foundAlbum.deleteCover();
-    await this._albumWR.save(foundAlbum);
+    await this._WR.save(foundAlbum);
     await this._artistFS.deleteAlbumCover(foundAlbum.getMainArtist(), foundAlbum.getId());
     this._EB.publish(new AlbumCoverDeletedEvent({ id: foundAlbum.getId() }));
     this._EB.publish(new AlbumUpdatedEvent({ id: foundAlbum.getId() }));
@@ -174,7 +161,7 @@ export class AlbumService {
   }
 
   async deleteAlbum(id: string): Promise<AlbumId> {
-    const deletedAlbumId = await this._albumWR.deleteById(id);
+    const deletedAlbumId = await this._WR.deleteById(id);
 
     if (!deletedAlbumId) {
       throw new NotFoundException('Album does not exist');
@@ -186,7 +173,7 @@ export class AlbumService {
   }
 
   async deleteAlbumsByArtistId(id: string): Promise<AlbumId[]> {
-    const { deletedIds } = await this._albumWR.deleteByArtistId(id);
+    const { deletedIds } = await this._WR.deleteByArtistId(id);
 
     this._EB.publish(new AlbumsDeletedEvent({ ids: deletedIds }));
 
@@ -194,7 +181,7 @@ export class AlbumService {
   }
 
   async getAlbum(id: string, options?: Partial<{ isPublic: boolean }>): Promise<AlbumDTO | null> {
-    const foundAlbum = await this._albumRR.findById(id, options);
+    const foundAlbum = await this._RR.findById(id, options);
 
     return foundAlbum ? AlbumMapper.toDTO(foundAlbum) : null;
   }
@@ -206,7 +193,7 @@ export class AlbumService {
       pagination: OffsetLimitPaginationDTO;
     }>,
   ): Promise<OffsetLimitPaginationResponseDTO<AlbumDTO>> {
-    const resp = await this._albumRR.findByArtistId(id, options);
+    const resp = await this._RR.findByArtistId(id, options);
 
     return {
       ...resp,
@@ -215,7 +202,7 @@ export class AlbumService {
   }
 
   async getAlbumArtistsById(id: string): Promise<ArtistId[]> {
-    const foundAlbum = await this._albumWR.findById(id);
+    const foundAlbum = await this._WR.findById(id);
 
     if (!foundAlbum) {
       throw new NotFoundException('Album does not exist');
@@ -225,6 +212,6 @@ export class AlbumService {
   }
 
   async verifyAlbumId(id: string): Promise<AlbumId | null> {
-    return this._albumWR.existsById(id);
+    return this._WR.existsById(id);
   }
 }

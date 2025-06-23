@@ -1,7 +1,7 @@
-import { AlbumType } from '../../../../domain/components/album/constants/album-types';
-import { Genre } from '../../../../domain/common/constants/genres';
+import { AlbumType } from '@core/domain/components/album/constants/album-types';
+import { Genre } from '@core/domain/common/constants/genres';
+import { AlbumId } from '@core/domain/components/album/types';
 import { ArtistDTO } from '../../artist/dtos/artist.dto';
-import { AlbumId } from '../../../../domain/components/album/types';
 
 export class AlbumDTO {
   constructor(
