@@ -1,5 +1,5 @@
 import { Global, Module } from '@nestjs/common';
-import { TypesenseAdapter } from './typesense.adapter';
+import { TypesenseService } from './typesense.service';
 import { ArtistModule } from './modules/artist/artist.module';
 import { AlbumModule } from './modules/album/album.module';
 import { TrackModule } from './modules/track/track.module';
@@ -9,7 +9,7 @@ import { ArtistService } from '../../../src/core/app/components/artist/artist.se
 @Global()
 @Module({
   imports: [UserModule, ArtistModule, AlbumModule, TrackModule],
-  providers: [ArtistService, TypesenseAdapter],
-  exports: [TypesenseAdapter],
+  providers: [ArtistService, TypesenseService],
+  exports: [TypesenseService],
 })
 export class TypesenseModule {}

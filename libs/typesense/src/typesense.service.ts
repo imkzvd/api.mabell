@@ -10,7 +10,7 @@ import { IndexedAlbumDTO } from '../../../src/core/app/components/search/ports/s
 import { IndexedTrackDTO } from '../../../src/core/app/components/search/ports/search-service/dtos/indexed-track.dto';
 import { IndexedPlaylistDTO } from '../../../src/core/app/components/search/ports/search-service/dtos/indexed-playlist.dto';
 
-export class TypesenseAdapter implements SearchService {
+export class TypesenseService implements SearchService {
   constructor(
     private readonly _userCollection: UserCollection,
     private readonly _artistCollection: ArtistCollection,
