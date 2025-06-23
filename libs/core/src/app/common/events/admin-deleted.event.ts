@@ -1,5 +1,5 @@
 import { Event } from '../ports/event-bus.port';
-import { AdminId } from '../../../domain/components/admin/types';
+import { AdminId } from '@core/domain/components/admin/types';
 
 export type AdminDeletedPayload = {
   id: AdminId;

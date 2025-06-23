@@ -1,5 +1,5 @@
 import { Event } from '../ports/event-bus.port';
-import { AlbumId } from '../../../domain/components/album/types';
+import { AlbumId } from '@core/domain/components/album/types';
 
 export type AlbumCoverDeletedPayload = {
   id: AlbumId;

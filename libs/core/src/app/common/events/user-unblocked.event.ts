@@ -1,5 +1,5 @@
 import { Event } from '../ports/event-bus.port';
-import { UserId } from '../../../domain/components/user/types';
+import { UserId } from '@core/domain/components/user/types';
 
 export type UserUnblockedPayload = {
   id: UserId;

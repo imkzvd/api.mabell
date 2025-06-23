@@ -1,5 +1,5 @@
 import { Event } from '../ports/event-bus.port';
-import { TrackId } from '../../../domain/components/track/types';
+import { TrackId } from '@core/domain/components/track/types';
 
 export type TrackUpdatedPayload = {
   id: TrackId;

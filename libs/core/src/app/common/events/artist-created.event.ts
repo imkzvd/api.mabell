@@ -1,5 +1,5 @@
 import { Event } from '../ports/event-bus.port';
-import { ArtistId } from '../../../domain/components/artist/types';
+import { ArtistId } from '@core/domain/components/artist/types';
 
 export type ArtistCreatedPayload = {
   id: ArtistId;
