@@ -1,16 +1,18 @@
+import { Injectable } from '@nestjs/common';
 import * as path from 'path';
 import * as fsPromises from 'fs/promises';
 import * as process from 'process';
 import { v4 as uuidv4 } from 'uuid';
-import { redisClient } from '../cache/redis/client';
-import { TmpFileStorage } from '../../core/app/common/ports/file-storages/tmp-file-storage.port';
-import { TmpFileDTO } from '../../core/app/common/ports/file-storages/common/dtos/tmp-file.dto';
-import { TmpFileId } from '../../core/app/common/ports/file-storages/common/types';
+import { CacheService } from '../../../../src/core/app/common/ports/cache.service.port';
+import { TmpFileStorage as TmpFileStoragePort } from '../../../../src/core/app/common/ports/file-storages/tmp-file-storage.port';
+import { TmpFileDTO } from '../../../../src/core/app/common/ports/file-storages/common/dtos/tmp-file.dto';
+import { TmpFileId } from '../../../../src/core/app/common/ports/file-storages/common/types';
 
-export class TmpFileStorageAdapter implements TmpFileStorage {
+@Injectable()
+export class TmpFileStorage implements TmpFileStoragePort {
   private readonly _dir: string = path.join(process.cwd(), '/tmp');
 
-  constructor() {
+  constructor(private readonly _cacheService: CacheService) {
     fsPromises.mkdir(this._dir, { recursive: true });
   }
 
@@ -43,10 +45,9 @@ export class TmpFileStorageAdapter implements TmpFileStorage {
 
     const prepKey: string = `file:${generatedId}`;
 
-    await redisClient.set(
+    await this._cacheService.set(
       prepKey,
       JSON.stringify(fileData),
-      'EX',
       Math.round((expiresAt.getTime() - Date.now()) / 1000),
     );
 
@@ -54,20 +55,20 @@ export class TmpFileStorageAdapter implements TmpFileStorage {
   }
 
   async findById(id: string): Promise<TmpFileDTO | null> {
-    const fileData = await redisClient.get(`file:${id}`);
+    const fileData = await this._cacheService.get(`file:${id}`);
 
     return fileData ? (JSON.parse(fileData) as TmpFileDTO) : null;
   }
 
   async deleteById(id: string): Promise<TmpFileId | null> {
-    const fileData = await redisClient.get(`file:${id}`);
+    const fileData = await this._cacheService.get(`file:${id}`);
 
     if (!fileData) return null;
 
     const parsedFileData = JSON.parse(fileData) as TmpFileDTO;
 
     await fsPromises.rm(parsedFileData.path);
-    await redisClient.del(`file:${parsedFileData.id}`);
+    await this._cacheService.del(`file:${parsedFileData.id}`);
 
     return parsedFileData.id;
   }
@@ -76,10 +77,6 @@ export class TmpFileStorageAdapter implements TmpFileStorage {
     await fsPromises.rm(this._dir, { recursive: true });
     await fsPromises.mkdir(this._dir, { recursive: true });
 
-    const keys = await redisClient.keys('file:*');
-
-    if (keys.length > 0) {
-      await redisClient.del(...keys);
-    }
+    await this._cacheService.delByPrefix('file');
   }
 }
