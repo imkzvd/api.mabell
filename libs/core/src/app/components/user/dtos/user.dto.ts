@@ -1,6 +1,6 @@
-import { Region } from '../../../../domain/common/constants/regions';
-import { Genre } from '../../../../domain/common/constants/genres';
-import { UserId } from '../../../../domain/components/user/types';
+import { Region } from '@core/domain/common/constants/regions';
+import { Genre } from '@core/domain/common/constants/genres';
+import { UserId } from '@core/domain/components/user/types';
 
 export class UserDTO {
   constructor(
