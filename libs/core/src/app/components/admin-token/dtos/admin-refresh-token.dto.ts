@@ -1,6 +1,6 @@
-import { AdminId } from '../../../../domain/components/admin/types';
-import { AdminRefreshTokenId } from '../../../../domain/components/admin-refresh-token/types';
-import { AdminRole } from '../../../../domain/components/admin/constants/admin-roles';
+import { AdminId } from '@core/domain/components/admin/types';
+import { AdminRefreshTokenId } from '@core/domain/components/admin-refresh-token/types';
+import { AdminRole } from '@core/domain/components/admin/constants/admin-roles';
 
 export class AdminRefreshTokenDTO {
   constructor(

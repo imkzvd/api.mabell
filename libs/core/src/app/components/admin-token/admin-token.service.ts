@@ -1,17 +1,10 @@
-import { Inject } from '@nestjs/common';
 import * as process from 'process';
-import { JWT_SERVICE_DI_TOKEN, JWTService, TokenTypes } from '../../common/ports/jwt.service.port';
-import { AdminRefreshTokenFactory } from '../../../domain/components/admin-refresh-token/admin-refresh-token.factory';
-import { ID_SERVICE_DI_TOKEN, IdService } from '../../common/ports/id.service.port';
-import { AdminRefreshTokenId } from '../../../domain/components/admin-refresh-token/types';
-import {
-  ADMIN_REFRESH_TOKEN_WRITE_REPOSITORY_DI_TOKEN,
-  AdminRefreshTokenWriteRepository,
-} from '../../../domain/components/admin-refresh-token/repository/admin-refresh-token-write-repository.port';
-import {
-  ADMIN_REFRESH_TOKEN_READ_REPOSITORY_DI_TOKEN,
-  AdminRefreshTokenReadRepository,
-} from '../../../domain/components/admin-refresh-token/repository/admin-refresh-token-read-repository.port';
+import { AdminRefreshTokenFactory } from '@core/domain/components/admin-refresh-token/admin-refresh-token.factory';
+import { AdminRefreshTokenId } from '@core/domain/components/admin-refresh-token/types';
+import { AdminRefreshTokenWriteRepository } from '@core/domain/components/admin-refresh-token/repository/admin-refresh-token-write-repository.port';
+import { AdminRefreshTokenReadRepository } from '@core/domain/components/admin-refresh-token/repository/admin-refresh-token-read-repository.port';
+import { JWTService, TokenTypes } from '../../common/ports/jwt.service.port';
+import { IdService } from '../../common/ports/id.service.port';
 import {
   AccessTokenCustomPayload,
   CreateAccessTokenPayload,
@@ -23,12 +16,10 @@ import AdminRefreshTokenMapper from './dtos/admin-refresh-token.mapper';
 
 export class AdminTokenService {
   constructor(
-    @Inject(ADMIN_REFRESH_TOKEN_WRITE_REPOSITORY_DI_TOKEN)
     private readonly _WR: AdminRefreshTokenWriteRepository,
-    @Inject(ADMIN_REFRESH_TOKEN_READ_REPOSITORY_DI_TOKEN)
     private readonly _RR: AdminRefreshTokenReadRepository,
-    @Inject(ID_SERVICE_DI_TOKEN) private readonly _IdService: IdService<AdminRefreshTokenId>,
-    @Inject(JWT_SERVICE_DI_TOKEN) private readonly _JWTService: JWTService,
+    private readonly _IdService: IdService<AdminRefreshTokenId>,
+    private readonly _JWTService: JWTService,
   ) {}
 
   createAccessToken(payload: CreateAccessTokenPayload): string {
