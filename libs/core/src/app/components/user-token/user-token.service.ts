@@ -1,18 +1,11 @@
-import { Inject } from '@nestjs/common';
 import * as process from 'process';
-import { JWT_SERVICE_DI_TOKEN, JWTService, TokenTypes } from '../../common/ports/jwt.service.port';
-import { ID_SERVICE_DI_TOKEN, IdService } from '../../common/ports/id.service.port';
-import { NotFoundException, UnauthorizedException } from '../../../shared/exceptions';
-import { UserRefreshTokenId } from '../../../domain/components/user-refresh-token/types';
-import { UserRefreshTokenFactory } from '../../../domain/components/user-refresh-token/user-refresh-token.factory';
-import {
-  USER_REFRESH_TOKEN_WRITE_REPOSITORY_DI_TOKEN,
-  UserRefreshTokenWriteRepository,
-} from '../../../domain/components/user-refresh-token/user-refresh-token-write-repository.port';
-import {
-  USER_REFRESH_TOKEN_READ_REPOSITORY_DI_TOKEN,
-  UserRefreshTokenReadRepository,
-} from '../../../domain/components/user-refresh-token/user-refresh-token-read-repository.port';
+import { NotFoundException, UnauthorizedException } from '@core/shared/exceptions';
+import { UserRefreshTokenId } from '@core/domain/components/user-refresh-token/types';
+import { UserRefreshTokenFactory } from '@core/domain/components/user-refresh-token/user-refresh-token.factory';
+import { UserRefreshTokenWriteRepository } from '@core/domain/components/user-refresh-token/user-refresh-token-write-repository.port';
+import { UserRefreshTokenReadRepository } from '@core/domain/components/user-refresh-token/user-refresh-token-read-repository.port';
+import { JWTService, TokenTypes } from '../../common/ports/jwt.service.port';
+import { IdService } from '../../common/ports/id.service.port';
 import {
   AccessTokenPayload,
   CreateAccessTokenPayload,
@@ -24,12 +17,10 @@ import { UserRefreshTokenDTO } from './dtos/user-refresh-token.dto';
 
 export class UserTokenService {
   constructor(
-    @Inject(USER_REFRESH_TOKEN_WRITE_REPOSITORY_DI_TOKEN)
     private readonly _WR: UserRefreshTokenWriteRepository,
-    @Inject(USER_REFRESH_TOKEN_READ_REPOSITORY_DI_TOKEN)
     private readonly _RR: UserRefreshTokenReadRepository,
-    @Inject(ID_SERVICE_DI_TOKEN) private readonly _IdService: IdService<UserRefreshTokenId>,
-    @Inject(JWT_SERVICE_DI_TOKEN) private readonly _JWTService: JWTService,
+    private readonly _IdService: IdService<UserRefreshTokenId>,
+    private readonly _JWTService: JWTService,
   ) {}
 
   createAccessToken(payload: CreateAccessTokenPayload): string {

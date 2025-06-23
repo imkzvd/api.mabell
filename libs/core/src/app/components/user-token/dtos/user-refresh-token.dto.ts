@@ -1,5 +1,5 @@
-import { UserId } from '../../../../domain/components/user/types';
-import { UserRefreshTokenId } from '../../../../domain/components/user-refresh-token/types';
+import { UserId } from '@core/domain/components/user/types';
+import { UserRefreshTokenId } from '@core/domain/components/user-refresh-token/types';
 
 export class UserRefreshTokenDTO {
   constructor(
