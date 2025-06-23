@@ -1,9 +1,9 @@
 export const CACHE_SERVICE_DI_TOKEN = Symbol('CACHE_SERVICE_DI_TOKEN');
 
 export interface CacheService {
-  get<T>(key: string): Promise<T | null>;
+  get<T extends string | number = string>(key: string): Promise<T | null>;
 
-  set<T>(key: string, value: T, ttlSeconds?: number): Promise<void>;
+  set<T extends string | number = string>(key: string, value: T, ttl?: number): Promise<void>;
 
   del(key: string): Promise<void>;
 
