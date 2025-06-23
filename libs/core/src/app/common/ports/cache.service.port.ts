@@ -1,5 +1,3 @@
-export const CACHE_SERVICE_DI_TOKEN = Symbol('CACHE_SERVICE_DI_TOKEN');
-
 export interface CacheService {
   get<T extends string | number = string>(key: string): Promise<T | null>;
 

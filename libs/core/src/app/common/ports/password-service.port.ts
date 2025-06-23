@@ -1,6 +1,4 @@
-import { HashedPasswordVO } from '../../../domain/common/vos/hashed-password.vo';
-
-export const PASSWORD_SERVICE_DI_TOKEN = Symbol('PASSWORD_SERVICE_DI_TOKEN');
+import { HashedPasswordVO } from '@core/domain/common/vos/hashed-password.vo';
 
 export interface PasswordService {
   generate: <HashOptions extends boolean = false>(

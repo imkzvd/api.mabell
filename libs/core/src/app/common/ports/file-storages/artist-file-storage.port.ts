@@ -1,10 +1,8 @@
-import { ArtistId } from '../../../../domain/components/artist/types';
-import { AlbumId } from '../../../../domain/components/album/types';
-import { TrackId } from '../../../../domain/components/track/types';
+import { ArtistId } from '@core/domain/components/artist/types';
+import { AlbumId } from '@core/domain/components/album/types';
+import { TrackId } from '@core/domain/components/track/types';
 import { StoredFileDTO } from './common/dtos/stored-file.dto';
 import { TmpFileDTO } from './common/dtos/tmp-file.dto';
-
-export const ARTIST_FILE_STORAGE_DI_TOKEN = Symbol('ARTIST_FILE_STORAGE_DI_TOKEN');
 
 export interface ArtistFileStorage {
   saveArtistAvatar(artistId: ArtistId, file: TmpFileDTO): Promise<StoredFileDTO>;

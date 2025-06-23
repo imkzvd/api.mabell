@@ -1,5 +1,3 @@
-export const JWT_SERVICE_DI_TOKEN = Symbol.for('JWT_SERVICE_DI_TOKEN');
-
 export const TokenTypes = {
   Access: 'access',
   Refresh: 'refresh',

@@ -1,5 +1,3 @@
-export const EVENT_BUS_DI_TOKEN = Symbol('EVENT_BUS_DI_TOKEN');
-
 export interface Event<T extends EventPayload = EventPayload> {
   readonly name: string;
   readonly payload: T;
