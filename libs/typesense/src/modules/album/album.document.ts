@@ -1,4 +1,4 @@
-import { AlbumType } from '../../../../../core/domain/components/album/constants/album-types';
+import { AlbumType } from '../../../../../src/core/domain/components/album/constants/album-types';
 
 export class Album {
   constructor(

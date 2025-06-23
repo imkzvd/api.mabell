@@ -1,5 +1,5 @@
-import { UserDTO } from '../../../../../core/app/components/user/dtos/user.dto';
 import { User } from './user.document';
+import { UserDTO } from '../../../../../src/core/app/components/user/dtos/user.dto';
 
 export class UserFactory {
   static create(dto: UserDTO) {

@@ -1,10 +1,10 @@
 import { CollectionCreateSchema } from 'typesense/lib/Typesense/Collections';
-import { TypeSenseClient } from '../../client';
 import ArtistMapper from './artist.mapper';
 import { Artist } from './artist.document';
-import { IndexedArtistDTO } from '../../../../../core/app/components/search/ports/search-service/dtos/indexed-artist.dto';
+import { TypeSenseClient } from '../../client';
+import { IndexedArtistDTO } from '../../../../../src/core/app/components/search/ports/search-service/dtos/indexed-artist.dto';
 import { BaseCollection } from '../../base/base-collection.interface';
-import { ArtistDTO } from '../../../../../core/domain/components/artist/repository/dtos/artist.dto';
+import { ArtistDTO } from '../../../../../src/core/domain/components/artist/repository/dtos/artist.dto';
 
 export class ArtistCollection implements BaseCollection<IndexedArtistDTO, ArtistDTO> {
   private readonly _collectionName = 'artists';

@@ -1,25 +1,20 @@
-import { SearchService } from '../../../core/app/components/search/ports/search-service/search-service.port';
-import { IndexedItemsDTO } from '../../../core/app/components/search/ports/search-service/dtos/indexed-items.dto';
-import { IndexedUserDTO } from '../../../core/app/components/search/ports/search-service/dtos/indexed-user.dto';
-import { IndexedArtistDTO } from '../../../core/app/components/search/ports/search-service/dtos/indexed-artist.dto';
-import { IndexedAlbumDTO } from '../../../core/app/components/search/ports/search-service/dtos/indexed-album.dto';
-import { IndexedTrackDTO } from '../../../core/app/components/search/ports/search-service/dtos/indexed-track.dto';
-import { IndexedPlaylistDTO } from '../../../core/app/components/search/ports/search-service/dtos/indexed-playlist.dto';
-import { Inject } from '@nestjs/common';
 import { ArtistCollection } from './modules/artist/artist.collection';
 import { AlbumCollection } from './modules/album/album.collection';
 import { TrackCollection } from './modules/track/track.collection';
 import { UserCollection } from './modules/user/user.collection';
+import { SearchService } from '../../../src/core/app/components/search/ports/search-service/search-service.port';
+import { IndexedItemsDTO } from '../../../src/core/app/components/search/ports/search-service/dtos/indexed-items.dto';
+import { IndexedUserDTO } from '../../../src/core/app/components/search/ports/search-service/dtos/indexed-user.dto';
+import { IndexedArtistDTO } from '../../../src/core/app/components/search/ports/search-service/dtos/indexed-artist.dto';
+import { IndexedAlbumDTO } from '../../../src/core/app/components/search/ports/search-service/dtos/indexed-album.dto';
+import { IndexedTrackDTO } from '../../../src/core/app/components/search/ports/search-service/dtos/indexed-track.dto';
+import { IndexedPlaylistDTO } from '../../../src/core/app/components/search/ports/search-service/dtos/indexed-playlist.dto';
 
 export class TypesenseAdapter implements SearchService {
   constructor(
-    @Inject(UserCollection)
     private readonly _userCollection: UserCollection,
-    @Inject(ArtistCollection)
     private readonly _artistCollection: ArtistCollection,
-    @Inject(AlbumCollection)
     private readonly _albumCollection: AlbumCollection,
-    @Inject(TrackCollection)
     private readonly _trackCollection: TrackCollection,
   ) {}
 

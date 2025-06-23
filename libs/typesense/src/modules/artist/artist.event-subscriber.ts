@@ -1,17 +1,16 @@
-import { Inject } from '@nestjs/common';
-import { EVENT_BUS_DI_TOKEN, EventBus } from '../../../../../core/app/common/ports/event-bus.port';
-import { ArtistCollection } from './artist.collection';
-import { ArtistCreatedEvent } from '../../../../../core/app/common/events/artist-created.event';
-import { ArtistUpdatedEvent } from '../../../../../core/app/common/events/artist-updated.event';
-import { ArtistDeletedEvent } from '../../../../../core/app/common/events/artist-deleted.event';
 import { QueryBus } from '@nestjs/cqrs';
-import { GetArtistQuery } from '../../../../../core/app/cqrs/artist/queries/get-artist/get-artist.query';
+import { ArtistCollection } from './artist.collection';
+import { EventBus } from '../../../../../src/core/app/common/ports/event-bus.port';
+import { ArtistCreatedEvent } from '../../../../../src/core/app/common/events/artist-created.event';
+import { ArtistUpdatedEvent } from '../../../../../src/core/app/common/events/artist-updated.event';
+import { ArtistDeletedEvent } from '../../../../../src/core/app/common/events/artist-deleted.event';
+import { GetArtistQuery } from '../../../../../src/core/app/cqrs/artist/queries/get-artist/get-artist.query';
 
 export class ArtistEventSubscriber {
   constructor(
     private readonly _QB: QueryBus,
-    @Inject(EVENT_BUS_DI_TOKEN) private readonly _EB: EventBus,
-    @Inject(ArtistCollection) private readonly _collection: ArtistCollection,
+    private readonly _EB: EventBus,
+    private readonly _collection: ArtistCollection,
   ) {
     this._EB.subscribe(ArtistCreatedEvent, async ({ id }) => this.saveArtistDocument(id));
     this._EB.subscribe(ArtistUpdatedEvent, async ({ id }) => this.saveArtistDocument(id));

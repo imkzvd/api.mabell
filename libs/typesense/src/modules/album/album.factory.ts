@@ -1,5 +1,5 @@
-import { AlbumDTO } from '../../../../../core/app/components/album/dtos/album.dto';
 import { Album } from './album.document';
+import { AlbumDTO } from '../../../../../src/core/app/components/album/dtos/album.dto';
 
 export class AlbumFactory {
   static create(dto: AlbumDTO) {
