@@ -1,5 +1,5 @@
-import { Genre } from '../../../../domain/common/constants/genres';
-import { ArtistId } from '../../../../domain/components/artist/types';
+import { Genre } from '@core/domain/common/constants/genres';
+import { ArtistId } from '@core/domain/components/artist/types';
 
 export class ArtistDTO {
   constructor(

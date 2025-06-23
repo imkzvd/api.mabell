@@ -1,58 +1,45 @@
-import { Inject } from '@nestjs/common';
-import {
-  ARTIST_WRITE_REPOSITORY_DI_TOKEN,
-  ArtistWriteRepository,
-} from '../../../domain/components/artist/repository/artist-write-repository.port';
-import { ID_SERVICE_DI_TOKEN, IdService } from '../../common/ports/id.service.port';
-import { ArtistFactory } from '../../../domain/components/artist/artist.factory';
+import { NotFoundException } from '@core/shared/exceptions';
+import { ArtistWriteRepository } from '@core/domain/components/artist/repository/artist-write-repository.port';
+import { ArtistFactory } from '@core/domain/components/artist/artist.factory';
+import { ArtistReadRepository } from '@core/domain/components/artist/repository/artist-read-repository.port';
+import { ArtistId } from '@core/domain/components/artist/types';
+import { IdService } from '../../common/ports/id.service.port';
 import { UpdateArtistAvatarPayload, UpdateArtistCoverPayload, UpdateArtistPayload } from './types';
-import { NotFoundException } from '../../../shared/exceptions';
 import { ArtistDTO } from './dtos/artist.dto';
-import {
-  ARTIST_READ_REPOSITORY_DI_TOKEN,
-  ArtistReadRepository,
-} from '../../../domain/components/artist/repository/artist-read-repository.port';
 import ArtistMapper from './dtos/artist.mapper';
-import { ArtistId } from '../../../domain/components/artist/types';
-import {
-  ARTIST_FILE_STORAGE_DI_TOKEN,
-  ArtistFileStorage,
-} from '../../common/ports/file-storages/artist-file-storage.port';
-import {
-  TMP_FILE_STORAGE_DI_TOKEN,
-  TmpFileStorage,
-} from '../../common/ports/file-storages/tmp-file-storage.port';
-import { EVENT_BUS_DI_TOKEN, EventBus } from '../../common/ports/event-bus.port';
+import { ArtistFileStorage } from '../../common/ports/file-storages/artist-file-storage.port';
+import { TmpFileStorage } from '../../common/ports/file-storages/tmp-file-storage.port';
+import { EventBus } from '../../common/ports/event-bus.port';
 import { ArtistCreatedEvent } from '../../common/events/artist-created.event';
 import { ArtistUpdatedEvent } from '../../common/events/artist-updated.event';
 import { ArtistDeletedEvent } from '../../common/events/artist-deleted.event';
 
 export class ArtistService {
   constructor(
-    @Inject(EVENT_BUS_DI_TOKEN) private readonly _EB: EventBus,
-    @Inject(ARTIST_WRITE_REPOSITORY_DI_TOKEN) private readonly _wr: ArtistWriteRepository,
-    @Inject(ARTIST_READ_REPOSITORY_DI_TOKEN) private readonly _rr: ArtistReadRepository,
-    @Inject(ID_SERVICE_DI_TOKEN) private readonly _idService: IdService<ArtistId>,
-    @Inject(TMP_FILE_STORAGE_DI_TOKEN) private readonly _tmpFS: TmpFileStorage,
-    @Inject(ARTIST_FILE_STORAGE_DI_TOKEN) private readonly _artistFS: ArtistFileStorage,
+    private readonly _EB: EventBus,
+    private readonly _WR: ArtistWriteRepository,
+    private readonly _RR: ArtistReadRepository,
+    private readonly _idService: IdService<ArtistId>,
+    private readonly _tmpFS: TmpFileStorage,
+    private readonly _artistFS: ArtistFileStorage,
   ) {}
 
   async createArtist(): Promise<ArtistId> {
     const generatedId = this._idService.generate();
-    const nextArtistIndex = await this._wr.getNextIndex();
+    const nextArtistIndex = await this._WR.getNextIndex();
     const createdArtist = ArtistFactory.create({
       id: generatedId,
       name: `Artist #${nextArtistIndex}`,
     });
 
-    await this._wr.save(createdArtist);
+    await this._WR.save(createdArtist);
     this._EB.publish(new ArtistCreatedEvent({ id: generatedId }));
 
     return generatedId;
   }
 
   async updateArtist(id: string, payload: UpdateArtistPayload): Promise<ArtistId> {
-    const foundArtist = await this._wr.findById(id);
+    const foundArtist = await this._WR.findById(id);
 
     if (!foundArtist) {
       throw new NotFoundException(`Artist does not exist`);
@@ -86,14 +73,14 @@ export class ArtistService {
       foundArtist.updatePublicStatus(payload.isPublic);
     }
 
-    await this._wr.save(foundArtist);
+    await this._WR.save(foundArtist);
     this._EB.publish(new ArtistUpdatedEvent({ id: foundArtist.getId() }));
 
     return foundArtist.getId();
   }
 
   async updateArtistAvatar(id: string, payload: UpdateArtistAvatarPayload): Promise<ArtistId> {
-    const foundArtist = await this._wr.findById(id);
+    const foundArtist = await this._WR.findById(id);
 
     if (!foundArtist) {
       throw new NotFoundException('Artist does not exist');
@@ -115,14 +102,14 @@ export class ArtistService {
       foundArtist.updateAccentColor(payload.color);
     }
 
-    await this._wr.save(foundArtist);
+    await this._WR.save(foundArtist);
     this._EB.publish(new ArtistUpdatedEvent({ id: foundArtist.getId() }));
 
     return foundArtist.getId();
   }
 
   async deleteArtistAvatar(id: string): Promise<ArtistId> {
-    const foundArtist = await this._wr.findById(id);
+    const foundArtist = await this._WR.findById(id);
 
     if (!foundArtist) {
       throw new NotFoundException('Artist does not exist');
@@ -130,7 +117,7 @@ export class ArtistService {
 
     foundArtist.deleteAvatar();
 
-    await this._wr.save(foundArtist);
+    await this._WR.save(foundArtist);
     await this._artistFS.deleteArtistAvatar(foundArtist.getId());
     this._EB.publish(new ArtistUpdatedEvent({ id: foundArtist.getId() }));
 
@@ -138,7 +125,7 @@ export class ArtistService {
   }
 
   async updateArtistCover(id: string, payload: UpdateArtistCoverPayload): Promise<ArtistId> {
-    const foundArtist = await this._wr.findById(id);
+    const foundArtist = await this._WR.findById(id);
 
     if (!foundArtist) {
       throw new NotFoundException('Artist does not exist');
@@ -160,21 +147,21 @@ export class ArtistService {
       foundArtist.updateSecondaryColor(payload.color);
     }
 
-    await this._wr.save(foundArtist);
+    await this._WR.save(foundArtist);
     this._EB.publish(new ArtistUpdatedEvent({ id: foundArtist.getId() }));
 
     return foundArtist.getId();
   }
 
   async deleteArtistCover(id: string): Promise<ArtistId> {
-    const foundArtist = await this._wr.findById(id);
+    const foundArtist = await this._WR.findById(id);
 
     if (!foundArtist) {
       throw new NotFoundException('Artist does not exist');
     }
 
     foundArtist.deleteCover();
-    await this._wr.save(foundArtist);
+    await this._WR.save(foundArtist);
     await this._artistFS.deleteArtistCover(foundArtist.getId());
     this._EB.publish(new ArtistUpdatedEvent({ id: foundArtist.getId() }));
 
@@ -182,7 +169,7 @@ export class ArtistService {
   }
 
   async deleteArtist(id: string): Promise<ArtistId> {
-    const deletedArtistId = await this._wr.deleteById(id);
+    const deletedArtistId = await this._WR.deleteById(id);
 
     if (!deletedArtistId) {
       throw new NotFoundException('Artist does not exist');
@@ -195,13 +182,13 @@ export class ArtistService {
   }
 
   async getArtist(id: string, options?: Partial<{ isPublic: boolean }>): Promise<ArtistDTO | null> {
-    const foundArtist = await this._rr.findById(id, options);
+    const foundArtist = await this._RR.findById(id, options);
 
     return foundArtist ? ArtistMapper.toDTO(foundArtist) : null;
   }
 
   async getArtistPublicStatus(id: string): Promise<boolean> {
-    const foundArtist = await this._rr.findById(id);
+    const foundArtist = await this._RR.findById(id);
 
     if (!foundArtist) {
       throw new NotFoundException('Artist does not exist');
@@ -211,7 +198,7 @@ export class ArtistService {
   }
 
   async verifyArtistId(id: string): Promise<ArtistId | null> {
-    return this._wr.existsById(id);
+    return this._WR.existsById(id);
   }
 
   async verifyArtistIds(ids: string[]): Promise<{
@@ -219,6 +206,6 @@ export class ArtistService {
     total: number;
     missingIds: string[];
   }> {
-    return this._wr.existsByIds(ids);
+    return this._WR.existsByIds(ids);
   }
 }
