@@ -1,4 +1,4 @@
-import { BadRequestException } from '../../../../shared/exceptions';
+import { BadRequestException } from '@core/shared/exceptions';
 
 export class ReleaseDateVO {
   private constructor(public readonly value: Date) {

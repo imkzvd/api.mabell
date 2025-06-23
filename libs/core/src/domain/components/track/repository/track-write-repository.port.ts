@@ -1,8 +1,6 @@
 import { Track } from '../track.entity';
 import { TrackId } from '../types';
 
-export const TRACK_WRITE_REPOSITORY_DI_TOKEN = Symbol('TRACK_WRITE_REPOSITORY_DI_TOKEN');
-
 export interface TrackWriteRepository {
   save(entity: Track): Promise<void>;
 

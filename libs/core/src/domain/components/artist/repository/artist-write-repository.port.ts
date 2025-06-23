@@ -1,8 +1,6 @@
 import { Artist } from '../artist.entity';
 import { ArtistId } from '../types';
 
-export const ARTIST_WRITE_REPOSITORY_DI_TOKEN = Symbol('ARTIST_WRITE_REPOSITORY_DI_TOKEN');
-
 export interface ArtistWriteRepository {
   save(entity: Artist): Promise<void>;
 

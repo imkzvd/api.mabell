@@ -1,4 +1,4 @@
-import { BadRequestException } from '../../../../shared/exceptions';
+import { BadRequestException } from '@core/shared/exceptions';
 import { AlbumType, AlbumTypes } from '../constants/album-types';
 
 export class AlbumTypeVO {
