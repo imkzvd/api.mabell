@@ -1,7 +1,7 @@
-import { PlaylistId } from '../../../../domain/components/playlist/types';
-import { Genre } from '../../../../domain/common/constants/genres';
+import { PlaylistId } from '@core/domain/components/playlist/types';
+import { Genre } from '@core/domain/common/constants/genres';
+import { TrackId } from '@core/domain/components/track/types';
 import { UserDTO } from '../../user/dtos/user.dto';
-import { TrackId } from '../../../../domain/components/track/types';
 
 export class PlaylistDTO {
   constructor(

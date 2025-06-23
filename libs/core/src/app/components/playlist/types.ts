@@ -1,5 +1,5 @@
-import { UserId } from '../../../domain/components/user/types';
-import { Genre } from '../../../domain/common/constants/genres';
+import { UserId } from '@core/domain/components/user/types';
+import { Genre } from '@core/domain/common/constants/genres';
 
 export type CreatePlaylistPayload = {
   ownerId: UserId;
