@@ -1,6 +1,6 @@
+import { TrackId } from '@core/domain/components/track/types';
 import { ArtistDTO } from '../../artist/dtos/artist.dto';
 import { AlbumDTO } from '../../album/dtos/album.dto';
-import { TrackId } from '../../../../domain/components/track/types';
 
 export class TrackDTO {
   constructor(

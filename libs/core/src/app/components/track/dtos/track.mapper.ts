@@ -1,6 +1,6 @@
+import { TrackWithAlbumAndArtistsDTO } from '@core/domain/components/track/repository/dtos/track-with-album-and-artists.dto';
 import { TrackDTO } from './track.dto';
 import { PlaylistTrackDTO } from './playlist-track.dto';
-import { TrackWithAlbumAndArtistsDTO } from '../../../../domain/components/track/repository/dtos/track-with-album-and-artists.dto';
 import ArtistMapper from '../../artist/dtos/artist.mapper';
 import AlbumMapper from '../../album/dtos/album.mapper';
 

@@ -1,5 +1,5 @@
-import { AlbumId } from '../../../domain/components/album/types';
-import { ArtistId } from '../../../domain/components/artist/types';
+import { AlbumId } from '@core/domain/components/album/types';
+import { ArtistId } from '@core/domain/components/artist/types';
 
 export type CreateTrackPayload = {
   artistIds: ArtistId[];

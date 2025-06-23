@@ -1,4 +1,21 @@
-import { Inject } from '@nestjs/common';
+import { NotFoundException } from '@core/shared/exceptions';
+import { OffsetLimitPaginationResponseDTO } from '@core/shared/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
+import { OffsetLimitPaginationDTO } from '@core/shared/dtos/offset-limit-pagination/offset-limit-pagination-payload.dto';
+import { TrackWriteRepository } from '@core/domain/components/track/repository/track-write-repository.port';
+import { TrackFactory } from '@core/domain/components/track/track.factory';
+import { TrackReadRepository } from '@core/domain/components/track/repository/track-read-repository.port';
+import { TrackId } from '@core/domain/components/track/types';
+import { ArtistId } from '@core/domain/components/artist/types';
+import { TrackDTO } from './dtos/track.dto';
+import TrackMapper from './dtos/track.mapper';
+import { ArtistFileStorage } from '../../common/ports/file-storages/artist-file-storage.port';
+import { TmpFileStorage } from '../../common/ports/file-storages/tmp-file-storage.port';
+import { EventBus } from '../../common/ports/event-bus.port';
+import { TrackCreatedEvent } from '../../common/events/track-created.event';
+import { TrackUpdatedEvent } from '../../common/events/track-updated.event';
+import { TracksUpdatedEvent } from '../../common/events/tracks-updated.event';
+import { TrackDeletedEvent } from '../../common/events/track-deleted.event';
+import { TracksDeletedEvent } from '../../common/events/tracks-deleted.event';
 import {
   CreateTrackPayload,
   UpdateTrackArtistsPayload,
@@ -6,51 +23,21 @@ import {
   UpdateTrackFilePayload,
   UpdateTrackPayload,
 } from './types';
-import {
-  TRACK_WRITE_REPOSITORY_DI_TOKEN,
-  TrackWriteRepository,
-} from '../../../domain/components/track/repository/track-write-repository.port';
-import { ID_SERVICE_DI_TOKEN, IdService } from '../../common/ports/id.service.port';
-import { NotFoundException } from '../../../shared/exceptions';
-import { TrackFactory } from '../../../domain/components/track/track.factory';
-import { TrackDTO } from './dtos/track.dto';
-import {
-  TRACK_READ_REPOSITORY_DI_TOKEN,
-  TrackReadRepository,
-} from '../../../domain/components/track/repository/track-read-repository.port';
-import TrackMapper from './dtos/track.mapper';
-import { OffsetLimitPaginationResponseDTO } from '../../../shared/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
-import { OffsetLimitPaginationDTO } from '../../../shared/dtos/offset-limit-pagination/offset-limit-pagination-payload.dto';
-import { TrackId } from '../../../domain/components/track/types';
-import { ArtistId } from '../../../domain/components/artist/types';
-import {
-  ARTIST_FILE_STORAGE_DI_TOKEN,
-  ArtistFileStorage,
-} from '../../common/ports/file-storages/artist-file-storage.port';
-import {
-  TMP_FILE_STORAGE_DI_TOKEN,
-  TmpFileStorage,
-} from '../../common/ports/file-storages/tmp-file-storage.port';
-import { EVENT_BUS_DI_TOKEN, EventBus } from '../../common/ports/event-bus.port';
-import { TrackCreatedEvent } from '../../common/events/track-created.event';
-import { TrackUpdatedEvent } from '../../common/events/track-updated.event';
-import { TracksUpdatedEvent } from '../../common/events/tracks-updated.event';
-import { TrackDeletedEvent } from '../../common/events/track-deleted.event';
-import { TracksDeletedEvent } from '../../common/events/tracks-deleted.event';
+import { IdService } from '../../common/ports/id.service.port';
 
 export class TrackService {
   constructor(
-    @Inject(EVENT_BUS_DI_TOKEN) private readonly _EB: EventBus,
-    @Inject(TRACK_WRITE_REPOSITORY_DI_TOKEN) private readonly _wr: TrackWriteRepository,
-    @Inject(TRACK_READ_REPOSITORY_DI_TOKEN) private readonly _rr: TrackReadRepository,
-    @Inject(ID_SERVICE_DI_TOKEN) private readonly _idService: IdService<TrackId>,
-    @Inject(TMP_FILE_STORAGE_DI_TOKEN) private readonly _tmpFS: TmpFileStorage,
-    @Inject(ARTIST_FILE_STORAGE_DI_TOKEN) private readonly _artistFS: ArtistFileStorage,
+    private readonly _EB: EventBus,
+    private readonly _WR: TrackWriteRepository,
+    private readonly _RR: TrackReadRepository,
+    private readonly _idService: IdService<TrackId>,
+    private readonly _tmpFS: TmpFileStorage,
+    private readonly _artistFS: ArtistFileStorage,
   ) {}
 
   async createTrack(payload: CreateTrackPayload): Promise<TrackId> {
     const generatedId = this._idService.generate();
-    const nextAlbumTrackIndex = await this._wr.getNextAlbumTrackIndex(payload.albumId);
+    const nextAlbumTrackIndex = await this._WR.getNextAlbumTrackIndex(payload.albumId);
     const createdTrack = TrackFactory.create({
       id: generatedId,
       name: `Track #${nextAlbumTrackIndex + 1}`,
@@ -59,14 +46,14 @@ export class TrackService {
       trackNumber: nextAlbumTrackIndex,
     });
 
-    await this._wr.save(createdTrack);
+    await this._WR.save(createdTrack);
     this._EB.publish(new TrackCreatedEvent({ id: generatedId }));
 
     return createdTrack.getId();
   }
 
   async updateTrack(id: string, payload: UpdateTrackPayload): Promise<TrackId> {
-    const foundTrack = await this._wr.findById(id);
+    const foundTrack = await this._WR.findById(id);
 
     if (!foundTrack) {
       throw new NotFoundException('Track does not exist');
@@ -88,14 +75,14 @@ export class TrackService {
       foundTrack.updatePublicStatus(payload.isPublic);
     }
 
-    await this._wr.save(foundTrack);
+    await this._WR.save(foundTrack);
     this._EB.publish(new TrackUpdatedEvent({ id: foundTrack.getId() }));
 
     return foundTrack.getId();
   }
 
   async updateTrackFile(id: string, payload: UpdateTrackFilePayload): Promise<TrackId> {
-    const foundTrack = await this._wr.findById(id);
+    const foundTrack = await this._WR.findById(id);
 
     if (!foundTrack) {
       throw new NotFoundException('Track does not exist');
@@ -117,14 +104,14 @@ export class TrackService {
     foundTrack.updateFile(storedFileData.path);
     foundTrack.updateDuration(payload.duration);
 
-    await this._wr.save(foundTrack);
+    await this._WR.save(foundTrack);
     this._EB.publish(new TrackUpdatedEvent({ id: foundTrack.getId() }));
 
     return foundTrack.getId();
   }
 
   async deleteTrackFile(id: string): Promise<TrackId> {
-    const foundTrack = await this._wr.findById(id);
+    const foundTrack = await this._WR.findById(id);
 
     if (!foundTrack) {
       throw new NotFoundException('Track does not exist');
@@ -134,7 +121,7 @@ export class TrackService {
     foundTrack.deleteDuration();
     foundTrack.updateActiveStatus(false);
 
-    await this._wr.save(foundTrack);
+    await this._WR.save(foundTrack);
     await this._artistFS.deleteTrack(
       foundTrack.getMainArtist(),
       foundTrack.getAlbum(),
@@ -149,13 +136,13 @@ export class TrackService {
     albumId: string,
     payload: UpdateTrackArtistsPayload,
   ): Promise<TrackId[]> {
-    const foundTracks = await this._wr.findByAlbumId(albumId);
+    const foundTracks = await this._WR.findByAlbumId(albumId);
 
     if (!foundTracks.total) return [];
 
     foundTracks.items.forEach((track) => track.updateArtists(payload.artistIds));
 
-    await this._wr.saveMany(foundTracks.items);
+    await this._WR.saveMany(foundTracks.items);
     this._EB.publish(new TracksUpdatedEvent({ ids: foundTracks.itemIds }));
 
     return foundTracks.itemIds;
@@ -165,7 +152,7 @@ export class TrackService {
     id: string,
     payload: UpdateTrackFeatArtistsPayload,
   ): Promise<TrackId> {
-    const foundTrack = await this._wr.findById(id);
+    const foundTrack = await this._WR.findById(id);
 
     if (!foundTrack) {
       throw new NotFoundException('Track does not exist');
@@ -173,33 +160,33 @@ export class TrackService {
 
     foundTrack.updateFeaturedArtists(payload.artistIds);
 
-    await this._wr.save(foundTrack);
+    await this._WR.save(foundTrack);
     this._EB.publish(new TrackUpdatedEvent({ id: foundTrack.getId() }));
 
     return foundTrack.getId();
   }
 
   async unlinkFeatArtistForTracksByArtistId(artistId: ArtistId): Promise<TrackId[]> {
-    const foundTracksResult = await this._wr.findByFeatArtistId(artistId);
+    const foundTracksResult = await this._WR.findByFeatArtistId(artistId);
 
     if (!foundTracksResult.total) return [];
 
     foundTracksResult.items.forEach((track) => track.deleteFeaturedArtist(artistId));
 
-    await this._wr.saveMany(foundTracksResult.items);
+    await this._WR.saveMany(foundTracksResult.items);
     this._EB.publish(new TracksUpdatedEvent({ ids: foundTracksResult.itemIds }));
 
     return foundTracksResult.itemIds;
   }
 
   async deleteTrack(id: string): Promise<TrackId> {
-    const foundTrack = await this._wr.findById(id);
+    const foundTrack = await this._WR.findById(id);
 
     if (!foundTrack) {
       throw new NotFoundException('Track does not exist');
     }
 
-    await this._wr.deleteById(id);
+    await this._WR.deleteById(id);
     await this._artistFS.deleteTrack(
       foundTrack.getMainArtist(),
       foundTrack.getAlbum(),
@@ -211,7 +198,7 @@ export class TrackService {
   }
 
   async deleteByArtistId(id: string): Promise<TrackId[]> {
-    const { deletedIds } = await this._wr.deleteByArtistId(id);
+    const { deletedIds } = await this._WR.deleteByArtistId(id);
 
     this._EB.publish(new TracksDeletedEvent({ ids: deletedIds }));
 
@@ -219,7 +206,7 @@ export class TrackService {
   }
 
   async deleteByAlbumId(id: string): Promise<TrackId[]> {
-    const { deletedIds } = await this._wr.deleteByAlbumId(id);
+    const { deletedIds } = await this._WR.deleteByAlbumId(id);
 
     this._EB.publish(new TracksDeletedEvent({ ids: deletedIds }));
 
@@ -232,7 +219,7 @@ export class TrackService {
       isPublic: boolean;
     }>,
   ): Promise<TrackDTO | null> {
-    const foundTrack = await this._rr.findById(id, options);
+    const foundTrack = await this._RR.findById(id, options);
 
     return foundTrack ? TrackMapper.toDTO(foundTrack) : null;
   }
@@ -249,7 +236,7 @@ export class TrackService {
     total: number;
     missingIds: string[];
   }> {
-    return await this._rr.findByIds(ids, options);
+    return await this._RR.findByIds(ids, options);
   }
 
   async getTracksByArtistId(
@@ -259,7 +246,7 @@ export class TrackService {
       pagination: OffsetLimitPaginationDTO;
     }>,
   ): Promise<OffsetLimitPaginationResponseDTO<TrackDTO>> {
-    const result = await this._rr.findByArtistId(id, options);
+    const result = await this._RR.findByArtistId(id, options);
 
     return {
       ...result,
@@ -274,7 +261,7 @@ export class TrackService {
       pagination: OffsetLimitPaginationDTO;
     }>,
   ): Promise<OffsetLimitPaginationResponseDTO<TrackDTO>> {
-    const result = await this._rr.findByAlbumId(id, options);
+    const result = await this._RR.findByAlbumId(id, options);
 
     return {
       ...result,
@@ -283,6 +270,6 @@ export class TrackService {
   }
 
   async verifyTrackId(id: string): Promise<TrackId | null> {
-    return this._wr.existsById(id);
+    return this._WR.existsById(id);
   }
 }
