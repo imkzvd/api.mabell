@@ -36,6 +36,14 @@ export class RedisService implements CacheService {
     await this._client.del(key);
   }
 
+  async delByPrefix(prefix: string): Promise<void> {
+    const keys = await this._client.keys(`${prefix}:*`);
+
+    if (!keys.length) return;
+
+    await this._client.del(...keys);
+  }
+
   async has(key: string): Promise<boolean> {
     return !!(await this._client.exists(key));
   }

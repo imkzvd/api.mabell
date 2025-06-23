@@ -7,5 +7,7 @@ export interface CacheService {
 
   del(key: string): Promise<void>;
 
+  delByPrefix(key: string): Promise<void>;
+
   has(key: string): Promise<boolean>;
 }
