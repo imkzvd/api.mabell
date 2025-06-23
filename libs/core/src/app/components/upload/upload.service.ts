@@ -1,17 +1,11 @@
-import { Inject } from '@nestjs/common';
-import {
-  TMP_FILE_STORAGE_DI_TOKEN,
-  TmpFileStorage,
-} from '../../common/ports/file-storages/tmp-file-storage.port';
+import { NotFoundException } from '@core/shared/exceptions';
+import { TmpFileStorage } from '../../common/ports/file-storages/tmp-file-storage.port';
 import { TmpFileId } from '../../common/ports/file-storages/common/types';
-import { NotFoundException } from '../../../shared/exceptions';
 import { TmpFileDTO } from '../../common/ports/file-storages/common/dtos/tmp-file.dto';
 import { UploadFilePayload } from './types';
 
 export class UploadService {
-  constructor(
-    @Inject(TMP_FILE_STORAGE_DI_TOKEN) private readonly _tmpFileStorage: TmpFileStorage,
-  ) {}
+  constructor(private readonly _tmpFileStorage: TmpFileStorage) {}
 
   async uploadFile(payload: UploadFilePayload): Promise<TmpFileId> {
     const { id } = await this._tmpFileStorage.upload(payload.file);
