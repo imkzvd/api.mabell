@@ -1,14 +1,9 @@
-import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { Inject } from '@nestjs/common';
-import {
-  SEARCH_SERVICE_DI_TOKEN,
-  SearchService,
-} from '../../ports/search-service/search-service.port';
-import { GetPlaylistsQuery } from './get-playlists.query';
+import { QueryHandler } from '@core/app/types';
+import { GetPlaylistsQuery } from '@core/app/cqrs/search/queries/get-playlists/get-playlists.query';
+import { SearchService } from '@core/app/common/ports/search-service/search-service.port';
 
-@QueryHandler(GetPlaylistsQuery)
-export class GetPlaylistsHandler implements IQueryHandler<GetPlaylistsQuery> {
-  constructor(@Inject(SEARCH_SERVICE_DI_TOKEN) private readonly _searchService: SearchService) {}
+export class GetPlaylistsHandler implements QueryHandler<GetPlaylistsQuery> {
+  constructor(private readonly _searchService: SearchService) {}
 
   async execute({ q }: GetPlaylistsQuery) {
     return this._searchService.findPlaylistsByKey(q);

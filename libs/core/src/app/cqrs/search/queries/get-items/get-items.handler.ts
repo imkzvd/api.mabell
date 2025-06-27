@@ -1,14 +1,9 @@
-import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { Inject } from '@nestjs/common';
-import {
-  SEARCH_SERVICE_DI_TOKEN,
-  SearchService,
-} from '../../ports/search-service/search-service.port';
-import { GetItemsQuery } from './get-items.query';
+import { QueryHandler } from '@core/app/types';
+import { GetItemsQuery } from '@core/app/cqrs/search/queries/get-items/get-items.query';
+import { SearchService } from '@core/app/common/ports/search-service/search-service.port';
 
-@QueryHandler(GetItemsQuery)
-export class GetItemsHandler implements IQueryHandler<GetItemsQuery> {
-  constructor(@Inject(SEARCH_SERVICE_DI_TOKEN) private readonly _searchService: SearchService) {}
+export class GetItemsHandler implements QueryHandler<GetItemsQuery> {
+  constructor(private readonly _searchService: SearchService) {}
 
   async execute({ q }: GetItemsQuery) {
     return this._searchService.findByKey(q);

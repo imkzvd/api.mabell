@@ -5,8 +5,6 @@ import { IndexedTrackDTO } from './dtos/indexed-track.dto';
 import { IndexedItemsDTO } from './dtos/indexed-items.dto';
 import { IndexedPlaylistDTO } from './dtos/indexed-playlist.dto';
 
-export const SEARCH_SERVICE_DI_TOKEN = Symbol('SEARCH_SERVICE_DI_TOKEN');
-
 export interface SearchService {
   findByKey(key: string, isPublic?: boolean): Promise<IndexedItemsDTO>;
 

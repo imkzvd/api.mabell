@@ -1,14 +1,9 @@
-import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { Inject } from '@nestjs/common';
-import {
-  SEARCH_SERVICE_DI_TOKEN,
-  SearchService,
-} from '../../ports/search-service/search-service.port';
-import { GetArtistsQuery } from './get-artists.query';
+import { QueryHandler } from '@core/app/types';
+import { GetArtistsQuery } from '@core/app/cqrs/search/queries/get-artists/get-artists.query';
+import { SearchService } from '@core/app/common/ports/search-service/search-service.port';
 
-@QueryHandler(GetArtistsQuery)
-export class GetArtistsHandler implements IQueryHandler<GetArtistsQuery> {
-  constructor(@Inject(SEARCH_SERVICE_DI_TOKEN) private readonly _searchService: SearchService) {}
+export class GetArtistsHandler implements QueryHandler<GetArtistsQuery> {
+  constructor(private readonly _searchService: SearchService) {}
 
   async execute({ q }: GetArtistsQuery) {
     return this._searchService.findArtistsByKey(q);

@@ -1,14 +1,9 @@
-import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { Inject } from '@nestjs/common';
-import {
-  SEARCH_SERVICE_DI_TOKEN,
-  SearchService,
-} from '../../ports/search-service/search-service.port';
-import { GetTracksQuery } from './get-tracks.query';
+import { QueryHandler } from '@core/app/types';
+import { GetTracksQuery } from '@core/app/cqrs/search/queries/get-tracks/get-tracks.query';
+import { SearchService } from '@core/app/common/ports/search-service/search-service.port';
 
-@QueryHandler(GetTracksQuery)
-export class GetTracksHandler implements IQueryHandler<GetTracksQuery> {
-  constructor(@Inject(SEARCH_SERVICE_DI_TOKEN) private readonly _searchService: SearchService) {}
+export class GetTracksHandler implements QueryHandler<GetTracksQuery> {
+  constructor(private readonly _searchService: SearchService) {}
 
   async execute({ q }: GetTracksQuery) {
     return this._searchService.findTracksByKey(q);
