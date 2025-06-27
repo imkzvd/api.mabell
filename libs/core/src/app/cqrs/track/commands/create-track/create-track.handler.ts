@@ -1,15 +1,13 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { Inject } from '@nestjs/common';
-import { CreateTrackCommand } from './create-track.command';
-import { NotFoundException } from '../../../../../shared/exceptions';
-import { AlbumService } from '../../../../components/album/album.service';
-import { TrackService } from '../../../../components/track/track.service';
+import { CommandHandler } from '@core/app/types';
+import { NotFoundException } from '@core/shared/exceptions';
+import { AlbumService } from '@core/app/components/album/album.service';
+import { TrackService } from '@core/app/components/track/track.service';
+import { CreateTrackCommand } from '@core/app/cqrs/track/commands/create-track/create-track.command';
 
-@CommandHandler(CreateTrackCommand)
-export class CreateTrackHandler implements ICommandHandler<CreateTrackCommand> {
+export class CreateTrackHandler implements CommandHandler<CreateTrackCommand> {
   constructor(
-    @Inject(AlbumService) private readonly _albumService: AlbumService,
-    @Inject(TrackService) private readonly _trackService: TrackService,
+    private readonly _albumService: AlbumService,
+    private readonly _trackService: TrackService,
   ) {}
 
   async execute({ albumId }: CreateTrackCommand) {

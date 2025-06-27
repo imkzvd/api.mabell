@@ -1,11 +1,9 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { Inject } from '@nestjs/common';
-import { LoginAdminCommand } from './login-admin.command';
-import { LoginService } from '../../../../components/login/login.service';
+import { CommandHandler } from '@core/app/types';
+import { LoginService } from '@core/app/components/login/login.service';
+import { LoginAdminCommand } from '@core/app/cqrs/admin/commands/login-admin/login-admin.command';
 
-@CommandHandler(LoginAdminCommand)
-export class LoginAdminHandler implements ICommandHandler<LoginAdminCommand> {
-  constructor(@Inject(LoginService) private readonly _loginService: LoginService) {}
+export class LoginAdminHandler implements CommandHandler<LoginAdminCommand> {
+  constructor(private readonly _loginService: LoginService) {}
 
   async execute({ payload }: LoginAdminCommand) {
     return await this._loginService.loginAdmin(payload);

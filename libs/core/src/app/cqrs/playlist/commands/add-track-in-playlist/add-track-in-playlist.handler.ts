@@ -1,15 +1,13 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { Inject } from '@nestjs/common';
-import { NotFoundException } from '../../../../../shared/exceptions';
-import { AddTrackInPlaylistCommand } from './add-track-in-playlist.command';
-import { PlaylistService } from '../../../../components/playlist/playlist.service';
-import { TrackService } from '../../../../components/track/track.service';
+import { CommandHandler } from '@core/app/types';
+import { NotFoundException } from '@core/shared/exceptions';
+import { PlaylistService } from '@core/app/components/playlist/playlist.service';
+import { TrackService } from '@core/app/components/track/track.service';
+import { AddTrackInPlaylistCommand } from '@core/app/cqrs/playlist/commands/add-track-in-playlist/add-track-in-playlist.command';
 
-@CommandHandler(AddTrackInPlaylistCommand)
-export class AddTrackInPlaylistHandler implements ICommandHandler<AddTrackInPlaylistCommand> {
+export class AddTrackInPlaylistHandler implements CommandHandler<AddTrackInPlaylistCommand> {
   constructor(
-    @Inject(PlaylistService) private readonly _playlistService: PlaylistService,
-    @Inject(TrackService) private readonly _trackService: TrackService,
+    private readonly _playlistService: PlaylistService,
+    private readonly _trackService: TrackService,
   ) {}
 
   async execute({ playlistId, trackId }: AddTrackInPlaylistCommand) {

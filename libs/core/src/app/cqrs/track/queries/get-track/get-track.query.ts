@@ -1,5 +1,5 @@
-import { Query } from '@nestjs/cqrs';
-import { TrackDTO } from '../../../../components/track/dtos/track.dto';
+import { Query } from '@core/app/types';
+import { TrackDTO } from '@core/app/components/track/dtos/track.dto';
 
 export class GetTrackQuery extends Query<TrackDTO | null> {
   constructor(

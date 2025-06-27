@@ -1,11 +1,9 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { Inject } from '@nestjs/common';
-import { DeleteAdminCommand } from './delete-admin.command';
-import { AdminService } from '../../../../components/admin/admin.service';
+import { CommandHandler } from '@core/app/types';
+import { AdminService } from '@core/app/components/admin/admin.service';
+import { DeleteAdminCommand } from '@core/app/cqrs/admin/commands/delete-admin/delete-admin.command';
 
-@CommandHandler(DeleteAdminCommand)
-export class DeleteAdminHandler implements ICommandHandler<DeleteAdminCommand> {
-  constructor(@Inject(AdminService) private readonly _adminService: AdminService) {}
+export class DeleteAdminHandler implements CommandHandler<DeleteAdminCommand> {
+  constructor(private readonly _adminService: AdminService) {}
 
   async execute({ id }: DeleteAdminCommand) {
     return await this._adminService.deleteAdmin(id);

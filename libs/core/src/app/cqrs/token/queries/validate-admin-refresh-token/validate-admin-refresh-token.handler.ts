@@ -1,13 +1,11 @@
-import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { Inject } from '@nestjs/common';
-import { AdminTokenService } from '../../../../components/admin-token/admin-token.service';
-import { ValidateAdminRefreshTokenQuery } from './validate-admin-refresh-token.query';
+import { QueryHandler } from '@core/app/types';
+import { ValidateAdminRefreshTokenQuery } from '@core/app/cqrs/token/queries/validate-admin-refresh-token/validate-admin-refresh-token.query';
+import { AdminTokenService } from '@core/app/components/admin-token/admin-token.service';
 
-@QueryHandler(ValidateAdminRefreshTokenQuery)
 export class ValidateAdminRefreshTokenHandler
-  implements IQueryHandler<ValidateAdminRefreshTokenQuery>
+  implements QueryHandler<ValidateAdminRefreshTokenQuery>
 {
-  constructor(@Inject(AdminTokenService) private readonly _tokenService: AdminTokenService) {}
+  constructor(private readonly _tokenService: AdminTokenService) {}
 
   async execute({ payload }: ValidateAdminRefreshTokenQuery) {
     return await this._tokenService.validateRefreshToken(payload);

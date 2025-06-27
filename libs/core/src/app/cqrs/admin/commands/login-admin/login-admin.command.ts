@@ -1,6 +1,6 @@
-import { Command } from '@nestjs/cqrs';
-import { LoginPayload } from '../../../../components/login/types';
-import { AdminId } from '../../../../../domain/components/admin/types';
+import { Command } from '@core/app/types';
+import { LoginPayload } from '@core/app/components/login/types';
+import { AdminId } from '@core/domain/components/admin/types';
 
 export class LoginAdminCommand extends Command<AdminId> {
   constructor(public readonly payload: LoginPayload) {

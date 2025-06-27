@@ -1,5 +1,5 @@
-import { Query } from '@nestjs/cqrs';
-import { ArtistDTO } from '../../../../components/artist/dtos/artist.dto';
+import { Query } from '@core/app/types';
+import { ArtistDTO } from '@core/app/components/artist/dtos/artist.dto';
 
 export class GetArtistQuery extends Query<ArtistDTO | null> {
   constructor(

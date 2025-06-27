@@ -1,5 +1,5 @@
-import { Command } from '@nestjs/cqrs';
-import { AlbumId } from '../../../../../domain/components/album/types';
+import { Command } from '@core/app/types';
+import { AlbumId } from '@core/domain/components/album/types';
 
 export class DeleteAlbumCoverCommand extends Command<AlbumId> {
   constructor(public readonly id: string) {

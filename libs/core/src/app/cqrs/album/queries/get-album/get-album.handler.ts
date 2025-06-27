@@ -1,12 +1,10 @@
-import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { Inject } from '@nestjs/common';
-import { GetAlbumQuery } from './get-album.query';
-import { AlbumService } from '../../../../components/album/album.service';
-import AlbumMapper from '../../../../components/album/dtos/album.mapper';
+import { QueryHandler } from '@core/app/types';
+import { AlbumService } from '@core/app/components/album/album.service';
+import { GetAlbumQuery } from '@core/app/cqrs/album/queries/get-album/get-album.query';
+import AlbumMapper from '@core/app/components/album/dtos/album.mapper';
 
-@QueryHandler(GetAlbumQuery)
-export class GetAlbumHandler implements IQueryHandler<GetAlbumQuery> {
-  constructor(@Inject(AlbumService) private readonly _albumService: AlbumService) {}
+export class GetAlbumHandler implements QueryHandler<GetAlbumQuery> {
+  constructor(private readonly _albumService: AlbumService) {}
 
   async execute({ id, options }: GetAlbumQuery) {
     const foundAlbum = await this._albumService.getAlbum(id, options);

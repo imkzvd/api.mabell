@@ -1,11 +1,9 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { Inject } from '@nestjs/common';
-import { DeleteUserAvatarCommand } from './delete-user-avatar.command';
-import { UserService } from '../../../../components/user/user.service';
+import { CommandHandler } from '@core/app/types';
+import { UserService } from '@core/app/components/user/user.service';
+import { DeleteUserAvatarCommand } from '@core/app/cqrs/user/commands/delete-user-avatar/delete-user-avatar.command';
 
-@CommandHandler(DeleteUserAvatarCommand)
-export class DeleteUserAvatarHandler implements ICommandHandler<DeleteUserAvatarCommand> {
-  constructor(@Inject(UserService) private readonly _userService: UserService) {}
+export class DeleteUserAvatarHandler implements CommandHandler<DeleteUserAvatarCommand> {
+  constructor(private readonly _userService: UserService) {}
 
   async execute({ id }: DeleteUserAvatarCommand) {
     return await this._userService.deleteUserAvatar(id);

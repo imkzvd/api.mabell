@@ -1,6 +1,6 @@
-import { Command } from '@nestjs/cqrs';
-import { ArtistId } from '../../../../../domain/components/artist/types';
-import { UpdateArtistAvatarPayload } from '../../../../components/artist/types';
+import { Command } from '@core/app/types';
+import { ArtistId } from '@core/domain/components/artist/types';
+import { UpdateArtistAvatarPayload } from '@core/app/components/artist/types';
 
 export class UpdateArtistAvatarCommand extends Command<ArtistId> {
   constructor(

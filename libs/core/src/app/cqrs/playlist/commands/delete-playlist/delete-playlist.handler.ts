@@ -1,11 +1,9 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { Inject } from '@nestjs/common';
-import { DeletePlaylistCommand } from './delete-playlist.command';
-import { PlaylistService } from '../../../../components/playlist/playlist.service';
+import { CommandHandler } from '@core/app/types';
+import { PlaylistService } from '@core/app/components/playlist/playlist.service';
+import { DeletePlaylistCommand } from '@core/app/cqrs/playlist/commands/delete-playlist/delete-playlist.command';
 
-@CommandHandler(DeletePlaylistCommand)
-export class DeletePlaylistHandler implements ICommandHandler<DeletePlaylistCommand> {
-  constructor(@Inject(PlaylistService) private readonly _playlistService: PlaylistService) {}
+export class DeletePlaylistHandler implements CommandHandler<DeletePlaylistCommand> {
+  constructor(private readonly _playlistService: PlaylistService) {}
 
   async execute({ id }: DeletePlaylistCommand) {
     return await this._playlistService.deletePlaylist(id);

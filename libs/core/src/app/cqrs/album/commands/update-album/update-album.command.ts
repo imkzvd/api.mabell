@@ -1,6 +1,6 @@
-import { Command } from '@nestjs/cqrs';
-import { AlbumId } from '../../../../../domain/components/album/types';
-import { UpdateAlbumPayload } from '../../../../components/album/types';
+import { Command } from '@core/app/types';
+import { AlbumId } from '@core/domain/components/album/types';
+import { UpdateAlbumPayload } from '@core/app/components/album/types';
 
 export class UpdateAlbumCommand extends Command<AlbumId> {
   constructor(

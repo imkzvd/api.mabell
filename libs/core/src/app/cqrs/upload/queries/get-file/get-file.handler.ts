@@ -1,11 +1,9 @@
-import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { Inject } from '@nestjs/common';
-import { GetFileQuery } from './get-file.query';
-import { UploadService } from '../../../../components/upload/upload.service';
+import { QueryHandler } from '@core/app/types';
+import { UploadService } from '@core/app/components/upload/upload.service';
+import { GetFileQuery } from '@core/app/cqrs/upload/queries/get-file/get-file.query';
 
-@QueryHandler(GetFileQuery)
-export class GetFileHandler implements IQueryHandler<GetFileQuery> {
-  constructor(@Inject(UploadService) private readonly _uploadService: UploadService) {}
+export class GetFileHandler implements QueryHandler<GetFileQuery> {
+  constructor(private readonly _uploadService: UploadService) {}
 
   async execute({ id }: GetFileQuery) {
     return this._uploadService.getFile(id);

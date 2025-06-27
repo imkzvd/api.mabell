@@ -1,11 +1,9 @@
-import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { Inject } from '@nestjs/common';
-import { GetUserQuery } from './get-user.query';
-import { UserService } from '../../../../components/user/user.service';
+import { QueryHandler } from '@core/app/types';
+import { UserService } from '@core/app/components/user/user.service';
+import { GetUserQuery } from '@core/app/cqrs/user/queries/get-user/get-user.query';
 
-@QueryHandler(GetUserQuery)
-export class GetUserHandler implements IQueryHandler<GetUserQuery> {
-  constructor(@Inject(UserService) private readonly _userService: UserService) {}
+export class GetUserHandler implements QueryHandler<GetUserQuery> {
+  constructor(private readonly _userService: UserService) {}
 
   async execute({ id, options }: GetUserQuery) {
     return await this._userService.getUser(id, options);

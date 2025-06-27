@@ -1,6 +1,6 @@
-import { Command } from '@nestjs/cqrs';
-import { TrackId } from '../../../../../domain/components/track/types';
-import { UpdateTrackFilePayload } from '../../../../components/track/types';
+import { Command } from '@core/app/types';
+import { TrackId } from '@core/domain/components/track/types';
+import { UpdateTrackFilePayload } from '@core/app/components/track/types';
 
 export class UpdateTrackFileCommand extends Command<TrackId> {
   constructor(

@@ -1,11 +1,9 @@
-import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { Inject } from '@nestjs/common';
-import { GetArtistPublicStatusQuery } from './get-artist-public-status.query';
-import { ArtistService } from '../../../../components/artist/artist.service';
+import { QueryHandler } from '@core/app/types';
+import { ArtistService } from '@core/app/components/artist/artist.service';
+import { GetArtistPublicStatusQuery } from '@core/app/cqrs/artist/queries/get-artist-public-status/get-artist-public-status.query';
 
-@QueryHandler(GetArtistPublicStatusQuery)
-export class GetArtistPublicStatusHandler implements IQueryHandler<GetArtistPublicStatusQuery> {
-  constructor(@Inject(ArtistService) private readonly _artistService: ArtistService) {}
+export class GetArtistPublicStatusHandler implements QueryHandler<GetArtistPublicStatusQuery> {
+  constructor(private readonly _artistService: ArtistService) {}
 
   async execute({ id }: GetArtistPublicStatusQuery) {
     return await this._artistService.getArtistPublicStatus(id);

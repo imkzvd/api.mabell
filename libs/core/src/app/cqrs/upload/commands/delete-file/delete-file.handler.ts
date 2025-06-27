@@ -1,12 +1,10 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { Inject } from '@nestjs/common';
-import { DeleteFileCommand } from './delete-file.command';
-import { NotFoundException } from '../../../../../shared/exceptions';
-import { UploadService } from '../../../../components/upload/upload.service';
+import { CommandHandler } from '@core/app/types';
+import { NotFoundException } from '@core/shared/exceptions';
+import { UploadService } from '@core/app/components/upload/upload.service';
+import { DeleteFileCommand } from '@core/app/cqrs/upload/commands/delete-file/delete-file.command';
 
-@CommandHandler(DeleteFileCommand)
-export class DeleteFileHandler implements ICommandHandler<DeleteFileCommand> {
-  constructor(@Inject(UploadService) private readonly _uploadService: UploadService) {}
+export class DeleteFileHandler implements CommandHandler<DeleteFileCommand> {
+  constructor(private readonly _uploadService: UploadService) {}
 
   async execute({ id }: DeleteFileCommand) {
     const deleteFileId = await this._uploadService.deleteFile(id);

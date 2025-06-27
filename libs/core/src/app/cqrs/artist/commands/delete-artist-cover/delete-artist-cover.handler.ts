@@ -1,11 +1,9 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { Inject } from '@nestjs/common';
-import { DeleteArtistCoverCommand } from './delete-artist-cover.command';
-import { ArtistService } from '../../../../components/artist/artist.service';
+import { CommandHandler } from '@core/app/types';
+import { ArtistService } from '@core/app/components/artist/artist.service';
+import { DeleteArtistCoverCommand } from '@core/app/cqrs/artist/commands/delete-artist-cover/delete-artist-cover.command';
 
-@CommandHandler(DeleteArtistCoverCommand)
-export class DeleteArtistCoverHandler implements ICommandHandler<DeleteArtistCoverCommand> {
-  constructor(@Inject(ArtistService) private readonly _artistService: ArtistService) {}
+export class DeleteArtistCoverHandler implements CommandHandler<DeleteArtistCoverCommand> {
+  constructor(private readonly _artistService: ArtistService) {}
 
   async execute({ id }: DeleteArtistCoverCommand) {
     return await this._artistService.deleteArtistCover(id);

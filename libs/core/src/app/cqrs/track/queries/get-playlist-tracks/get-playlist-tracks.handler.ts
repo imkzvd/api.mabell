@@ -1,16 +1,14 @@
-import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { Inject } from '@nestjs/common';
-import { TrackService } from '../../../../components/track/track.service';
-import { GetPlaylistTracksQuery } from './get-playlist-tracks.query';
-import { PlaylistService } from '../../../../components/playlist/playlist.service';
-import { PlaylistTrackDTO } from '../../../../components/track/dtos/playlist-track.dto';
-import { OffsetLimitPaginationResponseDTO } from '../../../../../shared/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
+import { QueryHandler } from '@core/app/types';
+import { TrackService } from '@core/app/components/track/track.service';
+import { PlaylistService } from '@core/app/components/playlist/playlist.service';
+import { PlaylistTrackDTO } from '@core/app/components/track/dtos/playlist-track.dto';
+import { OffsetLimitPaginationResponseDTO } from '@core/shared/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
+import { GetPlaylistTracksQuery } from '@core/app/cqrs/track/queries/get-playlist-tracks/get-playlist-tracks.query';
 
-@QueryHandler(GetPlaylistTracksQuery)
-export class GetPlaylistTracksHandler implements IQueryHandler<GetPlaylistTracksQuery> {
+export class GetPlaylistTracksHandler implements QueryHandler<GetPlaylistTracksQuery> {
   constructor(
-    @Inject(PlaylistService) private readonly _playlistService: PlaylistService,
-    @Inject(TrackService) private readonly _trackService: TrackService,
+    private readonly _playlistService: PlaylistService,
+    private readonly _trackService: TrackService,
   ) {}
 
   async execute({ playlistId, options }: GetPlaylistTracksQuery) {

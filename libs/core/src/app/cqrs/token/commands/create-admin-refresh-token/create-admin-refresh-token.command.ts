@@ -1,4 +1,4 @@
-import { Command } from '@nestjs/cqrs';
+import { Command } from '@core/app/types';
 
 export class CreateAdminRefreshTokenCommand extends Command<string> {
   constructor(

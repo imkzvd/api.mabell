@@ -1,15 +1,13 @@
-import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { Inject } from '@nestjs/common';
-import { GetArtistTracksQuery } from './get-artist-tracks.query';
-import { TrackService } from '../../../../components/track/track.service';
-import { ArtistService } from '../../../../components/artist/artist.service';
-import { NotFoundException } from '../../../../../shared/exceptions';
+import { QueryHandler } from '@core/app/types';
+import { TrackService } from '@core/app/components/track/track.service';
+import { ArtistService } from '@core/app/components/artist/artist.service';
+import { NotFoundException } from '@core/shared/exceptions';
+import { GetArtistTracksQuery } from '@core/app/cqrs/track/queries/get-artist-tracks/get-artist-tracks.query';
 
-@QueryHandler(GetArtistTracksQuery)
-export class GetArtistTracksHandler implements IQueryHandler<GetArtistTracksQuery> {
+export class GetArtistTracksHandler implements QueryHandler<GetArtistTracksQuery> {
   constructor(
-    @Inject(ArtistService) private readonly _artistService: ArtistService,
-    @Inject(TrackService) private readonly _trackService: TrackService,
+    private readonly _artistService: ArtistService,
+    private readonly _trackService: TrackService,
   ) {}
 
   async execute({ artistId, options }: GetArtistTracksQuery) {

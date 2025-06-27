@@ -1,15 +1,13 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { Inject } from '@nestjs/common';
-import { NotFoundException } from '../../../../../shared/exceptions';
-import { CreatePlaylistCommand } from './create-playlist.command';
-import { PlaylistService } from '../../../../components/playlist/playlist.service';
-import { UserService } from '../../../../components/user/user.service';
+import { CommandHandler } from '@core/app/types';
+import { NotFoundException } from '@core/shared/exceptions';
+import { PlaylistService } from '@core/app/components/playlist/playlist.service';
+import { UserService } from '@core/app/components/user/user.service';
+import { CreatePlaylistCommand } from '@core/app/cqrs/playlist/commands/create-playlist/create-playlist.command';
 
-@CommandHandler(CreatePlaylistCommand)
-export class CreatePlaylistHandler implements ICommandHandler<CreatePlaylistCommand> {
+export class CreatePlaylistHandler implements CommandHandler<CreatePlaylistCommand> {
   constructor(
-    @Inject(UserService) private readonly _userService: UserService,
-    @Inject(PlaylistService) private readonly _playlistService: PlaylistService,
+    private readonly _userService: UserService,
+    private readonly _playlistService: PlaylistService,
   ) {}
 
   async execute({ ownerId }: CreatePlaylistCommand) {

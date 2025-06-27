@@ -1,11 +1,9 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { Inject } from '@nestjs/common';
-import { DeleteTrackFileCommand } from './delete-track-file.command';
-import { TrackService } from '../../../../components/track/track.service';
+import { CommandHandler } from '@core/app/types';
+import { TrackService } from '@core/app/components/track/track.service';
+import { DeleteTrackFileCommand } from '@core/app/cqrs/track/commands/delete-track-file/delete-track-file.command';
 
-@CommandHandler(DeleteTrackFileCommand)
-export class DeleteTrackFileHandler implements ICommandHandler<DeleteTrackFileCommand> {
-  constructor(@Inject(TrackService) private readonly _trackService: TrackService) {}
+export class DeleteTrackFileHandler implements CommandHandler<DeleteTrackFileCommand> {
+  constructor(private readonly _trackService: TrackService) {}
 
   async execute({ id }: DeleteTrackFileCommand) {
     return await this._trackService.deleteTrackFile(id);

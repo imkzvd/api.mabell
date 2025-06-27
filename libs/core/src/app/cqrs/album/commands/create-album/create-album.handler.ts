@@ -1,15 +1,13 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { Inject } from '@nestjs/common';
-import { CreateAlbumCommand } from './create-album.command';
-import { NotFoundException } from '../../../../../shared/exceptions';
-import { ArtistService } from '../../../../components/artist/artist.service';
-import { AlbumService } from '../../../../components/album/album.service';
+import { NotFoundException } from '@core/shared/exceptions';
+import { ArtistService } from '@core/app/components/artist/artist.service';
+import { AlbumService } from '@core/app/components/album/album.service';
+import { CommandHandler } from '@core/app/types';
+import { CreateAlbumCommand } from '@core/app/cqrs/album/commands/create-album/create-album.command';
 
-@CommandHandler(CreateAlbumCommand)
-export class CreateAlbumHandler implements ICommandHandler<CreateAlbumCommand> {
+export class CreateAlbumHandler implements CommandHandler<CreateAlbumCommand> {
   constructor(
-    @Inject(ArtistService) private readonly _artistService: ArtistService,
-    @Inject(AlbumService) private readonly _albumService: AlbumService,
+    private readonly _artistService: ArtistService,
+    private readonly _albumService: AlbumService,
   ) {}
 
   async execute({ artistId }: CreateAlbumCommand) {

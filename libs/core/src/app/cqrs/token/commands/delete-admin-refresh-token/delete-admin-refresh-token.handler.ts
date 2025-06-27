@@ -1,13 +1,11 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { Inject } from '@nestjs/common';
-import { DeleteAdminRefreshTokenCommand } from './delete-admin-refresh-token.command';
-import { AdminTokenService } from '../../../../components/admin-token/admin-token.service';
+import { CommandHandler } from '@core/app/types';
+import { AdminTokenService } from '@core/app/components/admin-token/admin-token.service';
+import { DeleteAdminRefreshTokenCommand } from '@core/app/cqrs/token/commands/delete-admin-refresh-token/delete-admin-refresh-token.command';
 
-@CommandHandler(DeleteAdminRefreshTokenCommand)
 export class DeleteAdminRefreshTokenHandler
-  implements ICommandHandler<DeleteAdminRefreshTokenCommand>
+  implements CommandHandler<DeleteAdminRefreshTokenCommand>
 {
-  constructor(@Inject(AdminTokenService) private readonly _adminTokenService: AdminTokenService) {}
+  constructor(private readonly _adminTokenService: AdminTokenService) {}
 
   async execute({ token }: DeleteAdminRefreshTokenCommand) {
     await this._adminTokenService.deleteRefreshToken(token);

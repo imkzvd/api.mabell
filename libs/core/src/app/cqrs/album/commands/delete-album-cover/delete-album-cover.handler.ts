@@ -1,11 +1,9 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { Inject } from '@nestjs/common';
-import { DeleteAlbumCoverCommand } from './delete-album-cover.command';
-import { AlbumService } from '../../../../components/album/album.service';
+import { CommandHandler } from '@core/app/types';
+import { AlbumService } from '@core/app/components/album/album.service';
+import { DeleteAlbumCoverCommand } from '@core/app/cqrs/album/commands/delete-album-cover/delete-album-cover.command';
 
-@CommandHandler(DeleteAlbumCoverCommand)
-export class DeleteAlbumCoverHandler implements ICommandHandler<DeleteAlbumCoverCommand> {
-  constructor(@Inject(AlbumService) private readonly _albumService: AlbumService) {}
+export class DeleteAlbumCoverHandler implements CommandHandler<DeleteAlbumCoverCommand> {
+  constructor(private readonly _albumService: AlbumService) {}
 
   async execute({ id }: DeleteAlbumCoverCommand) {
     return await this._albumService.deleteAlbumCover(id);

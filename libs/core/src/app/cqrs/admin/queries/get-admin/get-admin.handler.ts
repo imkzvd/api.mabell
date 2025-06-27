@@ -1,11 +1,9 @@
-import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { Inject } from '@nestjs/common';
-import { GetAdminQuery } from './get-admin.query';
-import { AdminService } from '../../../../components/admin/admin.service';
+import { AdminService } from '@core/app/components/admin/admin.service';
+import { GetAdminQuery } from '@core/app/cqrs/admin/queries/get-admin/get-admin.query';
+import { QueryHandler } from '@core/app/types';
 
-@QueryHandler(GetAdminQuery)
-export class GetAdminHandler implements IQueryHandler<GetAdminQuery> {
-  constructor(@Inject(AdminService) private _adminService: AdminService) {}
+export class GetAdminHandler implements QueryHandler<GetAdminQuery> {
+  constructor(private _adminService: AdminService) {}
 
   async execute({ id }: GetAdminQuery) {
     return this._adminService.getAdmin(id);

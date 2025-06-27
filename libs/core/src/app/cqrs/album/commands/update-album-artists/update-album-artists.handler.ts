@@ -1,15 +1,13 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { Inject } from '@nestjs/common';
-import { UpdateAlbumArtistsCommand } from './update-album-artists.command';
-import { NotFoundException } from '../../../../../shared/exceptions';
-import { ArtistService } from '../../../../components/artist/artist.service';
-import { AlbumService } from '../../../../components/album/album.service';
+import { CommandHandler } from '@core/app/types';
+import { NotFoundException } from '@core/shared/exceptions';
+import { ArtistService } from '@core/app/components/artist/artist.service';
+import { AlbumService } from '@core/app/components/album/album.service';
+import { UpdateAlbumArtistsCommand } from '@core/app/cqrs/album/commands/update-album-artists/update-album-artists.command';
 
-@CommandHandler(UpdateAlbumArtistsCommand)
-export class UpdateAlbumArtistsHandler implements ICommandHandler<UpdateAlbumArtistsCommand> {
+export class UpdateAlbumArtistsHandler implements CommandHandler<UpdateAlbumArtistsCommand> {
   constructor(
-    @Inject(ArtistService) private readonly _artistService: ArtistService,
-    @Inject(AlbumService) private readonly _albumService: AlbumService,
+    private readonly _artistService: ArtistService,
+    private readonly _albumService: AlbumService,
   ) {}
 
   async execute({ id, artists }: UpdateAlbumArtistsCommand) {

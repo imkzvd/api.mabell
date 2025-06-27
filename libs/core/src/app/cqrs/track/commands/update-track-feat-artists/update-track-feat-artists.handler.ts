@@ -1,17 +1,15 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { Inject } from '@nestjs/common';
-import { UpdateTrackFeatArtistsCommand } from './update-track-feat-artists.command';
-import { NotFoundException } from '../../../../../shared/exceptions';
-import { ArtistService } from '../../../../components/artist/artist.service';
-import { TrackService } from '../../../../components/track/track.service';
+import { CommandHandler } from '@core/app/types';
+import { NotFoundException } from '@core/shared/exceptions';
+import { ArtistService } from '@core/app/components/artist/artist.service';
+import { TrackService } from '@core/app/components/track/track.service';
+import { UpdateTrackFeatArtistsCommand } from '@core/app/cqrs/track/commands/update-track-feat-artists/update-track-feat-artists.command';
 
-@CommandHandler(UpdateTrackFeatArtistsCommand)
 export class UpdateTrackFeatArtistsHandler
-  implements ICommandHandler<UpdateTrackFeatArtistsCommand>
+  implements CommandHandler<UpdateTrackFeatArtistsCommand>
 {
   constructor(
-    @Inject(ArtistService) private readonly _artistService: ArtistService,
-    @Inject(TrackService) private readonly _trackService: TrackService,
+    private readonly _artistService: ArtistService,
+    private readonly _trackService: TrackService,
   ) {}
 
   async execute({ id, artistIds }: UpdateTrackFeatArtistsCommand) {

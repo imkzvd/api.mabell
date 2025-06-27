@@ -1,11 +1,9 @@
-import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { Inject } from '@nestjs/common';
-import { GetAdminsQuery } from './get-admins.query';
-import { AdminService } from '../../../../components/admin/admin.service';
+import { AdminService } from '@core/app/components/admin/admin.service';
+import { QueryHandler } from '@core/app/types';
+import { GetAdminsQuery } from '@core/app/cqrs/admin/queries/get-admins/get-admins.query';
 
-@QueryHandler(GetAdminsQuery)
-export class GetAdminsHandler implements IQueryHandler<GetAdminsQuery> {
-  constructor(@Inject(AdminService) private _adminService: AdminService) {}
+export class GetAdminsHandler implements QueryHandler<GetAdminsQuery> {
+  constructor(private _adminService: AdminService) {}
 
   async execute({ pagination }: GetAdminsQuery) {
     return this._adminService.getAdmins(pagination);

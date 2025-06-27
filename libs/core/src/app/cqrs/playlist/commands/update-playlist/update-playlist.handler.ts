@@ -1,11 +1,9 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { Inject } from '@nestjs/common';
-import { UpdatePlaylistCommand } from './update-playlist.command';
-import { PlaylistService } from '../../../../components/playlist/playlist.service';
+import { CommandHandler } from '@core/app/types';
+import { PlaylistService } from '@core/app/components/playlist/playlist.service';
+import { UpdatePlaylistCommand } from '@core/app/cqrs/playlist/commands/update-playlist/update-playlist.command';
 
-@CommandHandler(UpdatePlaylistCommand)
-export class UpdatePlaylistHandler implements ICommandHandler<UpdatePlaylistCommand> {
-  constructor(@Inject(PlaylistService) private readonly _playlistService: PlaylistService) {}
+export class UpdatePlaylistHandler implements CommandHandler<UpdatePlaylistCommand> {
+  constructor(private readonly _playlistService: PlaylistService) {}
 
   async execute({ id, payload }: UpdatePlaylistCommand) {
     return await this._playlistService.updatePlaylist(id, payload);

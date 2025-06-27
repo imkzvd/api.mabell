@@ -1,12 +1,9 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { Inject } from '@nestjs/common';
+import { CommandHandler } from '@core/app/types';
+import { UserService } from '@core/app/components/user/user.service';
+import { UpdateUserEmailCommand } from '@core/app/cqrs/user/commands/update-user-email/update-user-email.command';
 
-import { UpdateUserEmailCommand } from './update-user-email.command';
-import { UserService } from '../../../../components/user/user.service';
-
-@CommandHandler(UpdateUserEmailCommand)
-export class UpdateUserEmailHandler implements ICommandHandler<UpdateUserEmailCommand> {
-  constructor(@Inject(UserService) private readonly _userService: UserService) {}
+export class UpdateUserEmailHandler implements CommandHandler<UpdateUserEmailCommand> {
+  constructor(private readonly _userService: UserService) {}
 
   async execute({ id, email }: UpdateUserEmailCommand) {
     return await this._userService.updateUserEmail(id, email);

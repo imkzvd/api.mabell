@@ -1,16 +1,13 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { Inject } from '@nestjs/common';
-import { CreateUserAccessTokenCommand } from './create-user-access-token.command';
-import { AdminTokenService } from '../../../../components/admin-token/admin-token.service';
-import { UnauthorizedException } from '../../../../../shared/exceptions';
-import { UserService } from '../../../../components/user/user.service';
-import { UserTokenService } from '../../../../components/user-token/user-token.service';
+import { CommandHandler } from '@core/app/types';
+import { UnauthorizedException } from '@core/shared/exceptions';
+import { UserService } from '@core/app/components/user/user.service';
+import { UserTokenService } from '@core/app/components/user-token/user-token.service';
+import { CreateUserAccessTokenCommand } from '@core/app/cqrs/token/commands/create-user-access-token/create-user-access-token.command';
 
-@CommandHandler(CreateUserAccessTokenCommand)
-export class CreateUserAccessTokenHandler implements ICommandHandler<CreateUserAccessTokenCommand> {
+export class CreateUserAccessTokenHandler implements CommandHandler<CreateUserAccessTokenCommand> {
   constructor(
-    @Inject(UserService) private readonly _userService: UserService,
-    @Inject(AdminTokenService) private readonly _userTokenService: UserTokenService,
+    private readonly _userService: UserService,
+    private readonly _userTokenService: UserTokenService,
   ) {}
 
   async execute({ userId }: CreateUserAccessTokenCommand) {

@@ -1,11 +1,9 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { Inject } from '@nestjs/common';
-import { CreateUserCommand } from './create-user.command';
-import { UserService } from '../../../../components/user/user.service';
+import { CommandHandler } from '@core/app/types';
+import { UserService } from '@core/app/components/user/user.service';
+import { CreateUserCommand } from '@core/app/cqrs/user/commands/create-user/create-user.command';
 
-@CommandHandler(CreateUserCommand)
-export class CreateUserHandler implements ICommandHandler<CreateUserCommand> {
-  constructor(@Inject(UserService) private readonly _userService: UserService) {}
+export class CreateUserHandler implements CommandHandler<CreateUserCommand> {
+  constructor(private readonly _userService: UserService) {}
 
   async execute() {
     return await this._userService.createUser();

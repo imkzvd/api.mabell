@@ -1,6 +1,6 @@
-import { Command } from '@nestjs/cqrs';
-import { PlaylistId } from '../../../../../domain/components/playlist/types';
-import { UpdatePlaylistCoverPayload } from '../../../../components/playlist/types';
+import { Command } from '@core/app/types';
+import { PlaylistId } from '@core/domain/components/playlist/types';
+import { UpdatePlaylistCoverPayload } from '@core/app/components/playlist/types';
 
 export class UpdatePlaylistCoverCommand extends Command<PlaylistId> {
   constructor(
