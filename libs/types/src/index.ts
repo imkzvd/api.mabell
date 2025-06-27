@@ -1,2 +1,2 @@
-export * from './types.module';
-export * from './types.service';
+export * from './query.types';
+export * from './query-handler.types';
