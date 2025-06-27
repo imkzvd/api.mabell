@@ -6,7 +6,7 @@ import {
   ForbiddenException,
   NotFoundException,
   UnauthorizedException,
-} from '../../../../core/shared/exceptions';
+} from '@core/shared/exceptions';
 import { ErrorRO } from '../ros/error.ro';
 
 @Catch()
