@@ -1,9 +1,9 @@
 import { Injectable, CanActivate, ExecutionContext, ForbiddenException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
+import { IS_PUBLIC_KEY } from '@shared/decorators/is-public.decorator';
+import { AdminRole } from '@core/domain/components/admin/constants/admin-roles';
+import { AccessTokenPayload } from '@core/app/components/admin-token/types';
 import { ROLES_KEY } from '../decorators/roles.decorator';
-import { AdminRole } from '../../../../core/domain/components/admin/constants/admin-roles';
-import { AccessTokenPayload } from '../../../../core/app/components/admin-token/types';
-import { IS_PUBLIC_KEY } from '../decorators/is-public.decorator';
 
 @Injectable()
 export class RolesGuard implements CanActivate {

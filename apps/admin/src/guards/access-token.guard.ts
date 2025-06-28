@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ACCESS_TOKEN_STRATEGY_NAME } from '../strategies/constants';
-import { UnauthorizedException } from '../../../../core/shared/exceptions';
-import { ACCESS_TOKEN_COOKIE_NAME } from '../constants';
 import { Reflector } from '@nestjs/core';
-import { IS_PUBLIC_KEY } from '../decorators/is-public.decorator';
-import { AccessTokenPayload } from '../../../../core/app/components/admin-token/types';
 import type { Response } from 'express';
 import type { ExecutionContext } from '@nestjs/common';
+import { IS_PUBLIC_KEY } from '@shared/decorators/is-public.decorator';
+import { AccessTokenPayload } from '@core/app/components/admin-token/types';
+import { UnauthorizedException } from '@core/shared/exceptions';
+import { ACCESS_TOKEN_STRATEGY_NAME } from '../strategies/constants';
+import { ACCESS_TOKEN_COOKIE_NAME } from '../constants';
 
 @Injectable()
 export class AccessTokenGuard extends AuthGuard(ACCESS_TOKEN_STRATEGY_NAME) {
