@@ -1,17 +1,18 @@
 import { Controller, Post, Body, HttpCode, HttpStatus, Res, Req } from '@nestjs/common';
 import { ApiBody, ApiNoContentResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ConfigService } from '@nestjs/config';
 import { Request, Response } from 'express';
-import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import * as process from 'process';
-import { LoginAdminCommand } from '../../../../../core/app/cqrs/admin/commands/login-admin/login-admin.command';
+import { LoginAdminCommand } from '@core/app/cqrs/admin/commands/login-admin/login-admin.command';
+import { CreateAdminAccessTokenCommand } from '@core/app/cqrs/token/commands/create-admin-access-token/create-admin-access-token.command';
+import { CreateAdminRefreshTokenCommand } from '@core/app/cqrs/token/commands/create-admin-refresh-token/create-admin-refresh-token.command';
+import { DeleteAdminRefreshTokenCommand } from '@core/app/cqrs/token/commands/delete-admin-refresh-token/delete-admin-refresh-token.command';
+import { UnauthorizedException } from '@core/shared/exceptions';
+import { ValidateAdminRefreshTokenQuery } from '@core/app/cqrs/token/queries/validate-admin-refresh-token/validate-admin-refresh-token.query';
+import { CommandBus } from '@infrastructure/command-bus';
+import { QueryBus } from '@infrastructure/query-bus';
+import { IsPublic } from '@shared/decorators/is-public.decorator';
 import { LoginAdminDTO } from './dtos/login-admin.dto';
-import { CreateAdminAccessTokenCommand } from '../../../../../core/app/cqrs/token/commands/create-admin-access-token/create-admin-access-token.command';
-import { CreateAdminRefreshTokenCommand } from '../../../../../core/app/cqrs/token/commands/create-admin-refresh-token/create-admin-refresh-token.command';
 import { ACCESS_TOKEN_COOKIE_NAME, REFRESH_TOKEN_COOKIE_NAME } from '../../constants';
-import { IsPublic } from '../../decorators/is-public.decorator';
-import { ValidateAdminRefreshTokenQuery } from '../../../../../core/app/cqrs/token/queries/validate-admin-refresh-token/validate-admin-refresh-token.query';
-import { DeleteAdminRefreshTokenCommand } from '../../../../../core/app/cqrs/token/commands/delete-admin-refresh-token/delete-admin-refresh-token.command';
-import { UnauthorizedException } from '../../../../../core/shared/exceptions';
 
 @ApiTags('Auth')
 @IsPublic()
@@ -20,6 +21,7 @@ export class AuthController {
   constructor(
     private readonly _CB: CommandBus,
     private readonly _QB: QueryBus,
+    private readonly _configService: ConfigService,
   ) {}
 
   @ApiOperation({ summary: 'Admin login', operationId: 'login' })
@@ -46,22 +48,19 @@ export class AuthController {
       }),
     );
 
+    const accessTokenExpiresIn = this._configService.get<number>('jwt.accessToken.expiresIn');
+    const refreshTokenExpiresIn = this._configService.get<number>('jwt.refreshToken.expiresIn');
+
     res.cookie(ACCESS_TOKEN_COOKIE_NAME, accessToken, {
       httpOnly: true,
       sameSite: true,
-      maxAge:
-        (process.env.ACCESS_TOKEN_EXPIRATION
-          ? parseInt(process.env.ACCESS_TOKEN_EXPIRATION)
-          : 300) * 1000,
+      maxAge: (accessTokenExpiresIn ? accessTokenExpiresIn : 300) * 1000,
     });
 
     res.cookie(REFRESH_TOKEN_COOKIE_NAME, refreshToken, {
       httpOnly: true,
       sameSite: true,
-      maxAge:
-        (process.env.REFRESH_TOKEN_EXPIRATION
-          ? parseInt(process.env.REFRESH_TOKEN_EXPIRATION)
-          : 600) * 1000,
+      maxAge: (refreshTokenExpiresIn ? refreshTokenExpiresIn : 600) * 1000,
     });
   }
 
@@ -110,13 +109,12 @@ export class AuthController {
         new CreateAdminAccessTokenCommand(validatedRefreshToken.owner),
       );
 
+      const accessTokenExpiresIn = this._configService.get<number>('jwt.accessToken.expiresIn');
+
       res.cookie(ACCESS_TOKEN_COOKIE_NAME, accessToken, {
         httpOnly: true,
         sameSite: true,
-        maxAge:
-          (process.env.ACCESS_TOKEN_EXPIRATION
-            ? parseInt(process.env.ACCESS_TOKEN_EXPIRATION)
-            : 300) * 1000,
+        maxAge: (accessTokenExpiresIn ? accessTokenExpiresIn : 300) * 1000,
       });
     } else {
       res.clearCookie(ACCESS_TOKEN_COOKIE_NAME);
