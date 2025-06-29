@@ -1,23 +1,45 @@
 import { Module } from '@nestjs/common';
-import { AdminsController } from './admins.controller';
-import { PasswordModule } from '../../../../../infrastructure/security/password/password.module';
-import { AdminService } from '../../../../../core/app/components/admin/admin.service';
-import { CreateAdminHandler } from '../../../../../core/app/cqrs/admin/commands/create-admin/create-admin.handler';
-import { UpdateAdminHandler } from '../../../../../core/app/cqrs/admin/commands/update-admin/update-admin.handler';
-import { UpdateAdminUsernameHandler } from '../../../../../core/app/cqrs/admin/commands/update-admin-username/update-admin-username.handler';
-import { RefreshAdminPasswordHandler } from '../../../../../core/app/cqrs/admin/commands/refresh-admin-password/refresh-admin-password.handler';
-import { DeleteAdminHandler } from '../../../../../core/app/cqrs/admin/commands/delete-admin/delete-admin.handler';
-import { GetAdminsHandler } from '../../../../../core/app/cqrs/admin/queries/get-admins/get-admins.handler';
-import { GetAdminHandler } from '../../../../../core/app/cqrs/admin/queries/get-admin/get-admin.handler';
-import { GetAdminTokensHandler } from '../../../../../core/app/cqrs/token/queries/get-admin-tokens/get-admin-tokens.handler';
-import { AdminTokenService } from '../../../../../core/app/components/admin-token/admin-token.service';
-import { JWTModule } from '../../../../../infrastructure/security/jwt/jwt.module';
+import { AdminService } from '@core/app/components/admin/admin.service';
+import { EventBus as EventBusPort } from '@core/app/common/ports/event-bus.port';
+import { AdminWriteRepository as AdminWriteRepositoryPort } from '@core/domain/components/admin/repository/admin-write-repository.port';
+import { AdminReadRepository as AdminReadRepositoryPort } from '@core/domain/components/admin/repository/admin-read-repository.port';
+import { IdService as IdServicePort } from '@core/app/common/ports/id.service.port';
+import { AdminId } from '@core/domain/components/admin/types';
+import { PasswordService as PasswordServicePort } from '@core/app/common/ports/password-service.port';
+import { PasswordModule, PasswordService } from '@infrastructure/password';
+import { RandomIdModule, RandomIdService } from '@infrastructure/random-id';
+import { EventBus } from '@infrastructure/event-bus';
+import { AdminWriteRepository } from '@infrastructure/mongoose/services/admin/admin-write-repository.service';
+import { AdminReadRepository } from '@infrastructure/mongoose/services/admin/admin-read-repository.service';
+import { AdminController } from './admin.controller';
+import { CreateAdminHandler } from './commands/create-admin.handler';
+import { UpdateAdminHandler } from './commands/update-admin.handler';
+import { UpdateAdminUsernameHandler } from './commands/update-admin-username.handler';
+import { RefreshAdminPasswordHandler } from './commands/refresh-admin-password.handler';
+import { DeleteAdminHandler } from './commands/delete-admin.handler';
+import { GetAdminsHandler } from './queries/get-admins.handler';
+import { GetAdminHandler } from './queries/get-admin.handler';
 
 @Module({
-  imports: [PasswordModule, JWTModule],
+  imports: [PasswordModule, RandomIdModule],
   providers: [
-    AdminService,
-    AdminTokenService,
+    {
+      provide: AdminService,
+      useFactory: (
+        eb: EventBusPort,
+        wr: AdminWriteRepositoryPort,
+        rr: AdminReadRepositoryPort,
+        idService: IdServicePort<AdminId>,
+        passwordService: PasswordServicePort,
+      ) => new AdminService(eb, wr, rr, idService, passwordService),
+      inject: [
+        EventBus,
+        AdminWriteRepository,
+        AdminReadRepository,
+        RandomIdService,
+        PasswordService,
+      ],
+    },
     CreateAdminHandler,
     UpdateAdminHandler,
     UpdateAdminUsernameHandler,
@@ -25,8 +47,7 @@ import { JWTModule } from '../../../../../infrastructure/security/jwt/jwt.module
     DeleteAdminHandler,
     GetAdminsHandler,
     GetAdminHandler,
-    GetAdminTokensHandler,
   ],
-  controllers: [AdminsController],
+  controllers: [AdminController],
 })
-export class AdminsModule {}
+export class AdminModule {}
