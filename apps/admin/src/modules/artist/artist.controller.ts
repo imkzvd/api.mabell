@@ -41,6 +41,10 @@ import { ArtistRO } from './ros/artist.ro';
 import { UpdateArtistImageDTO } from './dtos/update-artist-image.dto';
 import { UpdateArtistDTO } from './dtos/update-artist.dto';
 import { Roles } from '../../decorators/roles.decorator';
+import { AlbumsRO } from '../album/ros/albums.ro';
+import { GetArtistAlbumsQuery } from '@core/app/cqrs/album/queries/get-artist-albums/get-artist-albums.query';
+import { TracksRO } from '../track/ros/tracks.ro';
+import { GetArtistTracksQuery } from '@core/app/cqrs/track/queries/get-artist-tracks/get-artist-tracks.query';
 
 @ApiTags('Artist')
 @Roles(AdminRoles.Owner, AdminRoles.Admin)
@@ -226,51 +230,51 @@ export class ArtistController {
     return new ArtistRO(foundArtist);
   }
 
-  // @ApiOperation({ summary: 'Get artist albums', operationId: 'getArtistAlbums' })
-  // @ApiParam({
-  //   type: String,
-  //   name: 'id',
-  //   description: 'Id',
-  //   example: faker.database.mongodbObjectId(),
-  // })
-  // @ApiQuery({ required: false, type: Number, name: 'limit', description: 'Limit', example: 50 })
-  // @ApiQuery({ required: false, type: Number, name: 'offset', description: 'Offset', example: 0 })
-  // @ApiOkResponse({ description: 'Artist albums', type: AlbumsRO })
-  // @Roles(AdminRoles.Guest)
-  // @Get('/:id/albums')
-  // async getArtistAlbums(
-  //   @Param('id', ParseObjectIdPipe) id: string,
-  //   @Query('limit', new DefaultValuePipe(50), ParseIntPipe) limit: number,
-  //   @Query('offset', new DefaultValuePipe(0), ParseIntPipe) offset: number,
-  // ): Promise<AlbumsRO> {
-  //   const foundAlbums = await this._queryBus.execute(
-  //     new GetArtistAlbumsQuery(id, { pagination: { limit, offset } }),
-  //   );
-  //
-  //   return new AlbumsRO(foundAlbums);
-  // }
-  //
-  // @ApiOperation({ summary: 'Get artist tracks', operationId: 'getArtistTracks' })
-  // @ApiParam({
-  //   type: String,
-  //   name: 'id',
-  //   description: 'Id',
-  //   example: faker.database.mongodbObjectId(),
-  // })
-  // @ApiQuery({ required: false, type: Number, name: 'limit', description: 'Limit', example: 50 })
-  // @ApiQuery({ required: false, type: Number, name: 'offset', description: 'Offset', example: 0 })
-  // @ApiOkResponse({ description: 'Artist tracks', type: TracksRO })
-  // @Roles(AdminRoles.Guest)
-  // @Get('/:id/tracks')
-  // async getArtistTracks(
-  //   @Param('id', ParseObjectIdPipe) id: string,
-  //   @Query('limit', new DefaultValuePipe(50), ParseIntPipe) limit: number,
-  //   @Query('offset', new DefaultValuePipe(0), ParseIntPipe) offset: number,
-  // ): Promise<TracksRO> {
-  //   const foundTracks = await this._queryBus.execute(
-  //     new GetArtistTracksQuery(id, { pagination: { limit, offset } }),
-  //   );
-  //
-  //   return new TracksRO(foundTracks);
-  // }
+  @ApiOperation({ summary: 'Get artist albums', operationId: 'getArtistAlbums' })
+  @ApiParam({
+    type: String,
+    name: 'id',
+    description: 'Id',
+    example: faker.database.mongodbObjectId(),
+  })
+  @ApiQuery({ required: false, type: Number, name: 'limit', description: 'Limit', example: 50 })
+  @ApiQuery({ required: false, type: Number, name: 'offset', description: 'Offset', example: 0 })
+  @ApiOkResponse({ description: 'Artist albums', type: AlbumsRO })
+  @Roles(AdminRoles.Guest)
+  @Get('/:id/albums')
+  async getArtistAlbums(
+    @Param('id', ParseObjectIdPipe) id: string,
+    @Query('limit', new DefaultValuePipe(50), ParseIntPipe) limit: number,
+    @Query('offset', new DefaultValuePipe(0), ParseIntPipe) offset: number,
+  ): Promise<AlbumsRO> {
+    const foundAlbums = await this._queryBus.execute(
+      new GetArtistAlbumsQuery(id, { pagination: { limit, offset } }),
+    );
+
+    return new AlbumsRO(foundAlbums);
+  }
+
+  @ApiOperation({ summary: 'Get artist tracks', operationId: 'getArtistTracks' })
+  @ApiParam({
+    type: String,
+    name: 'id',
+    description: 'Id',
+    example: faker.database.mongodbObjectId(),
+  })
+  @ApiQuery({ required: false, type: Number, name: 'limit', description: 'Limit', example: 50 })
+  @ApiQuery({ required: false, type: Number, name: 'offset', description: 'Offset', example: 0 })
+  @ApiOkResponse({ description: 'Artist tracks', type: TracksRO })
+  @Roles(AdminRoles.Guest)
+  @Get('/:id/tracks')
+  async getArtistTracks(
+    @Param('id', ParseObjectIdPipe) id: string,
+    @Query('limit', new DefaultValuePipe(50), ParseIntPipe) limit: number,
+    @Query('offset', new DefaultValuePipe(0), ParseIntPipe) offset: number,
+  ): Promise<TracksRO> {
+    const foundTracks = await this._queryBus.execute(
+      new GetArtistTracksQuery(id, { pagination: { limit, offset } }),
+    );
+
+    return new TracksRO(foundTracks);
+  }
 }
