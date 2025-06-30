@@ -18,19 +18,20 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { faker } from '@faker-js/faker';
+import { AdminRoles } from '@core/domain/components/admin/constants/admin-roles';
+import { CommandBus } from '@infrastructure/command-bus';
+import { QueryBus } from '@infrastructure/query-bus';
+import { UploadFileCommand } from '@core/app/cqrs/upload/commands/upload-file/upload-file.command';
+import { GetFileQuery } from '@core/app/cqrs/upload/queries/get-file/get-file.query';
+import { BadRequestException, NotFoundException } from '@core/shared/exceptions';
+import { DeleteFileCommand } from '@core/app/cqrs/upload/commands/delete-file/delete-file.command';
+import { DeleteAllFilesCommand } from '@core/app/cqrs/upload/commands/delete-all-files/delete-all-files.command';
 import { UploadFileDTO } from './dtos/upload-file.dto';
 import { TmpFileRO } from './ros/tmp-file.ro';
-import { BadRequestException, NotFoundException } from '../../../../../core/shared/exceptions';
-import { UploadFileCommand } from '../../../../../core/app/cqrs/upload/commands/upload-file/upload-file.command';
-import { GetFileQuery } from '../../../../../core/app/cqrs/upload/queries/get-file/get-file.query';
-import { DeleteFileCommand } from '../../../../../core/app/cqrs/upload/commands/delete-file/delete-file.command';
-import { DeleteAllFilesCommand } from '../../../../../core/app/cqrs/upload/commands/delete-all-files/delete-all-files.command';
 import { Roles } from '../../decorators/roles.decorator';
-import { AdminRoles } from '../../../../../core/domain/components/admin/constants/admin-roles';
 
-@ApiTags('Uploads')
+@ApiTags('Upload')
 @Roles(AdminRoles.Owner, AdminRoles.Admin)
 @Controller('/uploads')
 export class UploadController {

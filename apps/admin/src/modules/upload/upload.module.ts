@@ -1,18 +1,25 @@
 import { Module } from '@nestjs/common';
 import { UploadController } from './upload.controller';
-import { UploadService } from '../../../../../core/app/components/upload/upload.service';
-import { UploadFileHandler } from '../../../../../core/app/cqrs/upload/commands/upload-file/upload-file.handler';
-import { GetFileHandler } from '../../../../../core/app/cqrs/upload/queries/get-file/get-file.handler';
-import { DeleteFileHandler } from '../../../../../core/app/cqrs/upload/commands/delete-file/delete-file.handler';
-import { DeleteAllFilesHandler } from '../../../../../core/app/cqrs/upload/commands/delete-all-files/delete-all-files.handler';
+import { UploadService } from '@core/app/components/upload/upload.service';
+import { UploadFileHandler } from './commands/upload-file.handler';
+import { DeleteFileHandler } from './commands/delete-file.handler';
+import { DeleteAllFilesHandler } from './commands/delete-all-files.handler';
+import { TmpFileStorage as TmpFileStoragePort } from '@core/app/common/ports/file-storages/tmp-file-storage.port';
+import { FileStorageModule, TmpFileStorage } from '@infrastructure/file-storage';
+import { GetFileHandler } from './queries/get-file.handler';
 
 @Module({
+  imports: [FileStorageModule],
   providers: [
-    UploadService,
+    {
+      provide: UploadService,
+      useFactory: (fs: TmpFileStoragePort) => new UploadService(fs),
+      inject: [TmpFileStorage],
+    },
     UploadFileHandler,
-    GetFileHandler,
     DeleteFileHandler,
     DeleteAllFilesHandler,
+    GetFileHandler,
   ],
   controllers: [UploadController],
 })
