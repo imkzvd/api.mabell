@@ -1,16 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { faker } from '@faker-js/faker';
 import * as process from 'process';
-import { LabelValueRO } from '../../../../common/ros/label-value.ro';
-import {
-  getRegionLabelByValue,
-  Regions,
-} from '../../../../../../core/domain/common/constants/regions';
-import {
-  Genres,
-  getGenreLabelByValue,
-} from '../../../../../../core/domain/common/constants/genres';
-import { UserDTO } from '../../../../../../core/app/components/user/dtos/user.dto';
+import { LabelValueRO } from '@shared/ros/label-value.ro';
+import { getRegionLabelByValue, Regions } from '@core/domain/common/constants/regions';
+import { Genres, getGenreLabelByValue } from '@core/domain/common/constants/genres';
+import { UserDTO } from '@core/app/components/user/dtos/user.dto';
 
 export class UserRO {
   @ApiProperty({
