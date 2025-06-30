@@ -33,7 +33,7 @@ import { AdminRoles } from '../../../../../core/domain/components/admin/constant
 @ApiTags('Uploads')
 @Roles(AdminRoles.Owner, AdminRoles.Admin)
 @Controller('/uploads')
-export class UploadsController {
+export class UploadController {
   constructor(
     private readonly _commandBus: CommandBus,
     private readonly _queryBus: QueryBus,

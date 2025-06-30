@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { UploadsController } from './uploads.controller';
+import { UploadController } from './upload.controller';
 import { UploadService } from '../../../../../core/app/components/upload/upload.service';
 import { UploadFileHandler } from '../../../../../core/app/cqrs/upload/commands/upload-file/upload-file.handler';
 import { GetFileHandler } from '../../../../../core/app/cqrs/upload/queries/get-file/get-file.handler';
@@ -14,6 +14,6 @@ import { DeleteAllFilesHandler } from '../../../../../core/app/cqrs/upload/comma
     DeleteFileHandler,
     DeleteAllFilesHandler,
   ],
-  controllers: [UploadsController],
+  controllers: [UploadController],
 })
-export class UploadsModule {}
+export class UploadModule {}
