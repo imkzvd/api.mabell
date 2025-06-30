@@ -14,7 +14,7 @@ import { UserReadRepository } from '@infrastructure/mongoose/services/user/user-
 import { RandomIdModule, RandomIdService } from '@infrastructure/random-id';
 import { PasswordModule, PasswordService } from '@infrastructure/password';
 import { FileStorageModule, TmpFileStorage, UserFileStorage } from '@infrastructure/file-storage';
-import { UsersController } from './users.controller';
+import { UserController } from './user.controller';
 import { CreateUserHandler } from './commands/create-user.handler';
 import { DeleteUserHandler } from './commands/delete-user.handler';
 import { DeleteUserAvatarHandler } from './commands/delete-user-avatar.handler';
@@ -59,6 +59,6 @@ import { GetUserHandler } from './queries/get-user.handler';
     UpdateUserUsernameHandler,
     GetUserHandler,
   ],
-  controllers: [UsersController],
+  controllers: [UserController],
 })
-export class UsersModule {}
+export class UserModule {}

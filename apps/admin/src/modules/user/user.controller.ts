@@ -41,10 +41,10 @@ import { UserRO } from './ros/user.ro';
 import { UpdateUserAvatarDTO } from './dtos/update-user-avatar.dto';
 import { Roles } from '../../decorators/roles.decorator';
 
-@ApiTags('Users')
+@ApiTags('User')
 @Roles(AdminRoles.Owner, AdminRoles.Admin)
 @Controller({ path: '/users' })
-export class UsersController {
+export class UserController {
   constructor(
     private readonly _CB: CommandBus,
     private readonly _QB: QueryBus,
