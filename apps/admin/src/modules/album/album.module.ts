@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { AlbumsController } from './albums.controller';
+import { AlbumController } from './album.controller';
 import { AlbumService } from '../../../../../core/app/components/album/album.service';
 import { ArtistService } from '../../../../../core/app/components/artist/artist.service';
 import { CreateAlbumHandler } from '../../../../../core/app/cqrs/album/commands/create-album/create-album.handler';
@@ -28,6 +28,6 @@ import { TrackService } from '../../../../../core/app/components/track/track.ser
     GetAlbumTracksHandler,
     AlbumEventSubscriber,
   ],
-  controllers: [AlbumsController],
+  controllers: [AlbumController],
 })
-export class AlbumsModule {}
+export class AlbumModule {}
