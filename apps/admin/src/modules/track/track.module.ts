@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { TracksController } from './tracks.controller';
+import { TrackController } from './track.controller';
 import { TrackService } from '../../../../../core/app/components/track/track.service';
 import { AlbumService } from '../../../../../core/app/components/album/album.service';
 import { ArtistService } from '../../../../../core/app/components/artist/artist.service';
@@ -26,6 +26,6 @@ import { TrackEventSubscriber } from '../../../../../core/app/components/track/t
     GetTrackHandler,
     TrackEventSubscriber,
   ],
-  controllers: [TracksController],
+  controllers: [TrackController],
 })
-export class TracksModule {}
+export class TrackModule {}
