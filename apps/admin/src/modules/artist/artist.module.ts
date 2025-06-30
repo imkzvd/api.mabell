@@ -1,24 +1,51 @@
 import { Module } from '@nestjs/common';
 import { ArtistController } from './artist.controller';
-import { ArtistService } from '../../../../../core/app/components/artist/artist.service';
-import { AlbumService } from '../../../../../core/app/components/album/album.service';
-import { TrackService } from '../../../../../core/app/components/track/track.service';
-import { CreateArtistHandler } from '../../../../../core/app/cqrs/artist/commands/create-artist/create-artist.handler';
-import { UpdateArtistHandler } from '../../../../../core/app/cqrs/artist/commands/update-artist/update-artist.handler';
-import { UpdateArtistAvatarHandler } from '../../../../../core/app/cqrs/artist/commands/update-artist-avatar/update-artist-avatar.handler';
-import { UpdateArtistCoverHandler } from '../../../../../core/app/cqrs/artist/commands/update-artist-cover/update-artist-cover.handler';
-import { DeleteArtistAvatarHandler } from '../../../../../core/app/cqrs/artist/commands/delete-artist-avatar/delete-artist-avatar.handler';
-import { DeleteArtistCoverHandler } from '../../../../../core/app/cqrs/artist/commands/delete-artist-cover/delete-artist-cover.handler';
-import { DeleteArtistHandler } from '../../../../../core/app/cqrs/artist/commands/delete-artist/delete-artist.handler';
-import { GetArtistHandler } from '../../../../../core/app/cqrs/artist/queries/get-artist/get-artist.handler';
-import { GetArtistAlbumsHandler } from '../../../../../core/app/cqrs/album/queries/get-artist-albums/get-artist-albums.handler';
-import { GetArtistTracksHandler } from '../../../../../core/app/cqrs/track/queries/get-artist-tracks/get-artist-tracks.handler';
+import { CreateArtistHandler } from './commands/create-artist.handler';
+import { UpdateArtistHandler } from './commands/update-artist.handler';
+import { UpdateArtistAvatarHandler } from './commands/update-artist-avatar.handler';
+import { UpdateArtistCoverHandler } from './commands/update-artist-cover.handler';
+import { DeleteArtistAvatarHandler } from './commands/delete-artist-avatar.handler';
+import { DeleteArtistCoverHandler } from './commands/delete-artist-cover.handler';
+import { DeleteArtistHandler } from './commands/delete-artist.handler';
+import { GetArtistHandler } from './queries/get-artist.handler';
+import { ArtistService } from '@core/app/components/artist/artist.service';
+import { EventBus as EventBusPort } from '@core/app/common/ports/event-bus.port';
+import { ArtistWriteRepository as ArtistWriteRepositoryPort } from '@core/domain/components/artist/repository/artist-write-repository.port';
+import { ArtistReadRepository as ArtistReadRepositoryPort } from '@core/domain/components/artist/repository/artist-read-repository.port';
+import { IdService as IdServicePort } from '@core/app/common/ports/id.service.port';
+import { TmpFileStorage as TmpFileStoragePort } from '@core/app/common/ports/file-storages/tmp-file-storage.port';
+import { ArtistFileStorage as ArtistFileStoragePort } from '@core/app/common/ports/file-storages/artist-file-storage.port';
+import { ArtistId } from '@core/domain/components/artist/types';
+import { EventBus } from '@infrastructure/event-bus';
+import { ArtistWriteRepository } from '@infrastructure/mongoose/services/artist/artist-write-repository.service';
+import { ArtistReadRepository } from '@infrastructure/mongoose/services/artist/artist-read-repository.service';
+import { RandomIdModule, RandomIdService } from '@infrastructure/random-id';
+import { ArtistFileStorage, FileStorageModule, TmpFileStorage } from '@infrastructure/file-storage';
 
 @Module({
+  imports: [RandomIdModule, FileStorageModule],
   providers: [
-    ArtistService,
-    AlbumService,
-    TrackService,
+    {
+      provide: ArtistService,
+      useFactory: (
+        eb: EventBusPort,
+        wr: ArtistWriteRepositoryPort,
+        rr: ArtistReadRepositoryPort,
+        idService: IdServicePort<ArtistId>,
+        tmpFS: TmpFileStoragePort,
+        artistFS: ArtistFileStoragePort,
+      ) => new ArtistService(eb, wr, rr, idService, tmpFS, artistFS),
+      inject: [
+        EventBus,
+        ArtistWriteRepository,
+        ArtistReadRepository,
+        RandomIdService,
+        TmpFileStorage,
+        ArtistFileStorage,
+      ],
+    },
+    // AlbumService,
+    // TrackService,
     CreateArtistHandler,
     UpdateArtistHandler,
     UpdateArtistAvatarHandler,
@@ -27,8 +54,8 @@ import { GetArtistTracksHandler } from '../../../../../core/app/cqrs/track/queri
     DeleteArtistCoverHandler,
     DeleteArtistHandler,
     GetArtistHandler,
-    GetArtistAlbumsHandler,
-    GetArtistTracksHandler,
+    // GetArtistAlbumsHandler,
+    // GetArtistTracksHandler,
   ],
   controllers: [ArtistController],
 })

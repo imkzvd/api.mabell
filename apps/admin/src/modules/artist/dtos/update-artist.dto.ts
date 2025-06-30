@@ -9,7 +9,7 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
-import { Genre, Genres } from '../../../../../../core/domain/common/constants/genres';
+import { Genre, Genres } from '@core/domain/common/constants/genres';
 
 export class UpdateArtistDTO {
   @ApiProperty({
