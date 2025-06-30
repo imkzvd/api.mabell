@@ -1,8 +1,8 @@
 import { Controller, Get } from '@nestjs/common';
 import { ApiCookieAuth, ApiOkResponse, ApiOperation } from '@nestjs/swagger';
+import { AdminRoles } from '@core/domain/components/admin/constants/admin-roles';
 import { MetadataRO } from './ros/metadata.ro';
 import { Roles } from '../../decorators/roles.decorator';
-import { AdminRoles } from '../../../../../core/domain/components/admin/constants/admin-roles';
 
 @ApiCookieAuth()
 @Roles(AdminRoles.Owner, AdminRoles.Admin, AdminRoles.Guest)

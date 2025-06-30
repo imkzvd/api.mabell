@@ -1,22 +1,16 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { faker } from '@faker-js/faker';
-import { LabelValueRO } from '../../../../common/ros/label-value.ro';
-import {
-  getRegionLabelByValue,
-  Regions,
-} from '../../../../../../core/domain/common/constants/regions';
-import {
-  Genres,
-  getGenreLabelByValue,
-} from '../../../../../../core/domain/common/constants/genres';
+import { LabelValueRO } from '@shared/ros/label-value.ro';
+import { getRegionLabelByValue, Regions } from '@core/domain/common/constants/regions';
+import { Genres, getGenreLabelByValue } from '@core/domain/common/constants/genres';
 import {
   AdminRoles,
   getAdminRoleLabelByValue,
-} from '../../../../../../core/domain/components/admin/constants/admin-roles';
+} from '@core/domain/components/admin/constants/admin-roles';
 import {
   AlbumTypes,
   getAlbumTypeLabelByValue,
-} from '../../../../../../core/domain/components/album/constants/album-types';
+} from '@core/domain/components/album/constants/album-types';
 
 export class MetadataRO {
   @ApiProperty({
