@@ -1,13 +1,10 @@
 import * as process from 'process';
 import { ApiProperty } from '@nestjs/swagger';
 import { faker } from '@faker-js/faker';
-import { LabelValueRO } from '../../../../common/ros/label-value.ro';
-import { UserRO } from '../../users/ros/user.ro';
-import {
-  Genres,
-  getGenreLabelByValue,
-} from '../../../../../../core/domain/common/constants/genres';
-import { PlaylistDTO } from '../../../../../../core/app/components/playlist/dtos/playlist.dto';
+import { LabelValueRO } from '@shared/ros/label-value.ro';
+import { Genres, getGenreLabelByValue } from '@core/domain/common/constants/genres';
+import { PlaylistDTO } from '@core/app/components/playlist/dtos/playlist.dto';
+import { UserRO } from '../../user/ros/user.ro';
 
 export class PlaylistRO {
   @ApiProperty({

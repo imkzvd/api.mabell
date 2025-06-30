@@ -48,7 +48,7 @@ import { AdminRoles } from '../../../../../core/domain/components/admin/constant
 @ApiTags('Playlists')
 @Roles(AdminRoles.Owner, AdminRoles.Admin)
 @Controller({ path: '/playlists' })
-export class PlaylistsController {
+export class PlaylistController {
   constructor(
     private readonly _commandBus: CommandBus,
     private readonly _queryBus: QueryBus,

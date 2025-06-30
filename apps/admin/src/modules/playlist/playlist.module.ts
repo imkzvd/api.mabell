@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { PlaylistsController } from './playlists.controller';
+import { PlaylistController } from './playlist.controller';
 import { TrackService } from '../../../../../core/app/components/track/track.service';
 import { AddTrackInPlaylistHandler } from '../../../../../core/app/cqrs/playlist/commands/add-track-in-playlist/add-track-in-playlist.handler';
 import { CreatePlaylistHandler } from '../../../../../core/app/cqrs/playlist/commands/create-playlist/create-playlist.handler';
@@ -32,6 +32,6 @@ import { PlaylistEventSubscriber } from '../../../../../core/app/components/play
     GetPlaylistTracksHandler,
     PlaylistEventSubscriber,
   ],
-  controllers: [PlaylistsController],
+  controllers: [PlaylistController],
 })
-export class PlaylistsModule {}
+export class PlaylistModule {}

@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { faker } from '@faker-js/faker';
 import { IsBoolean, IsEnum, IsNotEmpty, IsOptional, IsString, MinLength } from 'class-validator';
-import { Genre, Genres } from '../../../../../../core/domain/common/constants/genres';
+import { Genre, Genres } from '@core/domain/common/constants/genres';
 
 export class UpdatePlaylistDTO {
   @ApiProperty({
