@@ -10,11 +10,8 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
-import {
-  AlbumType,
-  AlbumTypes,
-} from '../../../../../../core/domain/components/album/constants/album-types';
-import { Genre, Genres } from '../../../../../../core/domain/common/constants/genres';
+import { Genre, Genres } from '@core/domain/common/constants/genres';
+import { AlbumType, AlbumTypes } from '@core/domain/components/album/constants/album-types';
 
 export class UpdateAlbumDTO {
   @ApiProperty({

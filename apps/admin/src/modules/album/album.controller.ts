@@ -24,27 +24,26 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { faker } from '@faker-js/faker';
-import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { ParseObjectIdPipe } from '../../../common/pipes/parse-object-id.pipe';
+import { AdminRoles } from '@core/domain/components/admin/constants/admin-roles';
+import { CreateAlbumCommand } from '@core/app/cqrs/album/commands/create-album/create-album.command';
+import { GetAlbumQuery } from '@core/app/cqrs/album/queries/get-album/get-album.query';
+import { CommandBus } from '@infrastructure/command-bus';
+import { QueryBus } from '@infrastructure/query-bus';
+import { BadRequestException } from '@core/shared/exceptions';
+import { ParseObjectIdPipe } from '@shared/pipes/parse-object-id.pipe';
+import { UpdateAlbumCommand } from '@core/app/cqrs/album/commands/update-album/update-album.command';
+import { UpdateAlbumArtistsCommand } from '@core/app/cqrs/album/commands/update-album-artists/update-album-artists.command';
+import { UpdateAlbumCoverCommand } from '@core/app/cqrs/album/commands/update-album-cover/update-album-cover.command';
+import { DeleteAlbumCoverCommand } from '@core/app/cqrs/album/commands/delete-album-cover/delete-album-cover.command';
+import { DeleteAlbumCommand } from '@core/app/cqrs/album/commands/delete-album/delete-album.command';
 import { UpdateAlbumDTO } from './dtos/update-album.dto';
 import { AlbumRO } from './ros/album.ro';
 import { UpdateAlbumArtistsDTO } from './dtos/update-album-artists.dto';
 import { UpdateAlbumCoverDTO } from './dtos/update-album-cover.dto';
-import { BadRequestException } from '../../../../../core/shared/exceptions';
 import { CreateAlbumDTO } from './dtos/create-album.dto';
-import { TracksRO } from '../tracks/ros/tracks.ro';
-import { CreateAlbumCommand } from '../../../../../core/app/cqrs/album/commands/create-album/create-album.command';
-import { GetAlbumQuery } from '../../../../../core/app/cqrs/album/queries/get-album/get-album.query';
-import { UpdateAlbumCommand } from '../../../../../core/app/cqrs/album/commands/update-album/update-album.command';
-import { UpdateAlbumArtistsCommand } from '../../../../../core/app/cqrs/album/commands/update-album-artists/update-album-artists.command';
-import { UpdateAlbumCoverCommand } from '../../../../../core/app/cqrs/album/commands/update-album-cover/update-album-cover.command';
-import { DeleteAlbumCoverCommand } from '../../../../../core/app/cqrs/album/commands/delete-album-cover/delete-album-cover.command';
-import { DeleteAlbumCommand } from '../../../../../core/app/cqrs/album/commands/delete-album/delete-album.command';
-import { GetAlbumTracksQuery } from '../../../../../core/app/cqrs/track/queries/get-album-tracks/get-album-tracks.query';
 import { Roles } from '../../decorators/roles.decorator';
-import { AdminRoles } from '../../../../../core/domain/components/admin/constants/admin-roles';
 
-@ApiTags('Albums')
+@ApiTags('Album')
 @Roles(AdminRoles.Owner, AdminRoles.Admin)
 @Controller({ path: '/albums' })
 export class AlbumController {
@@ -198,27 +197,27 @@ export class AlbumController {
     return new AlbumRO(foundAlbum);
   }
 
-  @ApiOperation({ summary: 'Get album tracks', operationId: 'getAlbumTracks' })
-  @ApiParam({
-    type: String,
-    name: 'id',
-    description: 'Id',
-    example: faker.database.mongodbObjectId(),
-  })
-  @ApiQuery({ required: false, type: Number, name: 'limit', description: 'Limit', example: 50 })
-  @ApiQuery({ required: false, type: Number, name: 'offset', description: 'Offset', example: 0 })
-  @ApiOkResponse({ description: 'Album tracks', type: TracksRO })
-  @Roles(AdminRoles.Guest)
-  @Get('/:id/tracks')
-  async getAlbumTracks(
-    @Param('id', ParseObjectIdPipe) id: string,
-    @Query('limit', new DefaultValuePipe(50), ParseIntPipe) limit: number,
-    @Query('offset', new DefaultValuePipe(0), ParseIntPipe) offset: number,
-  ): Promise<TracksRO> {
-    const foundTracks = await this._queryBus.execute(
-      new GetAlbumTracksQuery(id, { pagination: { limit, offset } }),
-    );
-
-    return new TracksRO(foundTracks);
-  }
+  // @ApiOperation({ summary: 'Get album tracks', operationId: 'getAlbumTracks' })
+  // @ApiParam({
+  //   type: String,
+  //   name: 'id',
+  //   description: 'Id',
+  //   example: faker.database.mongodbObjectId(),
+  // })
+  // @ApiQuery({ required: false, type: Number, name: 'limit', description: 'Limit', example: 50 })
+  // @ApiQuery({ required: false, type: Number, name: 'offset', description: 'Offset', example: 0 })
+  // @ApiOkResponse({ description: 'Album tracks', type: TracksRO })
+  // @Roles(AdminRoles.Guest)
+  // @Get('/:id/tracks')
+  // async getAlbumTracks(
+  //   @Param('id', ParseObjectIdPipe) id: string,
+  //   @Query('limit', new DefaultValuePipe(50), ParseIntPipe) limit: number,
+  //   @Query('offset', new DefaultValuePipe(0), ParseIntPipe) offset: number,
+  // ): Promise<TracksRO> {
+  //   const foundTracks = await this._queryBus.execute(
+  //     new GetAlbumTracksQuery(id, { pagination: { limit, offset } }),
+  //   );
+  //
+  //   return new TracksRO(foundTracks);
+  // }
 }

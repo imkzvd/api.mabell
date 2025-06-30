@@ -1,17 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { faker } from '@faker-js/faker';
 import * as process from 'process';
-import { LabelValueRO } from '../../../../common/ros/label-value.ro';
-import { ArtistRO } from '../../artists/ros/artist.ro';
-import {
-  Genres,
-  getGenreLabelByValue,
-} from '../../../../../../core/domain/common/constants/genres';
+import { LabelValueRO } from '@shared/ros/label-value.ro';
 import {
   AlbumTypes,
   getAlbumTypeLabelByValue,
-} from '../../../../../../core/domain/components/album/constants/album-types';
-import { AlbumDTO } from '../../../../../../core/app/components/album/dtos/album.dto';
+} from '@core/domain/components/album/constants/album-types';
+import { Genres, getGenreLabelByValue } from '@core/domain/common/constants/genres';
+import { AlbumDTO } from '@core/app/components/album/dtos/album.dto';
+import { ArtistRO } from '../../artist/ros/artist.ro';
 
 export class AlbumRO {
   @ApiProperty({
