@@ -1,13 +1,13 @@
 import { Controller, Get, Req } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { QueryBus } from '@nestjs/cqrs';
-import { Roles } from '../../decorators/roles.decorator';
-import { AdminRoles } from '../../../../../core/domain/components/admin/constants/admin-roles';
 import { Request } from 'express';
-import { AccessTokenPayload } from '../../../../../core/app/components/admin-token/types';
-import { GetAdminQuery } from '../../../../../core/app/cqrs/admin/queries/get-admin/get-admin.query';
-import { UnauthorizedException } from '../../../../../core/shared/exceptions';
+import { AdminRoles } from '@core/domain/components/admin/constants/admin-roles';
+import { AccessTokenPayload } from '@core/app/components/admin-token/types';
+import { QueryBus } from '@infrastructure/query-bus';
+import { GetAdminQuery } from '@core/app/cqrs/admin/queries/get-admin/get-admin.query';
+import { UnauthorizedException } from '@core/shared/exceptions';
 import { LoggedAdminProfileRO } from './ros/logged-admin-profile.ro';
+import { Roles } from '../../decorators/roles.decorator';
 
 @ApiTags('Me')
 @Roles(AdminRoles.Owner, AdminRoles.Admin, AdminRoles.Guest)
