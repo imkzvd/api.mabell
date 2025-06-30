@@ -36,12 +36,14 @@ import { UpdateAlbumArtistsCommand } from '@core/app/cqrs/album/commands/update-
 import { UpdateAlbumCoverCommand } from '@core/app/cqrs/album/commands/update-album-cover/update-album-cover.command';
 import { DeleteAlbumCoverCommand } from '@core/app/cqrs/album/commands/delete-album-cover/delete-album-cover.command';
 import { DeleteAlbumCommand } from '@core/app/cqrs/album/commands/delete-album/delete-album.command';
+import { GetAlbumTracksQuery } from '@core/app/cqrs/track/queries/get-album-tracks/get-album-tracks.query';
 import { UpdateAlbumDTO } from './dtos/update-album.dto';
 import { AlbumRO } from './ros/album.ro';
 import { UpdateAlbumArtistsDTO } from './dtos/update-album-artists.dto';
 import { UpdateAlbumCoverDTO } from './dtos/update-album-cover.dto';
 import { CreateAlbumDTO } from './dtos/create-album.dto';
 import { Roles } from '../../decorators/roles.decorator';
+import { TracksRO } from '../track/ros/tracks.ro';
 
 @ApiTags('Album')
 @Roles(AdminRoles.Owner, AdminRoles.Admin)
@@ -197,27 +199,27 @@ export class AlbumController {
     return new AlbumRO(foundAlbum);
   }
 
-  // @ApiOperation({ summary: 'Get album tracks', operationId: 'getAlbumTracks' })
-  // @ApiParam({
-  //   type: String,
-  //   name: 'id',
-  //   description: 'Id',
-  //   example: faker.database.mongodbObjectId(),
-  // })
-  // @ApiQuery({ required: false, type: Number, name: 'limit', description: 'Limit', example: 50 })
-  // @ApiQuery({ required: false, type: Number, name: 'offset', description: 'Offset', example: 0 })
-  // @ApiOkResponse({ description: 'Album tracks', type: TracksRO })
-  // @Roles(AdminRoles.Guest)
-  // @Get('/:id/tracks')
-  // async getAlbumTracks(
-  //   @Param('id', ParseObjectIdPipe) id: string,
-  //   @Query('limit', new DefaultValuePipe(50), ParseIntPipe) limit: number,
-  //   @Query('offset', new DefaultValuePipe(0), ParseIntPipe) offset: number,
-  // ): Promise<TracksRO> {
-  //   const foundTracks = await this._queryBus.execute(
-  //     new GetAlbumTracksQuery(id, { pagination: { limit, offset } }),
-  //   );
-  //
-  //   return new TracksRO(foundTracks);
-  // }
+  @ApiOperation({ summary: 'Get album tracks', operationId: 'getAlbumTracks' })
+  @ApiParam({
+    type: String,
+    name: 'id',
+    description: 'Id',
+    example: faker.database.mongodbObjectId(),
+  })
+  @ApiQuery({ required: false, type: Number, name: 'limit', description: 'Limit', example: 50 })
+  @ApiQuery({ required: false, type: Number, name: 'offset', description: 'Offset', example: 0 })
+  @ApiOkResponse({ description: 'Album tracks', type: TracksRO })
+  @Roles(AdminRoles.Guest)
+  @Get('/:id/tracks')
+  async getAlbumTracks(
+    @Param('id', ParseObjectIdPipe) id: string,
+    @Query('limit', new DefaultValuePipe(50), ParseIntPipe) limit: number,
+    @Query('offset', new DefaultValuePipe(0), ParseIntPipe) offset: number,
+  ): Promise<TracksRO> {
+    const foundTracks = await this._queryBus.execute(
+      new GetAlbumTracksQuery(id, { pagination: { limit, offset } }),
+    );
+
+    return new TracksRO(foundTracks);
+  }
 }

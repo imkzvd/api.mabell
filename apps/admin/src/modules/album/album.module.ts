@@ -1,12 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AlbumController } from './album.controller';
-import { CreateAlbumHandler } from './commands/create-album.handler';
-import { DeleteAlbumHandler } from './commands/delete-album.handler';
-import { DeleteAlbumCoverHandler } from './commands/delete-album-cover.handler';
-import { UpdateAlbumArtistsHandler } from './commands/update-album-artists.handler';
-import { UpdateAlbumHandler } from './commands/update-album.handler';
-import { UpdateAlbumCoverHandler } from './commands/update-album-cover.handler';
-import { GetAlbumHandler } from './queries/get-album.handler';
 import { AlbumService } from '@core/app/components/album/album.service';
 import { EventBus as EventBusPort } from '@core/app/common/ports/event-bus.port';
 import { AlbumWriteRepository as AlbumWriteRepositoryPort } from '@core/domain/components/album/repository/album-write-repository.port';
@@ -26,6 +18,21 @@ import { ArtistReadRepository as ArtistReadRepositoryPort } from '@core/domain/c
 import { ArtistId } from '@core/domain/components/artist/types';
 import { ArtistWriteRepository } from '@infrastructure/mongoose/services/artist/artist-write-repository.service';
 import { ArtistReadRepository } from '@infrastructure/mongoose/services/artist/artist-read-repository.service';
+import { TrackService } from '@core/app/components/track/track.service';
+import { TrackWriteRepository as TrackWriteRepositoryPort } from '@core/domain/components/track/repository/track-write-repository.port';
+import { TrackReadRepository as TrackReadRepositoryPort } from '@core/domain/components/track/repository/track-read-repository.port';
+import { TrackId } from '@core/domain/components/track/types';
+import { TrackWriteRepository } from '@infrastructure/mongoose/services/track/track-write-repository.service';
+import { TrackReadRepository } from '@infrastructure/mongoose/services/track/track-read-repository.service';
+import { AlbumController } from './album.controller';
+import { CreateAlbumHandler } from './commands/create-album.handler';
+import { DeleteAlbumHandler } from './commands/delete-album.handler';
+import { DeleteAlbumCoverHandler } from './commands/delete-album-cover.handler';
+import { UpdateAlbumArtistsHandler } from './commands/update-album-artists.handler';
+import { UpdateAlbumHandler } from './commands/update-album.handler';
+import { UpdateAlbumCoverHandler } from './commands/update-album-cover.handler';
+import { GetAlbumHandler } from './queries/get-album.handler';
+import { GetAlbumTracksHandler } from '../track/queries/get-album-tracks.handler';
 
 @Module({
   imports: [RandomIdModule, FileStorageModule],
@@ -68,7 +75,25 @@ import { ArtistReadRepository } from '@infrastructure/mongoose/services/artist/a
         ArtistFileStorage,
       ],
     },
-    // TrackService,
+    {
+      provide: TrackService,
+      useFactory: (
+        eb: EventBusPort,
+        wr: TrackWriteRepositoryPort,
+        rr: TrackReadRepositoryPort,
+        idService: IdServicePort<TrackId>,
+        tmpFS: TmpFileStoragePort,
+        artistFS: ArtistFileStoragePort,
+      ) => new TrackService(eb, wr, rr, idService, tmpFS, artistFS),
+      inject: [
+        EventBus,
+        TrackWriteRepository,
+        TrackReadRepository,
+        RandomIdService,
+        TmpFileStorage,
+        ArtistFileStorage,
+      ],
+    },
     CreateAlbumHandler,
     DeleteAlbumHandler,
     DeleteAlbumCoverHandler,
@@ -76,7 +101,7 @@ import { ArtistReadRepository } from '@infrastructure/mongoose/services/artist/a
     UpdateAlbumHandler,
     UpdateAlbumCoverHandler,
     GetAlbumHandler,
-    // GetAlbumTracksHandler,
+    GetAlbumTracksHandler,
     // AlbumEventSubscriber,
   ],
   controllers: [AlbumController],
