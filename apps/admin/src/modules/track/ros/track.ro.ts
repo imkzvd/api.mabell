@@ -1,9 +1,9 @@
 import * as process from 'process';
 import { ApiProperty } from '@nestjs/swagger';
 import { faker } from '@faker-js/faker';
-import { AlbumRO } from '../../albums/ros/album.ro';
-import { ArtistRO } from '../../artists/ros/artist.ro';
-import { TrackDTO } from '../../../../../../core/app/components/track/dtos/track.dto';
+import { TrackDTO } from '@core/app/components/track/dtos/track.dto';
+import { AlbumRO } from '../../album/ros/album.ro';
+import { ArtistRO } from '../../artist/ros/artist.ro';
 
 export class TrackRO {
   @ApiProperty({

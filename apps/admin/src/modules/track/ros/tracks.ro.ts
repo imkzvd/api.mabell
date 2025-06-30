@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { OffsetLimitPaginationRO } from '../../../../common/ros/offset-limit-pagination.ro';
+import { OffsetLimitPaginationRO } from '@shared/ros/offset-limit-pagination.ro';
+import { OffsetLimitPaginationResponseDTO } from '@core/shared/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
+import { TrackDTO } from '@core/app/components/track/dtos/track.dto';
 import { TrackRO } from './track.ro';
-import { OffsetLimitPaginationResponseDTO } from '../../../../../../core/shared/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
-import { TrackDTO } from '../../../../../../core/app/components/track/dtos/track.dto';
 
 export class TracksRO extends OffsetLimitPaginationRO<TrackRO> {
   @ApiProperty({ type: () => [TrackRO], description: 'Items' })

@@ -20,25 +20,26 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { faker } from '@faker-js/faker';
-import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { AdminRoles } from '@core/domain/components/admin/constants/admin-roles';
+import { CommandBus } from '@infrastructure/command-bus';
+import { QueryBus } from '@infrastructure/query-bus';
+import { CreateTrackCommand } from '@core/app/cqrs/track/commands/create-track/create-track.command';
+import { GetTrackQuery } from '@core/app/cqrs/track/queries/get-track/get-track.query';
+import { BadRequestException } from '@core/shared/exceptions';
+import { ParseObjectIdPipe } from '@shared/pipes/parse-object-id.pipe';
+import { UpdateTrackCommand } from '@core/app/cqrs/track/commands/update-track/update-track.command';
+import { UpdateTrackFeatArtistsCommand } from '@core/app/cqrs/track/commands/update-track-feat-artists/update-track-feat-artists.command';
+import { UpdateTrackFileCommand } from '@core/app/cqrs/track/commands/update-track-file/update-track-file.command';
+import { DeleteTrackFileCommand } from '@core/app/cqrs/track/commands/delete-track-file/delete-track-file.command';
+import { DeleteTrackCommand } from '@core/app/cqrs/track/commands/delete-track/delete-track.command';
 import { CreateTrackDTO } from './dtos/create-track.dto';
 import { UpdateTrackFileDTO } from './dtos/update-track-file.dto';
 import { TrackRO } from './ros/track.ro';
-import { BadRequestException } from '../../../../../core/shared/exceptions';
 import { UpdateTrackDTO } from './dtos/update-track.dto';
-import { ParseObjectIdPipe } from '../../../common/pipes/parse-object-id.pipe';
 import { UpdateTrackFeatArtistsDTO } from './dtos/update-track-feat-artists.dto';
-import { CreateTrackCommand } from '../../../../../core/app/cqrs/track/commands/create-track/create-track.command';
-import { GetTrackQuery } from '../../../../../core/app/cqrs/track/queries/get-track/get-track.query';
-import { UpdateTrackCommand } from '../../../../../core/app/cqrs/track/commands/update-track/update-track.command';
-import { UpdateTrackFeatArtistsCommand } from '../../../../../core/app/cqrs/track/commands/update-track-feat-artists/update-track-feat-artists.command';
-import { UpdateTrackFileCommand } from '../../../../../core/app/cqrs/track/commands/update-track-file/update-track-file.command';
-import { DeleteTrackFileCommand } from '../../../../../core/app/cqrs/track/commands/delete-track-file/delete-track-file.command';
-import { DeleteTrackCommand } from '../../../../../core/app/cqrs/track/commands/delete-track/delete-track.command';
 import { Roles } from '../../decorators/roles.decorator';
-import { AdminRoles } from '../../../../../core/domain/components/admin/constants/admin-roles';
 
-@ApiTags('Tracks')
+@ApiTags('Track')
 @Roles(AdminRoles.Owner, AdminRoles.Admin)
 @Controller({ path: '/tracks' })
 export class TrackController {
