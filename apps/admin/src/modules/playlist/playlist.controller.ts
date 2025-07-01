@@ -24,28 +24,29 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { faker } from '@faker-js/faker';
+import { AdminRoles } from '@core/domain/components/admin/constants/admin-roles';
+import { CommandBus } from '@infrastructure/command-bus';
+import { QueryBus } from '@infrastructure/query-bus';
+import { CreatePlaylistCommand } from '@core/app/cqrs/playlist/commands/create-playlist/create-playlist.command';
+import { GetPlaylistQuery } from '@core/app/cqrs/playlist/queries/get-playlist/get-playlist.query';
+import { BadRequestException } from '@core/shared/exceptions';
+import { ParseObjectIdPipe } from '@shared/pipes/parse-object-id.pipe';
+import { UpdatePlaylistCommand } from '@core/app/cqrs/playlist/commands/update-playlist/update-playlist.command';
+import { UpdatePlaylistCoverCommand } from '@core/app/cqrs/playlist/commands/update-playlist-cover/update-playlist-cover.command';
+import { DeletePlaylistCoverCommand } from '@core/app/cqrs/playlist/commands/delete-playlist-cover/delete-playlist-cover.command';
+import { DeletePlaylistCommand } from '@core/app/cqrs/playlist/commands/delete-playlist/delete-playlist.command';
+import { AddTrackInPlaylistCommand } from '@core/app/cqrs/playlist/commands/add-track-in-playlist/add-track-in-playlist.command';
+import { DeleteTrackFromPlaylistCommand } from '@core/app/cqrs/playlist/commands/delete-track-from-playlist/delete-track-from-playlist.command';
+import { GetPlaylistTracksQuery } from '@core/app/cqrs/track/queries/get-playlist-tracks/get-playlist-tracks.query';
 import { PlaylistRO } from './ros/playlist.ro';
 import { UpdatePlaylistCoverDTO } from './dtos/update-playlist-cover.dto';
-import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreatePlaylistDTO } from './dtos/create-playlist.dto';
-import { BadRequestException } from '../../../../../core/shared/exceptions';
 import { UpdatePlaylistDTO } from './dtos/update-playlist.dto';
-import { ParseObjectIdPipe } from '../../../common/pipes/parse-object-id.pipe';
 import { AddTrackInPlaylistDTO } from './dtos/add-track-in-playlist.dto';
-import { CreatePlaylistCommand } from '../../../../../core/app/cqrs/playlist/commands/create-playlist/create-playlist.command';
-import { GetPlaylistQuery } from '../../../../../core/app/cqrs/playlist/queries/get-playlist/get-playlist.query';
-import { UpdatePlaylistCommand } from '../../../../../core/app/cqrs/playlist/commands/update-playlist/update-playlist.command';
-import { UpdatePlaylistCoverCommand } from '../../../../../core/app/cqrs/playlist/commands/update-playlist-cover/update-playlist-cover.command';
-import { DeletePlaylistCoverCommand } from '../../../../../core/app/cqrs/playlist/commands/delete-playlist-cover/delete-playlist-cover.command';
-import { DeletePlaylistCommand } from '../../../../../core/app/cqrs/playlist/commands/delete-playlist/delete-playlist.command';
-import { AddTrackInPlaylistCommand } from '../../../../../core/app/cqrs/playlist/commands/add-track-in-playlist/add-track-in-playlist.command';
-import { DeleteTrackFromPlaylistCommand } from '../../../../../core/app/cqrs/playlist/commands/delete-track-from-playlist/delete-track-from-playlist.command';
-import { PlaylistTracksRO } from '../tracks/ros/playlist-tracks.ro';
-import { GetPlaylistTracksQuery } from '../../../../../core/app/cqrs/track/queries/get-playlist-tracks/get-playlist-tracks.query';
 import { Roles } from '../../decorators/roles.decorator';
-import { AdminRoles } from '../../../../../core/domain/components/admin/constants/admin-roles';
+import { PlaylistTracksRO } from '../track/ros/playlist-tracks.ro';
 
-@ApiTags('Playlists')
+@ApiTags('Playlist')
 @Roles(AdminRoles.Owner, AdminRoles.Admin)
 @Controller({ path: '/playlists' })
 export class PlaylistController {
