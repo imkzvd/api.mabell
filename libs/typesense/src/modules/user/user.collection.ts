@@ -1,5 +1,5 @@
 import { CollectionCreateSchema } from 'typesense/lib/Typesense/Collections';
-import { IndexedUserDTO } from '@core/app/components/search/ports/search-service/dtos/indexed-user.dto';
+import { IndexedUserDTO } from '@core/app/common/ports/search-service/dtos/indexed-user.dto';
 import { UserDTO } from '@core/app/components/user/dtos/user.dto';
 import UserMapper from './user.mapper';
 import { User } from './user.document';

@@ -1,4 +1,4 @@
-import { IndexedArtistDTO } from '@core/app/components/search/ports/search-service/dtos/indexed-artist.dto';
+import { IndexedArtistDTO } from '@core/app/common/ports/search-service/dtos/indexed-artist.dto';
 import { ArtistDTO } from '@core/domain/components/artist/repository/dtos/artist.dto';
 import { Artist } from './artist.document';
 import { ArtistFactory } from './artist.factory';

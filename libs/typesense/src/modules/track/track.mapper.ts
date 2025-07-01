@@ -1,7 +1,7 @@
-import { IndexedTrackDTO } from '@core/app/components/search/ports/search-service/dtos/indexed-track.dto';
 import { TrackDTO } from '@core/app/components/track/dtos/track.dto';
-import { IndexedAlbumDTO } from '@core/app/components/search/ports/search-service/dtos/indexed-album.dto';
-import { IndexedSimplifiedArtistDTO } from '@core/app/components/search/ports/search-service/dtos/indexed-simplified-artist.dto';
+import { IndexedTrackDTO } from '@core/app/common/ports/search-service/dtos/indexed-track.dto';
+import { IndexedAlbumDTO } from '@core/app/common/ports/search-service/dtos/indexed-album.dto';
+import { IndexedSimplifiedArtistDTO } from '@core/app/common/ports/search-service/dtos/indexed-simplified-artist.dto';
 import { Track } from './track.document';
 import { TrackFactory } from './track.factory';
 

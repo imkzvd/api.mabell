@@ -1,5 +1,5 @@
 import { UserDTO } from '@core/app/components/user/dtos/user.dto';
-import { IndexedUserDTO } from '@core/app/components/search/ports/search-service/dtos/indexed-user.dto';
+import { IndexedUserDTO } from '@core/app/common/ports/search-service/dtos/indexed-user.dto';
 import { User } from './user.document';
 import { UserFactory } from './user.factory';
 

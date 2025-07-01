@@ -1,5 +1,5 @@
 import { CollectionCreateSchema } from 'typesense/lib/Typesense/Collections';
-import { IndexedAlbumDTO } from '@core/app/components/search/ports/search-service/dtos/indexed-album.dto';
+import { IndexedAlbumDTO } from '@core/app/common/ports/search-service/dtos/indexed-album.dto';
 import { AlbumWithArtistsDTO } from '@core/domain/components/album/repository/dtos/album-with-artists.dto';
 import { Album } from './album.document';
 import AlbumMapper from './album.mapper';

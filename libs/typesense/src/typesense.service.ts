@@ -1,10 +1,10 @@
-import { SearchService } from '@core/app/components/search/ports/search-service/search-service.port';
-import { IndexedItemsDTO } from '@core/app/components/search/ports/search-service/dtos/indexed-items.dto';
-import { IndexedUserDTO } from '@core/app/components/search/ports/search-service/dtos/indexed-user.dto';
-import { IndexedArtistDTO } from '@core/app/components/search/ports/search-service/dtos/indexed-artist.dto';
-import { IndexedAlbumDTO } from '@core/app/components/search/ports/search-service/dtos/indexed-album.dto';
-import { IndexedTrackDTO } from '@core/app/components/search/ports/search-service/dtos/indexed-track.dto';
-import { IndexedPlaylistDTO } from '@core/app/components/search/ports/search-service/dtos/indexed-playlist.dto';
+import { SearchService } from '@core/app/common/ports/search-service/search-service.port';
+import { IndexedItemsDTO } from '@core/app/common/ports/search-service/dtos/indexed-items.dto';
+import { IndexedUserDTO } from '@core/app/common/ports/search-service/dtos/indexed-user.dto';
+import { IndexedArtistDTO } from '@core/app/common/ports/search-service/dtos/indexed-artist.dto';
+import { IndexedAlbumDTO } from '@core/app/common/ports/search-service/dtos/indexed-album.dto';
+import { IndexedTrackDTO } from '@core/app/common/ports/search-service/dtos/indexed-track.dto';
+import { IndexedPlaylistDTO } from '@core/app/common/ports/search-service/dtos/indexed-playlist.dto';
 import { ArtistCollection } from './modules/artist/artist.collection';
 import { AlbumCollection } from './modules/album/album.collection';
 import { TrackCollection } from './modules/track/track.collection';

@@ -1,5 +1,5 @@
 import { CollectionCreateSchema } from 'typesense/lib/Typesense/Collections';
-import { IndexedTrackDTO } from '@core/app/components/search/ports/search-service/dtos/indexed-track.dto';
+import { IndexedTrackDTO } from '@core/app/common/ports/search-service/dtos/indexed-track.dto';
 import { TrackDTO } from '@core/app/components/track/dtos/track.dto';
 import { Track } from './track.document';
 import TrackMapper from './track.mapper';
