@@ -6,7 +6,7 @@ import { UserService } from '@core/app/components/user/user.service';
 import { UserTokenService } from '@core/app/components/user-token/user-token.service';
 
 @CommandHandler(CreateUserRefreshTokenCommand)
-export class CreateAdminRefreshTokenHandler
+export class CreateUserRefreshTokenHandler
   implements ICommandHandler<CreateUserRefreshTokenCommand>
 {
   private readonly _coreHandler: CoreCreateUserRefreshTokenHandler;

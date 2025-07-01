@@ -6,9 +6,7 @@ import { CreateUserAccessTokenCommand } from '@core/app/cqrs/token/commands/crea
 import { CreateUserAccessTokenHandler as CoreCreateUserAccessTokenHandler } from '@core/app/cqrs/token/commands/create-user-access-token/create-user-access-token.handler';
 
 @CommandHandler(CreateUserAccessTokenCommand)
-export class CreateAdminAccessTokenHandler
-  implements ICommandHandler<CreateUserAccessTokenCommand>
-{
+export class CreateUserAccessTokenHandler implements ICommandHandler<CreateUserAccessTokenCommand> {
   private readonly _coreHandler: CoreCreateUserAccessTokenHandler;
 
   constructor(
