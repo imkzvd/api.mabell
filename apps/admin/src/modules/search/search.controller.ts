@@ -23,7 +23,13 @@ export class SearchController {
   constructor(private readonly _queryBus: QueryBus) {}
 
   @ApiOperation({ summary: 'Global search', operationId: 'search' })
-  @ApiQuery({ required: true, type: String, name: 'q', description: 'Query', example: 'eminem' })
+  @ApiQuery({
+    required: true,
+    type: String,
+    name: 'q',
+    description: 'QueryTypes',
+    example: 'eminem',
+  })
   @ApiOkResponse({ description: 'Result', type: SearchResultRO })
   @Get('/')
   async search(@Query('q') q: string): Promise<SearchResultRO> {
@@ -33,7 +39,13 @@ export class SearchController {
   }
 
   @ApiOperation({ summary: 'User search', operationId: 'userSearch' })
-  @ApiQuery({ required: true, type: String, name: 'q', description: 'Query', example: 'james007' })
+  @ApiQuery({
+    required: true,
+    type: String,
+    name: 'q',
+    description: 'QueryTypes',
+    example: 'james007',
+  })
   @ApiOkResponse({ description: 'Result', type: [IndexedUserRO] })
   @Get('/users')
   async userSearch(@Query('q') q: string): Promise<IndexedUserRO[]> {
@@ -43,7 +55,13 @@ export class SearchController {
   }
 
   @ApiOperation({ summary: 'Artist search', operationId: 'artistSearch' })
-  @ApiQuery({ required: true, type: String, name: 'q', description: 'Query', example: 'eminem' })
+  @ApiQuery({
+    required: true,
+    type: String,
+    name: 'q',
+    description: 'QueryTypes',
+    example: 'eminem',
+  })
   @ApiOkResponse({ description: 'Result', type: [IndexedArtistRO] })
   @Get('/artists')
   async artistSearch(@Query('q') q: string): Promise<IndexedArtistRO[]> {
@@ -53,7 +71,13 @@ export class SearchController {
   }
 
   @ApiOperation({ summary: 'Album search', operationId: 'albumSearch' })
-  @ApiQuery({ required: true, type: String, name: 'q', description: 'Query', example: 'kamikaze' })
+  @ApiQuery({
+    required: true,
+    type: String,
+    name: 'q',
+    description: 'QueryTypes',
+    example: 'kamikaze',
+  })
   @ApiOkResponse({ description: 'Result', type: [IndexedAlbumRO] })
   @Get('/albums')
   async albumSearch(@Query('q') q: string): Promise<IndexedAlbumRO[]> {
@@ -63,7 +87,13 @@ export class SearchController {
   }
 
   @ApiOperation({ summary: 'Track search', operationId: 'trackSearch' })
-  @ApiQuery({ required: true, type: String, name: 'q', description: 'Query', example: 'lucky you' })
+  @ApiQuery({
+    required: true,
+    type: String,
+    name: 'q',
+    description: 'QueryTypes',
+    example: 'lucky you',
+  })
   @ApiOkResponse({ description: 'Result', type: [IndexedTrackRO] })
   @Get('/tracks')
   async trackSearch(@Query('q') q: string): Promise<IndexedTrackRO[]> {
@@ -77,7 +107,7 @@ export class SearchController {
     required: true,
     type: String,
     name: 'q',
-    description: 'Query',
+    description: 'QueryTypes',
     example: 'hip-hop 2025',
   })
   @ApiOkResponse({ description: 'Result', type: [IndexedPlaylistRO] })
