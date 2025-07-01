@@ -10,8 +10,8 @@ import {
   MinLength,
 } from 'class-validator';
 import { faker } from '@faker-js/faker';
-import { Region, Regions } from '../../../../../../core/domain/common/constants/regions';
-import { Genre, Genres } from '../../../../../../core/domain/common/constants/genres';
+import { Region, Regions } from '@core/domain/common/constants/regions';
+import { Genre, Genres } from '@core/domain/common/constants/genres';
 
 export class UpdateUserDTO {
   @ApiProperty({
