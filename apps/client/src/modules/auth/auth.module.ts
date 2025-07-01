@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { LoginController } from './login.controller';
+import { AuthController } from './auth.controller';
 import { LoginService } from '../../../../../core/app/components/login/login.service';
 import { PasswordModule } from '../../../../../infrastructure/security/password/password.module';
 import { AdminTokenService } from '../../../../../core/app/components/admin-token/admin-token.service';
@@ -17,6 +17,6 @@ import { UserService } from '../../../../../core/app/components/user/user.servic
     LoginUserHandler,
     CreateUserAccessTokenHandler,
   ],
-  controllers: [LoginController],
+  controllers: [AuthController],
 })
-export class LoginModule {}
+export class AuthModule {}

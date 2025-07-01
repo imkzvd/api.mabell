@@ -9,7 +9,7 @@ import { CreateUserAccessTokenCommand } from '../../../../../core/app/cqrs/token
 
 @ApiTags('Login')
 @Controller('/login')
-export class LoginController {
+export class AuthController {
   constructor(private readonly _commandBus: CommandBus) {}
 
   @ApiOperation({ summary: 'User login', operationId: 'login' })
