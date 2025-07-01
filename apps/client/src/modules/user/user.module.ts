@@ -1,8 +1,7 @@
 import { Module } from '@nestjs/common';
 import { PasswordModule } from '@infrastructure/password';
 import { UserService } from '@core/app/components/user/user.service';
-import { UserController } from './user.controller';
-import { EventBus, EventBusModule } from '@infrastructure/event-bus';
+import { EventBus } from '@infrastructure/event-bus';
 import { EventBus as EventBusPort } from '@core/app/common/ports/event-bus.port';
 import { UserWriteRepository as UserWriteRepositoryPort } from '@core/domain/components/user/repository/user-write-repository.port';
 import { UserReadRepository as UserReadRepositoryPort } from '@core/domain/components/user/repository/user-read-repository.port';
@@ -11,12 +10,11 @@ import { PasswordService } from '@core/app/common/ports/password-service.port';
 import { TmpFileStorage } from '@core/app/common/ports/file-storages/tmp-file-storage.port';
 import { UserFileStorage } from '@core/app/common/ports/file-storages/user-file-storage.port';
 import { UserId } from '@core/domain/components/user/types';
-import { MongooseModule } from '@infrastructure/mongoose';
-import { UserModule } from '@infrastructure/mongoose/services/user/user.module';
 import { UserWriteRepository } from '@infrastructure/mongoose/services/user/user-write-repository.service';
 import { UserReadRepository } from '@infrastructure/mongoose/services/user/user-read-repository.service';
-import { GetUserHandler } from '../../commands/get-user.handler';
 import { QueryBusModule } from '@infrastructure/query-bus';
+import { GetUserHandler } from './queries/get-user.handler';
+import { UserController } from './user.controller';
 
 @Module({
   imports: [PasswordModule, QueryBusModule],
