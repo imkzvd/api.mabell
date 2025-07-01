@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { faker } from '@faker-js/faker';
-import { IndexedTrackDTO } from '../../../../../../core/app/components/search/ports/search-service/dtos/indexed-track.dto';
+import { IndexedTrackDTO } from '@core/app/common/ports/search-service/dtos/indexed-track.dto';
 import { IndexedSimplifiedArtistRO } from './indexed-simplified-artist.ro';
 import { IndexedAlbumRO } from './indexed-album.ro';
 

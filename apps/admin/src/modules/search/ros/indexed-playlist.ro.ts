@@ -1,7 +1,7 @@
 import * as process from 'process';
 import { ApiProperty } from '@nestjs/swagger';
 import { faker } from '@faker-js/faker';
-import { IndexedPlaylistDTO } from '../../../../../../core/app/components/search/ports/search-service/dtos/indexed-playlist.dto';
+import { IndexedPlaylistDTO } from '@core/app/common/ports/search-service/dtos/indexed-playlist.dto';
 
 export class IndexedPlaylistRO {
   @ApiProperty({ description: 'Id', example: faker.database.mongodbObjectId() })

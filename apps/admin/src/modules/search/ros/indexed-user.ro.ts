@@ -1,7 +1,7 @@
 import * as process from 'process';
 import { ApiProperty } from '@nestjs/swagger';
 import { faker } from '@faker-js/faker';
-import { IndexedUserDTO } from '../../../../../../core/app/components/search/ports/search-service/dtos/indexed-user.dto';
+import { IndexedUserDTO } from '@core/app/common/ports/search-service/dtos/indexed-user.dto';
 
 export class IndexedUserRO {
   @ApiProperty({ description: 'Id', example: faker.database.mongodbObjectId() })

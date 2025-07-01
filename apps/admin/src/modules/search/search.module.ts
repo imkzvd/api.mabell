@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
+import { TypesenseModule } from '@infrastructure/typesense';
 import { SearchController } from './search.controller';
-import { GetAlbumsHandler } from '../../../../../core/app/components/search/queries/get-albums/get-albums.handler';
-import { GetArtistsHandler } from '../../../../../core/app/components/search/queries/get-artists/get-artists.handler';
-import { GetItemsHandler } from '../../../../../core/app/components/search/queries/get-items/get-items.handler';
-import { GetPlaylistsHandler } from '../../../../../core/app/components/search/queries/get-playlists/get-playlists.handler';
-import { GetTracksHandler } from '../../../../../core/app/components/search/queries/get-tracks/get-tracks.handler';
-import { GetUsersHandler } from '../../../../../core/app/components/search/queries/get-users/get-users.handler';
-import { TypesenseModule } from '../../../../../infrastructure/persistence/typesense/typesense.module';
+import { GetAlbumsHandler } from './queries/get-albums.handler';
+import { GetArtistsHandler } from './queries/get-artists.handler';
+import { GetItemsHandler } from './queries/get-items.handler';
+import { GetPlaylistsHandler } from './queries/get-playlists.handler';
+import { GetTracksHandler } from './queries/get-tracks.handler';
+import { GetUsersHandler } from './queries/get-users.handler';
 
 @Module({
   imports: [TypesenseModule],

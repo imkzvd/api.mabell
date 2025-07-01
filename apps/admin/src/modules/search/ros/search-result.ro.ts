@@ -1,14 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IndexedArtistDTO } from '@core/app/common/ports/search-service/dtos/indexed-artist.dto';
+import { IndexedAlbumDTO } from '@core/app/common/ports/search-service/dtos/indexed-album.dto';
+import { IndexedTrackDTO } from '@core/app/common/ports/search-service/dtos/indexed-track.dto';
+import { IndexedUserDTO } from '@core/app/common/ports/search-service/dtos/indexed-user.dto';
+import { IndexedPlaylistDTO } from '@core/app/common/ports/search-service/dtos/indexed-playlist.dto';
 import { IndexedArtistRO } from './indexed-artist.ro';
 import { IndexedAlbumRO } from './indexed-album.ro';
 import { IndexedTrackRO } from './indexed-track.ro';
 import { IndexedUserRO } from './indexed-user.ro';
 import { IndexedPlaylistRO } from './indexed-playlist.ro';
-import { IndexedArtistDTO } from '../../../../../../core/app/components/search/ports/search-service/dtos/indexed-artist.dto';
-import { IndexedAlbumDTO } from '../../../../../../core/app/components/search/ports/search-service/dtos/indexed-album.dto';
-import { IndexedTrackDTO } from '../../../../../../core/app/components/search/ports/search-service/dtos/indexed-track.dto';
-import { IndexedUserDTO } from '../../../../../../core/app/components/search/ports/search-service/dtos/indexed-user.dto';
-import { IndexedPlaylistDTO } from '../../../../../../core/app/components/search/ports/search-service/dtos/indexed-playlist.dto';
 
 export class SearchResultRO {
   @ApiProperty({ description: 'Artists', type: () => [IndexedArtistRO] })

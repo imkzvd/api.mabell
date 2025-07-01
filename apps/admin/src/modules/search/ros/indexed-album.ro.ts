@@ -1,12 +1,12 @@
 import * as process from 'process';
 import { ApiProperty } from '@nestjs/swagger';
 import { faker } from '@faker-js/faker';
-import { IndexedAlbumDTO } from '../../../../../../core/app/components/search/ports/search-service/dtos/indexed-album.dto';
-import { LabelValueRO } from '../../../../common/ros/label-value.ro';
+import { LabelValueRO } from '@shared/ros/label-value.ro';
 import {
   AlbumTypes,
   getAlbumTypeLabelByValue,
-} from '../../../../../../core/domain/components/album/constants/album-types';
+} from '@core/domain/components/album/constants/album-types';
+import { IndexedAlbumDTO } from '@core/app/common/ports/search-service/dtos/indexed-album.dto';
 import { IndexedSimplifiedArtistRO } from './indexed-simplified-artist.ro';
 
 export class IndexedAlbumRO {
