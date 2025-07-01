@@ -9,13 +9,14 @@ import { ArtistCollection } from './modules/artist/artist.collection';
 import { AlbumCollection } from './modules/album/album.collection';
 import { TrackCollection } from './modules/track/track.collection';
 import { UserCollection } from './modules/user/user.collection';
+import { Inject } from '@nestjs/common';
 
 export class TypesenseService implements SearchService {
   constructor(
-    private readonly _userCollection: UserCollection,
-    private readonly _artistCollection: ArtistCollection,
-    private readonly _albumCollection: AlbumCollection,
-    private readonly _trackCollection: TrackCollection,
+    @Inject(UserCollection) private readonly _userCollection: UserCollection,
+    @Inject(ArtistCollection) private readonly _artistCollection: ArtistCollection,
+    @Inject(AlbumCollection) private readonly _albumCollection: AlbumCollection,
+    @Inject(TrackCollection) private readonly _trackCollection: TrackCollection,
   ) {}
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

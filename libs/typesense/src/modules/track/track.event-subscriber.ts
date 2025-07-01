@@ -1,5 +1,6 @@
-import { QueryBus } from '@nestjs/cqrs';
-import { EventBus } from '@core/app/common/ports/event-bus.port';
+import { Inject } from '@nestjs/common';
+import { EventBus } from '@infrastructure/event-bus';
+import { QueryBus } from '@infrastructure/query-bus';
 import { TrackCreatedEvent } from '@core/app/common/events/track-created.event';
 import { TrackUpdatedEvent } from '@core/app/common/events/track-updated.event';
 import { TrackDeletedEvent } from '@core/app/common/events/track-deleted.event';
@@ -13,9 +14,9 @@ import { TrackCollection } from './track.collection';
 
 export class TrackEventSubscriber {
   constructor(
-    private readonly _QB: QueryBus,
-    private readonly _EB: EventBus,
-    private readonly _collection: TrackCollection,
+    @Inject(QueryBus) private readonly _QB: QueryBus,
+    @Inject(EventBus) private readonly _EB: EventBus,
+    @Inject(TrackCollection) private readonly _collection: TrackCollection,
   ) {
     this._EB.subscribe(TrackCreatedEvent, async ({ id }) => this.saveTrackDocument(id));
     this._EB.subscribe(TrackUpdatedEvent, async ({ id }) => this.saveTrackDocument(id));

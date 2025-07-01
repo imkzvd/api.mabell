@@ -1,5 +1,7 @@
-import { QueryBus } from '@nestjs/cqrs';
-import { EventBus } from '@core/app/common/ports/event-bus.port';
+import { Inject } from '@nestjs/common';
+import { QueryBus } from '@infrastructure/query-bus';
+import { EventBus } from '@infrastructure/event-bus';
+import { EventBus as EventBusPort } from '@core/app/common/ports/event-bus.port';
 import { UserCreatedEvent } from '@core/app/common/events/user-created.event';
 import { GetUserQuery } from '@core/app/cqrs/user/queries/get-user/get-user.query';
 import { UserDeletedEvent } from '@core/app/common/events/user-deleted.event';
@@ -9,9 +11,9 @@ import { UserCollection } from './user.collection';
 
 export class UserEventSubscriber {
   constructor(
-    private readonly _QB: QueryBus,
-    private readonly _EB: EventBus,
-    private readonly _collection: UserCollection,
+    @Inject(QueryBus) private readonly _QB: QueryBus,
+    @Inject(EventBus) private readonly _EB: EventBusPort,
+    @Inject(UserCollection) private readonly _collection: UserCollection,
   ) {
     this._EB.subscribe(UserCreatedEvent, async ({ id }) => this.saveUserDocument(id));
     this._EB.subscribe(UserRegisteredEvent, async ({ id }) => this.saveUserDocument(id));

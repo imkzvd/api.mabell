@@ -5,10 +5,11 @@ import { ArtistModule } from './modules/artist/artist.module';
 import { AlbumModule } from './modules/album/album.module';
 import { TrackModule } from './modules/track/track.module';
 import { UserModule } from './modules/user/user.module';
+import { EventBusModule } from '@infrastructure/event-bus';
 
 @Global()
 @Module({
-  imports: [UserModule, ArtistModule, AlbumModule, TrackModule],
+  imports: [UserModule, ArtistModule, AlbumModule, TrackModule, EventBusModule],
   providers: [ArtistService, TypesenseService],
   exports: [TypesenseService],
 })
