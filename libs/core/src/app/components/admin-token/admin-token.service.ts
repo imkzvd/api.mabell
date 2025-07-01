@@ -13,6 +13,7 @@ import {
 } from './types';
 import { AdminRefreshTokenDTO } from './dtos/admin-refresh-token.dto';
 import AdminRefreshTokenMapper from './dtos/admin-refresh-token.mapper';
+import { NotFoundException } from '@core/shared/exceptions';
 
 export class AdminTokenService {
   constructor(
@@ -99,6 +100,16 @@ export class AdminTokenService {
     if (!tokenPayload) return;
 
     await this._WR.deleteById(tokenPayload.jti);
+  }
+
+  async deleteRefreshTokenById(id: string): Promise<AdminRefreshTokenId> {
+    const deletedRefreshTokenId = await this._WR.deleteById(id);
+
+    if (!deletedRefreshTokenId) {
+      throw new NotFoundException('Refresh token does not exist');
+    }
+
+    return deletedRefreshTokenId;
   }
 
   async deleteRefreshTokensByAdminId(id: string): Promise<void> {
