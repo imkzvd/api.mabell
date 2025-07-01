@@ -1,13 +1,5 @@
-import {
-  Controller,
-  DefaultValuePipe,
-  Get,
-  NotFoundException,
-  Param,
-  ParseIntPipe,
-  QueryTypes,
-} from '@nestjs/common';
-import { ApiOkResponse, ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { Controller, Get, NotFoundException, Param } from '@nestjs/common';
+import { ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { faker } from '@faker-js/faker';
 import { ArtistRO } from './ros/artist.ro';
 import { ParseObjectIdPipe } from '@shared/pipes/parse-object-id.pipe';
@@ -15,7 +7,7 @@ import { GetArtistQuery } from '@core/app/cqrs/artist/queries/get-artist/get-art
 import { QueryBus } from '@infrastructure/query-bus';
 
 @ApiTags('Artists')
-@Controller({ path: '/artist' })
+@Controller({ path: '/artists' })
 export class ArtistController {
   constructor(private readonly _QB: QueryBus) {}
 
@@ -38,67 +30,67 @@ export class ArtistController {
     return new ArtistRO(foundArtist);
   }
 
-  @ApiOperation({ summary: 'Get artist public albums', operationId: 'getArtistAlbums' })
-  @ApiParam({
-    type: String,
-    name: 'id',
-    description: 'Id',
-    example: faker.database.mongodbObjectId(),
-  })
-  @ApiQuery({ required: false, type: Number, description: 'Limit', example: 25, default: 50 })
-  @ApiQuery({ required: false, type: Number, description: 'Offset', example: 10, default: 0 })
-  @ApiOkResponse({ description: 'Albums', type: AlbumsRO })
-  @Get('/:id/albums')
-  async getArtistAlbums(
-    @Param('id', ParseObjectIdPipe) id: string,
-    @QueryTypes('limit', new DefaultValuePipe(50), ParseIntPipe) limit: number,
-    @QueryTypes('offset', new DefaultValuePipe(0), ParseIntPipe) offset: number,
-  ): Promise<AlbumsRO> {
-    const isArtistPublic = await this._QB.execute(new GetArtistPublicStatusQuery(id));
-
-    if (!isArtistPublic) {
-      throw new NotFoundException(`There is no artist with the specified ID`);
-    }
-
-    const foundAlbums = await this._QB.execute(
-      new GetArtistAlbumsQuery(id, {
-        isPublic: true,
-        pagination: { limit, offset },
-      }),
-    );
-
-    return new AlbumsRO(foundAlbums);
-  }
-
-  @ApiOperation({ summary: 'Get artist public tracks', operationId: 'getArtistTracks' })
-  @ApiParam({
-    type: String,
-    name: 'id',
-    description: 'Id',
-    example: faker.database.mongodbObjectId(),
-  })
-  @ApiQuery({ required: false, type: Number, description: 'Limit', example: 25, default: 50 })
-  @ApiQuery({ required: false, type: Number, description: 'Offset', example: 10, default: 0 })
-  @ApiOkResponse({ description: 'Tracks', type: TracksRO })
-  @Get('/:id/tracks')
-  async getArtistTracks(
-    @Param('id', ParseObjectIdPipe) id: string,
-    @QueryTypes('limit', new DefaultValuePipe(50), ParseIntPipe) limit: number,
-    @QueryTypes('offset', new DefaultValuePipe(0), ParseIntPipe) offset: number,
-  ): Promise<TracksRO> {
-    const isArtistPublic = await this._QB.execute(new GetArtistPublicStatusQuery(id));
-
-    if (!isArtistPublic) {
-      throw new NotFoundException(`There is no artist with the specified ID`);
-    }
-
-    const foundTracks = await this._QB.execute(
-      new GetArtistTracksQuery(id, {
-        isPublic: true,
-        pagination: { limit, offset },
-      }),
-    );
-
-    return new TracksRO(foundTracks);
-  }
+  // @ApiOperation({ summary: 'Get artist public albums', operationId: 'getArtistAlbums' })
+  // @ApiParam({
+  //   type: String,
+  //   name: 'id',
+  //   description: 'Id',
+  //   example: faker.database.mongodbObjectId(),
+  // })
+  // @ApiQuery({ required: false, type: Number, description: 'Limit', example: 25, default: 50 })
+  // @ApiQuery({ required: false, type: Number, description: 'Offset', example: 10, default: 0 })
+  // @ApiOkResponse({ description: 'Albums', type: AlbumsRO })
+  // @Get('/:id/albums')
+  // async getArtistAlbums(
+  //   @Param('id', ParseObjectIdPipe) id: string,
+  //   @QueryTypes('limit', new DefaultValuePipe(50), ParseIntPipe) limit: number,
+  //   @QueryTypes('offset', new DefaultValuePipe(0), ParseIntPipe) offset: number,
+  // ): Promise<AlbumsRO> {
+  //   const isArtistPublic = await this._QB.execute(new GetArtistPublicStatusQuery(id));
+  //
+  //   if (!isArtistPublic) {
+  //     throw new NotFoundException(`There is no artist with the specified ID`);
+  //   }
+  //
+  //   const foundAlbums = await this._QB.execute(
+  //     new GetArtistAlbumsQuery(id, {
+  //       isPublic: true,
+  //       pagination: { limit, offset },
+  //     }),
+  //   );
+  //
+  //   return new AlbumsRO(foundAlbums);
+  // }
+  //
+  // @ApiOperation({ summary: 'Get artist public tracks', operationId: 'getArtistTracks' })
+  // @ApiParam({
+  //   type: String,
+  //   name: 'id',
+  //   description: 'Id',
+  //   example: faker.database.mongodbObjectId(),
+  // })
+  // @ApiQuery({ required: false, type: Number, description: 'Limit', example: 25, default: 50 })
+  // @ApiQuery({ required: false, type: Number, description: 'Offset', example: 10, default: 0 })
+  // @ApiOkResponse({ description: 'Tracks', type: TracksRO })
+  // @Get('/:id/tracks')
+  // async getArtistTracks(
+  //   @Param('id', ParseObjectIdPipe) id: string,
+  //   @QueryTypes('limit', new DefaultValuePipe(50), ParseIntPipe) limit: number,
+  //   @QueryTypes('offset', new DefaultValuePipe(0), ParseIntPipe) offset: number,
+  // ): Promise<TracksRO> {
+  //   const isArtistPublic = await this._QB.execute(new GetArtistPublicStatusQuery(id));
+  //
+  //   if (!isArtistPublic) {
+  //     throw new NotFoundException(`There is no artist with the specified ID`);
+  //   }
+  //
+  //   const foundTracks = await this._QB.execute(
+  //     new GetArtistTracksQuery(id, {
+  //       isPublic: true,
+  //       pagination: { limit, offset },
+  //     }),
+  //   );
+  //
+  //   return new TracksRO(foundTracks);
+  // }
 }
