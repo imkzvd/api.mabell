@@ -1,4 +1,4 @@
-import { AlbumType } from '../../../../../../domain/components/album/constants/album-types';
+import { AlbumType } from '@core/domain/components/album/constants/album-types';
 import { IndexedSimplifiedArtistDTO } from './indexed-simplified-artist.dto';
 
 export class IndexedAlbumDTO {
