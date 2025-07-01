@@ -6,7 +6,7 @@ import { QueryBus } from '@infrastructure/query-bus';
 import { ParseObjectIdPipe } from '@shared/pipes/parse-object-id.pipe';
 import { UserRO } from './ros/user.ro';
 
-@ApiTags('Users')
+@ApiTags('User')
 @Controller({ path: '/users' })
 export class UserController {
   constructor(private readonly _QB: QueryBus) {}
