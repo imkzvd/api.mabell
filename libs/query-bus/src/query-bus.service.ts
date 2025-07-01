@@ -1,6 +1,6 @@
 import { QueryBus as NestQueryBus } from '@nestjs/cqrs';
 import { Injectable } from '@nestjs/common';
-import { Query } from '@types';
+import { Query } from '@core/app/types';
 
 type ExtractQueryResponse<TQuery extends Query<any>> = TQuery extends Query<infer R> ? R : never;
 
