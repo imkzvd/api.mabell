@@ -1,0 +1,124 @@
+import * as process from 'process';
+import { AdminRefreshTokenFactory } from '@core/domain/components/admin-refresh-token/admin-refresh-token.factory';
+import { AdminRefreshTokenId } from '@core/domain/components/admin-refresh-token/types';
+import { AdminRefreshTokenWriteRepository } from '@core/domain/components/admin-refresh-token/repository/admin-refresh-token-write-repository.port';
+import { AdminRefreshTokenReadRepository } from '@core/domain/components/admin-refresh-token/repository/admin-refresh-token-read-repository.port';
+import { JWTService, TokenTypes } from '../../common/ports/jwt.service.port';
+import { IdService } from '../../common/ports/id.service.port';
+import {
+  AccessTokenCustomPayload,
+  CreateAccessTokenPayload,
+  CreateRefreshTokenPayload,
+  RefreshTokenPayload,
+} from './types';
+import { AdminRefreshTokenDTO } from './dtos/admin-refresh-token.dto';
+import AdminRefreshTokenMapper from './dtos/admin-refresh-token.mapper';
+import { NotFoundException } from '@core/shared/exceptions';
+
+export class AdminTokenService {
+  constructor(
+    private readonly _WR: AdminRefreshTokenWriteRepository,
+    private readonly _RR: AdminRefreshTokenReadRepository,
+    private readonly _IdService: IdService<AdminRefreshTokenId>,
+    private readonly _JWTService: JWTService,
+  ) {}
+
+  createAccessToken(payload: CreateAccessTokenPayload): string {
+    return this._JWTService.create<AccessTokenCustomPayload>({
+      subject: payload.adminId,
+      type: TokenTypes.Access,
+      payload: { role: payload.role },
+      secret: process.env.ACCESS_TOKEN_SECRET || 'accessSecret',
+      expiresIn: process.env.ACCESS_TOKEN_EXPIRATION
+        ? parseInt(process.env.ACCESS_TOKEN_EXPIRATION)
+        : 300,
+    });
+  }
+
+  async createRefreshToken({
+    adminId,
+    role,
+    ip,
+    userAgent,
+  }: CreateRefreshTokenPayload): Promise<string> {
+    const generatedRefreshTokenId = this._IdService.generate();
+    const createdRefreshedToken = AdminRefreshTokenFactory.create({
+      id: generatedRefreshTokenId,
+      owner: adminId,
+      role,
+      ip,
+      userAgent,
+    });
+
+    await this._WR.save(createdRefreshedToken);
+
+    return this._JWTService.create({
+      jti: createdRefreshedToken.getId(),
+      subject: createdRefreshedToken.getOwner(),
+      type: TokenTypes.Refresh,
+      secret: process.env.REFRESH_TOKEN_SECRET || 'refreshSecret',
+      expiresIn: process.env.REFRESH_TOKEN_EXPIRATION
+        ? parseInt(process.env.REFRESH_TOKEN_EXPIRATION)
+        : 600,
+    });
+  }
+
+  async validateRefreshToken(payload: {
+    token: string;
+    ip: string;
+    userAgent: string;
+  }): Promise<AdminRefreshTokenDTO | null> {
+    const refreshTokenPayload = this._JWTService.decode<RefreshTokenPayload>(
+      payload.token,
+      process.env.REFRESH_TOKEN_SECRET || 'refreshSecret',
+    );
+
+    if (!refreshTokenPayload) {
+      return null;
+    }
+
+    const foundRefreshToken = await this._RR.findById(refreshTokenPayload.jti);
+
+    if (
+      !foundRefreshToken ||
+      foundRefreshToken.owner !== refreshTokenPayload.sub ||
+      foundRefreshToken.ip !== payload.ip ||
+      foundRefreshToken.userAgent !== payload.userAgent
+    ) {
+      return null;
+    }
+
+    return AdminRefreshTokenMapper.toDTO(foundRefreshToken);
+  }
+
+  async deleteRefreshToken(token: string): Promise<void> {
+    const tokenPayload = this._JWTService.decode<RefreshTokenPayload>(
+      token,
+      process.env.REFRESH_TOKEN_SECRET || 'refreshSecret',
+    );
+
+    if (!tokenPayload) return;
+
+    await this._WR.deleteById(tokenPayload.jti);
+  }
+
+  async deleteRefreshTokenById(id: string): Promise<AdminRefreshTokenId> {
+    const deletedRefreshTokenId = await this._WR.deleteById(id);
+
+    if (!deletedRefreshTokenId) {
+      throw new NotFoundException('Refresh token does not exist');
+    }
+
+    return deletedRefreshTokenId;
+  }
+
+  async deleteRefreshTokensByAdminId(id: string): Promise<void> {
+    await this._WR.deleteByOwnerId(id);
+  }
+
+  async getRefreshTokensByAdminId(id: string): Promise<AdminRefreshTokenDTO[]> {
+    const foundTokens = await this._RR.findByOwnerId(id);
+
+    return foundTokens.map((i) => AdminRefreshTokenMapper.toDTO(i));
+  }
+}

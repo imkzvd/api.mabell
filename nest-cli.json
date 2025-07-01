@@ -1,8 +1,160 @@
 {
   "$schema": "https://json.schemastore.org/nest-cli",
   "collection": "@nestjs/schematics",
-  "sourceRoot": "src",
+  "sourceRoot": "apps/api.mabell/src",
   "compilerOptions": {
-    "deleteOutDir": true
-  }
+    "deleteOutDir": true,
+    "webpack": true,
+    "tsConfigPath": "apps/api.mabell/tsconfig.app.json"
+  },
+  "projects": {
+    "admin": {
+      "type": "application",
+      "root": "apps/admin",
+      "entryFile": "main",
+      "sourceRoot": "apps/admin/src",
+      "compilerOptions": {
+        "webpack": false,
+        "tsConfigPath": "apps/admin/tsconfig.app.json"
+      }
+    },
+    "api.mabell": {
+      "type": "application",
+      "root": "apps/api.mabell",
+      "entryFile": "main",
+      "sourceRoot": "apps/api.mabell/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/api.mabell/tsconfig.app.json"
+      }
+    },
+    "client": {
+      "type": "application",
+      "root": "apps/client",
+      "entryFile": "main",
+      "sourceRoot": "apps/client/src",
+      "compilerOptions": {
+        "webpack": false,
+        "tsConfigPath": "apps/client/tsconfig.app.json"
+      }
+    },
+    "command-bus": {
+      "type": "library",
+      "root": "libs/command-bus",
+      "entryFile": "index",
+      "sourceRoot": "libs/command-bus/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/command-bus/tsconfig.lib.json"
+      }
+    },
+    "core": {
+      "type": "library",
+      "root": "libs/core",
+      "entryFile": "index",
+      "sourceRoot": "libs/core/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/core/tsconfig.lib.json"
+      }
+    },
+    "event-bus": {
+      "type": "library",
+      "root": "libs/event-bus",
+      "entryFile": "index",
+      "sourceRoot": "libs/event-bus/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/event-bus/tsconfig.lib.json"
+      }
+    },
+    "file-storage": {
+      "type": "library",
+      "root": "libs/file-storage",
+      "entryFile": "index",
+      "sourceRoot": "libs/file-storage/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/file-storage/tsconfig.lib.json"
+      }
+    },
+    "jwt": {
+      "type": "library",
+      "root": "libs/jwt",
+      "entryFile": "index",
+      "sourceRoot": "libs/jwt/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/jwt/tsconfig.lib.json"
+      }
+    },
+    "mongoose": {
+      "type": "library",
+      "root": "libs/mongoose",
+      "entryFile": "index",
+      "sourceRoot": "libs/mongoose/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/mongoose/tsconfig.lib.json"
+      }
+    },
+    "password": {
+      "type": "library",
+      "root": "libs/password",
+      "entryFile": "index",
+      "sourceRoot": "libs/password/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/password/tsconfig.lib.json"
+      }
+    },
+    "query-bus": {
+      "type": "library",
+      "root": "libs/query-bus",
+      "entryFile": "index",
+      "sourceRoot": "libs/query-bus/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/query-bus/tsconfig.lib.json"
+      }
+    },
+    "random-id": {
+      "type": "library",
+      "root": "libs/random-id",
+      "entryFile": "index",
+      "sourceRoot": "libs/random-id/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/random-id/tsconfig.lib.json"
+      }
+    },
+    "redis": {
+      "type": "library",
+      "root": "libs/redis",
+      "entryFile": "index",
+      "sourceRoot": "libs/redis/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/redis/tsconfig.lib.json"
+      }
+    },
+    "shared": {
+      "type": "library",
+      "root": "libs/shared",
+      "entryFile": "index",
+      "sourceRoot": "libs/shared/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/shared/tsconfig.lib.json"
+      }
+    },
+    "types": {
+      "type": "library",
+      "root": "libs/types",
+      "entryFile": "index",
+      "sourceRoot": "libs/types/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/types/tsconfig.lib.json"
+      }
+    },
+    "typesense": {
+      "type": "library",
+      "root": "libs/typesense",
+      "entryFile": "index",
+      "sourceRoot": "libs/typesense/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/typesense/tsconfig.lib.json"
+      }
+    }
+  },
+  "monorepo": true,
+  "root": "apps/api.mabell"
 }

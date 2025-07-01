@@ -7,9 +7,10 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "nest build",
-    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\"",
     "start": "nest start",
-    "start:dev": "nest start --watch --env-file .env",
+    "start:admin:dev": "nest start admin --watch",
+    "start:client:dev": "nest start client --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
@@ -91,7 +92,7 @@
       "json",
       "ts"
     ],
-    "rootDir": "src",
+    "rootDir": ".",
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
@@ -99,7 +100,26 @@
     "collectCoverageFrom": [
       "**/*.(t|j)s"
     ],
-    "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    "coverageDirectory": "./coverage",
+    "testEnvironment": "node",
+    "roots": [
+      "<rootDir>/libs/",
+      "<rootDir>/apps/"
+    ],
+    "moduleNameMapper": {
+      "^@core(|/.*)$": "<rootDir>/libs/core/src/$1",
+      "^@infrastructure/command-bus(|/.*)$": "<rootDir>/libs/command-bus/src/$1",
+      "^@infrastructure/event-bus(|/.*)$": "<rootDir>/libs/event-bus/src/$1",
+      "^@infrastructure/file-storage(|/.*)$": "<rootDir>/libs/file-storage/src/$1",
+      "^@infrastructure/jwt(|/.*)$": "<rootDir>/libs/jwt/src/$1",
+      "^@infrastructure/mongoose(|/.*)$": "<rootDir>/libs/mongoose/src/$1",
+      "^@infrastructure/password(|/.*)$": "<rootDir>/libs/password/src/$1",
+      "^@infrastructure/query-bus(|/.*)$": "<rootDir>/libs/query-bus/src/$1",
+      "^@infrastructure/random-id(|/.*)$": "<rootDir>/libs/random-id/src/$1",
+      "^@infrastructure/redis(|/.*)$": "<rootDir>/libs/redis/src/$1",
+      "^@infrastructure/typesense(|/.*)$": "<rootDir>/libs/typesense/src/$1",
+      "^@shared(|/.*)$": "<rootDir>/libs/shared/src/$1",
+      "^@types(|/.*)$": "<rootDir>/libs/types/src/$1"
+    }
   }
 }

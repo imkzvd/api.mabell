@@ -16,6 +16,34 @@
     "forceConsistentCasingInFileNames": true,
     "noImplicitAny": true,
     "strictBindCallApply": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "paths": {
+      "@core": ["libs/core/src"],
+      "@core/*": ["libs/core/src/*"],
+      "@infrastructure/command-bus": ["libs/command-bus/src"],
+      "@infrastructure/command-bus/*": ["libs/command-bus/src/*"],
+      "@infrastructure/event-bus": ["libs/event-bus/src"],
+      "@infrastructure/event-bus/*": ["libs/event-bus/src/*"],
+      "@infrastructure/file-storage": ["libs/file-storage/src"],
+      "@infrastructure/file-storage/*": ["libs/file-storage/src/*"],
+      "@infrastructure/jwt": ["libs/jwt/src"],
+      "@infrastructure/jwt/*": ["libs/jwt/src/*"],
+      "@infrastructure/mongoose": ["libs/mongoose/src"],
+      "@infrastructure/mongoose/*": ["libs/mongoose/src/*"],
+      "@infrastructure/password": ["libs/password/src"],
+      "@infrastructure/password/*": ["libs/password/src/*"],
+      "@infrastructure/query-bus": ["libs/query-bus/src"],
+      "@infrastructure/query-bus/*": ["libs/query-bus/src/*"],
+      "@infrastructure/random-id": ["libs/random-id/src"],
+      "@infrastructure/random-id/*": ["libs/random-id/src/*"],
+      "@infrastructure/redis": ["libs/redis/src"],
+      "@infrastructure/redis/*": ["libs/redis/src/*"],
+      "@infrastructure/typesense": ["libs/typesense/src"],
+      "@infrastructure/typesense/*": ["libs/typesense/src/*"],
+      "@shared": ["libs/shared/src"],
+      "@shared/*": ["libs/shared/src/*"],
+      "@types": ["libs/types/src"],
+      "@types/*": ["libs/types/src/*"]
+    }
   }
 }
