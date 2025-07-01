@@ -3,7 +3,6 @@ import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { ConfigModule } from '@nestjs/config';
 import { ServeStaticModule } from '@nestjs/serve-static';
-import { UsersModule } from './controllers/users/users.module';
 import { MongooseModule } from '@infrastructure/mongoose';
 import { EventBusModule } from '@infrastructure/event-bus';
 import { CommandBusModule } from '@infrastructure/command-bus';
@@ -14,6 +13,8 @@ import jwtConfig from './configs/jwt.config';
 import mailConfig from './configs/mail.config';
 import redisConfig from './configs/redis.config';
 import { AuthModule } from './modules/auth/auth.module';
+import { UserModule } from './modules/user/user.module';
+import { ArtistModule } from './modules/artist/artist.module';
 
 @Module({
   imports: [
@@ -36,7 +37,8 @@ import { AuthModule } from './modules/auth/auth.module';
     EventBusModule,
     CommandBusModule,
     AuthModule,
-    UsersModule,
+    UserModule,
+    ArtistModule,
   ],
 })
 export class AppModule {}
