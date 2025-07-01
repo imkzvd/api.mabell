@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { faker } from '@faker-js/faker';
 import * as process from 'process';
-import { ArtistRO } from '../../artists/ros/artist.ro';
 import { LabelValueRO } from '@shared/ros/label-value.ro';
 import {
   AlbumTypes,
@@ -9,7 +8,12 @@ import {
 } from '@core/domain/components/album/constants/album-types';
 import { Genres, getGenreLabelByValue } from '@core/domain/common/constants/genres';
 import { OffsetLimitPaginationRO } from '@shared/ros/offset-limit-pagination.ro';
+import { AlbumDTO } from '@core/app/components/album/dtos/album.dto';
+import { OffsetLimitPaginationResponseDTO } from '@core/shared/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
 import { TrackRO } from '../../../../../admin/src/modules/track/ros/track.ro';
+import { ArtistRO } from '../../artist/ros/artist.ro';
+import { TrackDTO } from '@core/app/components/track/dtos/track.dto';
+import { TracksRO } from '../../../../../admin/src/modules/track/ros/tracks.ro';
 
 export class AlbumRO {
   @ApiProperty({
