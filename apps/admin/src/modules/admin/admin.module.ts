@@ -19,6 +19,7 @@ import { RefreshAdminPasswordHandler } from './commands/refresh-admin-password.h
 import { DeleteAdminHandler } from './commands/delete-admin.handler';
 import { GetAdminsHandler } from './queries/get-admins.handler';
 import { GetAdminHandler } from './queries/get-admin.handler';
+import { DeleteRefreshTokenOnUserBlockedHandler } from '../../events/delete-refresh-token-on-user-blocked.handlers';
 
 @Module({
   imports: [PasswordModule, RandomIdModule],
@@ -47,6 +48,7 @@ import { GetAdminHandler } from './queries/get-admin.handler';
     DeleteAdminHandler,
     GetAdminsHandler,
     GetAdminHandler,
+    DeleteRefreshTokenOnUserBlockedHandler,
   ],
   controllers: [AdminController],
 })
