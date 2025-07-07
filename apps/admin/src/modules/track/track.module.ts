@@ -18,12 +18,6 @@ import { AlbumReadRepository as AlbumReadRepositoryPort } from '@core/domain/com
 import { AlbumId } from '@core/domain/components/album/types';
 import { AlbumWriteRepository } from '@infrastructure/mongoose/services/album/album-write-repository.service';
 import { AlbumReadRepository } from '@infrastructure/mongoose/services/album/album-read-repository.service';
-import { ArtistService } from '@core/app/components/artist/artist.service';
-import { ArtistWriteRepository as ArtistWriteRepositoryPort } from '@core/domain/components/artist/repository/artist-write-repository.port';
-import { ArtistReadRepository as ArtistReadRepositoryPort } from '@core/domain/components/artist/repository/artist-read-repository.port';
-import { ArtistId } from '@core/domain/components/artist/types';
-import { ArtistWriteRepository } from '@infrastructure/mongoose/services/artist/artist-write-repository.service';
-import { ArtistReadRepository } from '@infrastructure/mongoose/services/artist/artist-read-repository.service';
 import { TrackController } from './track.controller';
 import { CreateTrackHandler } from './commands/create-track.handler';
 import { DeleteTrackHandler } from './commands/delete-track.handler';
@@ -32,29 +26,12 @@ import { UpdateTrackHandler } from './commands/update-track.handler';
 import { UpdateTrackFeatArtistsHandler } from './commands/update-track-feat-artists.handler';
 import { UpdateTrackFileHandler } from './commands/update-track-file.handler';
 import { GetTrackHandler } from './queries/get-track.handler';
+import { artistServiceProvider } from '../artist/providers/artist-service.provider';
 
 @Module({
   imports: [RandomIdModule, FileStorageModule],
   providers: [
-    {
-      provide: ArtistService,
-      useFactory: (
-        eb: EventBusPort,
-        wr: ArtistWriteRepositoryPort,
-        rr: ArtistReadRepositoryPort,
-        idService: IdServicePort<ArtistId>,
-        tmpFS: TmpFileStoragePort,
-        artistFS: ArtistFileStoragePort,
-      ) => new ArtistService(eb, wr, rr, idService, tmpFS, artistFS),
-      inject: [
-        EventBus,
-        ArtistWriteRepository,
-        ArtistReadRepository,
-        RandomIdService,
-        TmpFileStorage,
-        ArtistFileStorage,
-      ],
-    },
+    artistServiceProvider,
     {
       provide: AlbumService,
       useFactory: (
