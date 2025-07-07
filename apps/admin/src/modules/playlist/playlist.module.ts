@@ -11,27 +11,8 @@ import { EventBus } from '@infrastructure/event-bus';
 import { PlaylistWriteRepository } from '@infrastructure/mongoose/services/playlist/playlist-write-repository.service';
 import { PlaylistReadRepository } from '@infrastructure/mongoose/services/playlist/playlist-read-repository.service';
 import { RandomIdModule, RandomIdService } from '@infrastructure/random-id';
-import {
-  ArtistFileStorage,
-  FileStorageModule,
-  TmpFileStorage,
-  UserFileStorage,
-} from '@infrastructure/file-storage';
-import { TrackService } from '@core/app/components/track/track.service';
-import { TrackWriteRepository as TrackWriteRepositoryPort } from '@core/domain/components/track/repository/track-write-repository.port';
-import { TrackReadRepository as TrackReadRepositoryPort } from '@core/domain/components/track/repository/track-read-repository.port';
-import { TrackId } from '@core/domain/components/track/types';
-import { ArtistFileStorage as ArtistFileStoragePort } from '@core/app/common/ports/file-storages/artist-file-storage.port';
-import { TrackWriteRepository } from '@infrastructure/mongoose/services/track/track-write-repository.service';
-import { TrackReadRepository } from '@infrastructure/mongoose/services/track/track-read-repository.service';
-import { UserService } from '@core/app/components/user/user.service';
-import { UserWriteRepository as UserWriteRepositoryPort } from '@core/domain/components/user/repository/user-write-repository.port';
-import { UserReadRepository as UserReadRepositoryPort } from '@core/domain/components/user/repository/user-read-repository.port';
-import { UserId } from '@core/domain/components/user/types';
-import { PasswordService as PasswordServicePort } from '@core/app/common/ports/password-service.port';
-import { UserWriteRepository } from '@infrastructure/mongoose/services/user/user-write-repository.service';
-import { UserReadRepository } from '@infrastructure/mongoose/services/user/user-read-repository.service';
-import { PasswordModule, PasswordService } from '@infrastructure/password';
+import { FileStorageModule, TmpFileStorage, UserFileStorage } from '@infrastructure/file-storage';
+import { PasswordModule } from '@infrastructure/password';
 import { PlaylistController } from './playlist.controller';
 import { AddTrackInPlaylistHandler } from './commands/add-track-in-playlist.handler';
 import { CreatePlaylistHandler } from './commands/create-playlist.handler';
@@ -42,6 +23,8 @@ import { UpdatePlaylistHandler } from './commands/update-playlist.handler';
 import { UpdatePlaylistCoverHandler } from './commands/update-playlist-cover.handler';
 import { GetPlaylistHandler } from './queries/get-playlist.handler';
 import { GetPlaylistTracksHandler } from '../track/queries/get-playlist-tracks.handler';
+import { trackServiceProvider } from '../track/providers/track-service.provider';
+import { userServiceProvider } from '../user/providers/user-service.provider';
 
 @Module({
   imports: [RandomIdModule, PasswordModule, FileStorageModule],
@@ -65,46 +48,8 @@ import { GetPlaylistTracksHandler } from '../track/queries/get-playlist-tracks.h
         UserFileStorage,
       ],
     },
-    {
-      provide: TrackService,
-      useFactory: (
-        eb: EventBusPort,
-        wr: TrackWriteRepositoryPort,
-        rr: TrackReadRepositoryPort,
-        idService: IdServicePort<TrackId>,
-        tmpFS: TmpFileStoragePort,
-        artistFS: ArtistFileStoragePort,
-      ) => new TrackService(eb, wr, rr, idService, tmpFS, artistFS),
-      inject: [
-        EventBus,
-        TrackWriteRepository,
-        TrackReadRepository,
-        RandomIdService,
-        TmpFileStorage,
-        ArtistFileStorage,
-      ],
-    },
-    {
-      provide: UserService,
-      useFactory: (
-        eb: EventBusPort,
-        wr: UserWriteRepositoryPort,
-        rr: UserReadRepositoryPort,
-        idService: IdServicePort<UserId>,
-        passwordService: PasswordServicePort,
-        tmpFS: TmpFileStoragePort,
-        userFS: UserFileStoragePort,
-      ) => new UserService(eb, wr, rr, idService, passwordService, tmpFS, userFS),
-      inject: [
-        EventBus,
-        UserWriteRepository,
-        UserReadRepository,
-        RandomIdService,
-        PasswordService,
-        TmpFileStorage,
-        UserFileStorage,
-      ],
-    },
+    trackServiceProvider,
+    userServiceProvider,
     AddTrackInPlaylistHandler,
     CreatePlaylistHandler,
     DeletePlaylistHandler,
