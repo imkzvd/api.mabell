@@ -12,7 +12,7 @@ import { UpdateUserAvatarHandler } from './commands/update-user-avatar.handler';
 import { UpdateUserEmailHandler } from './commands/update-user-email.handler';
 import { UpdateUserUsernameHandler } from './commands/update-user-username.handler';
 import { GetUserHandler } from './queries/get-user.handler';
-import { userServiceProvider } from './providers/user-service.provider';
+import { userServiceProvider } from '../../providers/user-service.provider';
 
 @Module({
   imports: [RandomIdModule, FileStorageModule, PasswordModule],

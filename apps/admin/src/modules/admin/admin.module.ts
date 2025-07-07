@@ -10,7 +10,7 @@ import { DeleteAdminHandler } from './commands/delete-admin.handler';
 import { GetAdminsHandler } from './queries/get-admins.handler';
 import { GetAdminHandler } from './queries/get-admin.handler';
 import { DeleteRefreshTokenOnUserBlockedHandler } from '../../events/delete-refresh-token-on-user-blocked.handlers';
-import { adminServiceProvider } from './providers/admin-service.provider';
+import { adminServiceProvider } from '../../providers/admin-service.provider';
 
 @Module({
   imports: [PasswordModule, RandomIdModule],

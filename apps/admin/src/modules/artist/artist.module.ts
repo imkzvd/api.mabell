@@ -12,9 +12,9 @@ import { GetArtistTracksHandler } from '../track/queries/get-artist-tracks.handl
 import { DeleteArtistHandler } from './commands/delete-artist.handler';
 import { GetArtistHandler } from './queries/get-artist.handler';
 import { GetArtistAlbumsHandler } from '../album/queries/get-artist-albums.handler';
-import { artistServiceProvider } from './providers/artist-service.provider';
-import { albumServiceProvider } from '../album/providers/album-service.provider';
-import { trackServiceProvider } from '../track/providers/track-service.provider';
+import { artistServiceProvider } from '../../providers/artist-service.provider';
+import { albumServiceProvider } from '../../providers/album-service.provider';
+import { trackServiceProvider } from '../../providers/track-service.provider';
 
 @Module({
   imports: [RandomIdModule, FileStorageModule],
