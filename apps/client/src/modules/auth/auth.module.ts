@@ -1,19 +1,8 @@
 import { Module } from '@nestjs/common';
-import { UserReadRepository as UserReadRepositoryPort } from '@core/domain/components/user/repository/user-read-repository.port';
-import { PasswordService as PasswordServicePort } from '@core/app/common/ports/password-service.port';
-import { UserReadRepository } from '@infrastructure/mongoose/services/user/user-read-repository.service';
-import { PasswordModule, PasswordService } from '@infrastructure/password';
-import { UserService } from '@core/app/components/user/user.service';
-import { EventBus as EventBusPort } from '@core/app/common/ports/event-bus.port';
-import { UserWriteRepository as UserWriteRepositoryPort } from '@core/domain/components/user/repository/user-write-repository.port';
+import { PasswordModule } from '@infrastructure/password';
 import { IdService as IdServicePort } from '@core/app/common/ports/id.service.port';
-import { UserId } from '@core/domain/components/user/types';
-import { TmpFileStorage as TmpFileStoragePort } from '@core/app/common/ports/file-storages/tmp-file-storage.port';
-import { UserFileStorage as UserFileStoragePort } from '@core/app/common/ports/file-storages/user-file-storage.port';
-import { EventBus } from '@infrastructure/event-bus';
-import { UserWriteRepository } from '@infrastructure/mongoose/services/user/user-write-repository.service';
 import { RandomIdModule, RandomIdService } from '@infrastructure/random-id';
-import { FileStorageModule, TmpFileStorage, UserFileStorage } from '@infrastructure/file-storage';
+import { FileStorageModule } from '@infrastructure/file-storage';
 import { JWTService as JWTServicePort } from '@core/app/common/ports/jwt.service.port';
 import { JWTModule, JWTService } from '@infrastructure/jwt';
 import { UserTokenService } from '@core/app/components/user-token/user-token.service';
@@ -27,32 +16,13 @@ import { LoginUserHandler } from './commands/login-user.handler';
 import { CreateUserAccessTokenHandler } from './commands/create-user-access-token.handler';
 import { CreateUserRefreshTokenHandler } from './commands/create-user-refresh-token.handler';
 import { loginServiceProvider } from '../../providers/login-service.provider';
+import { userServiceProvider } from '../../providers/user-service.provider';
 
 @Module({
   imports: [PasswordModule, JWTModule, RandomIdModule, FileStorageModule],
   providers: [
     loginServiceProvider,
-    {
-      provide: UserService,
-      useFactory: (
-        eb: EventBusPort,
-        wr: UserWriteRepositoryPort,
-        rr: UserReadRepositoryPort,
-        idService: IdServicePort<UserId>,
-        passwordService: PasswordServicePort,
-        tmpFS: TmpFileStoragePort,
-        userFS: UserFileStoragePort,
-      ) => new UserService(eb, wr, rr, idService, passwordService, tmpFS, userFS),
-      inject: [
-        EventBus,
-        UserWriteRepository,
-        UserReadRepository,
-        RandomIdService,
-        PasswordService,
-        TmpFileStorage,
-        UserFileStorage,
-      ],
-    },
+    userServiceProvider,
     {
       provide: UserTokenService,
       useFactory: (
