@@ -1,15 +1,9 @@
 import { Module } from '@nestjs/common';
-import { AlbumService } from '@core/app/components/album/album.service';
 import { EventBus as EventBusPort } from '@core/app/common/ports/event-bus.port';
-import { AlbumWriteRepository as AlbumWriteRepositoryPort } from '@core/domain/components/album/repository/album-write-repository.port';
-import { AlbumReadRepository as AlbumReadRepositoryPort } from '@core/domain/components/album/repository/album-read-repository.port';
 import { IdService as IdServicePort } from '@core/app/common/ports/id.service.port';
 import { TmpFileStorage as TmpFileStoragePort } from '@core/app/common/ports/file-storages/tmp-file-storage.port';
 import { ArtistFileStorage as ArtistFileStoragePort } from '@core/app/common/ports/file-storages/artist-file-storage.port';
-import { AlbumId } from '@core/domain/components/album/types';
 import { EventBus } from '@infrastructure/event-bus';
-import { AlbumWriteRepository } from '@infrastructure/mongoose/services/album/album-write-repository.service';
-import { AlbumReadRepository } from '@infrastructure/mongoose/services/album/album-read-repository.service';
 import { RandomIdModule, RandomIdService } from '@infrastructure/random-id';
 import { ArtistFileStorage, FileStorageModule, TmpFileStorage } from '@infrastructure/file-storage';
 import { TrackService } from '@core/app/components/track/track.service';
@@ -28,30 +22,13 @@ import { UpdateAlbumCoverHandler } from './commands/update-album-cover.handler';
 import { GetAlbumHandler } from './queries/get-album.handler';
 import { GetAlbumTracksHandler } from '../track/queries/get-album-tracks.handler';
 import { artistServiceProvider } from '../artist/providers/artist-service.provider';
+import { albumServiceProvider } from './providers/album-service.provider';
 
 @Module({
   imports: [RandomIdModule, FileStorageModule],
   providers: [
     artistServiceProvider,
-    {
-      provide: AlbumService,
-      useFactory: (
-        eb: EventBusPort,
-        wr: AlbumWriteRepositoryPort,
-        rr: AlbumReadRepositoryPort,
-        idService: IdServicePort<AlbumId>,
-        tmpFS: TmpFileStoragePort,
-        artistFS: ArtistFileStoragePort,
-      ) => new AlbumService(eb, wr, rr, idService, tmpFS, artistFS),
-      inject: [
-        EventBus,
-        AlbumWriteRepository,
-        AlbumReadRepository,
-        RandomIdService,
-        TmpFileStorage,
-        ArtistFileStorage,
-      ],
-    },
+    albumServiceProvider,
     {
       provide: TrackService,
       useFactory: (
