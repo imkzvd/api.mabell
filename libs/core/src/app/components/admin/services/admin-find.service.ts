@@ -4,7 +4,7 @@ import { AdminReadRepository } from '@core/domain/components/admin/repository/ad
 import AdminMapper from '../dtos/admin.mapper';
 import { AdminDTO } from '../dtos/admin.dto';
 
-export class AdminService {
+export class AdminFindService {
   constructor(private readonly _RR: AdminReadRepository) {}
 
   async find(id: string): Promise<AdminDTO | null> {
