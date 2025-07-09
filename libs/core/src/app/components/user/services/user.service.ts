@@ -8,28 +8,28 @@ import { UserFactory } from '@core/domain/components/user/user.factory';
 import { UserWriteRepository } from '@core/domain/components/user/repository/user-write-repository.port';
 import { UserReadRepository } from '@core/domain/components/user/repository/user-read-repository.port';
 import { UserId } from '@core/domain/components/user/types';
-import { USER_MIN_LENGTH_PASSWORD } from './constants';
-import { UserDTO } from './dtos/user.dto';
-import UserMapper from './dtos/user.mapper';
+import { USER_MIN_LENGTH_PASSWORD } from '../constants';
+import { UserDTO } from '../dtos/user.dto';
+import UserMapper from '../dtos/user.mapper';
 import {
   RegisterUserPayload,
   UpdateUserAvatarPayload,
   UpdateUserPasswordPayload,
   UpdateUserPayload,
-} from './types';
-import { IdService } from '../../common/ports/id.service.port';
-import { PasswordService } from '../../common/ports/password-service.port';
-import { UserFileStorage } from '../../common/ports/file-storages/user-file-storage.port';
-import { TmpFileStorage } from '../../common/ports/file-storages/tmp-file-storage.port';
-import { EventBus } from '../../common/ports/event-bus.port';
-import { UserCreatedEvent } from '../../common/events/user-created.event';
-import { UserRegisteredEvent } from '../../common/events/user-registered.event';
-import { UserUpdatedEvent } from '../../common/events/user-updated.event';
-import { UserDeletedEvent } from '../../common/events/user-deleted.event';
-import { UserEmailUpdatedEvent } from '../../common/events/user-email-updated.event';
-import { UserPasswordUpdatedEvent } from '../../common/events/user-password-updated.event';
-import { UserBlockedEvent } from '../../common/events/user-blocked.event';
-import { UserUnblockedEvent } from '../../common/events/user-unblocked.event';
+} from '../types';
+import { IdService } from '../../../common/ports/id.service.port';
+import { PasswordService } from '../../../common/ports/password-service.port';
+import { UserFileStorage } from '../../../common/ports/file-storages/user-file-storage.port';
+import { TmpFileStorage } from '../../../common/ports/file-storages/tmp-file-storage.port';
+import { EventBus } from '../../../common/ports/event-bus.port';
+import { UserCreatedEvent } from '../../../common/events/user-created.event';
+import { UserRegisteredEvent } from '../../../common/events/user-registered.event';
+import { UserUpdatedEvent } from '../../../common/events/user-updated.event';
+import { UserDeletedEvent } from '../../../common/events/user-deleted.event';
+import { UserEmailUpdatedEvent } from '../../../common/events/user-email-updated.event';
+import { UserPasswordUpdatedEvent } from '../../../common/events/user-password-updated.event';
+import { UserBlockedEvent } from '../../../common/events/user-blocked.event';
+import { UserUnblockedEvent } from '../../../common/events/user-unblocked.event';
 
 export class UserService {
   constructor(
