@@ -1,6 +1,6 @@
 import { CommandHandler } from '@core/app/types';
 import { AdminTokenService } from '@core/app/components/admin-token/admin-token.service';
-import { AdminService } from '@core/app/components/admin/services/admin.service';
+import { AdminFindService } from '@core/app/components/admin/services/admin-find.service';
 import { UnauthorizedException } from '@core/shared/exceptions';
 import { CreateAdminRefreshTokenCommand } from '@core/app/cqrs/token/commands/create-admin-refresh-token/create-admin-refresh-token.command';
 
@@ -8,12 +8,12 @@ export class CreateAdminRefreshTokenHandler
   implements CommandHandler<CreateAdminRefreshTokenCommand>
 {
   constructor(
-    private readonly _adminService: AdminService,
+    private readonly _adminService: AdminFindService,
     private readonly _adminTokenService: AdminTokenService,
   ) {}
 
   async execute({ payload }: CreateAdminRefreshTokenCommand) {
-    const foundAdmin = await this._adminService.getAdmin(payload.adminId);
+    const foundAdmin = await this._adminService.find(payload.adminId);
 
     if (!foundAdmin) {
       throw new UnauthorizedException();
