@@ -4,7 +4,7 @@ import { UserId } from '@core/domain/components/user/types';
 import { UserDTO } from '../dtos/user.dto';
 import UserMapper from '../dtos/user.mapper';
 
-export class UserService {
+export class UserFindService {
   constructor(
     private readonly _WR: UserWriteRepository,
     private readonly _RR: UserReadRepository,
