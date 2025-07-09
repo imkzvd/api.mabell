@@ -1,5 +1,5 @@
 import { Provider } from '@nestjs/common';
-import { AdminService } from '@core/app/components/admin/admin.service';
+import { AdminService } from '@core/app/components/admin/services/admin.service';
 import { EventBus as EventBusPort } from '@core/app/common/ports/event-bus.port';
 import { AdminWriteRepository as AdminWriteRepositoryPort } from '@core/domain/components/admin/repository/admin-write-repository.port';
 import { AdminReadRepository as AdminReadRepositoryPort } from '@core/domain/components/admin/repository/admin-read-repository.port';

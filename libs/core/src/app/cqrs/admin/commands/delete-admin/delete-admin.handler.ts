@@ -1,5 +1,5 @@
 import { CommandHandler } from '@core/app/types';
-import { AdminService } from '@core/app/components/admin/admin.service';
+import { AdminService } from '@core/app/components/admin/services/admin.service';
 import { DeleteAdminCommand } from '@core/app/cqrs/admin/commands/delete-admin/delete-admin.command';
 
 export class DeleteAdminHandler implements CommandHandler<DeleteAdminCommand> {

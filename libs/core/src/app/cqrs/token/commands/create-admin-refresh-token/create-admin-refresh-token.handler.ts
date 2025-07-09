@@ -1,6 +1,6 @@
 import { CommandHandler } from '@core/app/types';
 import { AdminTokenService } from '@core/app/components/admin-token/admin-token.service';
-import { AdminService } from '@core/app/components/admin/admin.service';
+import { AdminService } from '@core/app/components/admin/services/admin.service';
 import { UnauthorizedException } from '@core/shared/exceptions';
 import { CreateAdminRefreshTokenCommand } from '@core/app/cqrs/token/commands/create-admin-refresh-token/create-admin-refresh-token.command';
 

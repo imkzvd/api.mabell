@@ -1,4 +1,4 @@
-import { AdminService } from '@core/app/components/admin/admin.service';
+import { AdminService } from '@core/app/components/admin/services/admin.service';
 import { QueryHandler } from '@core/app/types';
 import { GetAdminsQuery } from '@core/app/cqrs/admin/queries/get-admins/get-admins.query';
 

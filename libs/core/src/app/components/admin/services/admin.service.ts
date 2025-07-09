@@ -10,19 +10,19 @@ import { AdminFactory } from '@core/domain/components/admin/admin.factory';
 import { AdminRoles } from '@core/domain/components/admin/constants/admin-roles';
 import { AdminId } from '@core/domain/components/admin/types';
 import { AdminReadRepository } from '@core/domain/components/admin/repository/admin-read-repository.port';
-import { ADMIN_PASSWORD_LENGTH } from './constants';
-import AdminMapper from './dtos/admin.mapper';
-import { AdminDTO } from './dtos/admin.dto';
-import { UpdateAdminPayload } from './types';
-import { IdService } from '../../common/ports/id.service.port';
-import { PasswordService } from '../../common/ports/password-service.port';
-import { EventBus } from '../../common/ports/event-bus.port';
-import { AdminCreatedEvent } from '../../common/events/admin-created.event';
-import { AdminUpdatedEvent } from '../../common/events/admin-updated.event';
-import { AdminDeletedEvent } from '../../common/events/admin-deleted.event';
-import { AdminPasswordRefreshedEvent } from '../../common/events/admin-password-refreshed.event';
-import { AdminBlockedEvent } from '../../common/events/admin-blocked.event';
-import { AdminUnblockedEvent } from '../../common/events/admin-unblocked.event';
+import { ADMIN_PASSWORD_LENGTH } from '../constants';
+import AdminMapper from '../dtos/admin.mapper';
+import { AdminDTO } from '../dtos/admin.dto';
+import { UpdateAdminPayload } from '../types';
+import { IdService } from '../../../common/ports/id.service.port';
+import { PasswordService } from '../../../common/ports/password-service.port';
+import { EventBus } from '../../../common/ports/event-bus.port';
+import { AdminCreatedEvent } from '../../../common/events/admin-created.event';
+import { AdminUpdatedEvent } from '../../../common/events/admin-updated.event';
+import { AdminDeletedEvent } from '../../../common/events/admin-deleted.event';
+import { AdminPasswordRefreshedEvent } from '../../../common/events/admin-password-refreshed.event';
+import { AdminBlockedEvent } from '../../../common/events/admin-blocked.event';
+import { AdminUnblockedEvent } from '../../../common/events/admin-unblocked.event';
 
 export class AdminService {
   constructor(

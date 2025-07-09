@@ -1,5 +1,5 @@
 import { CommandHandler } from '@core/app/types';
-import { AdminService } from '@core/app/components/admin/admin.service';
+import { AdminService } from '@core/app/components/admin/services/admin.service';
 import { RefreshAdminPasswordCommand } from '@core/app/cqrs/admin/commands/refresh-admin-password/refresh-admin-password.command';
 
 export class RefreshAdminPasswordHandler implements CommandHandler<RefreshAdminPasswordCommand> {

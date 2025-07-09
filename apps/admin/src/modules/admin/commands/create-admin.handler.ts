@@ -1,6 +1,6 @@
 import { Inject } from '@nestjs/common';
 import { CommandHandler } from '@nestjs/cqrs';
-import { AdminService } from '@core/app/components/admin/admin.service';
+import { AdminService } from '@core/app/components/admin/services/admin.service';
 import { CreateAdminCommand } from '@core/app/cqrs/admin/commands/create-admin/create-admin.command';
 import { CreateAdminHandler as CoreCreateAdminHandler } from '@core/app/cqrs/admin/commands/create-admin/create-admin.handler';
 

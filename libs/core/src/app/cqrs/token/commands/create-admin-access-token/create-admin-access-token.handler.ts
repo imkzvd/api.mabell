@@ -1,6 +1,6 @@
 import { CommandHandler } from '@core/app/types';
 import { AdminTokenService } from '@core/app/components/admin-token/admin-token.service';
-import { AdminService } from '@core/app/components/admin/admin.service';
+import { AdminService } from '@core/app/components/admin/services/admin.service';
 import { UnauthorizedException } from '@core/shared/exceptions';
 import { CreateAdminAccessTokenCommand } from '@core/app/cqrs/token/commands/create-admin-access-token/create-admin-access-token.command';
 
