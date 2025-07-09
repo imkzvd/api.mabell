@@ -13,7 +13,7 @@ import { UpdatePlaylistCoverHandler } from './commands/update-playlist-cover.han
 import { GetPlaylistHandler } from './queries/get-playlist.handler';
 import { GetPlaylistTracksHandler } from '../track/queries/get-playlist-tracks.handler';
 import { trackServiceProvider } from '../../providers/track-service.provider';
-import { userServiceProvider } from '../../providers/user-service.provider';
+import { userVerificationServiceProvider } from '../../providers/user-verification-service.provider';
 import { playlistServiceProvider } from '../../providers/playlist-service.provider';
 
 @Module({
@@ -21,7 +21,7 @@ import { playlistServiceProvider } from '../../providers/playlist-service.provid
   providers: [
     playlistServiceProvider,
     trackServiceProvider,
-    userServiceProvider,
+    userVerificationServiceProvider,
     AddTrackInPlaylistHandler,
     CreatePlaylistHandler,
     DeletePlaylistHandler,

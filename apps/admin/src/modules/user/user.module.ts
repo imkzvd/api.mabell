@@ -12,12 +12,18 @@ import { UpdateUserAvatarHandler } from './commands/update-user-avatar.handler';
 import { UpdateUserEmailHandler } from './commands/update-user-email.handler';
 import { UpdateUserUsernameHandler } from './commands/update-user-username.handler';
 import { GetUserHandler } from './queries/get-user.handler';
-import { userServiceProvider } from '../../providers/user-service.provider';
+import { userFindServiceProvider } from '../../providers/user-find-service.provider';
+import { userCreateServiceProvider } from '../../providers/user-create-service.provider';
+import { userDeleteServiceProvider } from '../../providers/user-delete-service.provider';
+import { userUpdateServiceProvider } from '../../providers/user-update-service.provider';
 
 @Module({
   imports: [RandomIdModule, FileStorageModule, PasswordModule],
   providers: [
-    userServiceProvider,
+    userCreateServiceProvider,
+    userDeleteServiceProvider,
+    userUpdateServiceProvider,
+    userFindServiceProvider,
     CreateUserHandler,
     DeleteUserHandler,
     DeleteUserAvatarHandler,
