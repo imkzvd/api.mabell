@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { JWTModule } from '@infrastructure/jwt';
 import { PasswordModule } from '@infrastructure/password';
 import { RandomIdModule } from '@infrastructure/random-id';
 import { AdminController } from './admin.controller';
@@ -9,13 +10,20 @@ import { RefreshAdminPasswordHandler } from './commands/refresh-admin-password.h
 import { DeleteAdminHandler } from './commands/delete-admin.handler';
 import { GetAdminsHandler } from './queries/get-admins.handler';
 import { GetAdminHandler } from './queries/get-admin.handler';
-import { DeleteRefreshTokenOnUserBlockedHandler } from '../../events/delete-refresh-token-on-user-blocked.handlers';
-import { adminServiceProvider } from '../../providers/admin-service.provider';
+import { adminFindServiceProvider } from '../../providers/admin-service.provider';
+import { adminTokenServiceProvider } from '../../providers/admin-token-service.provider';
+import { adminCreateServiceProvider } from '../../providers/admin-create-service.provider';
+import { adminUpdateServiceProvider } from '../../providers/admin-update-service.provider';
+import { adminDeleteServiceProvider } from '../../providers/admin-delete-service.provider';
 
 @Module({
-  imports: [PasswordModule, RandomIdModule],
+  imports: [PasswordModule, RandomIdModule, JWTModule],
   providers: [
-    adminServiceProvider,
+    adminCreateServiceProvider,
+    adminUpdateServiceProvider,
+    adminDeleteServiceProvider,
+    adminFindServiceProvider,
+    adminTokenServiceProvider,
     CreateAdminHandler,
     UpdateAdminHandler,
     UpdateAdminUsernameHandler,
@@ -23,7 +31,6 @@ import { adminServiceProvider } from '../../providers/admin-service.provider';
     DeleteAdminHandler,
     GetAdminsHandler,
     GetAdminHandler,
-    DeleteRefreshTokenOnUserBlockedHandler,
   ],
   controllers: [AdminController],
 })
