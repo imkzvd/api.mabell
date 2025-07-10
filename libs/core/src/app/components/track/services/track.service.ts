@@ -7,7 +7,7 @@ import TrackMapper from '../dtos/track.mapper';
 export class TrackService {
   constructor(private readonly _RR: TrackReadRepository) {}
 
-  async findById(
+  async find(
     id: string,
     options?: Partial<{
       isPublic: boolean;

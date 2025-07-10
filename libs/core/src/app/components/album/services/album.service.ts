@@ -34,7 +34,7 @@ export class AlbumService {
     };
   }
 
-  async getAlbumArtistIds(id: string): Promise<ArtistId[]> {
+  async getArtistIds(id: string): Promise<ArtistId[]> {
     const foundAlbum = await this._WR.findById(id);
 
     if (!foundAlbum) {

@@ -4,7 +4,7 @@ import { TmpFileDTO } from '@core/app/common/ports/file-storages/common/dtos/tmp
 export class UploadFindService {
   constructor(private readonly _FS: TmpFileStorage) {}
 
-  findById(id: string): Promise<TmpFileDTO | null> {
+  find(id: string): Promise<TmpFileDTO | null> {
     return this._FS.findById(id);
   }
 }
