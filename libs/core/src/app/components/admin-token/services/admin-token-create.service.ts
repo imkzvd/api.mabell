@@ -2,8 +2,8 @@ import * as process from 'process';
 import { AdminRefreshTokenFactory } from '@core/domain/components/admin-refresh-token/admin-refresh-token.factory';
 import { AdminRefreshTokenId } from '@core/domain/components/admin-refresh-token/types';
 import { AdminRefreshTokenWriteRepository } from '@core/domain/components/admin-refresh-token/repository/admin-refresh-token-write-repository.port';
-import { JWTService, TokenTypes } from '../../../common/ports/jwt.service.port';
-import { IdService } from '../../../common/ports/id.service.port';
+import { IdService } from '@core/app/common/ports/id.service.port';
+import { JWTService, TokenTypes } from '@core/app/common/ports/jwt.service.port';
 import {
   AccessTokenCustomPayload,
   CreateAccessTokenPayload,

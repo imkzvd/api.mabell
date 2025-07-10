@@ -1,6 +1,6 @@
 import * as process from 'process';
 import { AdminRefreshTokenReadRepository } from '@core/domain/components/admin-refresh-token/repository/admin-refresh-token-read-repository.port';
-import { JWTService } from '../../../common/ports/jwt.service.port';
+import { JWTService } from '@core/app/common/ports/jwt.service.port';
 import { RefreshTokenPayload } from '../types';
 import { AdminRefreshTokenDTO } from '../dtos/admin-refresh-token.dto';
 import AdminRefreshTokenMapper from '../dtos/admin-refresh-token.mapper';

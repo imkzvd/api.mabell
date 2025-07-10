@@ -1,8 +1,8 @@
 import * as process from 'process';
-import { AdminRefreshTokenId } from '@core/domain/components/admin-refresh-token/types';
 import { NotFoundException } from '@core/shared/exceptions';
+import { AdminRefreshTokenId } from '@core/domain/components/admin-refresh-token/types';
 import { AdminRefreshTokenWriteRepository } from '@core/domain/components/admin-refresh-token/repository/admin-refresh-token-write-repository.port';
-import { JWTService } from '../../../common/ports/jwt.service.port';
+import { JWTService } from '@core/app/common/ports/jwt.service.port';
 import { RefreshTokenPayload } from '../types';
 
 export class AdminTokenDeleteService {
