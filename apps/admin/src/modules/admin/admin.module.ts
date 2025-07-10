@@ -10,11 +10,11 @@ import { RefreshAdminPasswordHandler } from './commands/refresh-admin-password.h
 import { DeleteAdminHandler } from './commands/delete-admin.handler';
 import { GetAdminsHandler } from './queries/get-admins.handler';
 import { GetAdminHandler } from './queries/get-admin.handler';
-import { adminFindServiceProvider } from '../../providers/admin-service.provider';
-import { adminTokenServiceProvider } from '../../providers/admin-token-service.provider';
-import { adminCreateServiceProvider } from '../../providers/admin-create-service.provider';
-import { adminUpdateServiceProvider } from '../../providers/admin-update-service.provider';
-import { adminDeleteServiceProvider } from '../../providers/admin-delete-service.provider';
+import { adminServiceProvider } from './providers/admin-service.provider';
+import { adminTokenServiceProvider } from './providers/admin-token-service.provider';
+import { adminCreateServiceProvider } from './providers/admin-create-service.provider';
+import { adminUpdateServiceProvider } from './providers/admin-update-service.provider';
+import { adminDeleteServiceProvider } from './providers/admin-delete-service.provider';
 
 @Module({
   imports: [PasswordModule, RandomIdModule, JWTModule],
@@ -22,7 +22,7 @@ import { adminDeleteServiceProvider } from '../../providers/admin-delete-service
     adminCreateServiceProvider,
     adminUpdateServiceProvider,
     adminDeleteServiceProvider,
-    adminFindServiceProvider,
+    adminServiceProvider,
     adminTokenServiceProvider,
     CreateAdminHandler,
     UpdateAdminHandler,
