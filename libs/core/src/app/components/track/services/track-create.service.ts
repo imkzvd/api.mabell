@@ -1,10 +1,10 @@
 import { TrackWriteRepository } from '@core/domain/components/track/repository/track-write-repository.port';
 import { TrackFactory } from '@core/domain/components/track/track.factory';
 import { TrackId } from '@core/domain/components/track/types';
-import { EventBus } from '../../../common/ports/event-bus.port';
-import { TrackCreatedEvent } from '../../../common/events/track-created.event';
+import { EventBus } from '@core/app/common/ports/event-bus.port';
+import { IdService } from '@core/app/common/ports/id.service.port';
+import { TrackCreatedEvent } from '@core/app/common/events/track-created.event';
 import { CreateTrackPayload } from '../types';
-import { IdService } from '../../../common/ports/id.service.port';
 
 export class TrackCreateService {
   constructor(

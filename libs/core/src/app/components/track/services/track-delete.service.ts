@@ -1,10 +1,10 @@
 import { NotFoundException } from '@core/shared/exceptions';
 import { TrackWriteRepository } from '@core/domain/components/track/repository/track-write-repository.port';
 import { TrackId } from '@core/domain/components/track/types';
-import { ArtistFileStorage } from '../../../common/ports/file-storages/artist-file-storage.port';
-import { EventBus } from '../../../common/ports/event-bus.port';
-import { TrackDeletedEvent } from '../../../common/events/track-deleted.event';
-import { TracksDeletedEvent } from '../../../common/events/tracks-deleted.event';
+import { EventBus } from '@core/app/common/ports/event-bus.port';
+import { ArtistFileStorage } from '@core/app/common/ports/file-storages/artist-file-storage.port';
+import { TrackDeletedEvent } from '@core/app/common/events/track-deleted.event';
+import { TracksDeletedEvent } from '@core/app/common/events/tracks-deleted.event';
 
 export class TrackDeleteService {
   constructor(

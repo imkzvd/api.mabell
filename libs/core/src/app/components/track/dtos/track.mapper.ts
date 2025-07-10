@@ -1,8 +1,8 @@
 import { TrackWithAlbumAndArtistsDTO } from '@core/domain/components/track/repository/dtos/track-with-album-and-artists.dto';
+import AlbumMapper from '@core/app/components/album/dtos/album.mapper';
+import ArtistMapper from '@core/app/components/artist/dtos/artist.mapper';
 import { TrackDTO } from './track.dto';
 import { PlaylistTrackDTO } from './playlist-track.dto';
-import ArtistMapper from '../../artist/dtos/artist.mapper';
-import AlbumMapper from '../../album/dtos/album.mapper';
 
 class TrackMapper {
   toDTO(dto: TrackWithAlbumAndArtistsDTO): TrackDTO {

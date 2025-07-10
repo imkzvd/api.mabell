@@ -2,11 +2,11 @@ import { NotFoundException } from '@core/shared/exceptions';
 import { TrackWriteRepository } from '@core/domain/components/track/repository/track-write-repository.port';
 import { TrackId } from '@core/domain/components/track/types';
 import { ArtistId } from '@core/domain/components/artist/types';
-import { ArtistFileStorage } from '../../../common/ports/file-storages/artist-file-storage.port';
-import { TmpFileStorage } from '../../../common/ports/file-storages/tmp-file-storage.port';
-import { EventBus } from '../../../common/ports/event-bus.port';
-import { TrackUpdatedEvent } from '../../../common/events/track-updated.event';
-import { TracksUpdatedEvent } from '../../../common/events/tracks-updated.event';
+import { EventBus } from '@core/app/common/ports/event-bus.port';
+import { TmpFileStorage } from '@core/app/common/ports/file-storages/tmp-file-storage.port';
+import { ArtistFileStorage } from '@core/app/common/ports/file-storages/artist-file-storage.port';
+import { TrackUpdatedEvent } from '@core/app/common/events/track-updated.event';
+import { TracksUpdatedEvent } from '@core/app/common/events/tracks-updated.event';
 import {
   UpdateTrackArtistsPayload,
   UpdateTrackFeatArtistsPayload,
