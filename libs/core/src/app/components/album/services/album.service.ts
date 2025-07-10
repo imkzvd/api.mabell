@@ -7,7 +7,7 @@ import { ArtistId } from '@core/domain/components/artist/types';
 import AlbumMapper from '../dtos/album.mapper';
 import { AlbumDTO } from '../dtos/album.dto';
 
-export class AlbumFindService {
+export class AlbumService {
   constructor(
     private readonly _WR: AlbumWriteRepository,
     private readonly _RR: AlbumReadRepository,

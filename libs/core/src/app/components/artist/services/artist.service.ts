@@ -3,7 +3,7 @@ import { ArtistReadRepository } from '@core/domain/components/artist/repository/
 import { ArtistDTO } from '../dtos/artist.dto';
 import ArtistMapper from '../dtos/artist.mapper';
 
-export class ArtistFindService {
+export class ArtistService {
   constructor(private readonly _RR: ArtistReadRepository) {}
 
   async find(id: string, options?: Partial<{ isPublic: boolean }>): Promise<ArtistDTO | null> {

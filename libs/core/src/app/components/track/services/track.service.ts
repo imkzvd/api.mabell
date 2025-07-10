@@ -4,7 +4,7 @@ import { TrackReadRepository } from '@core/domain/components/track/repository/tr
 import { TrackDTO } from '../dtos/track.dto';
 import TrackMapper from '../dtos/track.mapper';
 
-export class TrackFindService {
+export class TrackService {
   constructor(private readonly _RR: TrackReadRepository) {}
 
   async findById(

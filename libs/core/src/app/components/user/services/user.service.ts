@@ -2,7 +2,7 @@ import { UserReadRepository } from '@core/domain/components/user/repository/user
 import { UserDTO } from '../dtos/user.dto';
 import UserMapper from '../dtos/user.mapper';
 
-export class UserFindService {
+export class UserService {
   constructor(private readonly _RR: UserReadRepository) {}
 
   async find(id: string, options?: Partial<{ isPublic: boolean }>): Promise<UserDTO | null> {

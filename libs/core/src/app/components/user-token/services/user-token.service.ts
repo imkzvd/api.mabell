@@ -2,7 +2,7 @@ import { UserRefreshTokenReadRepository } from '@core/domain/components/user-ref
 import UserRefreshTokenMapper from '../dtos/user-refresh-token.mapper';
 import { UserRefreshTokenDTO } from '../dtos/user-refresh-token.dto';
 
-export class UserTokenFindService {
+export class UserTokenService {
   constructor(private readonly _RR: UserRefreshTokenReadRepository) {}
 
   async findRefreshTokensByUserId(id: string): Promise<UserRefreshTokenDTO[]> {

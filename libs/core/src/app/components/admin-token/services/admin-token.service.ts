@@ -2,7 +2,7 @@ import { AdminRefreshTokenReadRepository } from '@core/domain/components/admin-r
 import { AdminRefreshTokenDTO } from '../dtos/admin-refresh-token.dto';
 import AdminRefreshTokenMapper from '../dtos/admin-refresh-token.mapper';
 
-export class AdminTokenFindService {
+export class AdminTokenService {
   constructor(private readonly _RR: AdminRefreshTokenReadRepository) {}
 
   async findRefreshTokensByAdminId(id: string): Promise<AdminRefreshTokenDTO[]> {
