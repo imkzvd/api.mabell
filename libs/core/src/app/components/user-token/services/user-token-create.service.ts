@@ -2,8 +2,8 @@ import * as process from 'process';
 import { UserRefreshTokenId } from '@core/domain/components/user-refresh-token/types';
 import { UserRefreshTokenFactory } from '@core/domain/components/user-refresh-token/user-refresh-token.factory';
 import { UserRefreshTokenWriteRepository } from '@core/domain/components/user-refresh-token/user-refresh-token-write-repository.port';
-import { JWTService, TokenTypes } from '../../../common/ports/jwt.service.port';
-import { IdService } from '../../../common/ports/id.service.port';
+import { IdService } from '@core/app/common/ports/id.service.port';
+import { JWTService, TokenTypes } from '@core/app/common/ports/jwt.service.port';
 import {
   AccessTokenPayload,
   CreateAccessTokenPayload,
