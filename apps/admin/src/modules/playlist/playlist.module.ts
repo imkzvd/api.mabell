@@ -15,13 +15,21 @@ import { GetPlaylistTracksHandler } from '../track/queries/get-playlist-tracks.h
 import { playlistServiceProvider } from './providers/playlist-service.provider';
 import { trackServiceProvider } from '../track/providers/track-service.provider';
 import { userVerificationServiceProvider } from '../user/providers/user-verification-service.provider';
+import { trackVerifyServiceProvider } from '../track/providers/track-verify-service.provider';
+import { playlistUpdateServiceProvider } from './providers/playlist-update-service.provider';
+import { playlistCreateServiceProvider } from './providers/playlist-create-service.provider';
+import { playlistDeleteServiceProvider } from './providers/playlist-delete-service.provider';
 
 @Module({
   imports: [RandomIdModule, PasswordModule, FileStorageModule],
   providers: [
+    trackVerifyServiceProvider,
+    playlistUpdateServiceProvider,
+    userVerificationServiceProvider,
+    playlistCreateServiceProvider,
+    playlistDeleteServiceProvider,
     playlistServiceProvider,
     trackServiceProvider,
-    userVerificationServiceProvider,
     AddTrackInPlaylistHandler,
     CreatePlaylistHandler,
     DeletePlaylistHandler,
