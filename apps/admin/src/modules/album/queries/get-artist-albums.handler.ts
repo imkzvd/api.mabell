@@ -1,16 +1,12 @@
 import { QueryHandler } from '@nestjs/cqrs';
-import { Inject } from '@nestjs/common';
-import { AlbumService } from '@core/app/components/album/album.service';
-import { ArtistService } from '@core/app/components/artist/artist.service';
 import { GetArtistAlbumsQuery } from '@core/app/cqrs/album/queries/get-artist-albums/get-artist-albums.query';
 import { GetArtistAlbumsHandler as CoreGetArtistAlbumsHandler } from '@core/app/cqrs/album/queries/get-artist-albums/get-artist-albums.handler';
+import { ArtistVerifyService } from '@core/app/components/artist/services/artist-verify.service';
+import { AlbumService } from '@core/app/components/album/services/album.service';
 
 @QueryHandler(GetArtistAlbumsQuery)
 export class GetArtistAlbumsHandler extends CoreGetArtistAlbumsHandler {
-  constructor(
-    @Inject(ArtistService) artistService: ArtistService,
-    @Inject(AlbumService) albumService: AlbumService,
-  ) {
-    super(artistService, albumService);
+  constructor(artistVerifyService: ArtistVerifyService, albumService: AlbumService) {
+    super(artistVerifyService, albumService);
   }
 }
