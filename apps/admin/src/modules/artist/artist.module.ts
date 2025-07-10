@@ -15,11 +15,19 @@ import { GetArtistAlbumsHandler } from '../album/queries/get-artist-albums.handl
 import { artistServiceProvider } from './providers/artist-service.provider';
 import { albumServiceProvider } from '../album/providers/album-service.provider';
 import { trackServiceProvider } from '../track/providers/track-service.provider';
+import { artistCreateServiceProvider } from './providers/artist-create-service.provider';
+import { artistUpdateServiceProvider } from './providers/artist-update-service.provider';
+import { artistDeleteServiceProvider } from './providers/artist-delete-service.provider';
+import { artistVerifyServiceProvider } from './providers/artist-verify-service.provider';
 
 @Module({
   imports: [RandomIdModule, FileStorageModule],
   providers: [
     artistServiceProvider,
+    artistCreateServiceProvider,
+    artistUpdateServiceProvider,
+    artistDeleteServiceProvider,
+    artistVerifyServiceProvider,
     albumServiceProvider,
     trackServiceProvider,
     CreateArtistHandler,
