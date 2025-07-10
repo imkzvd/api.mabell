@@ -28,3 +28,8 @@ export type UpdateUserAvatarPayload = Partial<{
   fileId: string | null;
   color: string | null;
 }>;
+
+export type LoginUserPayload = {
+  username: string;
+  password: string;
+};

@@ -1,7 +1,7 @@
 import { UnauthorizedException } from '@core/shared/exceptions';
 import { UserId } from '@core/domain/components/user/types';
 import { UserReadRepository } from '@core/domain/components/user/repository/user-read-repository.port';
-import { LoginPayload } from '../types';
+import { LoginUserPayload } from '../types';
 import { PasswordService } from '../../../common/ports/password-service.port';
 
 export class UserLoginService {
@@ -10,7 +10,7 @@ export class UserLoginService {
     private readonly _passwordService: PasswordService,
   ) {}
 
-  async login({ username, password }: LoginPayload): Promise<UserId> {
+  async login({ username, password }: LoginUserPayload): Promise<UserId> {
     const foundUser = await this._userRR.findByUsername(username);
 
     if (!foundUser) {
