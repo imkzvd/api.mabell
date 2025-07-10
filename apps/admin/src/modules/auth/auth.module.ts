@@ -8,16 +8,20 @@ import { CreateAdminAccessTokenHandler } from './commands/create-admin-access-to
 import { CreateAdminRefreshTokenHandler } from './commands/create-admin-refresh-token.handler';
 import { ValidateAdminRefreshTokenHandler } from './queries/validate-admin-refresh-token.handler';
 import { DeleteAdminRefreshTokenHandler } from './commands/delete-admin-refresh-token.handler';
-import { loginServiceProvider } from '../../providers/login-service.provider';
-import { adminServiceProvider } from '../../providers/admin-service.provider';
-import { adminTokenServiceProvider } from '../../providers/admin-token-service.provider';
+import { adminLoginServiceProvider } from '../admin/providers/admin-login-service.provider';
+import { adminServiceProvider } from '../admin/providers/admin-service.provider';
+import { adminTokenCreateServiceProvider } from '../admin/providers/admin-token-create-service.provider';
+import { adminTokenDeleteServiceProvider } from '../admin/providers/admin-token-delete-service.provider';
+import { adminTokenValidateServiceProvider } from '../admin/providers/admin-token-validate-service.provider';
 
 @Module({
   imports: [PasswordModule, RandomIdModule, JWTModule],
   providers: [
-    loginServiceProvider,
+    adminLoginServiceProvider,
     adminServiceProvider,
-    adminTokenServiceProvider,
+    adminTokenCreateServiceProvider,
+    adminTokenDeleteServiceProvider,
+    adminTokenValidateServiceProvider,
     LoginAdminHandler,
     CreateAdminAccessTokenHandler,
     CreateAdminRefreshTokenHandler,
