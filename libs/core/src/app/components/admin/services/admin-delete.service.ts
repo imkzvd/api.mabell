@@ -2,8 +2,8 @@ import { BadRequestException, NotFoundException } from '@core/shared/exceptions'
 import { AdminWriteRepository } from '@core/domain/components/admin/repository/admin-write-repository.port';
 import { AdminRoles } from '@core/domain/components/admin/constants/admin-roles';
 import { AdminId } from '@core/domain/components/admin/types';
-import { EventBus } from '../../../common/ports/event-bus.port';
-import { AdminDeletedEvent } from '../../../common/events/admin-deleted.event';
+import { EventBus } from '@core/app/common/ports/event-bus.port';
+import { AdminDeletedEvent } from '@core/app/common/events/admin-deleted.event';
 
 export class AdminDeleteService {
   constructor(

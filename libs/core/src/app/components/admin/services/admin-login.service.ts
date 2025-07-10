@@ -1,17 +1,17 @@
 import { UnauthorizedException } from '@core/shared/exceptions';
 import { AdminId } from '@core/domain/components/admin/types';
 import { AdminReadRepository } from '@core/domain/components/admin/repository/admin-read-repository.port';
+import { PasswordService } from '@core/app/common/ports/password-service.port';
 import { LoginAdminPayload } from '../types';
-import { PasswordService } from '../../../common/ports/password-service.port';
 
 export class AdminLoginService {
   constructor(
-    private readonly _adminRR: AdminReadRepository,
+    private readonly _RR: AdminReadRepository,
     private readonly _passwordService: PasswordService,
   ) {}
 
   async login({ username, password }: LoginAdminPayload): Promise<AdminId> {
-    const foundAdmin = await this._adminRR.findByUsername(username);
+    const foundAdmin = await this._RR.findByUsername(username);
 
     if (!foundAdmin) {
       throw new UnauthorizedException('Incorrect username or password.');

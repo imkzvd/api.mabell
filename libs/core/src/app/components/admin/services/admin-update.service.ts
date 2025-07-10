@@ -1,14 +1,14 @@
 import { DuplicationException, NotFoundException } from '@core/shared/exceptions';
 import { AdminWriteRepository } from '@core/domain/components/admin/repository/admin-write-repository.port';
 import { AdminId } from '@core/domain/components/admin/types';
+import { EventBus } from '@core/app/common/ports/event-bus.port';
+import { PasswordService } from '@core/app/common/ports/password-service.port';
+import { AdminBlockedEvent } from '@core/app/common/events/admin-blocked.event';
+import { AdminUnblockedEvent } from '@core/app/common/events/admin-unblocked.event';
+import { AdminUpdatedEvent } from '@core/app/common/events/admin-updated.event';
+import { AdminPasswordRefreshedEvent } from '@core/app/common/events/admin-password-refreshed.event';
 import { ADMIN_PASSWORD_LENGTH } from '../constants';
 import { UpdateAdminPayload } from '../types';
-import { PasswordService } from '../../../common/ports/password-service.port';
-import { EventBus } from '../../../common/ports/event-bus.port';
-import { AdminUpdatedEvent } from '../../../common/events/admin-updated.event';
-import { AdminPasswordRefreshedEvent } from '../../../common/events/admin-password-refreshed.event';
-import { AdminBlockedEvent } from '../../../common/events/admin-blocked.event';
-import { AdminUnblockedEvent } from '../../../common/events/admin-unblocked.event';
 
 export class AdminUpdateService {
   constructor(
