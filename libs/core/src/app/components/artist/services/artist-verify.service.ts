@@ -4,7 +4,7 @@ import { ArtistId } from '@core/domain/components/artist/types';
 export class ArtistVerifyService {
   constructor(private readonly _WR: ArtistWriteRepository) {}
 
-  async verifyById(id: string): Promise<ArtistId | null> {
+  async verify(id: string): Promise<ArtistId | null> {
     return this._WR.existsById(id);
   }
 
