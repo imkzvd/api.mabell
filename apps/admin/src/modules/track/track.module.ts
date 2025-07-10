@@ -9,9 +9,9 @@ import { UpdateTrackHandler } from './commands/update-track.handler';
 import { UpdateTrackFeatArtistsHandler } from './commands/update-track-feat-artists.handler';
 import { UpdateTrackFileHandler } from './commands/update-track-file.handler';
 import { GetTrackHandler } from './queries/get-track.handler';
-import { artistServiceProvider } from '../../providers/artist-service.provider';
-import { albumServiceProvider } from '../../providers/album-service.provider';
-import { trackServiceProvider } from '../../providers/track-service.provider';
+import { artistServiceProvider } from '../artist/providers/artist-service.provider';
+import { albumServiceProvider } from '../album/providers/album-service.provider';
+import { trackServiceProvider } from './providers/track-service.provider';
 
 @Module({
   imports: [RandomIdModule, FileStorageModule],
