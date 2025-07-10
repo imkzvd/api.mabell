@@ -12,9 +12,9 @@ import { UpdatePlaylistHandler } from './commands/update-playlist.handler';
 import { UpdatePlaylistCoverHandler } from './commands/update-playlist-cover.handler';
 import { GetPlaylistHandler } from './queries/get-playlist.handler';
 import { GetPlaylistTracksHandler } from '../track/queries/get-playlist-tracks.handler';
-import { trackServiceProvider } from '../../providers/track-service.provider';
-import { userVerificationServiceProvider } from '../../providers/user-verification-service.provider';
-import { playlistServiceProvider } from '../../providers/playlist-service.provider';
+import { playlistServiceProvider } from './providers/playlist-service.provider';
+import { trackServiceProvider } from '../track/providers/track-service.provider';
+import { userVerificationServiceProvider } from '../user/providers/user-verification-service.provider';
 
 @Module({
   imports: [RandomIdModule, PasswordModule, FileStorageModule],
