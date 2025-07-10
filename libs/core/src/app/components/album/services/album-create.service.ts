@@ -1,10 +1,10 @@
 import { AlbumWriteRepository } from '@core/domain/components/album/repository/album-write-repository.port';
 import { AlbumId } from '@core/domain/components/album/types';
 import { AlbumFactory } from '@core/domain/components/album/album.factory';
-import { IdService } from '../../../common/ports/id.service.port';
+import { EventBus } from '@core/app/common/ports/event-bus.port';
+import { IdService } from '@core/app/common/ports/id.service.port';
+import { AlbumCreatedEvent } from '@core/app/common/events/album-created.event';
 import { CreateAlbumPayload } from '../types';
-import { EventBus } from '../../../common/ports/event-bus.port';
-import { AlbumCreatedEvent } from '../../../common/events/album-created.event';
 
 export class AlbumCreateService {
   constructor(

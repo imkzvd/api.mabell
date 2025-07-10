@@ -1,13 +1,13 @@
 import { BadRequestException, NotFoundException } from '@core/shared/exceptions';
 import { AlbumWriteRepository } from '@core/domain/components/album/repository/album-write-repository.port';
 import { AlbumId } from '@core/domain/components/album/types';
+import { EventBus } from '@core/app/common/ports/event-bus.port';
+import { TmpFileStorage } from '@core/app/common/ports/file-storages/tmp-file-storage.port';
+import { ArtistFileStorage } from '@core/app/common/ports/file-storages/artist-file-storage.port';
+import { AlbumUpdatedEvent } from '@core/app/common/events/album-updated.event';
+import { AlbumArtistsUpdatedEvent } from '@core/app/common/events/album-artists-updated.event';
+import { AlbumCoverDeletedEvent } from '@core/app/common/events/album-cover-deleted.event';
 import { UpdateAlbumArtistsPayload, UpdateAlbumCoverPayload, UpdateAlbumPayload } from '../types';
-import { ArtistFileStorage } from '../../../common/ports/file-storages/artist-file-storage.port';
-import { TmpFileStorage } from '../../../common/ports/file-storages/tmp-file-storage.port';
-import { EventBus } from '../../../common/ports/event-bus.port';
-import { AlbumUpdatedEvent } from '../../../common/events/album-updated.event';
-import { AlbumCoverDeletedEvent } from '../../../common/events/album-cover-deleted.event';
-import { AlbumArtistsUpdatedEvent } from '../../../common/events/album-artists-updated.event';
 
 export class AlbumUpdateService {
   constructor(

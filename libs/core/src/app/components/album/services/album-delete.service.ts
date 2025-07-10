@@ -1,9 +1,9 @@
 import { NotFoundException } from '@core/shared/exceptions';
 import { AlbumWriteRepository } from '@core/domain/components/album/repository/album-write-repository.port';
 import { AlbumId } from '@core/domain/components/album/types';
-import { EventBus } from '../../../common/ports/event-bus.port';
-import { AlbumDeletedEvent } from '../../../common/events/album-deleted.event';
-import { AlbumsDeletedEvent } from '../../../common/events/albums-deleted.event';
+import { EventBus } from '@core/app/common/ports/event-bus.port';
+import { AlbumDeletedEvent } from '@core/app/common/events/album-deleted.event';
+import { AlbumsDeletedEvent } from '@core/app/common/events/albums-deleted.event';
 
 export class AlbumDeleteService {
   constructor(
