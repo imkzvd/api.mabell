@@ -1,7 +1,7 @@
 import { ArtistWriteRepository } from '@core/domain/components/artist/repository/artist-write-repository.port';
 import { ArtistId } from '@core/domain/components/artist/types';
 
-export class ArtistVerificationService {
+export class ArtistVerifyService {
   constructor(private readonly _WR: ArtistWriteRepository) {}
 
   async verifyById(id: string): Promise<ArtistId | null> {
