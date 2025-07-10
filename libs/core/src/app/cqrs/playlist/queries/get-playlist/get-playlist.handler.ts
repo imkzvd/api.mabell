@@ -1,12 +1,12 @@
 import { QueryHandler } from '@core/app/types';
-import { PlaylistService } from '@core/app/components/playlist/playlist.service';
 import { GetPlaylistQuery } from '@core/app/cqrs/playlist/queries/get-playlist/get-playlist.query';
+import { PlaylistService } from '@core/app/components/playlist/services/playlist.service';
 
 export class GetPlaylistHandler implements QueryHandler<GetPlaylistQuery> {
-  constructor(private readonly _playlistService: PlaylistService) {}
+  constructor(private readonly _service: PlaylistService) {}
 
   async execute({ id, isPublic }: GetPlaylistQuery) {
-    return await this._playlistService.getPlaylist(id, {
+    return await this._service.find(id, {
       isPublic,
     });
   }

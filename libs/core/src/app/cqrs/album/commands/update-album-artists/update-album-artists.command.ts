@@ -4,7 +4,7 @@ import { AlbumId } from '@core/domain/components/album/types';
 export class UpdateAlbumArtistsCommand extends Command<AlbumId> {
   constructor(
     public readonly id: string,
-    public readonly artists: string[],
+    public readonly artistIds: string[],
   ) {
     super();
   }

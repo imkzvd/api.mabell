@@ -1,11 +1,11 @@
 import { CommandHandler } from '@core/app/types';
-import { ArtistService } from '@core/app/components/artist/artist.service';
 import { DeleteArtistCommand } from '@core/app/cqrs/artist/commands/delete-artist/delete-artist.command';
+import { ArtistDeleteService } from '@core/app/components/artist/services/artist-delete.service';
 
 export class DeleteArtistHandler implements CommandHandler<DeleteArtistCommand> {
-  constructor(private readonly _artistService: ArtistService) {}
+  constructor(private readonly _service: ArtistDeleteService) {}
 
   async execute({ id }: DeleteArtistCommand) {
-    return await this._artistService.deleteArtist(id);
+    return await this._service.delete(id);
   }
 }

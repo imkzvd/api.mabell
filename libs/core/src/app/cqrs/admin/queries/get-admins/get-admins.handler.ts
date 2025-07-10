@@ -1,9 +1,9 @@
-import { AdminFindService } from '@core/app/components/admin/services/admin-find.service';
+import { AdminService } from '@core/app/components/admin/services/admin.service';
 import { QueryHandler } from '@core/app/types';
 import { GetAdminsQuery } from '@core/app/cqrs/admin/queries/get-admins/get-admins.query';
 
 export class GetAdminsHandler implements QueryHandler<GetAdminsQuery> {
-  constructor(private _service: AdminFindService) {}
+  constructor(private _service: AdminService) {}
 
   async execute({ pagination }: GetAdminsQuery) {
     return this._service.findAll(pagination);

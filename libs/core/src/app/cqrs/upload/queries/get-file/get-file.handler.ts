@@ -1,11 +1,11 @@
 import { QueryHandler } from '@core/app/types';
-import { UploadService } from '@core/app/components/upload/upload.service';
 import { GetFileQuery } from '@core/app/cqrs/upload/queries/get-file/get-file.query';
+import { UploadFindService } from '@core/app/components/upload/services/upload-find.service';
 
 export class GetFileHandler implements QueryHandler<GetFileQuery> {
-  constructor(private readonly _uploadService: UploadService) {}
+  constructor(private readonly _service: UploadFindService) {}
 
   async execute({ id }: GetFileQuery) {
-    return this._uploadService.getFile(id);
+    return this._service.find(id);
   }
 }

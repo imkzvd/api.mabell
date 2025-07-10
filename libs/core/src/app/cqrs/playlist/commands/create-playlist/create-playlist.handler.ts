@@ -1,22 +1,22 @@
 import { CommandHandler } from '@core/app/types';
 import { NotFoundException } from '@core/shared/exceptions';
-import { PlaylistService } from '@core/app/components/playlist/playlist.service';
 import { CreatePlaylistCommand } from '@core/app/cqrs/playlist/commands/create-playlist/create-playlist.command';
-import { UserVerificationService } from '@core/app/components/user/services/user-verification.service';
+import { UserVerifyService } from '@core/app/components/user/services/user-verify.service';
+import { PlaylistCreateService } from '@core/app/components/playlist/services/playlist-create.service';
 
 export class CreatePlaylistHandler implements CommandHandler<CreatePlaylistCommand> {
   constructor(
-    private readonly _userVerificationService: UserVerificationService,
-    private readonly _playlistService: PlaylistService,
+    private readonly _userVerifyService: UserVerifyService,
+    private readonly _playlistCreateService: PlaylistCreateService,
   ) {}
 
   async execute({ ownerId }: CreatePlaylistCommand) {
-    const verifiedUserId = await this._userVerificationService.verify(ownerId);
+    const verifiedUserId = await this._userVerifyService.verify(ownerId);
 
     if (!verifiedUserId) {
       throw new NotFoundException('User does not exist');
     }
 
-    return await this._playlistService.createPlaylist({ ownerId: verifiedUserId });
+    return await this._playlistCreateService.create({ ownerId: verifiedUserId });
   }
 }
