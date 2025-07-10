@@ -5,3 +5,8 @@ export type UpdateAdminPayload = Partial<{
   role: AdminRole;
   isBlocked: boolean;
 }>;
+
+export type LoginAdminPayload = {
+  username: string;
+  password: string;
+};

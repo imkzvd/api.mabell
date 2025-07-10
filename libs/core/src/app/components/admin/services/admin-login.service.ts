@@ -1,7 +1,7 @@
 import { UnauthorizedException } from '@core/shared/exceptions';
 import { AdminId } from '@core/domain/components/admin/types';
 import { AdminReadRepository } from '@core/domain/components/admin/repository/admin-read-repository.port';
-import { LoginPayload } from '../types';
+import { LoginAdminPayload } from '../types';
 import { PasswordService } from '../../../common/ports/password-service.port';
 
 export class AdminLoginService {
@@ -10,7 +10,7 @@ export class AdminLoginService {
     private readonly _passwordService: PasswordService,
   ) {}
 
-  async login({ username, password }: LoginPayload): Promise<AdminId> {
+  async login({ username, password }: LoginAdminPayload): Promise<AdminId> {
     const foundAdmin = await this._adminRR.findByUsername(username);
 
     if (!foundAdmin) {
