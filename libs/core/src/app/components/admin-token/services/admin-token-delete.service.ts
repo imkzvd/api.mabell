@@ -32,7 +32,7 @@ export class AdminTokenDeleteService {
     return deletedRefreshTokenId;
   }
 
-  deleteRefreshTokensByAdminId(id: string) {
-    void this._WR.deleteByOwnerId(id);
+  async deleteRefreshTokensByAdminId(id: string) {
+    await this._WR.deleteByOwnerId(id);
   }
 }
