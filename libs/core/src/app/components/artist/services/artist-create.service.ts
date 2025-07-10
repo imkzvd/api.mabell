@@ -1,9 +1,9 @@
 import { ArtistWriteRepository } from '@core/domain/components/artist/repository/artist-write-repository.port';
 import { ArtistFactory } from '@core/domain/components/artist/artist.factory';
 import { ArtistId } from '@core/domain/components/artist/types';
-import { IdService } from '../../../common/ports/id.service.port';
-import { EventBus } from '../../../common/ports/event-bus.port';
-import { ArtistCreatedEvent } from '../../../common/events/artist-created.event';
+import { EventBus } from '@core/app/common/ports/event-bus.port';
+import { IdService } from '@core/app/common/ports/id.service.port';
+import { ArtistCreatedEvent } from '@core/app/common/events/artist-created.event';
 
 export class ArtistCreateService {
   constructor(

@@ -1,11 +1,11 @@
 import { NotFoundException } from '@core/shared/exceptions';
 import { ArtistWriteRepository } from '@core/domain/components/artist/repository/artist-write-repository.port';
 import { ArtistId } from '@core/domain/components/artist/types';
+import { EventBus } from '@core/app/common/ports/event-bus.port';
+import { TmpFileStorage } from '@core/app/common/ports/file-storages/tmp-file-storage.port';
+import { ArtistFileStorage } from '@core/app/common/ports/file-storages/artist-file-storage.port';
+import { ArtistUpdatedEvent } from '@core/app/common/events/artist-updated.event';
 import { UpdateArtistAvatarPayload, UpdateArtistCoverPayload, UpdateArtistPayload } from '../types';
-import { ArtistFileStorage } from '../../../common/ports/file-storages/artist-file-storage.port';
-import { TmpFileStorage } from '../../../common/ports/file-storages/tmp-file-storage.port';
-import { EventBus } from '../../../common/ports/event-bus.port';
-import { ArtistUpdatedEvent } from '../../../common/events/artist-updated.event';
 
 export class ArtistUpdateService {
   constructor(
