@@ -2,12 +2,12 @@ import { BadRequestException } from '@core/shared/exceptions';
 import { UserFactory } from '@core/domain/components/user/user.factory';
 import { UserWriteRepository } from '@core/domain/components/user/repository/user-write-repository.port';
 import { UserId } from '@core/domain/components/user/types';
+import { EventBus } from '@core/app/common/ports/event-bus.port';
+import { IdService } from '@core/app/common/ports/id.service.port';
+import { PasswordService } from '@core/app/common/ports/password-service.port';
+import { UserRegisteredEvent } from '@core/app/common/events/user-registered.event';
 import { USER_MIN_LENGTH_PASSWORD } from '../constants';
 import { RegisterUserPayload } from '../types';
-import { IdService } from '../../../common/ports/id.service.port';
-import { PasswordService } from '../../../common/ports/password-service.port';
-import { EventBus } from '../../../common/ports/event-bus.port';
-import { UserRegisteredEvent } from '../../../common/events/user-registered.event';
 
 export class UserRegistrationService {
   constructor(

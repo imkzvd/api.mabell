@@ -6,17 +6,17 @@ import {
 } from '@core/shared/exceptions';
 import { UserWriteRepository } from '@core/domain/components/user/repository/user-write-repository.port';
 import { UserId } from '@core/domain/components/user/types';
+import { EventBus } from '@core/app/common/ports/event-bus.port';
+import { PasswordService } from '@core/app/common/ports/password-service.port';
+import { TmpFileStorage } from '@core/app/common/ports/file-storages/tmp-file-storage.port';
+import { UserFileStorage } from '@core/app/common/ports/file-storages/user-file-storage.port';
+import { UserBlockedEvent } from '@core/app/common/events/user-blocked.event';
+import { UserUnblockedEvent } from '@core/app/common/events/user-unblocked.event';
+import { UserUpdatedEvent } from '@core/app/common/events/user-updated.event';
+import { UserEmailUpdatedEvent } from '@core/app/common/events/user-email-updated.event';
+import { UserPasswordUpdatedEvent } from '@core/app/common/events/user-password-updated.event';
 import { USER_MIN_LENGTH_PASSWORD } from '../constants';
 import { UpdateUserAvatarPayload, UpdateUserPasswordPayload, UpdateUserPayload } from '../types';
-import { PasswordService } from '../../../common/ports/password-service.port';
-import { UserFileStorage } from '../../../common/ports/file-storages/user-file-storage.port';
-import { TmpFileStorage } from '../../../common/ports/file-storages/tmp-file-storage.port';
-import { EventBus } from '../../../common/ports/event-bus.port';
-import { UserUpdatedEvent } from '../../../common/events/user-updated.event';
-import { UserEmailUpdatedEvent } from '../../../common/events/user-email-updated.event';
-import { UserPasswordUpdatedEvent } from '../../../common/events/user-password-updated.event';
-import { UserBlockedEvent } from '../../../common/events/user-blocked.event';
-import { UserUnblockedEvent } from '../../../common/events/user-unblocked.event';
 
 export class UserUpdateService {
   constructor(
