@@ -10,7 +10,7 @@ export class PlaylistDeleteService {
   constructor(
     private readonly _EB: EventBus,
     private readonly _WR: PlaylistWriteRepository,
-    private readonly _userFS: UserFileStorage,
+    private readonly _FS: UserFileStorage,
   ) {}
 
   async delete(id: string): Promise<PlaylistId> {
@@ -21,7 +21,7 @@ export class PlaylistDeleteService {
     }
 
     await this._WR.deleteById(id);
-    await this._userFS.deletePlaylistDirectory(foundPlaylist.getOwner(), foundPlaylist.getId());
+    await this._FS.deletePlaylistDirectory(foundPlaylist.getOwner(), foundPlaylist.getId());
     this._EB.publish(new PlaylistDeletedEvent({ id: foundPlaylist.getId() }));
 
     return foundPlaylist.getId();
