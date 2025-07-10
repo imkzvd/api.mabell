@@ -7,14 +7,14 @@ import { AuthController } from './auth.controller';
 import { LoginUserHandler } from './commands/login-user.handler';
 import { CreateUserAccessTokenHandler } from './commands/create-user-access-token.handler';
 import { CreateUserRefreshTokenHandler } from './commands/create-user-refresh-token.handler';
-import { loginServiceProvider } from '../../providers/login-service.provider';
-import { userServiceProvider } from '../../providers/user-service.provider';
-import { userTokenServiceProvider } from '../../providers/user-token-service.provider';
+import { userLoginServiceProvider } from '../user/providers/user-login-service.provider';
+import { userServiceProvider } from '../user/providers/user-service.provider';
+import { userTokenServiceProvider } from '../user/providers/user-token-service.provider';
 
 @Module({
   imports: [PasswordModule, JWTModule, RandomIdModule, FileStorageModule],
   providers: [
-    loginServiceProvider,
+    userLoginServiceProvider,
     userServiceProvider,
     userTokenServiceProvider,
     LoginUserHandler,
