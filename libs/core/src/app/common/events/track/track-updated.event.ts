@@ -1,12 +1,14 @@
 import { Event } from '@core/app/common/ports/event-bus.port';
 import { TrackId } from '@core/domain/components/track/types';
+import { AlbumId } from '@core/domain/components/album/types';
+import { ArtistId } from '@core/domain/components/artist/types';
 
 export type TrackUpdatedEventPayload = {
   id: TrackId;
   name: string;
-  album: { id: string; name: string };
-  artists: { id: string; name: string };
-  featArtists: { id: string; name: string };
+  album: { id: AlbumId; name: string };
+  artists: { id: ArtistId; name: string }[];
+  featArtists: { id: ArtistId; name: string }[];
   cover: string | null;
   isExplicit: boolean;
 };
