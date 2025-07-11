@@ -1,12 +1,17 @@
-import { Event } from '../ports/event-bus.port';
+import { Event } from '@core/app/common/ports/event-bus.port';
 import { UserId } from '@core/domain/components/user/types';
 
-export type UserCreatedPayload = {
+export type UserCreatedEventPayload = {
   id: UserId;
+  name: string;
+  email: string | null;
+  avatar: string | null;
 };
 
-export class UserCreatedEvent implements Event<UserCreatedPayload> {
+export class UserCreatedEvent extends Event<UserCreatedEventPayload> {
   public readonly name = 'user.created';
 
-  constructor(public readonly payload: UserCreatedPayload) {}
+  constructor(public readonly payload: UserCreatedEventPayload) {
+    super();
+  }
 }
