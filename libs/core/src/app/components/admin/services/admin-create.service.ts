@@ -4,7 +4,7 @@ import { AdminId } from '@core/domain/components/admin/types';
 import { EventBus } from '@core/app/common/ports/event-bus.port';
 import { IdService } from '@core/app/common/ports/id.service.port';
 import { PasswordService } from '@core/app/common/ports/password-service.port';
-import { AdminCreatedEvent } from '@core/app/common/events/admin-created.event';
+import { AdminCreatedEvent } from '@core/app/common/events/admin/admin-created.event';
 import { ADMIN_PASSWORD_LENGTH } from '../constants';
 
 export class AdminCreateService {

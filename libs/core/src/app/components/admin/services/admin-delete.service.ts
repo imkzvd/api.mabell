@@ -3,7 +3,7 @@ import { AdminWriteRepository } from '@core/domain/components/admin/repository/a
 import { AdminRoles } from '@core/domain/components/admin/constants/admin-roles';
 import { AdminId } from '@core/domain/components/admin/types';
 import { EventBus } from '@core/app/common/ports/event-bus.port';
-import { AdminDeletedEvent } from '@core/app/common/events/admin-deleted.event';
+import { AdminDeletedEvent } from '@core/app/common/events/admin/admin-deleted.event';
 
 export class AdminDeleteService {
   constructor(
