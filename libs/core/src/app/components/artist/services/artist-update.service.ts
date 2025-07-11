@@ -4,7 +4,7 @@ import { ArtistId } from '@core/domain/components/artist/types';
 import { EventBus } from '@core/app/common/ports/event-bus.port';
 import { TmpFileStorage } from '@core/app/common/ports/file-storages/tmp-file-storage.port';
 import { ArtistFileStorage } from '@core/app/common/ports/file-storages/artist-file-storage.port';
-import { ArtistUpdatedEvent } from '@core/app/common/events/artist-updated.event';
+import { ArtistUpdatedEvent } from '@core/app/common/events/artist/artist-updated.event';
 import { UpdateArtistAvatarPayload, UpdateArtistCoverPayload, UpdateArtistPayload } from '../types';
 
 export class ArtistUpdateService {
@@ -51,7 +51,13 @@ export class ArtistUpdateService {
     }
 
     await this._WR.save(foundArtist);
-    this._EB.publish(new ArtistUpdatedEvent({ id: foundArtist.getId() }));
+    this._EB.publish(
+      new ArtistUpdatedEvent({
+        id: foundArtist.getId(),
+        name: foundArtist.getName().value,
+        avatar: foundArtist.getAvatar(),
+      }),
+    );
 
     return foundArtist.getId();
   }
@@ -80,7 +86,13 @@ export class ArtistUpdateService {
     }
 
     await this._WR.save(foundArtist);
-    this._EB.publish(new ArtistUpdatedEvent({ id: foundArtist.getId() }));
+    this._EB.publish(
+      new ArtistUpdatedEvent({
+        id: foundArtist.getId(),
+        name: foundArtist.getName().value,
+        avatar: foundArtist.getAvatar(),
+      }),
+    );
 
     return foundArtist.getId();
   }
@@ -96,7 +108,13 @@ export class ArtistUpdateService {
 
     await this._WR.save(foundArtist);
     await this._artistFS.deleteArtistAvatar(foundArtist.getId());
-    this._EB.publish(new ArtistUpdatedEvent({ id: foundArtist.getId() }));
+    this._EB.publish(
+      new ArtistUpdatedEvent({
+        id: foundArtist.getId(),
+        name: foundArtist.getName().value,
+        avatar: foundArtist.getAvatar(),
+      }),
+    );
 
     return foundArtist.getId();
   }
@@ -125,7 +143,13 @@ export class ArtistUpdateService {
     }
 
     await this._WR.save(foundArtist);
-    this._EB.publish(new ArtistUpdatedEvent({ id: foundArtist.getId() }));
+    this._EB.publish(
+      new ArtistUpdatedEvent({
+        id: foundArtist.getId(),
+        name: foundArtist.getName().value,
+        avatar: foundArtist.getAvatar(),
+      }),
+    );
 
     return foundArtist.getId();
   }
@@ -140,7 +164,13 @@ export class ArtistUpdateService {
     foundArtist.deleteCover();
     await this._WR.save(foundArtist);
     await this._artistFS.deleteArtistCover(foundArtist.getId());
-    this._EB.publish(new ArtistUpdatedEvent({ id: foundArtist.getId() }));
+    this._EB.publish(
+      new ArtistUpdatedEvent({
+        id: foundArtist.getId(),
+        name: foundArtist.getName().value,
+        avatar: foundArtist.getAvatar(),
+      }),
+    );
 
     return foundArtist.getId();
   }
