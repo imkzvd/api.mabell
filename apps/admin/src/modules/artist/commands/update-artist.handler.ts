@@ -1,12 +1,11 @@
-import { Inject } from '@nestjs/common';
 import { CommandHandler } from '@nestjs/cqrs';
-import { ArtistService } from '@core/app/components/artist/artist.service';
 import { UpdateArtistCommand } from '@core/app/cqrs/artist/commands/update-artist/update-artist.command';
 import { UpdateArtistHandler as CoreUpdateArtistHandler } from '@core/app/cqrs/artist/commands/update-artist/update-artist.handler';
+import { ArtistUpdateService } from '@core/app/components/artist/services/artist-update.service';
 
 @CommandHandler(UpdateArtistCommand)
 export class UpdateArtistHandler extends CoreUpdateArtistHandler {
-  constructor(@Inject(ArtistService) service: ArtistService) {
+  constructor(service: ArtistUpdateService) {
     super(service);
   }
 }

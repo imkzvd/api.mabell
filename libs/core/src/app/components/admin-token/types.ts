@@ -1,6 +1,6 @@
 import { AdminRole } from '@core/domain/components/admin/constants/admin-roles';
 import { AdminId } from '@core/domain/components/admin/types';
-import { BaseTokenPayload, BaseTokenWithIdPayload } from '../../common/ports/jwt.service.port';
+import { BaseTokenPayload, BaseTokenWithIdPayload } from '@core/app/common/ports/jwt.service.port';
 
 export type AccessTokenCustomPayload = { role: AdminRole };
 

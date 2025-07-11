@@ -27,7 +27,7 @@ import { AlbumModule } from './modules/album/album.module';
 import { TrackModule } from './modules/track/track.module';
 import { MetadataModule } from './modules/metadata/metadata.module';
 import { PlaylistModule } from './modules/playlist/playlist.module';
-import { SessionModule } from './modules/session/session.module';
+// import { SessionModule } from './modules/session/session.module';
 import { SearchModule } from './modules/search/search.module';
 
 @Module({
@@ -51,7 +51,6 @@ import { SearchModule } from './modules/search/search.module';
     MongooseModule,
     CommandBusModule,
     QueryBusModule,
-    SearchModule,
     AuthModule,
     MeModule,
     AdminModule,
@@ -60,7 +59,8 @@ import { SearchModule } from './modules/search/search.module';
     AlbumModule,
     TrackModule,
     PlaylistModule,
-    SessionModule,
+    SearchModule,
+    // SessionModule,
     UploadModule,
     MetadataModule,
   ],

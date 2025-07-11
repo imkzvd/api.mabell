@@ -1,26 +1,26 @@
 import { CommandHandler } from '@core/app/types';
 import { NotFoundException } from '@core/shared/exceptions';
-import { ArtistService } from '@core/app/components/artist/artist.service';
-import { TrackService } from '@core/app/components/track/track.service';
 import { UpdateTrackFeatArtistsCommand } from '@core/app/cqrs/track/commands/update-track-feat-artists/update-track-feat-artists.command';
+import { ArtistVerifyService } from '@core/app/components/artist/services/artist-verify.service';
+import { TrackUpdateService } from '@core/app/components/track/services/track-update.service';
 
 export class UpdateTrackFeatArtistsHandler
   implements CommandHandler<UpdateTrackFeatArtistsCommand>
 {
   constructor(
-    private readonly _artistService: ArtistService,
-    private readonly _trackService: TrackService,
+    private readonly _artistVerifyService: ArtistVerifyService,
+    private readonly _trackUpdateService: TrackUpdateService,
   ) {}
 
   async execute({ id, artistIds }: UpdateTrackFeatArtistsCommand) {
-    const verifiedArtistIds = await this._artistService.verifyArtistIds(artistIds);
+    const verifiedArtistIdsResult = await this._artistVerifyService.verifyByIds(artistIds);
 
-    if (verifiedArtistIds.missingIds.length) {
+    if (verifiedArtistIdsResult.missingIds.length) {
       throw new NotFoundException('Artist does not exist');
     }
 
-    return await this._trackService.updateFeatArtistsForTrack(id, {
-      artistIds: verifiedArtistIds.foundIds,
+    return await this._trackUpdateService.updateFeatArtists(id, {
+      artistIds: verifiedArtistIdsResult.foundIds,
     });
   }
 }

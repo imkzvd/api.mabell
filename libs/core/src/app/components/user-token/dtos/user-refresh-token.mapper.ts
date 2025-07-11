@@ -1,4 +1,4 @@
-import { UserRefreshTokenDTO as UserRefreshTokenRepositoryDTO } from '../../../../domain/components/user-refresh-token/dtos/user-refresh-token.dto';
+import { UserRefreshTokenDTO as UserRefreshTokenRepositoryDTO } from '@core/domain/components/user-refresh-token/dtos/user-refresh-token.dto';
 import { UserRefreshTokenDTO } from './user-refresh-token.dto';
 
 class UserRefreshTokenMapper {

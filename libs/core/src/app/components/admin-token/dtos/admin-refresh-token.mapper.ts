@@ -1,4 +1,4 @@
-import { AdminRefreshTokenDTO as AdminRefreshTokenRepositoryDTO } from '../../../../domain/components/admin-refresh-token/repository/dtos/admin-refresh-token.dto';
+import { AdminRefreshTokenDTO as AdminRefreshTokenRepositoryDTO } from '@core/domain/components/admin-refresh-token/repository/dtos/admin-refresh-token.dto';
 import { AdminRefreshTokenDTO } from './admin-refresh-token.dto';
 
 class AdminRefreshTokenMapper {

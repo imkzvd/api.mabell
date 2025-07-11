@@ -1,11 +1,11 @@
 import { CommandHandler } from '@core/app/types';
-import { UploadService } from '@core/app/components/upload/upload.service';
 import { DeleteAllFilesCommand } from '@core/app/cqrs/upload/commands/delete-all-files/delete-all-files.command';
+import { UploadDeleteService } from '@core/app/components/upload/services/upload-delete.service';
 
 export class DeleteAllFilesHandler implements CommandHandler<DeleteAllFilesCommand> {
-  constructor(private readonly _uploadService: UploadService) {}
+  constructor(private readonly _service: UploadDeleteService) {}
 
   async execute() {
-    return this._uploadService.deleteAllFiles();
+    return this._service.deleteAll();
   }
 }

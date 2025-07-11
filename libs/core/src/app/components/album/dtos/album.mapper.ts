@@ -1,6 +1,6 @@
 import { AlbumWithArtistsDTO } from '@core/domain/components/album/repository/dtos/album-with-artists.dto';
+import ArtistMapper from '@core/app/components/artist/dtos/artist.mapper';
 import { AlbumDTO } from './album.dto';
-import ArtistMapper from '../../artist/dtos/artist.mapper';
 
 class AlbumMapper {
   toDTO(dto: AlbumWithArtistsDTO): AlbumDTO {

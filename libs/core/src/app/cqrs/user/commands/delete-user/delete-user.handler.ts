@@ -1,11 +1,11 @@
 import { CommandHandler } from '@core/app/types';
-import { UserService } from '@core/app/components/user/user.service';
+import { UserDeleteService } from '@core/app/components/user/services/user-delete.service';
 import { DeleteUserCommand } from '@core/app/cqrs/user/commands/delete-user/delete-user.command';
 
 export class DeleteUserHandler implements CommandHandler<DeleteUserCommand> {
-  constructor(private readonly _userService: UserService) {}
+  constructor(private readonly _service: UserDeleteService) {}
 
   async execute({ id }: DeleteUserCommand) {
-    return await this._userService.deleteUser(id);
+    return await this._service.delete(id);
   }
 }

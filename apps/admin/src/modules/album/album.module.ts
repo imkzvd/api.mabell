@@ -10,15 +10,23 @@ import { UpdateAlbumHandler } from './commands/update-album.handler';
 import { UpdateAlbumCoverHandler } from './commands/update-album-cover.handler';
 import { GetAlbumHandler } from './queries/get-album.handler';
 import { GetAlbumTracksHandler } from '../track/queries/get-album-tracks.handler';
-import { artistServiceProvider } from '../../providers/artist-service.provider';
-import { albumServiceProvider } from '../../providers/album-service.provider';
-import { trackServiceProvider } from '../../providers/track-service.provider';
+import { artistVerifyServiceProvider } from '../artist/providers/artist-verify-service.provider';
+import { albumCreateServiceProvider } from './providers/album-create-service.provider';
+import { albumDeleteServiceProvider } from './providers/album-delete-service.provider';
+import { albumUpdateServiceProvider } from './providers/album-update-service.provider';
+import { albumServiceProvider } from './providers/album-service.provider';
+import { albumVerifyServiceProvider } from './providers/album-verify-service.provider';
+import { trackServiceProvider } from '../track/providers/track-service.provider';
 
 @Module({
   imports: [RandomIdModule, FileStorageModule],
   providers: [
-    artistServiceProvider,
+    artistVerifyServiceProvider,
+    albumCreateServiceProvider,
+    albumDeleteServiceProvider,
+    albumUpdateServiceProvider,
     albumServiceProvider,
+    albumVerifyServiceProvider,
     trackServiceProvider,
     CreateAlbumHandler,
     DeleteAlbumHandler,

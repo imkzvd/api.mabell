@@ -1,7 +1,7 @@
 import { AlbumType } from '@core/domain/components/album/constants/album-types';
 import { Genre } from '@core/domain/common/constants/genres';
 import { AlbumId } from '@core/domain/components/album/types';
-import { ArtistDTO } from '../../artist/dtos/artist.dto';
+import { ArtistDTO } from '@core/app/components/artist/dtos/artist.dto';
 
 export class AlbumDTO {
   constructor(

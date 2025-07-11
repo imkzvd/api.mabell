@@ -3,9 +3,9 @@ import { GetAlbumsQuery } from '@core/app/cqrs/search/queries/get-albums/get-alb
 import { SearchService } from '@core/app/common/ports/search-service/search-service.port';
 
 export class GetAlbumsHandler implements QueryHandler<GetAlbumsQuery> {
-  constructor(private readonly _searchService: SearchService) {}
+  constructor(private readonly _service: SearchService) {}
 
   async execute({ q }: GetAlbumsQuery) {
-    return this._searchService.findAlbumsByKey(q);
+    return this._service.findAlbumsByKey(q);
   }
 }

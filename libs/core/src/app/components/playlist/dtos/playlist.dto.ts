@@ -1,7 +1,7 @@
 import { PlaylistId } from '@core/domain/components/playlist/types';
 import { Genre } from '@core/domain/common/constants/genres';
 import { TrackId } from '@core/domain/components/track/types';
-import { UserDTO } from '../../user/dtos/user.dto';
+import { UserDTO } from '@core/app/components/user/dtos/user.dto';
 
 export class PlaylistDTO {
   constructor(

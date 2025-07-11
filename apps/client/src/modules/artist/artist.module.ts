@@ -3,7 +3,7 @@ import { RandomIdModule } from '@infrastructure/random-id';
 import { FileStorageModule } from '@infrastructure/file-storage';
 import { ArtistController } from './artist.controller';
 import { GetArtistHandler } from './queries/get-artist.handler';
-import { artistServiceProvider } from '../../providers/artist-service.provider';
+import { artistServiceProvider } from './providers/artist-service.provider';
 
 @Module({
   imports: [RandomIdModule, FileStorageModule],
