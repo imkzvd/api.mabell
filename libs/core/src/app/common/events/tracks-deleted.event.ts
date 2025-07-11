@@ -1,12 +1,14 @@
-import { Event } from '../ports/event-bus.port';
+import { Event } from '@core/app/common/ports/event-bus.port';
 import { TrackId } from '@core/domain/components/track/types';
 
-export type TracksDeletedPayload = {
+export type TracksDeletedEventPayload = {
   ids: TrackId[];
 };
 
-export class TracksDeletedEvent implements Event<TracksDeletedPayload> {
+export class TracksDeletedEvent extends Event<TracksDeletedEventPayload> {
   public readonly name = 'tracks.deleted';
 
-  constructor(public readonly payload: TracksDeletedPayload) {}
+  constructor(public readonly payload: TracksDeletedEventPayload) {
+    super();
+  }
 }
