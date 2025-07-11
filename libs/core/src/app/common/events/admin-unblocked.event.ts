@@ -1,12 +1,14 @@
-import { Event } from '../ports/event-bus.port';
+import { Event } from '@core/app/common/ports/event-bus.port';
 import { AdminId } from '@core/domain/components/admin/types';
 
-export type AdminUnblockedPayload = {
+export type AdminUnblockedEventPayload = {
   id: AdminId;
 };
 
-export class AdminUnblockedEvent implements Event<AdminUnblockedPayload> {
+export class AdminUnblockedEvent extends Event<AdminUnblockedEventPayload> {
   public readonly name = 'admin.unblocked';
 
-  constructor(public readonly payload: AdminUnblockedPayload) {}
+  constructor(public readonly payload: AdminUnblockedEventPayload) {
+    super();
+  }
 }
