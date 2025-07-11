@@ -1,4 +1,5 @@
-import { EventEmitter } from 'eventemitter3';
+import { Inject } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import {
   Event,
   EventBus as EventBusPort,
@@ -8,33 +9,23 @@ import {
 } from '@core/app/common/ports/event-bus.port';
 
 export class EventBus implements EventBusPort {
-  private readonly emitter: EventEmitter;
-
-  constructor() {
-    this.emitter = new EventEmitter();
-  }
+  constructor(@Inject(EventEmitter2) private readonly emitter: EventEmitter2) {}
 
   publish<T extends EventPayload>(event: Event<T>): void {
-    this.emitter.emit(event.name, event.payload);
+    this.emitter.emit(event.name, event);
   }
 
-  subscribe<T extends EventPayload>(
-    eventClass: EventConstructor<T>,
-    callback: EventHandler<T>,
-  ): void {
-    const eventInstance = new eventClass({} as T);
+  subscribe<T extends Event<EventPayload>>(event: EventConstructor, handler: EventHandler<T>) {
+    const eventInstance = new event({} as EventPayload);
 
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
-    this.emitter.on(eventInstance.name, callback);
+    this.emitter.on(eventInstance.name, handler.handle.bind(handler));
   }
 
-  unsubscribe<T extends EventPayload>(
-    eventClass: EventConstructor<T>,
-    callback: EventHandler<T>,
-  ): void {
-    const eventInstance = new eventClass({} as T);
+  unsubscribe<T extends Event<EventPayload>>(event: EventConstructor, handler: EventHandler<T>) {
+    const eventInstance = new event({} as EventPayload);
 
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
-    this.emitter.off(eventInstance.name, callback);
+    this.emitter.off(eventInstance.name, handler.handle.bind(handler));
   }
 }
