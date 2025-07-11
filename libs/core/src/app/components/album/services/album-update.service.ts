@@ -1,18 +1,20 @@
 import { BadRequestException, NotFoundException } from '@core/shared/exceptions';
 import { AlbumWriteRepository } from '@core/domain/components/album/repository/album-write-repository.port';
+import { AlbumReadRepository } from '@core/domain/components/album/repository/album-read-repository.port';
 import { AlbumId } from '@core/domain/components/album/types';
 import { EventBus } from '@core/app/common/ports/event-bus.port';
 import { TmpFileStorage } from '@core/app/common/ports/file-storages/tmp-file-storage.port';
 import { ArtistFileStorage } from '@core/app/common/ports/file-storages/artist-file-storage.port';
-import { AlbumUpdatedEvent } from '@core/app/common/events/album-updated.event';
-import { AlbumArtistsUpdatedEvent } from '@core/app/common/events/album-artists-updated.event';
-import { AlbumCoverDeletedEvent } from '@core/app/common/events/album-cover-deleted.event';
+import { AlbumUpdatedEvent } from '@core/app/common/events/album/album-updated.event';
+import { AlbumArtistsUpdatedEvent } from '@core/app/common/events/album/album-artists-updated.event';
+import { AlbumCoverDeletedEvent } from '@core/app/common/events/album/album-cover-deleted.event';
 import { UpdateAlbumArtistsPayload, UpdateAlbumCoverPayload, UpdateAlbumPayload } from '../types';
 
 export class AlbumUpdateService {
   constructor(
     private readonly _EB: EventBus,
     private readonly _WR: AlbumWriteRepository,
+    private readonly _RR: AlbumReadRepository,
     private readonly _tmpFS: TmpFileStorage,
     private readonly _artistFS: ArtistFileStorage,
   ) {}
@@ -53,7 +55,22 @@ export class AlbumUpdateService {
     }
 
     await this._WR.save(foundAlbum);
-    this._EB.publish(new AlbumUpdatedEvent({ id: foundAlbum.getId() }));
+
+    const foundAlbumWithArtists = await this._RR.findById(id);
+
+    if (!foundAlbumWithArtists) {
+      throw new NotFoundException('Album does not exist');
+    }
+
+    this._EB.publish(
+      new AlbumUpdatedEvent({
+        id: foundAlbumWithArtists.id,
+        name: foundAlbumWithArtists.name,
+        artists: foundAlbumWithArtists.artists.map(({ id, name }) => ({ id, name })),
+        type: foundAlbumWithArtists.type,
+        cover: foundAlbumWithArtists.cover,
+      }),
+    );
 
     return foundAlbum.getId();
   }
@@ -71,8 +88,23 @@ export class AlbumUpdateService {
 
     foundAlbum.updateArtists(payload.artists);
     await this._WR.save(foundAlbum);
-    this._EB.publish(new AlbumArtistsUpdatedEvent({ id: foundAlbum.getId() }));
-    this._EB.publish(new AlbumUpdatedEvent({ id: foundAlbum.getId() }));
+
+    const foundAlbumWithArtists = await this._RR.findById(id);
+
+    if (!foundAlbumWithArtists) {
+      throw new NotFoundException('Album does not exist');
+    }
+
+    const eventPayload = {
+      id: foundAlbumWithArtists.id,
+      name: foundAlbumWithArtists.name,
+      artists: foundAlbumWithArtists.artists.map(({ id, name }) => ({ id, name })),
+      type: foundAlbumWithArtists.type,
+      cover: foundAlbumWithArtists.cover,
+    };
+
+    this._EB.publish(new AlbumArtistsUpdatedEvent(eventPayload));
+    this._EB.publish(new AlbumUpdatedEvent(eventPayload));
 
     return foundAlbum.getId();
   }
@@ -105,7 +137,22 @@ export class AlbumUpdateService {
     }
 
     await this._WR.save(foundAlbum);
-    this._EB.publish(new AlbumUpdatedEvent({ id: foundAlbum.getId() }));
+
+    const foundAlbumWithArtists = await this._RR.findById(id);
+
+    if (!foundAlbumWithArtists) {
+      throw new NotFoundException('Album does not exist');
+    }
+
+    this._EB.publish(
+      new AlbumUpdatedEvent({
+        id: foundAlbumWithArtists.id,
+        name: foundAlbumWithArtists.name,
+        artists: foundAlbumWithArtists.artists.map(({ id, name }) => ({ id, name })),
+        type: foundAlbumWithArtists.type,
+        cover: foundAlbumWithArtists.cover,
+      }),
+    );
 
     return foundAlbum.getId();
   }
@@ -120,8 +167,23 @@ export class AlbumUpdateService {
     foundAlbum.deleteCover();
     await this._WR.save(foundAlbum);
     await this._artistFS.deleteAlbumCover(foundAlbum.getMainArtist(), foundAlbum.getId());
-    this._EB.publish(new AlbumCoverDeletedEvent({ id: foundAlbum.getId() }));
-    this._EB.publish(new AlbumUpdatedEvent({ id: foundAlbum.getId() }));
+
+    const foundAlbumWithArtists = await this._RR.findById(id);
+
+    if (!foundAlbumWithArtists) {
+      throw new NotFoundException('Album does not exist');
+    }
+
+    const eventPayload = {
+      id: foundAlbumWithArtists.id,
+      name: foundAlbumWithArtists.name,
+      artists: foundAlbumWithArtists.artists.map(({ id, name }) => ({ id, name })),
+      type: foundAlbumWithArtists.type,
+      cover: foundAlbumWithArtists.cover,
+    };
+
+    this._EB.publish(new AlbumCoverDeletedEvent(eventPayload));
+    this._EB.publish(new AlbumUpdatedEvent(eventPayload));
 
     return foundAlbum.getId();
   }
