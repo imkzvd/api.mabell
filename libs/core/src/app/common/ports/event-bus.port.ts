@@ -1,20 +1,26 @@
-export interface Event<T extends EventPayload = EventPayload> {
-  readonly name: string;
-  readonly payload: T;
-}
-
 export type EventPayload = Record<string, unknown>;
 
-export type EventHandler<T extends EventPayload> = (payload: T) => Promise<void> | void;
+export abstract class Event<T extends EventPayload> {
+  public abstract readonly name: string;
+  public abstract readonly payload: T;
+  public readonly createdAt: Date = new Date();
+}
 
-export interface EventConstructor<T extends EventPayload> {
-  new (payload: T): Event<T>;
+export abstract class EventHandler<TEvent extends Event<EventPayload>> {
+  abstract handle(event: TEvent): Promise<void> | void;
+}
+
+export interface EventConstructor {
+  new (payload: EventPayload): Event<EventPayload>;
 }
 
 export interface EventBus {
   publish<T extends EventPayload>(event: Event<T>): void;
 
-  subscribe<T extends EventPayload>(event: EventConstructor<T>, handler: EventHandler<T>): void;
+  subscribe<T extends Event<EventPayload>>(event: EventConstructor, handler: EventHandler<T>): void;
 
-  unsubscribe<T extends EventPayload>(event: EventConstructor<T>, handler: EventHandler<T>): void;
+  unsubscribe<T extends Event<EventPayload>>(
+    event: EventConstructor,
+    handler: EventHandler<T>,
+  ): void;
 }
