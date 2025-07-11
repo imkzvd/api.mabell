@@ -14,9 +14,9 @@ export class ErrorRO {
   @ApiProperty({ type: String, example: '2024-01-01T00:00:00Z' })
   timestamp: string;
 
-  constructor(statusCode: number, message: string, path: string) {
+  constructor(statusCode: number, message: string | string[], path: string) {
     this.statusCode = statusCode;
-    this.message = message;
+    this.message = Array.isArray(message) ? message[0] : message;
     this.path = path;
     this.timestamp = new Date().toISOString();
   }
