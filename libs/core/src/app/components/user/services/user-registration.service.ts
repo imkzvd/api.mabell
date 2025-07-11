@@ -5,7 +5,7 @@ import { UserId } from '@core/domain/components/user/types';
 import { EventBus } from '@core/app/common/ports/event-bus.port';
 import { IdService } from '@core/app/common/ports/id.service.port';
 import { PasswordService } from '@core/app/common/ports/password-service.port';
-import { UserRegisteredEvent } from '@core/app/common/events/user-registered.event';
+import { UserRegisteredEvent } from '@core/app/common/events/user/user-registered.event';
 import { USER_MIN_LENGTH_PASSWORD } from '../constants';
 import { RegisterUserPayload } from '../types';
 
@@ -36,7 +36,14 @@ export class UserRegistrationService {
     });
 
     await this._WR.save(createdUser);
-    this._EB.publish(new UserRegisteredEvent({ id: generatedId }));
+    this._EB.publish(
+      new UserRegisteredEvent({
+        id: generatedId,
+        name: createdUser.getName().value,
+        email: createdUser.getEmail()?.value || null,
+        avatar: createdUser.getAvatar(),
+      }),
+    );
 
     return generatedId;
   }

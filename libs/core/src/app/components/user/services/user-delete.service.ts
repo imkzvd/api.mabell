@@ -3,7 +3,7 @@ import { UserWriteRepository } from '@core/domain/components/user/repository/use
 import { UserId } from '@core/domain/components/user/types';
 import { EventBus } from '@core/app/common/ports/event-bus.port';
 import { UserFileStorage } from '@core/app/common/ports/file-storages/user-file-storage.port';
-import { UserDeletedEvent } from '@core/app/common/events/user-deleted.event';
+import { UserDeletedEvent } from '@core/app/common/events/user/user-deleted.event';
 
 export class UserDeleteService {
   constructor(

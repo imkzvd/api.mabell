@@ -4,7 +4,7 @@ import { UserId } from '@core/domain/components/user/types';
 import { EventBus } from '@core/app/common/ports/event-bus.port';
 import { IdService } from '@core/app/common/ports/id.service.port';
 import { PasswordService } from '@core/app/common/ports/password-service.port';
-import { UserCreatedEvent } from '@core/app/common/events/user-created.event';
+import { UserCreatedEvent } from '@core/app/common/events/user/user-created.event';
 import { USER_MIN_LENGTH_PASSWORD } from '../constants';
 
 export class UserCreateService {
@@ -30,7 +30,14 @@ export class UserCreateService {
     });
 
     await this._WR.save(createdUser);
-    this._EB.publish(new UserCreatedEvent({ id: generatedId }));
+    this._EB.publish(
+      new UserCreatedEvent({
+        id: generatedId,
+        name: createdUser.getName().value,
+        email: createdUser.getEmail()?.value || null,
+        avatar: createdUser.getAvatar(),
+      }),
+    );
 
     return generatedId;
   }

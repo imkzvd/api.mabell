@@ -10,11 +10,11 @@ import { EventBus } from '@core/app/common/ports/event-bus.port';
 import { PasswordService } from '@core/app/common/ports/password-service.port';
 import { TmpFileStorage } from '@core/app/common/ports/file-storages/tmp-file-storage.port';
 import { UserFileStorage } from '@core/app/common/ports/file-storages/user-file-storage.port';
-import { UserBlockedEvent } from '@core/app/common/events/user-blocked.event';
-import { UserUnblockedEvent } from '@core/app/common/events/user-unblocked.event';
-import { UserUpdatedEvent } from '@core/app/common/events/user-updated.event';
-import { UserEmailUpdatedEvent } from '@core/app/common/events/user-email-updated.event';
-import { UserPasswordUpdatedEvent } from '@core/app/common/events/user-password-updated.event';
+import { UserBlockedEvent } from '@core/app/common/events/user/user-blocked.event';
+import { UserUnblockedEvent } from '@core/app/common/events/user/user-unblocked.event';
+import { UserUpdatedEvent } from '@core/app/common/events/user/user-updated.event';
+import { UserEmailUpdatedEvent } from '@core/app/common/events/user/user-email-updated.event';
+import { UserPasswordUpdatedEvent } from '@core/app/common/events/user/user-password-updated.event';
 import { USER_MIN_LENGTH_PASSWORD } from '../constants';
 import { UpdateUserAvatarPayload, UpdateUserPasswordPayload, UpdateUserPayload } from '../types';
 
@@ -64,7 +64,14 @@ export class UserUpdateService {
     }
 
     await this._WR.save(foundUser);
-    this._EB.publish(new UserUpdatedEvent({ id: foundUser.getId() }));
+    this._EB.publish(
+      new UserUpdatedEvent({
+        id: foundUser.getId(),
+        name: foundUser.getName().value,
+        email: foundUser.getEmail()?.value || null,
+        avatar: foundUser.getAvatar(),
+      }),
+    );
 
     return foundUser.getId();
   }
@@ -89,7 +96,14 @@ export class UserUpdateService {
     foundUser.updateUsername(username);
 
     await this._WR.save(foundUser);
-    this._EB.publish(new UserUpdatedEvent({ id: foundUser.getId() }));
+    this._EB.publish(
+      new UserUpdatedEvent({
+        id: foundUser.getId(),
+        name: foundUser.getName().value,
+        email: foundUser.getEmail()?.value || null,
+        avatar: foundUser.getAvatar(),
+      }),
+    );
 
     return foundUser.getId();
   }
@@ -114,8 +128,15 @@ export class UserUpdateService {
     foundUser.updateEmail(email);
 
     await this._WR.save(foundUser);
-    this._EB.publish(new UserEmailUpdatedEvent({ id: foundUser.getId() }));
-    this._EB.publish(new UserUpdatedEvent({ id: foundUser.getId() }));
+
+    const eventPayload = {
+      id: foundUser.getId(),
+      name: foundUser.getName().value,
+      email: foundUser.getEmail()?.value || null,
+      avatar: foundUser.getAvatar(),
+    };
+    this._EB.publish(new UserEmailUpdatedEvent(eventPayload));
+    this._EB.publish(new UserUpdatedEvent(eventPayload));
 
     return foundUser.getId();
   }
@@ -165,7 +186,14 @@ export class UserUpdateService {
     foundUser.updatePassword(hashPassword);
 
     await this._WR.save(foundUser);
-    this._EB.publish(new UserUpdatedEvent({ id: foundUser.getId() }));
+    this._EB.publish(
+      new UserUpdatedEvent({
+        id: foundUser.getId(),
+        name: foundUser.getName().value,
+        email: foundUser.getEmail()?.value || null,
+        avatar: foundUser.getAvatar(),
+      }),
+    );
 
     return { id: foundUser.getId(), password };
   }
@@ -194,7 +222,14 @@ export class UserUpdateService {
     }
 
     await this._WR.save(foundUser);
-    this._EB.publish(new UserUpdatedEvent({ id: foundUser.getId() }));
+    this._EB.publish(
+      new UserUpdatedEvent({
+        id: foundUser.getId(),
+        name: foundUser.getName().value,
+        email: foundUser.getEmail()?.value || null,
+        avatar: foundUser.getAvatar(),
+      }),
+    );
 
     return foundUser.getId();
   }
@@ -210,7 +245,14 @@ export class UserUpdateService {
     foundUser.deleteColor();
     await this._WR.save(foundUser);
     await this._userFS.deleteUserAvatar(foundUser.getId());
-    this._EB.publish(new UserUpdatedEvent({ id: foundUser.getId() }));
+    this._EB.publish(
+      new UserUpdatedEvent({
+        id: foundUser.getId(),
+        name: foundUser.getName().value,
+        email: foundUser.getEmail()?.value || null,
+        avatar: foundUser.getAvatar(),
+      }),
+    );
 
     return foundUser.getId();
   }
