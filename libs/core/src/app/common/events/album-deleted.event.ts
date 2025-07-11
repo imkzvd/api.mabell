@@ -1,12 +1,14 @@
-import { Event } from '../ports/event-bus.port';
+import { Event } from '@core/app/common/ports/event-bus.port';
 import { AlbumId } from '@core/domain/components/album/types';
 
-export type AlbumDeletedPayload = {
+export type AlbumDeletedEventPayload = {
   id: AlbumId;
 };
 
-export class AlbumDeletedEvent implements Event<AlbumDeletedPayload> {
+export class AlbumDeletedEvent extends Event<AlbumDeletedEventPayload> {
   public readonly name = 'album.deleted';
 
-  constructor(public readonly payload: AlbumDeletedPayload) {}
+  constructor(public readonly payload: AlbumDeletedEventPayload) {
+    super();
+  }
 }

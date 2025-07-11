@@ -1,12 +1,19 @@
-import { Event } from '../ports/event-bus.port';
+import { Event } from '@core/app/common/ports/event-bus.port';
 import { AlbumId } from '@core/domain/components/album/types';
+import { AlbumType } from '@core/domain/components/album/constants/album-types';
 
-export type AlbumCreatedPayload = {
+export type AlbumCreatedEventPayload = {
   id: AlbumId;
+  name: string;
+  artists: { id: string; name: string }[];
+  type: AlbumType;
+  cover: string | null;
 };
 
-export class AlbumCreatedEvent implements Event<AlbumCreatedPayload> {
+export class AlbumCreatedEvent extends Event<AlbumCreatedEventPayload> {
   public readonly name = 'album.created';
 
-  constructor(public readonly payload: AlbumCreatedPayload) {}
+  constructor(public readonly payload: AlbumCreatedEventPayload) {
+    super();
+  }
 }
