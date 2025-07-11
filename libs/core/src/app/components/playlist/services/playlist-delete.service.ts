@@ -3,8 +3,8 @@ import { PlaylistWriteRepository } from '@core/domain/components/playlist/reposi
 import { PlaylistId } from '@core/domain/components/playlist/types';
 import { EventBus } from '@core/app/common/ports/event-bus.port';
 import { UserFileStorage } from '@core/app/common/ports/file-storages/user-file-storage.port';
-import { PlaylistDeletedEvent } from '@core/app/common/events/playlist-deleted.event';
-import { PlaylistsDeletedEvent } from '@core/app/common/events/playlists-deleted.event';
+import { PlaylistDeletedEvent } from '@core/app/common/events/playlist/playlist-deleted.event';
+import { PlaylistsDeletedEvent } from '@core/app/common/events/playlist/playlists-deleted.event';
 
 export class PlaylistDeleteService {
   constructor(

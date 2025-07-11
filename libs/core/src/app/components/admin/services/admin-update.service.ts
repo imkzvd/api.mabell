@@ -3,10 +3,10 @@ import { AdminWriteRepository } from '@core/domain/components/admin/repository/a
 import { AdminId } from '@core/domain/components/admin/types';
 import { EventBus } from '@core/app/common/ports/event-bus.port';
 import { PasswordService } from '@core/app/common/ports/password-service.port';
-import { AdminBlockedEvent } from '@core/app/common/events/admin-blocked.event';
-import { AdminUnblockedEvent } from '@core/app/common/events/admin-unblocked.event';
-import { AdminUpdatedEvent } from '@core/app/common/events/admin-updated.event';
-import { AdminPasswordRefreshedEvent } from '@core/app/common/events/admin-password-refreshed.event';
+import { AdminBlockedEvent } from '@core/app/common/events/admin/admin-blocked.event';
+import { AdminUnblockedEvent } from '@core/app/common/events/admin/admin-unblocked.event';
+import { AdminUpdatedEvent } from '@core/app/common/events/admin/admin-updated.event';
+import { AdminPasswordRefreshedEvent } from '@core/app/common/events/admin/admin-password-refreshed.event';
 import { ADMIN_PASSWORD_LENGTH } from '../constants';
 import { UpdateAdminPayload } from '../types';
 

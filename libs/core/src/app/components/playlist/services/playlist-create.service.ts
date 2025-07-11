@@ -1,15 +1,18 @@
 import { PlaylistWriteRepository } from '@core/domain/components/playlist/repository/playlist-write-repository.port';
+import { PlaylistReadRepository } from '@core/domain/components/playlist/repository/playlist-read-repository.port';
 import { PlaylistFactory } from '@core/domain/components/playlist/playlist.factory';
 import { PlaylistId } from '@core/domain/components/playlist/types';
 import { EventBus } from '@core/app/common/ports/event-bus.port';
 import { IdService } from '@core/app/common/ports/id.service.port';
-import { PlaylistCreatedEvent } from '@core/app/common/events/playlist-created.event';
+import { PlaylistCreatedEvent } from '@core/app/common/events/playlist/playlist-created.event';
+import { NotFoundException } from '@core/shared/exceptions';
 import { CreatePlaylistPayload } from '../types';
 
 export class PlaylistCreateService {
   constructor(
     private readonly _EB: EventBus,
     private readonly _WR: PlaylistWriteRepository,
+    private readonly _RR: PlaylistReadRepository,
     private readonly _idService: IdService<PlaylistId>,
   ) {}
 
@@ -23,7 +26,21 @@ export class PlaylistCreateService {
     });
 
     await this._WR.save(createdPlaylist);
-    this._EB.publish(new PlaylistCreatedEvent({ id: generatedId }));
+
+    const foundPlaylistWithOwner = await this._RR.findById(createdPlaylist.getId());
+
+    if (!foundPlaylistWithOwner) {
+      throw new NotFoundException('Playlist does not exist');
+    }
+
+    this._EB.publish(
+      new PlaylistCreatedEvent({
+        id: foundPlaylistWithOwner.id,
+        name: foundPlaylistWithOwner.name,
+        owner: { id: foundPlaylistWithOwner.owner.id, name: foundPlaylistWithOwner.owner.name },
+        cover: foundPlaylistWithOwner.cover,
+      }),
+    );
 
     return generatedId;
   }

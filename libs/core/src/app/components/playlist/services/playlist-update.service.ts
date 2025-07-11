@@ -1,17 +1,19 @@
 import { NotFoundException } from '@core/shared/exceptions';
 import { PlaylistWriteRepository } from '@core/domain/components/playlist/repository/playlist-write-repository.port';
+import { PlaylistReadRepository } from '@core/domain/components/playlist/repository/playlist-read-repository.port';
 import { PlaylistId } from '@core/domain/components/playlist/types';
 import { TrackId } from '@core/domain/components/track/types';
 import { EventBus } from '@core/app/common/ports/event-bus.port';
 import { TmpFileStorage } from '@core/app/common/ports/file-storages/tmp-file-storage.port';
 import { UserFileStorage } from '@core/app/common/ports/file-storages/user-file-storage.port';
-import { PlaylistUpdatedEvent } from '@core/app/common/events/playlist-updated.event';
+import { PlaylistUpdatedEvent } from '@core/app/common/events/playlist/playlist-updated.event';
 import { UpdatePlaylistCoverPayload, UpdatePlaylistPayload } from '../types';
 
 export class PlaylistUpdateService {
   constructor(
     private readonly _EB: EventBus,
     private readonly _WR: PlaylistWriteRepository,
+    private readonly _RR: PlaylistReadRepository,
     private readonly _tmpFS: TmpFileStorage,
     private readonly _userFS: UserFileStorage,
   ) {}
@@ -40,7 +42,21 @@ export class PlaylistUpdateService {
     }
 
     await this._WR.save(foundPlaylist);
-    this._EB.publish(new PlaylistUpdatedEvent({ id: foundPlaylist.getId() }));
+
+    const foundPlaylistWithOwner = await this._RR.findById(id);
+
+    if (!foundPlaylistWithOwner) {
+      throw new NotFoundException('Playlist does not exist');
+    }
+
+    this._EB.publish(
+      new PlaylistUpdatedEvent({
+        id: foundPlaylistWithOwner.id,
+        name: foundPlaylistWithOwner.name,
+        owner: { id: foundPlaylistWithOwner.owner.id, name: foundPlaylistWithOwner.owner.name },
+        cover: foundPlaylistWithOwner.cover,
+      }),
+    );
 
     return foundPlaylist.getId();
   }
@@ -73,7 +89,21 @@ export class PlaylistUpdateService {
     }
 
     await this._WR.save(foundPlaylist);
-    this._EB.publish(new PlaylistUpdatedEvent({ id: foundPlaylist.getId() }));
+
+    const foundPlaylistWithOwner = await this._RR.findById(id);
+
+    if (!foundPlaylistWithOwner) {
+      throw new NotFoundException('Playlist does not exist');
+    }
+
+    this._EB.publish(
+      new PlaylistUpdatedEvent({
+        id: foundPlaylistWithOwner.id,
+        name: foundPlaylistWithOwner.name,
+        owner: { id: foundPlaylistWithOwner.owner.id, name: foundPlaylistWithOwner.owner.name },
+        cover: foundPlaylistWithOwner.cover,
+      }),
+    );
 
     return foundPlaylist.getId();
   }
@@ -88,7 +118,21 @@ export class PlaylistUpdateService {
     foundPlaylist.deleteCover();
     await this._WR.save(foundPlaylist);
     await this._userFS.deletePlaylistCover(foundPlaylist.getOwner(), foundPlaylist.getId());
-    this._EB.publish(new PlaylistUpdatedEvent({ id: foundPlaylist.getId() }));
+
+    const foundPlaylistWithOwner = await this._RR.findById(id);
+
+    if (!foundPlaylistWithOwner) {
+      throw new NotFoundException('Playlist does not exist');
+    }
+
+    this._EB.publish(
+      new PlaylistUpdatedEvent({
+        id: foundPlaylistWithOwner.id,
+        name: foundPlaylistWithOwner.name,
+        owner: { id: foundPlaylistWithOwner.owner.id, name: foundPlaylistWithOwner.owner.name },
+        cover: foundPlaylistWithOwner.cover,
+      }),
+    );
 
     return foundPlaylist.getId();
   }
@@ -102,7 +146,21 @@ export class PlaylistUpdateService {
 
     foundPlaylist.addTrack(trackId);
     await this._WR.save(foundPlaylist);
-    this._EB.publish(new PlaylistUpdatedEvent({ id: foundPlaylist.getId() }));
+
+    const foundPlaylistWithOwner = await this._RR.findById(id);
+
+    if (!foundPlaylistWithOwner) {
+      throw new NotFoundException('Playlist does not exist');
+    }
+
+    this._EB.publish(
+      new PlaylistUpdatedEvent({
+        id: foundPlaylistWithOwner.id,
+        name: foundPlaylistWithOwner.name,
+        owner: { id: foundPlaylistWithOwner.owner.id, name: foundPlaylistWithOwner.owner.name },
+        cover: foundPlaylistWithOwner.cover,
+      }),
+    );
 
     return foundPlaylist.getId();
   }
@@ -116,7 +174,21 @@ export class PlaylistUpdateService {
 
     foundPlaylist.deleteTrack(trackId);
     await this._WR.save(foundPlaylist);
-    this._EB.publish(new PlaylistUpdatedEvent({ id: foundPlaylist.getId() }));
+
+    const foundPlaylistWithOwner = await this._RR.findById(id);
+
+    if (!foundPlaylistWithOwner) {
+      throw new NotFoundException('Playlist does not exist');
+    }
+
+    this._EB.publish(
+      new PlaylistUpdatedEvent({
+        id: foundPlaylistWithOwner.id,
+        name: foundPlaylistWithOwner.name,
+        owner: { id: foundPlaylistWithOwner.owner.id, name: foundPlaylistWithOwner.owner.name },
+        cover: foundPlaylistWithOwner.cover,
+      }),
+    );
 
     return foundPlaylist.getId();
   }

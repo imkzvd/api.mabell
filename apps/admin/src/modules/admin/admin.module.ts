@@ -15,6 +15,8 @@ import { adminTokenServiceProvider } from './providers/admin-token-service.provi
 import { adminCreateServiceProvider } from './providers/admin-create-service.provider';
 import { adminUpdateServiceProvider } from './providers/admin-update-service.provider';
 import { adminDeleteServiceProvider } from './providers/admin-delete-service.provider';
+import { adminTokenDeleteServiceProvider } from './providers/admin-token-delete-service.provider';
+import { AdminTokenEventSubscriber } from './events/admin-token.event-subscriber';
 
 @Module({
   imports: [PasswordModule, RandomIdModule, JWTModule],
@@ -24,6 +26,7 @@ import { adminDeleteServiceProvider } from './providers/admin-delete-service.pro
     adminDeleteServiceProvider,
     adminServiceProvider,
     adminTokenServiceProvider,
+    adminTokenDeleteServiceProvider,
     CreateAdminHandler,
     UpdateAdminHandler,
     UpdateAdminUsernameHandler,
@@ -31,6 +34,7 @@ import { adminDeleteServiceProvider } from './providers/admin-delete-service.pro
     DeleteAdminHandler,
     GetAdminsHandler,
     GetAdminHandler,
+    AdminTokenEventSubscriber,
   ],
   controllers: [AdminController],
 })

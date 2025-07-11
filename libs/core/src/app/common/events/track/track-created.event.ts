@@ -1,0 +1,22 @@
+import { Event } from '@core/app/common/ports/event-bus.port';
+import { TrackId } from '@core/domain/components/track/types';
+import { AlbumId } from '@core/domain/components/album/types';
+import { ArtistId } from '@core/domain/components/artist/types';
+
+export type TrackCreatedEventPayload = {
+  id: TrackId;
+  name: string;
+  album: { id: AlbumId; name: string };
+  artists: { id: ArtistId; name: string }[];
+  featArtists: { id: ArtistId; name: string }[];
+  cover: string | null;
+  isExplicit: boolean;
+};
+
+export class TrackCreatedEvent extends Event<TrackCreatedEventPayload> {
+  public readonly name = 'track.created';
+
+  constructor(public readonly payload: TrackCreatedEventPayload) {
+    super();
+  }
+}

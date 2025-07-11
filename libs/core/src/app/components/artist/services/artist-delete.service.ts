@@ -3,7 +3,7 @@ import { ArtistWriteRepository } from '@core/domain/components/artist/repository
 import { ArtistId } from '@core/domain/components/artist/types';
 import { EventBus } from '@core/app/common/ports/event-bus.port';
 import { ArtistFileStorage } from '@core/app/common/ports/file-storages/artist-file-storage.port';
-import { ArtistDeletedEvent } from '@core/app/common/events/artist-deleted.event';
+import { ArtistDeletedEvent } from '@core/app/common/events/artist/artist-deleted.event';
 
 export class ArtistDeleteService {
   constructor(
