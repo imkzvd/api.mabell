@@ -3,8 +3,8 @@ import { TrackWriteRepository } from '@core/domain/components/track/repository/t
 import { TrackId } from '@core/domain/components/track/types';
 import { EventBus } from '@core/app/common/ports/event-bus.port';
 import { ArtistFileStorage } from '@core/app/common/ports/file-storages/artist-file-storage.port';
-import { TrackDeletedEvent } from '@core/app/common/events/track-deleted.event';
-import { TracksDeletedEvent } from '@core/app/common/events/tracks-deleted.event';
+import { TrackDeletedEvent } from '@core/app/common/events/track/track-deleted.event';
+import { TracksDeletedEvent } from '@core/app/common/events/track/tracks-deleted.event';
 
 export class TrackDeleteService {
   constructor(

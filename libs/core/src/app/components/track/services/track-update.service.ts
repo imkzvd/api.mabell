@@ -1,12 +1,13 @@
 import { NotFoundException } from '@core/shared/exceptions';
 import { TrackWriteRepository } from '@core/domain/components/track/repository/track-write-repository.port';
+import { TrackReadRepository } from '@core/domain/components/track/repository/track-read-repository.port';
 import { TrackId } from '@core/domain/components/track/types';
 import { ArtistId } from '@core/domain/components/artist/types';
 import { EventBus } from '@core/app/common/ports/event-bus.port';
 import { TmpFileStorage } from '@core/app/common/ports/file-storages/tmp-file-storage.port';
 import { ArtistFileStorage } from '@core/app/common/ports/file-storages/artist-file-storage.port';
-import { TrackUpdatedEvent } from '@core/app/common/events/track-updated.event';
-import { TracksUpdatedEvent } from '@core/app/common/events/tracks-updated.event';
+import { TrackUpdatedEvent } from '@core/app/common/events/track/track-updated.event';
+import { TracksUpdatedEvent } from '@core/app/common/events/track/tracks-updated.event';
 import {
   UpdateTrackArtistsPayload,
   UpdateTrackFeatArtistsPayload,
@@ -18,6 +19,7 @@ export class TrackUpdateService {
   constructor(
     private readonly _EB: EventBus,
     private readonly _WR: TrackWriteRepository,
+    private readonly _RR: TrackReadRepository,
     private readonly _tmpFS: TmpFileStorage,
     private readonly _artistFS: ArtistFileStorage,
   ) {}
@@ -46,7 +48,30 @@ export class TrackUpdateService {
     }
 
     await this._WR.save(foundTrack);
-    this._EB.publish(new TrackUpdatedEvent({ id: foundTrack.getId() }));
+
+    const foundTrackWithAlbumAndArtists = await this._RR.findById(id);
+
+    if (!foundTrackWithAlbumAndArtists) {
+      throw new NotFoundException('Track does not exist');
+    }
+
+    this._EB.publish(
+      new TrackUpdatedEvent({
+        id: foundTrackWithAlbumAndArtists.id,
+        name: foundTrackWithAlbumAndArtists.name,
+        album: {
+          id: foundTrackWithAlbumAndArtists.album.id,
+          name: foundTrackWithAlbumAndArtists.album.name,
+        },
+        artists: foundTrackWithAlbumAndArtists.artists.map(({ id, name }) => ({ id, name })),
+        featArtists: foundTrackWithAlbumAndArtists.featArtists.map(({ id, name }) => ({
+          id,
+          name,
+        })),
+        cover: foundTrackWithAlbumAndArtists.album.cover,
+        isExplicit: foundTrackWithAlbumAndArtists.isExplicit,
+      }),
+    );
 
     return foundTrack.getId();
   }
@@ -75,7 +100,30 @@ export class TrackUpdateService {
     foundTrack.updateDuration(payload.duration);
 
     await this._WR.save(foundTrack);
-    this._EB.publish(new TrackUpdatedEvent({ id: foundTrack.getId() }));
+
+    const foundTrackWithAlbumAndArtists = await this._RR.findById(id);
+
+    if (!foundTrackWithAlbumAndArtists) {
+      throw new NotFoundException('Track does not exist');
+    }
+
+    this._EB.publish(
+      new TrackUpdatedEvent({
+        id: foundTrackWithAlbumAndArtists.id,
+        name: foundTrackWithAlbumAndArtists.name,
+        album: {
+          id: foundTrackWithAlbumAndArtists.album.id,
+          name: foundTrackWithAlbumAndArtists.album.name,
+        },
+        artists: foundTrackWithAlbumAndArtists.artists.map(({ id, name }) => ({ id, name })),
+        featArtists: foundTrackWithAlbumAndArtists.featArtists.map(({ id, name }) => ({
+          id,
+          name,
+        })),
+        cover: foundTrackWithAlbumAndArtists.album.cover,
+        isExplicit: foundTrackWithAlbumAndArtists.isExplicit,
+      }),
+    );
 
     return foundTrack.getId();
   }
@@ -97,7 +145,30 @@ export class TrackUpdateService {
       foundTrack.getAlbum(),
       foundTrack.getId(),
     );
-    this._EB.publish(new TrackUpdatedEvent({ id: foundTrack.getId() }));
+
+    const foundTrackWithAlbumAndArtists = await this._RR.findById(id);
+
+    if (!foundTrackWithAlbumAndArtists) {
+      throw new NotFoundException('Track does not exist');
+    }
+
+    this._EB.publish(
+      new TrackUpdatedEvent({
+        id: foundTrackWithAlbumAndArtists.id,
+        name: foundTrackWithAlbumAndArtists.name,
+        album: {
+          id: foundTrackWithAlbumAndArtists.album.id,
+          name: foundTrackWithAlbumAndArtists.album.name,
+        },
+        artists: foundTrackWithAlbumAndArtists.artists.map(({ id, name }) => ({ id, name })),
+        featArtists: foundTrackWithAlbumAndArtists.featArtists.map(({ id, name }) => ({
+          id,
+          name,
+        })),
+        cover: foundTrackWithAlbumAndArtists.album.cover,
+        isExplicit: foundTrackWithAlbumAndArtists.isExplicit,
+      }),
+    );
 
     return foundTrack.getId();
   }
@@ -112,7 +183,30 @@ export class TrackUpdateService {
     foundTrack.updateFeaturedArtists(payload.artistIds);
 
     await this._WR.save(foundTrack);
-    this._EB.publish(new TrackUpdatedEvent({ id: foundTrack.getId() }));
+
+    const foundTrackWithAlbumAndArtists = await this._RR.findById(id);
+
+    if (!foundTrackWithAlbumAndArtists) {
+      throw new NotFoundException('Track does not exist');
+    }
+
+    this._EB.publish(
+      new TrackUpdatedEvent({
+        id: foundTrackWithAlbumAndArtists.id,
+        name: foundTrackWithAlbumAndArtists.name,
+        album: {
+          id: foundTrackWithAlbumAndArtists.album.id,
+          name: foundTrackWithAlbumAndArtists.album.name,
+        },
+        artists: foundTrackWithAlbumAndArtists.artists.map(({ id, name }) => ({ id, name })),
+        featArtists: foundTrackWithAlbumAndArtists.featArtists.map(({ id, name }) => ({
+          id,
+          name,
+        })),
+        cover: foundTrackWithAlbumAndArtists.album.cover,
+        isExplicit: foundTrackWithAlbumAndArtists.isExplicit,
+      }),
+    );
 
     return foundTrack.getId();
   }
@@ -128,7 +222,25 @@ export class TrackUpdateService {
     foundTracks.items.forEach((track) => track.updateArtists(payload.artistIds));
 
     await this._WR.saveMany(foundTracks.items);
-    this._EB.publish(new TracksUpdatedEvent({ ids: foundTracks.itemIds }));
+
+    const foundTrackWithAlbumAndArtists = await this._RR.findByIds(foundTracks.itemIds);
+
+    const eventPayload = foundTrackWithAlbumAndArtists.foundItems.map((track) => ({
+      id: track.id,
+      name: track.name,
+      album: {
+        id: track.album.id,
+        name: track.album.name,
+      },
+      artists: track.artists.map(({ id, name }) => ({ id, name })),
+      featArtists: track.featArtists.map(({ id, name }) => ({
+        id,
+        name,
+      })),
+      cover: track.album.cover,
+      isExplicit: track.isExplicit,
+    }));
+    this._EB.publish(new TracksUpdatedEvent({ tracks: eventPayload }));
 
     return foundTracks.itemIds;
   }
@@ -141,7 +253,25 @@ export class TrackUpdateService {
     foundTracksResult.items.forEach((track) => track.deleteFeaturedArtist(artistId));
 
     await this._WR.saveMany(foundTracksResult.items);
-    this._EB.publish(new TracksUpdatedEvent({ ids: foundTracksResult.itemIds }));
+
+    const foundTrackWithAlbumAndArtists = await this._RR.findByIds(foundTracksResult.itemIds);
+
+    const eventPayload = foundTrackWithAlbumAndArtists.foundItems.map((track) => ({
+      id: track.id,
+      name: track.name,
+      album: {
+        id: track.album.id,
+        name: track.album.name,
+      },
+      artists: track.artists.map(({ id, name }) => ({ id, name })),
+      featArtists: track.featArtists.map(({ id, name }) => ({
+        id,
+        name,
+      })),
+      cover: track.album.cover,
+      isExplicit: track.isExplicit,
+    }));
+    this._EB.publish(new TracksUpdatedEvent({ tracks: eventPayload }));
 
     return foundTracksResult.itemIds;
   }
