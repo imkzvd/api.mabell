@@ -67,7 +67,6 @@ export class AlbumUpdateService {
         id: foundAlbumWithArtists.id,
         name: foundAlbumWithArtists.name,
         artists: foundAlbumWithArtists.artists.map(({ id, name }) => ({ id, name })),
-        type: foundAlbumWithArtists.type,
         cover: foundAlbumWithArtists.cover,
       }),
     );
@@ -149,7 +148,6 @@ export class AlbumUpdateService {
         id: foundAlbumWithArtists.id,
         name: foundAlbumWithArtists.name,
         artists: foundAlbumWithArtists.artists.map(({ id, name }) => ({ id, name })),
-        type: foundAlbumWithArtists.type,
         cover: foundAlbumWithArtists.cover,
       }),
     );

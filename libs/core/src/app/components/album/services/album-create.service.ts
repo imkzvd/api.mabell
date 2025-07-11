@@ -38,7 +38,6 @@ export class AlbumCreateService {
         id: foundAlbum.id,
         name: foundAlbum.name,
         artists: foundAlbum.artists.map(({ id, name }) => ({ id, name })),
-        type: foundAlbum.type,
         cover: foundAlbum.cover,
       }),
     );
