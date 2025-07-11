@@ -1,11 +1,11 @@
 import { ExceptionFilter, Catch, ArgumentsHost, HttpException, HttpStatus } from '@nestjs/common';
 import { Response } from 'express';
 import {
-  BadRequestException,
-  DuplicationException,
-  ForbiddenException,
-  NotFoundException,
-  UnauthorizedException,
+  BadRequestException as CoreBadRequestException,
+  DuplicationException as CoreDuplicationException,
+  ForbiddenException as CoreForbiddenException,
+  NotFoundException as CoreNotFoundException,
+  UnauthorizedException as CoreUnauthorizedException,
 } from '@core/shared/exceptions';
 import { ErrorRO } from '../ros/error.ro';
 
@@ -17,27 +17,39 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const request = ctx.getRequest<Request>();
 
     let statusCode = HttpStatus.BAD_REQUEST;
+    let errorMessage: string | string[] = 'Bad Request.';
 
-    if (error instanceof BadRequestException) {
-      statusCode = HttpStatus.BAD_REQUEST;
+    if (error instanceof HttpException) {
+      statusCode = error.getStatus();
+      // @ts-expect-error fix error response
+      errorMessage = error.getResponse().message as string | string[];
     }
 
-    if (error instanceof DuplicationException) {
+    if (error instanceof CoreBadRequestException) {
       statusCode = HttpStatus.BAD_REQUEST;
+      errorMessage = error.message;
     }
 
-    if (error instanceof ForbiddenException) {
+    if (error instanceof CoreDuplicationException) {
+      statusCode = HttpStatus.BAD_REQUEST;
+      errorMessage = error.message;
+    }
+
+    if (error instanceof CoreForbiddenException) {
       statusCode = HttpStatus.FORBIDDEN;
+      errorMessage = error.message;
     }
 
-    if (error instanceof NotFoundException) {
+    if (error instanceof CoreNotFoundException) {
       statusCode = HttpStatus.NOT_FOUND;
+      errorMessage = error.message;
     }
 
-    if (error instanceof UnauthorizedException) {
+    if (error instanceof CoreUnauthorizedException) {
       statusCode = HttpStatus.UNAUTHORIZED;
+      errorMessage = error.message;
     }
 
-    response.status(statusCode).json(new ErrorRO(statusCode, error.message, request.url));
+    response.status(statusCode).json(new ErrorRO(statusCode, errorMessage, request.url));
   }
 }
