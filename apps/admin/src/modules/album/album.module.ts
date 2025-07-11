@@ -17,6 +17,7 @@ import { albumUpdateServiceProvider } from './providers/album-update-service.pro
 import { albumServiceProvider } from './providers/album-service.provider';
 import { albumVerifyServiceProvider } from './providers/album-verify-service.provider';
 import { trackServiceProvider } from '../track/providers/track-service.provider';
+import { AlbumEventSubscriber } from './events/album.event-subscriber';
 
 @Module({
   imports: [RandomIdModule, FileStorageModule],
@@ -36,7 +37,7 @@ import { trackServiceProvider } from '../track/providers/track-service.provider'
     UpdateAlbumCoverHandler,
     GetAlbumHandler,
     GetAlbumTracksHandler,
-    // AlbumEventSubscriber,
+    AlbumEventSubscriber,
   ],
   controllers: [AlbumController],
 })

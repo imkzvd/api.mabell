@@ -16,6 +16,7 @@ import { trackDeleteServiceProvider } from './providers/track-delete-service.pro
 import { trackUpdateServiceProvider } from './providers/track-update-service.provider';
 import { artistVerifyServiceProvider } from '../artist/providers/artist-verify-service.provider';
 import { trackServiceProvider } from './providers/track-service.provider';
+import { TrackEventSubscriber } from './events/track.event-subscriber';
 
 @Module({
   imports: [RandomIdModule, FileStorageModule],
@@ -34,6 +35,7 @@ import { trackServiceProvider } from './providers/track-service.provider';
     UpdateTrackFeatArtistsHandler,
     UpdateTrackFileHandler,
     GetTrackHandler,
+    TrackEventSubscriber,
   ],
   controllers: [TrackController],
 })

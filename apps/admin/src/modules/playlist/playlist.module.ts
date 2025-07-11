@@ -19,6 +19,7 @@ import { trackVerifyServiceProvider } from '../track/providers/track-verify-serv
 import { playlistUpdateServiceProvider } from './providers/playlist-update-service.provider';
 import { playlistCreateServiceProvider } from './providers/playlist-create-service.provider';
 import { playlistDeleteServiceProvider } from './providers/playlist-delete-service.provider';
+import { PlaylistEventSubscriber } from './events/playlist.event-subscriber';
 
 @Module({
   imports: [RandomIdModule, PasswordModule, FileStorageModule],
@@ -39,6 +40,7 @@ import { playlistDeleteServiceProvider } from './providers/playlist-delete-servi
     UpdatePlaylistCoverHandler,
     GetPlaylistHandler,
     GetPlaylistTracksHandler,
+    PlaylistEventSubscriber,
   ],
   controllers: [PlaylistController],
 })
