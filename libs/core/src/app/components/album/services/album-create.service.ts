@@ -37,8 +37,9 @@ export class AlbumCreateService {
       new AlbumCreatedEvent({
         id: foundAlbum.id,
         name: foundAlbum.name,
-        artists: foundAlbum.artists.map(({ id, name }) => ({ id, name })),
+        artists: foundAlbum.artists.map(({ id, name, isPublic }) => ({ id, name, isPublic })),
         cover: foundAlbum.cover,
+        isPublic: foundAlbum.isPublic,
       }),
     );
 
