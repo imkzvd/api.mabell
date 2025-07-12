@@ -1,7 +1,7 @@
-export interface BaseCollection<IndexedDTO, AppDTO> {
-  save(dto: AppDTO): Promise<void>;
+export interface BaseCollection<Payload, IndexedDTO> {
+  save(payload: Payload): Promise<void>;
 
-  searchByQuery(q: string): Promise<IndexedDTO[]>;
+  search(q: string): Promise<IndexedDTO[]>;
 
-  deleteById(id: string): Promise<void>;
+  delete(id: string): Promise<void>;
 }
