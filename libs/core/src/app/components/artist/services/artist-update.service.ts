@@ -56,6 +56,7 @@ export class ArtistUpdateService {
         id: foundArtist.getId(),
         name: foundArtist.getName().value,
         avatar: foundArtist.getAvatar(),
+        isPublic: foundArtist.getPublicStatus(),
       }),
     );
 
@@ -91,6 +92,7 @@ export class ArtistUpdateService {
         id: foundArtist.getId(),
         name: foundArtist.getName().value,
         avatar: foundArtist.getAvatar(),
+        isPublic: foundArtist.getPublicStatus(),
       }),
     );
 
@@ -113,6 +115,7 @@ export class ArtistUpdateService {
         id: foundArtist.getId(),
         name: foundArtist.getName().value,
         avatar: foundArtist.getAvatar(),
+        isPublic: foundArtist.getPublicStatus(),
       }),
     );
 
@@ -148,6 +151,7 @@ export class ArtistUpdateService {
         id: foundArtist.getId(),
         name: foundArtist.getName().value,
         avatar: foundArtist.getAvatar(),
+        isPublic: foundArtist.getPublicStatus(),
       }),
     );
 
@@ -169,6 +173,7 @@ export class ArtistUpdateService {
         id: foundArtist.getId(),
         name: foundArtist.getName().value,
         avatar: foundArtist.getAvatar(),
+        isPublic: foundArtist.getPublicStatus(),
       }),
     );
 

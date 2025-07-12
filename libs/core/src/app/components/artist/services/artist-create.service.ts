@@ -26,6 +26,7 @@ export class ArtistCreateService {
         id: generatedId,
         name: createdArtist.getName().value,
         avatar: createdArtist.getAvatar(),
+        isPublic: createdArtist.getPublicStatus(),
       }),
     );
 
