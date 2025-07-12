@@ -1,9 +1,19 @@
 import { Module } from '@nestjs/common';
-import { ArtistEventSubscriber } from './artist.event-subscriber';
-import { ArtistCollection } from './artist.collection';
+import { ArtistCollection } from '@infrastructure/typesense/modules/artist/artist.collection';
 
 @Module({
-  providers: [ArtistEventSubscriber, ArtistCollection],
+  providers: [
+    {
+      provide: ArtistCollection,
+      useFactory: async () => {
+        const collection = new ArtistCollection();
+
+        await collection.init();
+
+        return collection;
+      },
+    },
+  ],
   exports: [ArtistCollection],
 })
 export class ArtistModule {}
