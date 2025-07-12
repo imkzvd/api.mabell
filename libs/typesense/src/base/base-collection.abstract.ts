@@ -12,6 +12,7 @@ export abstract class BaseCollection<
     private readonly _collectionName: string,
     private readonly _collectionSchema: CollectionCreateSchema,
     private readonly _mapper: BaseMapper<Doc, DTO, Payload>,
+    private readonly _queryBy: string,
   ) {}
 
   async init() {
@@ -55,7 +56,7 @@ export abstract class BaseCollection<
     const result = await this._client
       .collections<Doc>(this._collectionName)
       .documents()
-      .search({ q, query_by: 'email' });
+      .search({ q, query_by: this._queryBy });
 
     return result.hits?.map(({ document }) => this._mapper.toDTO(document)) || [];
   }

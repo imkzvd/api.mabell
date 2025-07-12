@@ -20,6 +20,7 @@ export class UserCollection extends BaseCollection<User, IndexedUserDTO, UserPay
         ],
       },
       UserMapper,
+      'email',
     );
   }
 }
