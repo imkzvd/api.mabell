@@ -134,4 +134,22 @@ export class TrackCollection extends BaseCollection<Track, IndexedTrackDTO, Trac
 
     await this._client.collections('tracks').documents().import(docs, { action: 'upsert' });
   }
+
+  async deleteByArtistId(artistId: string) {
+    await this._client
+      .collections('tracks')
+      .documents()
+      .delete({
+        filter_by: `artistIds:=[${artistId}]`,
+      });
+  }
+
+  async deleteByAlbumId(artistId: string) {
+    await this._client
+      .collections('tracks')
+      .documents()
+      .delete({
+        filter_by: `albumId:=${artistId}`,
+      });
+  }
 }
