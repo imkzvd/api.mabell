@@ -4,7 +4,7 @@ import { ArtistUpdatedEvent } from '@core/app/common/events/artist/artist-update
 import { ArtistCreatedEvent } from '@core/app/common/events/artist/artist-created.event';
 import { ArtistCollection } from '@infrastructure/typesense/modules/artist/artist.collection';
 
-export class SaveArtistDocumentOnArtistUpdatedEventHandler extends EventHandler<
+export class CreateArtistDocumentOnArtistCreatedEventHandler extends EventHandler<
   ArtistCreatedEvent | ArtistUpdatedEvent
 > {
   constructor(@Inject(ArtistCollection) private readonly _collection: ArtistCollection) {
@@ -12,7 +12,6 @@ export class SaveArtistDocumentOnArtistUpdatedEventHandler extends EventHandler<
   }
 
   handle(event: ArtistCreatedEvent | ArtistUpdatedEvent) {
-    console.log(event);
     void this._collection.save(event.payload);
   }
 }

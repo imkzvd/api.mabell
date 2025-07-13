@@ -1,8 +1,8 @@
 export class Artist {
   constructor(
-    public readonly id: string,
-    public readonly name: string,
-    public readonly avatar: string | undefined,
-    public readonly isGlobal: boolean = false,
+    public id: string,
+    public name: string,
+    public avatar: string | undefined,
+    public isGlobal: boolean = false,
   ) {}
 }
