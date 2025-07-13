@@ -10,6 +10,7 @@ import { UserCollection } from '@infrastructure/typesense/modules/user/user.coll
 import { ArtistCollection } from '@infrastructure/typesense/modules/artist/artist.collection';
 import { AlbumCollection } from '@infrastructure/typesense/modules/album/album.collection';
 import { TrackCollection } from '@infrastructure/typesense/modules/track/track.collection';
+import { PlaylistCollection } from '@infrastructure/typesense/modules/playlist/playlist.collection';
 
 export class TypesenseService implements SearchService {
   constructor(
@@ -17,6 +18,7 @@ export class TypesenseService implements SearchService {
     @Inject(ArtistCollection) private readonly _artistCollection: ArtistCollection,
     @Inject(AlbumCollection) private readonly _albumCollection: AlbumCollection,
     @Inject(TrackCollection) private readonly _trackCollection: TrackCollection,
+    @Inject(PlaylistCollection) private readonly _playlistCollection: PlaylistCollection,
   ) {}
 
   async find(q: string, isGlobal?: boolean): Promise<IndexedItemsDTO> {
@@ -24,8 +26,9 @@ export class TypesenseService implements SearchService {
     const foundArtists = await this._artistCollection.find(q, isGlobal);
     const foundAlbums = await this._albumCollection.find(q, isGlobal);
     const foundTracks = await this._trackCollection.find(q, isGlobal);
+    const foundPlaylists = await this._playlistCollection.find(q, isGlobal);
 
-    return new IndexedItemsDTO(foundUsers, foundArtists, foundAlbums, foundTracks, []);
+    return new IndexedItemsDTO(foundUsers, foundArtists, foundAlbums, foundTracks, foundPlaylists);
   }
 
   findUsers(q: string): Promise<IndexedUserDTO[]> {
@@ -44,8 +47,7 @@ export class TypesenseService implements SearchService {
     return this._trackCollection.find(q, isGlobal);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   findPlaylists(q: string, isGlobal?: boolean): Promise<IndexedPlaylistDTO[]> {
-    throw new Error('Method not implemented.');
+    return this._playlistCollection.find(q, isGlobal);
   }
 }

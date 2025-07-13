@@ -5,9 +5,10 @@ import { ArtistModule } from '@infrastructure/typesense/modules/artist/artist.mo
 import { AlbumModule } from '@infrastructure/typesense/modules/album/album.module';
 import { TrackModule } from '@infrastructure/typesense/modules/track/track.module';
 import { TypesenseService } from '@infrastructure/typesense/typesense.service';
+import { PlaylistModule } from '@infrastructure/typesense/modules/playlist/playlist.module';
 
 @Module({
-  imports: [UserModule, ArtistModule, AlbumModule, TrackModule],
+  imports: [UserModule, ArtistModule, AlbumModule, TrackModule, PlaylistModule],
   providers: [TypesenseService, TypesenseEventSubscriber],
   exports: [TypesenseService],
 })

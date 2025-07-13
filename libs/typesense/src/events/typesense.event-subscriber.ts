@@ -29,6 +29,16 @@ import { DeleteTrackDocumentOnTrackDeletedEventHandler } from '@infrastructure/t
 import { TrackDeletedEvent } from '@core/app/common/events/track/track-deleted.event';
 import { UpdateTrackDocumentsOnAlbumUpdatedEventHandler } from '@infrastructure/typesense/modules/track/event-handlers/update-track-documents-on-album-updated.event-handler';
 import { UpdateTrackDocumentsOnArtistUpdatedEventHandler } from '@infrastructure/typesense/modules/track/event-handlers/update-track-documents-on-artist-updated.event-handler';
+import { CreatePlaylistDocumentOnPlaylistCreatedEventHandler } from '@infrastructure/typesense/modules/playlist/event-handlers/create-playlist-document-on-playlist-created.event-handler';
+import { PlaylistCollection } from '@infrastructure/typesense/modules/playlist/playlist.collection';
+import { DeletePlaylistDocumentOnPlaylistDeletedEventHandler } from '@infrastructure/typesense/modules/playlist/event-handlers/delete-playlist-document-on-playlist-deleted.event-handler';
+import { PlaylistCreatedEvent } from '@core/app/common/events/playlist/playlist-created.event';
+import { PlaylistDeletedEvent } from '@core/app/common/events/playlist/playlist-deleted.event';
+import { DeleteTrackDocumentsOnArtistDeletedEventHandler } from '@infrastructure/typesense/modules/track/event-handlers/delete-track-documents-on-artist-deleted.event-handler';
+import { DeleteTrackDocumentsOnAlbumDeletedEventHandler } from '@infrastructure/typesense/modules/track/event-handlers/delete-track-documents-on-album-deleted.event-handler';
+import { PlaylistUpdatedEvent } from '@core/app/common/events/playlist/playlist-updated.event';
+import { DeletePlaylistDocumentsOnUserDeletedEventHandler } from '@infrastructure/typesense/modules/playlist/event-handlers/delete-playlist-documents-on-user-deleted.event-handler';
+import { UpdatePlaylistDocumentsOnUserUpdatedEventHandler } from '@infrastructure/typesense/modules/playlist/event-handlers/update-playlist-documents-on-user-updated.event-handler';
 
 export class TypesenseEventSubscriber {
   constructor(
@@ -37,6 +47,7 @@ export class TypesenseEventSubscriber {
     @Inject(ArtistCollection) private readonly _artistCollection: ArtistCollection,
     @Inject(AlbumCollection) private readonly _albumCollection: AlbumCollection,
     @Inject(TrackCollection) private readonly _trackCollection: TrackCollection,
+    @Inject(PlaylistCollection) private readonly _playlistCollection: PlaylistCollection,
   ) {
     const saveUserDocumentOnUserUpdatedEventHandler =
       new CreateUserDocumentOnUserCreatedEventHandler(this._userCollection);
@@ -79,11 +90,32 @@ export class TypesenseEventSubscriber {
       new UpdateTrackDocumentsOnAlbumUpdatedEventHandler(this._trackCollection);
     const saveTrackDocumentsOnArtistUpdatedEventHandler =
       new UpdateTrackDocumentsOnArtistUpdatedEventHandler(this._trackCollection);
+    const deleteTrackDocumentsOnArtistDeletedEventHandler =
+      new DeleteTrackDocumentsOnArtistDeletedEventHandler(this._trackCollection);
+    const deleteTrackDocumentsOnAlbumDeletedEventHandler =
+      new DeleteTrackDocumentsOnAlbumDeletedEventHandler(this._trackCollection);
 
     this._EB.subscribe(TrackCreatedEvent, saveTrackDocumentOnTrackUpdatedEventHandler);
     this._EB.subscribe(TrackUpdatedEvent, saveTrackDocumentOnTrackUpdatedEventHandler);
     this._EB.subscribe(TrackDeletedEvent, deleteTrackDocumentOnTrackDeletedEventHandler);
     this._EB.subscribe(AlbumUpdatedEvent, saveTrackDocumentsOnAlbumUpdatedEventHandler);
     this._EB.subscribe(ArtistUpdatedEvent, saveTrackDocumentsOnArtistUpdatedEventHandler);
+    this._EB.subscribe(ArtistDeletedEvent, deleteTrackDocumentsOnArtistDeletedEventHandler);
+    this._EB.subscribe(AlbumDeletedEvent, deleteTrackDocumentsOnAlbumDeletedEventHandler);
+
+    const createPlaylistDocumentOnPlaylistCreatedEventHandler =
+      new CreatePlaylistDocumentOnPlaylistCreatedEventHandler(this._playlistCollection);
+    const deletePlaylistDocumentOnPlaylistDeletedEventHandler =
+      new DeletePlaylistDocumentOnPlaylistDeletedEventHandler(this._playlistCollection);
+    const deletePlaylistDocumentsOnUserDeletedEventHandler =
+      new DeletePlaylistDocumentsOnUserDeletedEventHandler(this._playlistCollection);
+    const updatePlaylistDocumentsOnUserUpdatedEventHandler =
+      new UpdatePlaylistDocumentsOnUserUpdatedEventHandler(this._playlistCollection);
+
+    this._EB.subscribe(PlaylistCreatedEvent, createPlaylistDocumentOnPlaylistCreatedEventHandler);
+    this._EB.subscribe(PlaylistUpdatedEvent, createPlaylistDocumentOnPlaylistCreatedEventHandler);
+    this._EB.subscribe(PlaylistDeletedEvent, deletePlaylistDocumentOnPlaylistDeletedEventHandler);
+    this._EB.subscribe(UserDeletedEvent, deletePlaylistDocumentsOnUserDeletedEventHandler);
+    this._EB.subscribe(UserUpdatedEvent, updatePlaylistDocumentsOnUserUpdatedEventHandler);
   }
 }
