@@ -1,14 +1,12 @@
 import { IndexedUserDTO } from '@core/app/common/ports/search-service/dtos/indexed-user.dto';
 import { UserPayload } from '@infrastructure/typesense/modules/user/types';
 import UserMapper from '@infrastructure/typesense/modules/user/user.mapper';
-import { TypeSenseClient } from '@infrastructure/typesense/client';
 import { User } from '@infrastructure/typesense/modules/user/user.document';
 import { BaseCollection } from '@infrastructure/typesense/base/base-collection.abstract';
 
 export class UserCollection extends BaseCollection<User, IndexedUserDTO, UserPayload> {
   constructor() {
     super(
-      TypeSenseClient,
       'users',
       {
         name: 'users',
@@ -20,7 +18,12 @@ export class UserCollection extends BaseCollection<User, IndexedUserDTO, UserPay
         ],
       },
       UserMapper,
-      'email',
     );
+  }
+
+  async find(q: string) {
+    const { items } = await this.search({ q, query_by: 'email' });
+
+    return items.map((item) => this._mapper.toDTO(item));
   }
 }
