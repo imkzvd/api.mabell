@@ -1,8 +1,10 @@
+import { IndexedSimplifiedUserDTO } from '@core/app/common/ports/search-service/dtos/indexed-simplified-user.dto';
+
 export class IndexedPlaylistDTO {
   constructor(
     public readonly id: string,
     public readonly name: string,
+    public readonly owner: IndexedSimplifiedUserDTO,
     public readonly cover: string | null,
-    public readonly isPublic: boolean,
   ) {}
 }

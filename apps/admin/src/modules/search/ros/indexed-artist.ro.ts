@@ -21,6 +21,6 @@ export class IndexedArtistRO {
   constructor(dto: IndexedArtistDTO) {
     this.id = dto.id;
     this.name = dto.name;
-    this.avatar = dto.avatar ? `${process.env.HOST}${dto.avatar}` : null;
+    this.avatar = dto.avatar ? `${process.env.API_URL}${dto.avatar}` : null;
   }
 }

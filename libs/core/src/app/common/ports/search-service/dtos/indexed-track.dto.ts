@@ -7,8 +7,6 @@ export class IndexedTrackDTO {
     public readonly name: string,
     public readonly album: IndexedAlbumDTO,
     public readonly featArtists: IndexedSimplifiedArtistDTO[],
-    public readonly file: string | null,
-    public readonly duration: number | null,
     public readonly isExplicit: boolean,
   ) {}
 }

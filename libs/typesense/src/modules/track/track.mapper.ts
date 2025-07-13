@@ -1,13 +1,14 @@
-import { TrackDTO } from '@core/app/components/track/dtos/track.dto';
 import { IndexedTrackDTO } from '@core/app/common/ports/search-service/dtos/indexed-track.dto';
 import { IndexedAlbumDTO } from '@core/app/common/ports/search-service/dtos/indexed-album.dto';
 import { IndexedSimplifiedArtistDTO } from '@core/app/common/ports/search-service/dtos/indexed-simplified-artist.dto';
-import { Track } from './track.document';
-import { TrackFactory } from './track.factory';
+import { TrackPayload } from '@infrastructure/typesense/modules/track/types';
+import { TrackFactory } from '@infrastructure/typesense/modules/track/track.factory';
+import { Track } from '@infrastructure/typesense/modules/track/track.document';
+import { BaseMapper } from '@infrastructure/typesense/base/base-mapper.interface';
 
-class TrackMapper {
-  toDocument(dto: TrackDTO): Track {
-    return TrackFactory.create(dto);
+class TrackMapper implements BaseMapper<Track, IndexedTrackDTO, TrackPayload> {
+  toDocument(payload: TrackPayload): Track {
+    return TrackFactory.create(payload);
   }
 
   toDTO(doc: Track): IndexedTrackDTO {
@@ -15,15 +16,16 @@ class TrackMapper {
       doc.id,
       doc.name,
       new IndexedAlbumDTO(
-        doc.album.id,
-        doc.album.name,
-        doc.album.artists.map(({ id, name }) => new IndexedSimplifiedArtistDTO(id, name)),
-        doc.album.type,
-        doc.album.cover || null,
+        doc.albumId,
+        doc.albumName,
+        doc.artistIds.map(
+          (id, index) => new IndexedSimplifiedArtistDTO(id, doc.artistNames[index]),
+        ),
+        doc.cover || null,
       ),
-      doc.featArtists.map(({ id, name }) => new IndexedSimplifiedArtistDTO(id, name)),
-      doc.file || null,
-      doc.duration || null,
+      doc.featArtistIds.map(
+        (id, index) => new IndexedSimplifiedArtistDTO(id, doc.featArtistNames[index]),
+      ),
       doc.isExplicit,
     );
   }

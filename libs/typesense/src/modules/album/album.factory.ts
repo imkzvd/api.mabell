@@ -1,16 +1,15 @@
-import { AlbumDTO } from '@core/app/components/album/dtos/album.dto';
-import { Album } from './album.document';
+import { Album } from '@infrastructure/typesense/modules/album/album.document';
+import { AlbumPayload } from '@infrastructure/typesense/modules/album/types';
 
 export class AlbumFactory {
-  static create(dto: AlbumDTO) {
+  static create(payload: AlbumPayload) {
     return new Album(
-      dto.id,
-      dto.name,
-      dto.artists.map(({ id, name }) => ({ id, name })),
-      dto.artists.map(({ name }) => name),
-      dto.type,
-      dto.cover || undefined,
-      dto.isPublic || dto.artists.every(({ isPublic }) => isPublic),
+      payload.id,
+      payload.name,
+      payload.artists.map(({ id }) => id),
+      payload.artists.map(({ name }) => name),
+      payload.cover || undefined,
+      payload.isPublic && payload.artists.every(({ isPublic }) => isPublic),
     );
   }
 }

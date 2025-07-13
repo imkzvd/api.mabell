@@ -1,8 +1,8 @@
-import { ArtistDTO } from '@core/app/components/artist/dtos/artist.dto';
-import { Artist } from './artist.document';
+import { ArtistPayload } from '@infrastructure/typesense/modules/artist/types';
+import { Artist } from '@infrastructure/typesense/modules/artist/artist.document';
 
 export class ArtistFactory {
-  static create(dto: ArtistDTO) {
-    return new Artist(dto.id, dto.name, dto.avatar || undefined, dto.isPublic);
+  static create(payload: ArtistPayload) {
+    return new Artist(payload.id, payload.name, payload.avatar || undefined, payload.isPublic);
   }
 }

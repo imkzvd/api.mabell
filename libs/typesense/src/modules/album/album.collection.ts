@@ -1,59 +1,78 @@
-import { CollectionCreateSchema } from 'typesense/lib/Typesense/Collections';
 import { IndexedAlbumDTO } from '@core/app/common/ports/search-service/dtos/indexed-album.dto';
-import { AlbumWithArtistsDTO } from '@core/domain/components/album/repository/dtos/album-with-artists.dto';
-import { Album } from './album.document';
-import AlbumMapper from './album.mapper';
-import { TypeSenseClient } from '../../client';
-import { BaseCollection } from '../../base/base-collection.interface';
+import { BaseCollection } from '@infrastructure/typesense/base/base-collection.abstract';
+import { Album } from '@infrastructure/typesense/modules/album/album.document';
+import { AlbumPayload } from '@infrastructure/typesense/modules/album/types';
+import AlbumMapper from '@infrastructure/typesense/modules/album/album.mapper';
+import { ArtistPayload } from '@infrastructure/typesense/modules/artist/types';
 
-export class AlbumCollection implements BaseCollection<IndexedAlbumDTO, AlbumWithArtistsDTO> {
-  private readonly _collectionName = 'albums';
-  private readonly _collectionSchema: CollectionCreateSchema = {
-    name: this._collectionName,
-    enable_nested_fields: true,
-    fields: [
-      { name: 'name', type: 'string' },
-      { name: 'artistNames', type: 'string[]' },
-    ],
-  };
-
+export class AlbumCollection extends BaseCollection<Album, IndexedAlbumDTO, AlbumPayload> {
   constructor() {
-    void this.createCollection();
-  }
-
-  async save(dto: AlbumWithArtistsDTO): Promise<void> {
-    const mappedDoc = AlbumMapper.toDocument(dto);
-
-    await TypeSenseClient.collections<Album>(this._collectionName).documents().upsert(mappedDoc);
-  }
-
-  async searchByQuery(q: string): Promise<IndexedAlbumDTO[]> {
-    const result = await TypeSenseClient.collections<Album>(this._collectionName)
-      .documents()
-      .search({ q, query_by: 'name,artistNames' });
-
-    return result.hits?.map(({ document }) => AlbumMapper.toDTO(document)) || [];
-  }
-
-  async deleteById(id: string): Promise<void> {
-    await TypeSenseClient.collections<Album>(this._collectionName).documents(id).delete();
-  }
-
-  async deleteByIds(ids: string[]): Promise<void> {
-    const promiseQueue = Promise.all(
-      ids.map((id) => {
-        return TypeSenseClient.collections<Album>(this._collectionName).documents(id).delete();
-      }),
+    super(
+      'albums',
+      {
+        name: 'albums',
+        fields: [
+          { name: 'id', type: 'string', index: false },
+          { name: 'name', type: 'string' },
+          { name: 'artistNames', type: 'string[]' },
+          { name: 'artistIds', type: 'string[]' },
+          { name: 'cover', type: 'string', optional: true, index: false },
+          { name: 'isGlobal', type: 'bool' },
+        ],
+      },
+      AlbumMapper,
     );
-
-    await promiseQueue;
   }
 
-  private async createCollection(): Promise<void> {
-    const isExistCollection = await TypeSenseClient.collections(this._collectionName).exists();
+  async find(q: string, isGlobal?: boolean) {
+    const { items } = await this.search({
+      q,
+      query_by: 'name,artistNames',
+      ...(Boolean(isGlobal) && {
+        filter_by: `isGlobal:=${isGlobal}`,
+      }),
+    });
 
-    if (isExistCollection) return;
+    return items.map((item) => this._mapper.toDTO(item));
+  }
 
-    await TypeSenseClient.collections().create(this._collectionSchema);
+  async updateArtistsDataByArtistId(artistId: string, payload: ArtistPayload) {
+    const docs: Album[] = [];
+    const limit = 250;
+    let offset = 0;
+
+    while (true) {
+      const { items, hasMore } = await this.search({
+        q: '*',
+        filter_by: `artistIds:=[${artistId}]`,
+        offset,
+        limit,
+      });
+
+      docs.push(...items);
+
+      if (!hasMore) break;
+
+      offset = offset + limit;
+    }
+
+    if (!docs.length) return;
+
+    docs.forEach((doc) => {
+      const albumArtistIndex = doc.artistIds.findIndex((id) => id === artistId);
+
+      doc.artistNames[albumArtistIndex] = payload.name;
+    });
+
+    await this._client.collections('albums').documents().import(docs, { action: 'upsert' });
+  }
+
+  async deleteByArtistId(id: string) {
+    await this._client
+      .collections('albums')
+      .documents()
+      .delete({
+        filter_by: `artistIds:${id}`,
+      });
   }
 }

@@ -6,6 +6,6 @@ export class GetArtistsHandler implements QueryHandler<GetArtistsQuery> {
   constructor(private readonly _service: SearchService) {}
 
   async execute({ q }: GetArtistsQuery) {
-    return this._service.findArtistsByKey(q);
+    return this._service.findArtists(q);
   }
 }

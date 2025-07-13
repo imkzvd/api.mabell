@@ -1,72 +1,155 @@
-import { CollectionCreateSchema } from 'typesense/lib/Typesense/Collections';
 import { IndexedTrackDTO } from '@core/app/common/ports/search-service/dtos/indexed-track.dto';
-import { TrackDTO } from '@core/app/components/track/dtos/track.dto';
-import { Track } from './track.document';
-import TrackMapper from './track.mapper';
-import { TypeSenseClient } from '../../client';
-import { BaseCollection } from '../../base/base-collection.interface';
+import { BaseCollection } from '@infrastructure/typesense/base/base-collection.abstract';
+import { TrackPayload } from '@infrastructure/typesense/modules/track/types';
+import { ArtistPayload } from '@infrastructure/typesense/modules/artist/types';
+import { AlbumPayload } from '@infrastructure/typesense/modules/album/types';
+import { Track } from '@infrastructure/typesense/modules/track/track.document';
+import TrackMapper from '@infrastructure/typesense/modules/track/track.mapper';
 
-export class TrackCollection implements BaseCollection<IndexedTrackDTO, TrackDTO> {
-  private readonly _collectionName = 'tracks';
-  private readonly _collectionSchema: CollectionCreateSchema = {
-    name: this._collectionName,
-    enable_nested_fields: true,
-    fields: [
-      { name: 'name', type: 'string' },
-      { name: 'albumName', type: 'string' },
-      { name: 'allArtistNames', type: 'string[]' },
-      { name: 'isGlobal', type: 'bool' },
-    ],
-  };
-
+export class TrackCollection extends BaseCollection<Track, IndexedTrackDTO, TrackPayload> {
   constructor() {
-    void this.createCollection();
-  }
-
-  async save(dto: TrackDTO): Promise<void> {
-    const mappedDoc = TrackMapper.toDocument(dto);
-
-    await TypeSenseClient.collections<Track>(this._collectionName).documents().upsert(mappedDoc);
-  }
-
-  async saveMany(dtos: TrackDTO[]): Promise<void> {
-    const docs = dtos.map((dto) => TrackMapper.toDocument(dto));
-    const promiseQueue = Promise.all(
-      docs.map((doc) =>
-        TypeSenseClient.collections<Track>(this._collectionName).documents().upsert(doc),
-      ),
+    super(
+      'tracks',
+      {
+        name: 'tracks',
+        fields: [
+          { name: 'id', type: 'string', index: false },
+          { name: 'name', type: 'string' },
+          { name: 'albumId', type: 'string' },
+          { name: 'albumName', type: 'string' },
+          { name: 'artistIds', type: 'string[]' },
+          { name: 'artistNames', type: 'string[]' },
+          { name: 'featArtistIds', type: 'string[]' },
+          { name: 'featArtistNames', type: 'string[]' },
+          { name: 'isExplicit', type: 'bool', index: false },
+          { name: 'cover', type: 'string', optional: true, index: false },
+          { name: 'isGlobal', type: 'bool' },
+        ],
+      },
+      TrackMapper,
     );
-
-    await promiseQueue;
   }
 
-  async searchByQuery(q: string): Promise<IndexedTrackDTO[]> {
-    const result = await TypeSenseClient.collections<Track>(this._collectionName)
-      .documents()
-      .search({ q, query_by: 'name,albumName,allArtistNames' });
-
-    return result.hits?.map(({ document }) => TrackMapper.toDTO(document)) || [];
-  }
-
-  async deleteById(id: string): Promise<void> {
-    await TypeSenseClient.collections<Track>(this._collectionName).documents(id).delete();
-  }
-
-  async deleteByIds(ids: string[]): Promise<void> {
-    const promiseQueue = Promise.all(
-      ids.map((id) => {
-        return TypeSenseClient.collections<Track>(this._collectionName).documents(id).delete();
+  async find(q: string, isGlobal?: boolean) {
+    const { items } = await this.search({
+      q,
+      query_by: 'name,albumName,artistNames,featArtistNames',
+      ...(Boolean(isGlobal) && {
+        filter_by: `isGlobal:=${isGlobal}`,
       }),
-    );
+    });
 
-    await promiseQueue;
+    return items.map((item) => this._mapper.toDTO(item));
   }
 
-  private async createCollection(): Promise<void> {
-    const isExistCollection = await TypeSenseClient.collections(this._collectionName).exists();
+  async updateAlbumDataByAlbumId(albumId: string, payload: AlbumPayload) {
+    const docs: Track[] = [];
+    const limit = 250;
+    let offset = 0;
 
-    if (isExistCollection) return;
+    while (true) {
+      const { items, hasMore } = await this.search({
+        q: '*',
+        filter_by: `albumId:=${albumId}`,
+        offset,
+        limit,
+      });
 
-    await TypeSenseClient.collections().create(this._collectionSchema);
+      docs.push(...items);
+
+      if (!hasMore) break;
+
+      offset = offset + limit;
+    }
+
+    if (!docs.length) return;
+
+    docs.forEach((doc) => {
+      doc.albumName = payload.name;
+      doc.artistIds = payload.artists.map(({ id }) => id);
+      doc.artistNames = payload.artists.map(({ name }) => name);
+    });
+
+    await this._client.collections('tracks').documents().import(docs, { action: 'upsert' });
+  }
+
+  async updateArtistDataByArtistId(artistId: string, payload: ArtistPayload) {
+    const docs: Track[] = [];
+    const limit = 250;
+    let offset = 0;
+
+    while (true) {
+      const { items, hasMore } = await this.search({
+        q: '*',
+        filter_by: `artistIds:=[${artistId}]`,
+        offset,
+        limit,
+      });
+
+      docs.push(...items);
+
+      if (!hasMore) break;
+
+      offset = offset + limit;
+    }
+
+    if (!docs.length) return;
+
+    docs.forEach((doc) => {
+      const trackArtistIndex = doc.artistIds.findIndex((id) => id === artistId);
+
+      doc.artistNames[trackArtistIndex] = payload.name;
+    });
+
+    await this._client.collections('tracks').documents().import(docs, { action: 'upsert' });
+  }
+
+  async updateFeatArtistDataByArtistId(artistId: string, payload: ArtistPayload) {
+    const docs: Track[] = [];
+    const limit = 250;
+    let offset = 0;
+
+    while (true) {
+      const { items, hasMore } = await this.search({
+        q: '*',
+        filter_by: `featArtistIds:=[${artistId}]`,
+        offset,
+        limit,
+      });
+
+      docs.push(...items);
+
+      if (!hasMore) break;
+
+      offset = offset + limit;
+    }
+
+    if (!docs.length) return;
+
+    docs.forEach((doc) => {
+      const trackFeatArtistIndex = doc.featArtistIds.findIndex((id) => id === artistId);
+
+      doc.featArtistNames[trackFeatArtistIndex] = payload.name;
+    });
+
+    await this._client.collections('tracks').documents().import(docs, { action: 'upsert' });
+  }
+
+  async deleteByArtistId(artistId: string) {
+    await this._client
+      .collections('tracks')
+      .documents()
+      .delete({
+        filter_by: `artistIds:=[${artistId}]`,
+      });
+  }
+
+  async deleteByAlbumId(artistId: string) {
+    await this._client
+      .collections('tracks')
+      .documents()
+      .delete({
+        filter_by: `albumId:=${artistId}`,
+      });
   }
 }

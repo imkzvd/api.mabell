@@ -1,11 +1,12 @@
 import { IndexedArtistDTO } from '@core/app/common/ports/search-service/dtos/indexed-artist.dto';
-import { ArtistDTO } from '@core/domain/components/artist/repository/dtos/artist.dto';
-import { Artist } from './artist.document';
-import { ArtistFactory } from './artist.factory';
+import { ArtistFactory } from '@infrastructure/typesense/modules/artist/artist.factory';
+import { Artist } from '@infrastructure/typesense/modules/artist/artist.document';
+import { BaseMapper } from '@infrastructure/typesense/base/base-mapper.interface';
+import { ArtistPayload } from '@infrastructure/typesense/modules/artist/types';
 
-class ArtistMapper {
-  toDocument(dto: ArtistDTO): Artist {
-    return ArtistFactory.create(dto);
+class ArtistMapper implements BaseMapper<Artist, IndexedArtistDTO, ArtistPayload> {
+  toDocument(payload: ArtistPayload): Artist {
+    return ArtistFactory.create(payload);
   }
 
   toDTO(doc: Artist): IndexedArtistDTO {

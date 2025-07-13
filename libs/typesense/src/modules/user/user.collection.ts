@@ -1,45 +1,29 @@
-import { CollectionCreateSchema } from 'typesense/lib/Typesense/Collections';
 import { IndexedUserDTO } from '@core/app/common/ports/search-service/dtos/indexed-user.dto';
-import { UserDTO } from '@core/app/components/user/dtos/user.dto';
-import UserMapper from './user.mapper';
-import { User } from './user.document';
-import { TypeSenseClient } from '../../client';
-import { BaseCollection } from '../../base/base-collection.interface';
+import { UserPayload } from '@infrastructure/typesense/modules/user/types';
+import UserMapper from '@infrastructure/typesense/modules/user/user.mapper';
+import { User } from '@infrastructure/typesense/modules/user/user.document';
+import { BaseCollection } from '@infrastructure/typesense/base/base-collection.abstract';
 
-export class UserCollection implements BaseCollection<IndexedUserDTO, UserDTO> {
-  private readonly _collectionName = 'users';
-  private readonly _collectionSchema: CollectionCreateSchema = {
-    name: this._collectionName,
-    fields: [{ name: 'email', type: 'string', optional: true }],
-  };
-
+export class UserCollection extends BaseCollection<User, IndexedUserDTO, UserPayload> {
   constructor() {
-    void this.createCollection();
+    super(
+      'users',
+      {
+        name: 'users',
+        fields: [
+          { name: 'id', type: 'string', index: false },
+          { name: 'name', type: 'string', index: false },
+          { name: 'email', type: 'string', optional: true },
+          { name: 'avatar', type: 'string', optional: true, index: false },
+        ],
+      },
+      UserMapper,
+    );
   }
 
-  async save(dto: UserDTO): Promise<void> {
-    const mappedDoc = UserMapper.toDocument(dto);
+  async find(q: string) {
+    const { items } = await this.search({ q, query_by: 'email' });
 
-    await TypeSenseClient.collections<User>(this._collectionName).documents().upsert(mappedDoc);
-  }
-
-  async searchByQuery(q: string): Promise<IndexedUserDTO[]> {
-    const result = await TypeSenseClient.collections<User>(this._collectionName)
-      .documents()
-      .search({ q, query_by: 'email' });
-
-    return result.hits?.map(({ document }) => UserMapper.toDTO(document)) || [];
-  }
-
-  async deleteById(id: string): Promise<void> {
-    await TypeSenseClient.collections<User>(this._collectionName).documents(id).delete();
-  }
-
-  private async createCollection(): Promise<void> {
-    const isExistCollection = await TypeSenseClient.collections(this._collectionName).exists();
-
-    if (isExistCollection) return;
-
-    await TypeSenseClient.collections().create(this._collectionSchema);
+    return items.map((item) => this._mapper.toDTO(item));
   }
 }

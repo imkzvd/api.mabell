@@ -2,6 +2,7 @@ import * as process from 'process';
 import { ApiProperty } from '@nestjs/swagger';
 import { faker } from '@faker-js/faker';
 import { IndexedPlaylistDTO } from '@core/app/common/ports/search-service/dtos/indexed-playlist.dto';
+import { IndexedSimplifiedUserRO } from './indexed-simplified-user.ro';
 
 export class IndexedPlaylistRO {
   @ApiProperty({ description: 'Id', example: faker.database.mongodbObjectId() })
@@ -9,6 +10,9 @@ export class IndexedPlaylistRO {
 
   @ApiProperty({ description: 'Name', example: faker.person.firstName() })
   name: string;
+
+  @ApiProperty({ description: 'Owner', type: () => IndexedSimplifiedUserRO })
+  owner: IndexedSimplifiedUserRO;
 
   @ApiProperty({
     type: String,
@@ -24,7 +28,7 @@ export class IndexedPlaylistRO {
   constructor(dto: IndexedPlaylistDTO) {
     this.id = dto.id;
     this.name = dto.name;
-    this.cover = dto.cover ? `${process.env.HOST}${dto.cover}` : null;
-    this.isPublic = dto.isPublic;
+    this.owner = new IndexedSimplifiedUserRO(dto.owner);
+    this.cover = dto.cover ? `${process.env.API_URL}${dto.cover}` : null;
   }
 }

@@ -7,10 +7,11 @@ export type TracksUpdatedEventPayload = {
   tracks: {
     id: TrackId;
     name: string;
-    album: { id: AlbumId; name: string };
-    artists: { id: ArtistId; name: string }[];
-    featArtists: { id: ArtistId; name: string }[];
+    album: { id: AlbumId; name: string; isPublic: boolean };
+    artists: { id: ArtistId; name: string; isPublic: boolean }[];
+    featArtists: { id: ArtistId; name: string; isPublic: boolean }[];
     cover: string | null;
+    isPublic: boolean;
     isExplicit: boolean;
   }[];
 };

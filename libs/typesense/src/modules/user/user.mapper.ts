@@ -1,11 +1,12 @@
-import { UserDTO } from '@core/app/components/user/dtos/user.dto';
 import { IndexedUserDTO } from '@core/app/common/ports/search-service/dtos/indexed-user.dto';
-import { User } from './user.document';
-import { UserFactory } from './user.factory';
+import { UserPayload } from '@infrastructure/typesense/modules/user/types';
+import { UserFactory } from '@infrastructure/typesense/modules/user/user.factory';
+import { User } from '@infrastructure/typesense/modules/user/user.document';
+import { BaseMapper } from '@infrastructure/typesense/base/base-mapper.interface';
 
-class UserMapper {
-  toDocument(dto: UserDTO): User {
-    return UserFactory.create(dto);
+class UserMapper implements BaseMapper<User, IndexedUserDTO, UserPayload> {
+  toDocument(payload: UserPayload): User {
+    return UserFactory.create(payload);
   }
 
   toDTO(doc: User): IndexedUserDTO {

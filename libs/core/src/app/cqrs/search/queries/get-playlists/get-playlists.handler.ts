@@ -6,6 +6,6 @@ export class GetPlaylistsHandler implements QueryHandler<GetPlaylistsQuery> {
   constructor(private readonly _service: SearchService) {}
 
   async execute({ q }: GetPlaylistsQuery) {
-    return this._service.findPlaylistsByKey(q);
+    return this._service.findPlaylists(q);
   }
 }

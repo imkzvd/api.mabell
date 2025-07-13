@@ -1,3 +1,4 @@
+import { Inject } from '@nestjs/common';
 import { SearchService } from '@core/app/common/ports/search-service/search-service.port';
 import { IndexedItemsDTO } from '@core/app/common/ports/search-service/dtos/indexed-items.dto';
 import { IndexedUserDTO } from '@core/app/common/ports/search-service/dtos/indexed-user.dto';
@@ -5,11 +6,11 @@ import { IndexedArtistDTO } from '@core/app/common/ports/search-service/dtos/ind
 import { IndexedAlbumDTO } from '@core/app/common/ports/search-service/dtos/indexed-album.dto';
 import { IndexedTrackDTO } from '@core/app/common/ports/search-service/dtos/indexed-track.dto';
 import { IndexedPlaylistDTO } from '@core/app/common/ports/search-service/dtos/indexed-playlist.dto';
-import { ArtistCollection } from './modules/artist/artist.collection';
-import { AlbumCollection } from './modules/album/album.collection';
-import { TrackCollection } from './modules/track/track.collection';
-import { UserCollection } from './modules/user/user.collection';
-import { Inject } from '@nestjs/common';
+import { UserCollection } from '@infrastructure/typesense/modules/user/user.collection';
+import { ArtistCollection } from '@infrastructure/typesense/modules/artist/artist.collection';
+import { AlbumCollection } from '@infrastructure/typesense/modules/album/album.collection';
+import { TrackCollection } from '@infrastructure/typesense/modules/track/track.collection';
+import { PlaylistCollection } from '@infrastructure/typesense/modules/playlist/playlist.collection';
 
 export class TypesenseService implements SearchService {
   constructor(
@@ -17,40 +18,36 @@ export class TypesenseService implements SearchService {
     @Inject(ArtistCollection) private readonly _artistCollection: ArtistCollection,
     @Inject(AlbumCollection) private readonly _albumCollection: AlbumCollection,
     @Inject(TrackCollection) private readonly _trackCollection: TrackCollection,
+    @Inject(PlaylistCollection) private readonly _playlistCollection: PlaylistCollection,
   ) {}
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async findByKey(key: string, isPublic?: boolean): Promise<IndexedItemsDTO> {
-    const foundUsers = await this._userCollection.searchByQuery(key);
-    const foundArtists = await this._artistCollection.searchByQuery(key);
-    const foundAlbums = await this._albumCollection.searchByQuery(key);
-    const foundTracks = await this._trackCollection.searchByQuery(key);
+  async find(q: string, isGlobal?: boolean): Promise<IndexedItemsDTO> {
+    const foundUsers = await this._userCollection.find(q);
+    const foundArtists = await this._artistCollection.find(q, isGlobal);
+    const foundAlbums = await this._albumCollection.find(q, isGlobal);
+    const foundTracks = await this._trackCollection.find(q, isGlobal);
+    const foundPlaylists = await this._playlistCollection.find(q, isGlobal);
 
-    return new IndexedItemsDTO(foundUsers, foundArtists, foundAlbums, foundTracks, []);
+    return new IndexedItemsDTO(foundUsers, foundArtists, foundAlbums, foundTracks, foundPlaylists);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  findUsersByKey(key: string, isPublic?: boolean): Promise<IndexedUserDTO[]> {
-    return this._userCollection.searchByQuery(key);
+  findUsers(q: string): Promise<IndexedUserDTO[]> {
+    return this._userCollection.find(q);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  findArtistsByKey(key: string, isPublic?: boolean): Promise<IndexedArtistDTO[]> {
-    return this._artistCollection.searchByQuery(key);
+  findArtists(q: string, isGlobal?: boolean): Promise<IndexedArtistDTO[]> {
+    return this._artistCollection.find(q, isGlobal);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  findAlbumsByKey(key: string, isPublic?: boolean): Promise<IndexedAlbumDTO[]> {
-    return this._albumCollection.searchByQuery(key);
+  findAlbums(q: string, isGlobal?: boolean): Promise<IndexedAlbumDTO[]> {
+    return this._albumCollection.find(q, isGlobal);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  findTracksByKey(key: string, isPublic?: boolean): Promise<IndexedTrackDTO[]> {
-    return this._trackCollection.searchByQuery(key);
+  findTracks(q: string, isGlobal?: boolean): Promise<IndexedTrackDTO[]> {
+    return this._trackCollection.find(q, isGlobal);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  findPlaylistsByKey(key: string, isPublic?: boolean): Promise<IndexedPlaylistDTO[]> {
-    throw new Error('Method not implemented.');
+  findPlaylists(q: string, isGlobal?: boolean): Promise<IndexedPlaylistDTO[]> {
+    return this._playlistCollection.find(q, isGlobal);
   }
 }

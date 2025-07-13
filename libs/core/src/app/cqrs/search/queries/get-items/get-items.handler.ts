@@ -6,6 +6,6 @@ export class GetItemsHandler implements QueryHandler<GetItemsQuery> {
   constructor(private readonly _service: SearchService) {}
 
   async execute({ q }: GetItemsQuery) {
-    return this._service.findByKey(q);
+    return this._service.find(q);
   }
 }

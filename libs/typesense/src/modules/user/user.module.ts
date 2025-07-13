@@ -1,11 +1,19 @@
 import { Module } from '@nestjs/common';
-import { UserCollection } from './user.collection';
-import { UserEventSubscriber } from './user.event-subscriber';
-import { EventBusModule } from '@infrastructure/event-bus';
+import { UserCollection } from '@infrastructure/typesense/modules/user/user.collection';
 
 @Module({
-  imports: [EventBusModule],
-  providers: [UserEventSubscriber, UserCollection],
+  providers: [
+    {
+      provide: UserCollection,
+      useFactory: async () => {
+        const collection = new UserCollection();
+
+        await collection.init();
+
+        return collection;
+      },
+    },
+  ],
   exports: [UserCollection],
 })
 export class UserModule {}

@@ -66,8 +66,13 @@ export class AlbumUpdateService {
       new AlbumUpdatedEvent({
         id: foundAlbumWithArtists.id,
         name: foundAlbumWithArtists.name,
-        artists: foundAlbumWithArtists.artists.map(({ id, name }) => ({ id, name })),
+        artists: foundAlbumWithArtists.artists.map(({ id, name, isPublic }) => ({
+          id,
+          name,
+          isPublic,
+        })),
         cover: foundAlbumWithArtists.cover,
+        isPublic: foundAlbumWithArtists.isPublic,
       }),
     );
 
@@ -97,9 +102,14 @@ export class AlbumUpdateService {
     const eventPayload = {
       id: foundAlbumWithArtists.id,
       name: foundAlbumWithArtists.name,
-      artists: foundAlbumWithArtists.artists.map(({ id, name }) => ({ id, name })),
+      artists: foundAlbumWithArtists.artists.map(({ id, name, isPublic }) => ({
+        id,
+        name,
+        isPublic,
+      })),
       type: foundAlbumWithArtists.type,
       cover: foundAlbumWithArtists.cover,
+      isPublic: foundAlbumWithArtists.isPublic,
     };
 
     this._EB.publish(new AlbumArtistsUpdatedEvent(eventPayload));
@@ -147,8 +157,13 @@ export class AlbumUpdateService {
       new AlbumUpdatedEvent({
         id: foundAlbumWithArtists.id,
         name: foundAlbumWithArtists.name,
-        artists: foundAlbumWithArtists.artists.map(({ id, name }) => ({ id, name })),
+        artists: foundAlbumWithArtists.artists.map(({ id, name, isPublic }) => ({
+          id,
+          name,
+          isPublic,
+        })),
         cover: foundAlbumWithArtists.cover,
+        isPublic: foundAlbumWithArtists.isPublic,
       }),
     );
 
@@ -175,9 +190,14 @@ export class AlbumUpdateService {
     const eventPayload = {
       id: foundAlbumWithArtists.id,
       name: foundAlbumWithArtists.name,
-      artists: foundAlbumWithArtists.artists.map(({ id, name }) => ({ id, name })),
+      artists: foundAlbumWithArtists.artists.map(({ id, name, isPublic }) => ({
+        id,
+        name,
+        isPublic,
+      })),
       type: foundAlbumWithArtists.type,
       cover: foundAlbumWithArtists.cover,
+      isPublic: foundAlbumWithArtists.isPublic,
     };
 
     this._EB.publish(new AlbumCoverDeletedEvent(eventPayload));

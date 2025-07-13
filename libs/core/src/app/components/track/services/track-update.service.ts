@@ -62,13 +62,20 @@ export class TrackUpdateService {
         album: {
           id: foundTrackWithAlbumAndArtists.album.id,
           name: foundTrackWithAlbumAndArtists.album.name,
+          isPublic: foundTrackWithAlbumAndArtists.album.isPublic,
         },
-        artists: foundTrackWithAlbumAndArtists.artists.map(({ id, name }) => ({ id, name })),
-        featArtists: foundTrackWithAlbumAndArtists.featArtists.map(({ id, name }) => ({
+        artists: foundTrackWithAlbumAndArtists.artists.map(({ id, name, isPublic }) => ({
           id,
           name,
+          isPublic,
+        })),
+        featArtists: foundTrackWithAlbumAndArtists.featArtists.map(({ id, name, isPublic }) => ({
+          id,
+          name,
+          isPublic,
         })),
         cover: foundTrackWithAlbumAndArtists.album.cover,
+        isPublic: foundTrackWithAlbumAndArtists.isPublic,
         isExplicit: foundTrackWithAlbumAndArtists.isExplicit,
       }),
     );
@@ -114,13 +121,20 @@ export class TrackUpdateService {
         album: {
           id: foundTrackWithAlbumAndArtists.album.id,
           name: foundTrackWithAlbumAndArtists.album.name,
+          isPublic: foundTrackWithAlbumAndArtists.album.isPublic,
         },
-        artists: foundTrackWithAlbumAndArtists.artists.map(({ id, name }) => ({ id, name })),
-        featArtists: foundTrackWithAlbumAndArtists.featArtists.map(({ id, name }) => ({
+        artists: foundTrackWithAlbumAndArtists.artists.map(({ id, name, isPublic }) => ({
           id,
           name,
+          isPublic,
+        })),
+        featArtists: foundTrackWithAlbumAndArtists.featArtists.map(({ id, name, isPublic }) => ({
+          id,
+          name,
+          isPublic,
         })),
         cover: foundTrackWithAlbumAndArtists.album.cover,
+        isPublic: foundTrackWithAlbumAndArtists.isPublic,
         isExplicit: foundTrackWithAlbumAndArtists.isExplicit,
       }),
     );
@@ -159,13 +173,20 @@ export class TrackUpdateService {
         album: {
           id: foundTrackWithAlbumAndArtists.album.id,
           name: foundTrackWithAlbumAndArtists.album.name,
+          isPublic: foundTrackWithAlbumAndArtists.album.isPublic,
         },
-        artists: foundTrackWithAlbumAndArtists.artists.map(({ id, name }) => ({ id, name })),
-        featArtists: foundTrackWithAlbumAndArtists.featArtists.map(({ id, name }) => ({
+        artists: foundTrackWithAlbumAndArtists.artists.map(({ id, name, isPublic }) => ({
           id,
           name,
+          isPublic,
+        })),
+        featArtists: foundTrackWithAlbumAndArtists.featArtists.map(({ id, name, isPublic }) => ({
+          id,
+          name,
+          isPublic,
         })),
         cover: foundTrackWithAlbumAndArtists.album.cover,
+        isPublic: foundTrackWithAlbumAndArtists.isPublic,
         isExplicit: foundTrackWithAlbumAndArtists.isExplicit,
       }),
     );
@@ -197,13 +218,20 @@ export class TrackUpdateService {
         album: {
           id: foundTrackWithAlbumAndArtists.album.id,
           name: foundTrackWithAlbumAndArtists.album.name,
+          isPublic: foundTrackWithAlbumAndArtists.album.isPublic,
         },
-        artists: foundTrackWithAlbumAndArtists.artists.map(({ id, name }) => ({ id, name })),
-        featArtists: foundTrackWithAlbumAndArtists.featArtists.map(({ id, name }) => ({
+        artists: foundTrackWithAlbumAndArtists.artists.map(({ id, name, isPublic }) => ({
           id,
           name,
+          isPublic,
+        })),
+        featArtists: foundTrackWithAlbumAndArtists.featArtists.map(({ id, name, isPublic }) => ({
+          id,
+          name,
+          isPublic,
         })),
         cover: foundTrackWithAlbumAndArtists.album.cover,
+        isPublic: foundTrackWithAlbumAndArtists.isPublic,
         isExplicit: foundTrackWithAlbumAndArtists.isExplicit,
       }),
     );
@@ -231,13 +259,16 @@ export class TrackUpdateService {
       album: {
         id: track.album.id,
         name: track.album.name,
+        isPublic: track.album.isPublic,
       },
-      artists: track.artists.map(({ id, name }) => ({ id, name })),
-      featArtists: track.featArtists.map(({ id, name }) => ({
+      artists: track.artists.map(({ id, name, isPublic }) => ({ id, name, isPublic })),
+      featArtists: track.featArtists.map(({ id, name, isPublic }) => ({
         id,
         name,
+        isPublic,
       })),
       cover: track.album.cover,
+      isPublic: track.isPublic,
       isExplicit: track.isExplicit,
     }));
     this._EB.publish(new TracksUpdatedEvent({ tracks: eventPayload }));
@@ -262,13 +293,16 @@ export class TrackUpdateService {
       album: {
         id: track.album.id,
         name: track.album.name,
+        isPublic: track.album.isPublic,
       },
-      artists: track.artists.map(({ id, name }) => ({ id, name })),
-      featArtists: track.featArtists.map(({ id, name }) => ({
+      artists: track.artists.map(({ id, name, isPublic }) => ({ id, name, isPublic })),
+      featArtists: track.featArtists.map(({ id, name, isPublic }) => ({
         id,
         name,
+        isPublic,
       })),
       cover: track.album.cover,
+      isPublic: track.isPublic,
       isExplicit: track.isExplicit,
     }));
     this._EB.publish(new TracksUpdatedEvent({ tracks: eventPayload }));

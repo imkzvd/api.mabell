@@ -5,6 +5,7 @@ export type ArtistCreatedEventPayload = {
   id: ArtistId;
   name: string;
   avatar: string | null;
+  isPublic: boolean;
 };
 
 export class ArtistCreatedEvent extends Event<ArtistCreatedEventPayload> {

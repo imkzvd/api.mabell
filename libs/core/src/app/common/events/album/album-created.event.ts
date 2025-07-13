@@ -4,8 +4,9 @@ import { AlbumId } from '@core/domain/components/album/types';
 export type AlbumCreatedEventPayload = {
   id: AlbumId;
   name: string;
-  artists: { id: string; name: string }[];
+  artists: { id: string; name: string; isPublic: boolean }[];
   cover: string | null;
+  isPublic: boolean;
 };
 
 export class AlbumCreatedEvent extends Event<AlbumCreatedEventPayload> {

@@ -1,9 +1,19 @@
 import { Module } from '@nestjs/common';
-import { TrackEventSubscriber } from './track.event-subscriber';
-import { TrackCollection } from './track.collection';
+import { TrackCollection } from '@infrastructure/typesense/modules/track/track.collection';
 
 @Module({
-  providers: [TrackEventSubscriber, TrackCollection],
+  providers: [
+    {
+      provide: TrackCollection,
+      useFactory: async () => {
+        const collection = new TrackCollection();
+
+        await collection.init();
+
+        return collection;
+      },
+    },
+  ],
   exports: [TrackCollection],
 })
 export class TrackModule {}

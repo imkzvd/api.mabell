@@ -1,9 +1,19 @@
 import { Module } from '@nestjs/common';
-import { AlbumEventSubscriber } from './album.event-subscriber';
-import { AlbumCollection } from './album.collection';
+import { AlbumCollection } from '@infrastructure/typesense/modules/album/album.collection';
 
 @Module({
-  providers: [AlbumEventSubscriber, AlbumCollection],
+  providers: [
+    {
+      provide: AlbumCollection,
+      useFactory: async () => {
+        const collection = new AlbumCollection();
+
+        await collection.init();
+
+        return collection;
+      },
+    },
+  ],
   exports: [AlbumCollection],
 })
 export class AlbumModule {}
