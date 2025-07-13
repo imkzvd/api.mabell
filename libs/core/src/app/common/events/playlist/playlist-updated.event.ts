@@ -5,8 +5,9 @@ import { UserId } from '@core/domain/components/user/types';
 export type PlaylistUpdatedEventPayload = {
   id: PlaylistId;
   name: string;
-  owner: { id: UserId; name: string };
+  owner: { id: UserId; name: string; isPublic: boolean };
   cover: string | null;
+  isPublic: boolean;
 };
 
 export class PlaylistUpdatedEvent extends Event<PlaylistUpdatedEventPayload> {

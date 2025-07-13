@@ -37,8 +37,13 @@ export class PlaylistCreateService {
       new PlaylistCreatedEvent({
         id: foundPlaylistWithOwner.id,
         name: foundPlaylistWithOwner.name,
-        owner: { id: foundPlaylistWithOwner.owner.id, name: foundPlaylistWithOwner.owner.name },
+        owner: {
+          id: foundPlaylistWithOwner.owner.id,
+          name: foundPlaylistWithOwner.owner.name,
+          isPublic: foundPlaylistWithOwner.owner.isPublic,
+        },
         cover: foundPlaylistWithOwner.cover,
+        isPublic: foundPlaylistWithOwner.isPublic,
       }),
     );
 
