@@ -6,6 +6,6 @@ export class GetAlbumsHandler implements QueryHandler<GetAlbumsQuery> {
   constructor(private readonly _service: SearchService) {}
 
   async execute({ q }: GetAlbumsQuery) {
-    return this._service.findAlbumsByKey(q);
+    return this._service.findAlbums(q);
   }
 }

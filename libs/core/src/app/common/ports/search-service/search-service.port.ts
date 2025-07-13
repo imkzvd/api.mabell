@@ -6,15 +6,15 @@ import { IndexedItemsDTO } from './dtos/indexed-items.dto';
 import { IndexedPlaylistDTO } from './dtos/indexed-playlist.dto';
 
 export interface SearchService {
-  findByKey(key: string, isPublic?: boolean): Promise<IndexedItemsDTO>;
+  find(q: string, isGlobal?: boolean): Promise<IndexedItemsDTO>;
 
-  findUsersByKey(key: string, isPublic?: boolean): Promise<IndexedUserDTO[]>;
+  findUsers(q: string): Promise<IndexedUserDTO[]>;
 
-  findArtistsByKey(key: string, isPublic?: boolean): Promise<IndexedArtistDTO[]>;
+  findArtists(q: string, isGlobal?: boolean): Promise<IndexedArtistDTO[]>;
 
-  findAlbumsByKey(key: string, isPublic?: boolean): Promise<IndexedAlbumDTO[]>;
+  findAlbums(q: string, isGlobal?: boolean): Promise<IndexedAlbumDTO[]>;
 
-  findTracksByKey(key: string, isPublic?: boolean): Promise<IndexedTrackDTO[]>;
+  findTracks(q: string, isGlobal?: boolean): Promise<IndexedTrackDTO[]>;
 
-  findPlaylistsByKey(key: string, isPublic?: boolean): Promise<IndexedPlaylistDTO[]>;
+  findPlaylists(q: string, isGlobal?: boolean): Promise<IndexedPlaylistDTO[]>;
 }

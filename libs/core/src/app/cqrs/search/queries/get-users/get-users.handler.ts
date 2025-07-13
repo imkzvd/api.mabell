@@ -6,6 +6,6 @@ export class GetUsersHandler implements QueryHandler<GetUsersQuery> {
   constructor(private readonly _service: SearchService) {}
 
   async execute({ q }: GetUsersQuery) {
-    return this._service.findUsersByKey(q);
+    return this._service.findUsers(q);
   }
 }

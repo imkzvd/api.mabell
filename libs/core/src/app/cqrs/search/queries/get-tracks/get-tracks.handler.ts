@@ -6,6 +6,6 @@ export class GetTracksHandler implements QueryHandler<GetTracksQuery> {
   constructor(private readonly _service: SearchService) {}
 
   async execute({ q }: GetTracksQuery) {
-    return this._service.findTracksByKey(q);
+    return this._service.findTracks(q);
   }
 }
