@@ -29,6 +29,6 @@ export class IndexedAlbumRO {
     this.id = dto.id;
     this.name = dto.name;
     this.artists = dto.artists.map((i) => new IndexedSimplifiedArtistRO(i));
-    this.cover = dto.cover ? `${process.env.HOST}${dto.cover}` : null;
+    this.cover = dto.cover ? `${process.env.API_URL}${dto.cover}` : null;
   }
 }

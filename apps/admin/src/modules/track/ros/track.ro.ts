@@ -99,7 +99,7 @@ export class TrackRO {
     this.artistIds = dto.artists.map(({ id }) => id);
     this.featArtists = dto.featArtists.map((i) => new ArtistRO(i));
     this.featArtistIds = dto.featArtists.map(({ id }) => id);
-    this.file = dto.file ? `${process.env.HOST}${dto.file}` : null;
+    this.file = dto.file ? `${process.env.API_URL}${dto.file}` : null;
     this.duration = dto.duration;
     this.isExplicit = dto.isExplicit;
     this.isActive = dto.isActive;
