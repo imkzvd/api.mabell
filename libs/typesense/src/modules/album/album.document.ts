@@ -1,10 +1,10 @@
 export class Album {
   constructor(
-    public readonly id: string,
-    public readonly name: string,
-    public readonly artistIds: string[],
-    public readonly artistNames: string[],
-    public readonly cover?: string,
-    public readonly isGlobal: boolean = false,
+    public id: string,
+    public name: string,
+    public artistIds: string[],
+    public artistNames: string[],
+    public cover?: string,
+    public isGlobal: boolean = false,
   ) {}
 }

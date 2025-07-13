@@ -11,7 +11,6 @@ export class AlbumCollection extends BaseCollection<Album, IndexedAlbumDTO, Albu
       'albums',
       {
         name: 'albums',
-        enable_nested_fields: true,
         fields: [
           { name: 'id', type: 'string', index: false },
           { name: 'name', type: 'string' },
