@@ -1,18 +1,21 @@
-import { Client } from 'typesense';
 import { CollectionCreateSchema } from 'typesense/lib/Typesense/Collections';
+import { SearchParams } from 'typesense/lib/Typesense/Documents';
+import { OffsetLimitPaginationResponseDTO } from '@core/shared/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
 import { BaseMapper } from '@infrastructure/typesense/base/base-mapper.interface';
+import { TypeSenseClient } from '@infrastructure/typesense/client';
+import { DEFAULT_LIMIT } from '@infrastructure/typesense/constants';
 
 export abstract class BaseCollection<
   Doc extends Record<string, any>,
   DTO extends Record<string, any>,
   Payload extends Record<string, any>,
 > {
+  protected readonly _client = TypeSenseClient;
+
   constructor(
-    private readonly _client: Client,
     private readonly _collectionName: string,
     private readonly _collectionSchema: CollectionCreateSchema,
-    private readonly _mapper: BaseMapper<Doc, DTO, Payload>,
-    private readonly _queryBy: string,
+    protected readonly _mapper: BaseMapper<Doc, DTO, Payload>,
   ) {}
 
   async init() {
@@ -52,12 +55,20 @@ export abstract class BaseCollection<
     await promiseQueue;
   }
 
-  async search(q: string): Promise<DTO[]> {
+  protected async search(
+    params: Pick<SearchParams, 'q' | 'query_by' | 'filter_by' | 'offset' | 'limit'>,
+  ): Promise<OffsetLimitPaginationResponseDTO<Doc>> {
     const result = await this._client
       .collections<Doc>(this._collectionName)
       .documents()
-      .search({ q, query_by: this._queryBy });
+      .search(params);
 
-    return result.hits?.map(({ document }) => this._mapper.toDTO(document)) || [];
+    return new OffsetLimitPaginationResponseDTO(
+      result.hits?.map(({ document }) => document) || [],
+      result.found,
+      params.limit || DEFAULT_LIMIT,
+      params.offset || 0,
+      (params.limit || DEFAULT_LIMIT) + (params.offset || 0) < result.found,
+    );
   }
 }
