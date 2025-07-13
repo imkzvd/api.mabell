@@ -4,8 +4,9 @@ import { IndexedSimplifiedArtistDTO } from '@core/app/common/ports/search-servic
 import { TrackPayload } from '@infrastructure/typesense/modules/track/types';
 import { TrackFactory } from '@infrastructure/typesense/modules/track/track.factory';
 import { Track } from '@infrastructure/typesense/modules/track/track.document';
+import { BaseMapper } from '@infrastructure/typesense/base/base-mapper.interface';
 
-class TrackMapper {
+class TrackMapper implements BaseMapper<Track, IndexedTrackDTO, TrackPayload> {
   toDocument(payload: TrackPayload): Track {
     return TrackFactory.create(payload);
   }
