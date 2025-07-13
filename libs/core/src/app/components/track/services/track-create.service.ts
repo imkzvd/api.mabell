@@ -39,10 +39,19 @@ export class TrackCreateService {
       new TrackCreatedEvent({
         id: foundTrack.id,
         name: foundTrack.name,
-        album: { id: foundTrack.album.id, name: foundTrack.album.name },
-        artists: foundTrack.artists.map(({ id, name }) => ({ id, name })),
-        featArtists: foundTrack.featArtists.map(({ id, name }) => ({ id, name })),
+        album: {
+          id: foundTrack.album.id,
+          name: foundTrack.album.name,
+          isPublic: foundTrack.album.isPublic,
+        },
+        artists: foundTrack.artists.map(({ id, name, isPublic }) => ({ id, name, isPublic })),
+        featArtists: foundTrack.featArtists.map(({ id, name, isPublic }) => ({
+          id,
+          name,
+          isPublic,
+        })),
         cover: foundTrack.album.cover,
+        isPublic: foundTrack.isPublic,
         isExplicit: foundTrack.isExplicit,
       }),
     );
