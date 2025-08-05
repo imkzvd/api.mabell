@@ -9,7 +9,7 @@ import { TrackId } from '../track/types';
 export class Playlist {
   constructor(
     private readonly _id: PlaylistId,
-    private readonly _owner: UserId,
+    private readonly _user: UserId,
     private _name: NameVO,
     private _genres: GenreVO[],
     private _cover: string | null,
@@ -25,8 +25,8 @@ export class Playlist {
     return this._id;
   }
 
-  getOwner(): UserId {
-    return this._owner;
+  getUser(): UserId {
+    return this._user;
   }
 
   getName(): NameVO {

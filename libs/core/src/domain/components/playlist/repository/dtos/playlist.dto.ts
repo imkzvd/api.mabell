@@ -7,7 +7,7 @@ export class PlaylistDTO {
   constructor(
     public readonly id: PlaylistId,
     public readonly name: string,
-    public readonly owner: UserId | null,
+    public readonly user: UserId,
     public readonly genres: Genre[],
     public readonly cover: string | null,
     public readonly color: string | null,

@@ -3,10 +3,10 @@ import { UserDTO } from '../../../user/repository/dtos/user.dto';
 import { PlaylistId } from '../../types';
 import { TrackId } from '../../../track/types';
 
-export class PlaylistWithOwnerDTO {
+export class PlaylistWithUserDTO {
   constructor(
     public readonly id: PlaylistId,
-    public readonly owner: UserDTO,
+    public readonly user: UserDTO,
     public readonly name: string,
     public readonly genres: Genre[],
     public readonly cover: string | null,
