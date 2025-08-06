@@ -9,6 +9,6 @@ export class UpdatePlaylistDocumentsOnUserUpdatedEventHandler extends EventHandl
   }
 
   handle(event: UserUpdatedEvent) {
-    void this._collection.updateOwnerDataByUserId(event.payload.id, event.payload);
+    void this._collection.updateUserDataByUserId(event.payload.id, event.payload);
   }
 }

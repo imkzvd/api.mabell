@@ -6,10 +6,10 @@ export class PlaylistFactory {
     return new Playlist(
       payload.id,
       payload.name,
-      payload.owner.id,
-      payload.owner.name,
+      payload.user.id,
+      payload.user.name,
       payload.cover || undefined,
-      payload.isPublic && payload.owner.isPublic,
+      payload.isPublic && payload.user.isPublic,
     );
   }
 }
