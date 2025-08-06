@@ -19,6 +19,7 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
+import { ConfigService } from '@nestjs/config';
 import { faker } from '@faker-js/faker';
 import { AdminRoles } from '@core/domain/components/admin/constants/admin-roles';
 import { CommandBus } from '@infrastructure/command-bus';
@@ -48,6 +49,7 @@ export class UserController {
   constructor(
     private readonly _CB: CommandBus,
     private readonly _QB: QueryBus,
+    private readonly _configService: ConfigService,
   ) {}
 
   @ApiOperation({ summary: 'Create user', operationId: 'createUser' })
@@ -216,6 +218,26 @@ export class UserController {
   @Delete('/:id')
   async deleteUser(@Param('id', ParseObjectIdPipe) id: string): Promise<void> {
     await this._CB.execute(new DeleteUserCommand(id));
+  }
+
+  @ApiOperation({ summary: 'Get mabell user', operationId: 'getMabellUser' })
+  @ApiOkResponse({ description: 'Mabell User', type: UserRO })
+  @Roles(AdminRoles.Guest)
+  @Get('/mabell')
+  async getMabellUser(): Promise<UserRO> {
+    const mabellUserId = this._configService.get<string>('app.mabellUserId');
+
+    if (!mabellUserId) {
+      throw new BadRequestException('Mabell user id is required');
+    }
+
+    const foundUser = await this._QB.execute(new GetUserQuery(mabellUserId));
+
+    if (!foundUser) {
+      throw new NotFoundException(`User does not exist`);
+    }
+
+    return new UserRO(foundUser);
   }
 
   @ApiOperation({ summary: 'Get user by id', operationId: 'getUser' })
