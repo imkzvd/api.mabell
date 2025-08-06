@@ -9,7 +9,8 @@ export interface ArtistWriteRepository {
   findById(id: string): Promise<Artist | null>;
 
   findByIds(ids: string[]): Promise<{
-    items: Artist[];
+    items: (Artist | null)[];
+    foundItems: Artist[];
     foundIds: ArtistId[];
     total: number;
     missingIds: string[];
@@ -18,6 +19,7 @@ export interface ArtistWriteRepository {
   existsById(id: string): Promise<ArtistId | null>;
 
   existsByIds(ids: string[]): Promise<{
+    items: (ArtistId | null)[];
     foundIds: ArtistId[];
     total: number;
     missingIds: string[];

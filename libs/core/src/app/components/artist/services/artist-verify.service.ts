@@ -9,6 +9,7 @@ export class ArtistVerifyService {
   }
 
   async verifyByIds(ids: string[]): Promise<{
+    items: (ArtistId | null)[];
     foundIds: ArtistId[];
     total: number;
     missingIds: string[];

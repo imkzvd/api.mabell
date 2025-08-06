@@ -38,21 +38,26 @@ export class ArtistWriteRepository implements ArtistWriteRepositoryPort {
   }
 
   async findByIds(ids: string[]): Promise<{
-    items: DomainArtist[];
+    items: (DomainArtist | null)[];
+    foundItems: DomainArtist[];
     foundIds: ArtistId[];
     total: number;
     missingIds: string[];
   }> {
     const foundDocs = await this._artistModel.find({ _id: ids }).lean<Artist[]>();
-    const docsMap: Map<string, Artist> = new Map(foundDocs.map((doc) => [doc._id.toString(), doc]));
-    const sortedDocs = ids.map((id) => docsMap.get(id)!);
-    const foundDocIds = sortedDocs.map((doc) => doc._id.toHexString());
-    const missingDocIds = ids.filter((id) => !foundDocIds.includes(id));
+    const foundDocsMap: Map<string, DomainArtist> = new Map(
+      foundDocs.map((doc) => [doc._id.toString(), ArtistMapper.toDomainEntity(doc)]),
+    );
+    const itemsResult: (DomainArtist | null)[] = ids.map((id) => {
+      return foundDocsMap.get(id) || null;
+    });
+    const missingDocIds = ids.filter((id) => !foundDocsMap.has(id));
 
     return {
-      items: sortedDocs.map((doc) => ArtistMapper.toDomainEntity(doc)),
-      foundIds: foundDocIds as ArtistId[],
-      total: foundDocIds.length,
+      items: itemsResult,
+      foundItems: itemsResult.filter((i) => i !== null),
+      foundIds: [...foundDocsMap.keys()] as ArtistId[],
+      total: foundDocsMap.size,
       missingIds: missingDocIds,
     };
   }
@@ -64,17 +69,25 @@ export class ArtistWriteRepository implements ArtistWriteRepositoryPort {
   }
 
   async existsByIds(ids: string[]): Promise<{
+    items: (ArtistId | null)[];
     foundIds: ArtistId[];
     total: number;
     missingIds: string[];
   }> {
     const foundDocs = await this._artistModel.find({ _id: ids }, '_id');
-    const foundIds = new Set(foundDocs.map((doc) => doc._id.toString()));
+    const foundDocIdsMap = new Set<string>(foundDocs.map((doc) => doc._id.toString()));
+    const itemsResult = ids.map((id) => {
+      if (foundDocIdsMap.has(id)) return id;
+
+      return null;
+    });
+    const missingIds = ids.filter((id) => !foundDocIdsMap.has(id));
 
     return {
-      foundIds: [...foundIds] as ArtistId[],
-      total: foundIds.size,
-      missingIds: ids.filter((id) => !foundIds.has(id)),
+      items: itemsResult as (ArtistId | null)[],
+      foundIds: itemsResult.filter((i) => i !== null) as ArtistId[],
+      total: foundDocIdsMap.size,
+      missingIds,
     };
   }
 
