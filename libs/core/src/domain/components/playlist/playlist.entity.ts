@@ -113,15 +113,15 @@ export class Playlist {
     return this;
   }
 
-  deleteTrack(id: TrackId): Playlist {
-    this._tracks.delete(id);
+  deleteTrack(id: TrackId | string): Playlist {
+    this._tracks.delete(id as TrackId);
     this.refreshUpdatedAt();
 
     return this;
   }
 
-  deleteTracks(ids: TrackId[]): Playlist {
-    ids.forEach((id) => this._tracks.delete(id));
+  deleteTracks(ids: (TrackId | string)[]): Playlist {
+    ids.forEach((id) => this._tracks.delete(id as TrackId));
     this.refreshUpdatedAt();
 
     return this;
