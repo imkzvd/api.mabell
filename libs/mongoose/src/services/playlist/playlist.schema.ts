@@ -9,7 +9,7 @@ import { BaseSchema } from '../../base/base.schema';
 @SchemaDecorator({ versionKey: false, timestamps: true })
 export class Playlist extends BaseSchema {
   @Prop({ required: true, type: Schema.Types.ObjectId, ref: User.name })
-  owner: Types.ObjectId;
+  user: Types.ObjectId;
 
   @Prop({ required: true, type: String })
   name: string;
