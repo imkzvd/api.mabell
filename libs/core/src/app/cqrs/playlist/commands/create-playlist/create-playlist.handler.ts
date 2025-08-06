@@ -10,13 +10,13 @@ export class CreatePlaylistHandler implements CommandHandler<CreatePlaylistComma
     private readonly _playlistCreateService: PlaylistCreateService,
   ) {}
 
-  async execute({ ownerId }: CreatePlaylistCommand) {
-    const verifiedUserId = await this._userVerifyService.verify(ownerId);
+  async execute({ userId }: CreatePlaylistCommand) {
+    const verifiedUserId = await this._userVerifyService.verify(userId);
 
     if (!verifiedUserId) {
       throw new NotFoundException('User does not exist');
     }
 
-    return await this._playlistCreateService.create({ ownerId: verifiedUserId });
+    return await this._playlistCreateService.create({ userId: verifiedUserId });
   }
 }
