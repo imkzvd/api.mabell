@@ -45,6 +45,7 @@ import { AlbumsRO } from '../album/ros/albums.ro';
 import { GetArtistAlbumsQuery } from '@core/app/cqrs/album/queries/get-artist-albums/get-artist-albums.query';
 import { TracksRO } from '../track/ros/tracks.ro';
 import { GetArtistTracksQuery } from '@core/app/cqrs/track/queries/get-artist-tracks/get-artist-tracks.query';
+import { CreateAlbumCommand } from '@core/app/cqrs/album/commands/create-album/create-album.command';
 
 @ApiTags('Artist')
 @Roles(AdminRoles.Owner, AdminRoles.Admin)
@@ -228,6 +229,28 @@ export class ArtistController {
     }
 
     return new ArtistRO(foundArtist);
+  }
+
+  @ApiOperation({ summary: 'Create album', operationId: 'createAlbum' })
+  @ApiParam({
+    type: String,
+    name: 'id',
+    description: 'Id',
+    example: faker.database.mongodbObjectId(),
+  })
+  @ApiOkResponse({
+    description: 'Album Id',
+    schema: { properties: { albumId: { type: 'string' } }, required: ['albumId'] },
+  })
+  @Post('/:id/albums')
+  async createAlbum(@Param('id', ParseObjectIdPipe) id: string): Promise<{
+    albumId: string;
+  }> {
+    const createdAlbumId = await this._commandBus.execute(new CreateAlbumCommand(id));
+
+    return {
+      albumId: createdAlbumId,
+    };
   }
 
   @ApiOperation({ summary: 'Get artist albums', operationId: 'getArtistAlbums' })
