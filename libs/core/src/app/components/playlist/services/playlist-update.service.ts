@@ -138,7 +138,7 @@ export class PlaylistUpdateService {
     return foundPlaylist.getId();
   }
 
-  async deleteTrack(id: string, trackId: TrackId): Promise<PlaylistId> {
+  async deleteTrack(id: string, trackId: TrackId | string): Promise<PlaylistId> {
     const foundPlaylist = await this._WR.findById(id);
 
     if (!foundPlaylist) {
