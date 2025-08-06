@@ -10,7 +10,7 @@ import { TrackId } from '../track/types';
 export class PlaylistFactory {
   static create(props: {
     id: PlaylistId;
-    owner: UserId;
+    user: UserId;
     name: string;
     genres?: string[];
     cover?: string | null;
@@ -23,7 +23,7 @@ export class PlaylistFactory {
   }) {
     return new Playlist(
       props.id,
-      props.owner,
+      props.user,
       NameVO.create(props.name),
       props.genres?.map((genre: string) => GenreVO.create(genre)) || [],
       props.cover || null,

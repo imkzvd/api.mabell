@@ -14,7 +14,7 @@ class PlaylistMapper implements BaseMapper<Playlist, IndexedPlaylistDTO, Playlis
     return new IndexedPlaylistDTO(
       doc.id,
       doc.name,
-      new IndexedSimplifiedUserDTO(doc.ownerId, doc.ownerName),
+      new IndexedSimplifiedUserDTO(doc.userId, doc.userName),
       doc.cover || null,
     );
   }

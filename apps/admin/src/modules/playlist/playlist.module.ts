@@ -11,6 +11,7 @@ import { DeleteTrackFromPlaylistHandler } from './commands/delete-track-from-pla
 import { UpdatePlaylistHandler } from './commands/update-playlist.handler';
 import { UpdatePlaylistCoverHandler } from './commands/update-playlist-cover.handler';
 import { GetPlaylistHandler } from './queries/get-playlist.handler';
+import { GetUserPlaylistsHandler } from './queries/get-user-playlists.handler';
 import { GetPlaylistTracksHandler } from '../track/queries/get-playlist-tracks.handler';
 import { playlistServiceProvider } from './providers/playlist-service.provider';
 import { trackServiceProvider } from '../track/providers/track-service.provider';
@@ -40,6 +41,7 @@ import { PlaylistEventSubscriber } from './events/playlist.event-subscriber';
     UpdatePlaylistCoverHandler,
     GetPlaylistHandler,
     GetPlaylistTracksHandler,
+    GetUserPlaylistsHandler,
     PlaylistEventSubscriber,
   ],
   controllers: [PlaylistController],

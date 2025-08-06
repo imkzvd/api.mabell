@@ -6,16 +6,16 @@ import { UserDocument } from '../user/types';
 
 export type PlaylistDocument = HydratedDocument<Playlist>;
 
-export type PlaylistWithOwnerDocument = Overwrite<
+export type PlaylistWithUserDocument = Overwrite<
   PlaylistDocument,
   {
-    owner: UserDocument;
+    user: UserDocument;
   }
 >;
 
-export type PlaylistWithOwner = Overwrite<
+export type PlaylistWithUser = Overwrite<
   Playlist,
   {
-    owner: User;
+    user: User;
   }
 >;

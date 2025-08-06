@@ -31,8 +31,8 @@ export class PlaylistWriteRepository implements PlaylistWriteRepositoryPort {
     return result.deletedCount ? (id as PlaylistId) : null;
   }
 
-  async deleteByOwnerId(ownerId: string): Promise<{ deletedIds: PlaylistId[]; total: number }> {
-    const queryFilter = { owner: ownerId };
+  async deleteByUserId(userId: string): Promise<{ deletedIds: PlaylistId[]; total: number }> {
+    const queryFilter = { user: userId };
     const foundDocs = await this._playlistModel.find(queryFilter, '_id').lean().exec();
 
     await this._playlistModel.deleteMany(queryFilter).exec();
@@ -49,8 +49,8 @@ export class PlaylistWriteRepository implements PlaylistWriteRepositoryPort {
     return foundDoc ? PlaylistMapper.toDomainEntity(foundDoc) : null;
   }
 
-  async getNextPlaylistIndexByOwnerId(ownerId: string): Promise<number> {
-    const docsTotal = await this._playlistModel.countDocuments({ owner: ownerId });
+  async getNextPlaylistIndexByUserId(userId: string): Promise<number> {
+    const docsTotal = await this._playlistModel.countDocuments({ user: userId });
 
     return docsTotal + 1;
   }

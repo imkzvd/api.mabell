@@ -6,7 +6,7 @@ import { UserDTO } from '@core/app/components/user/dtos/user.dto';
 export class PlaylistDTO {
   constructor(
     public readonly id: PlaylistId,
-    public readonly owner: UserDTO,
+    public readonly user: UserDTO,
     public readonly name: string,
     public readonly genres: Genre[],
     public readonly cover: string | null,

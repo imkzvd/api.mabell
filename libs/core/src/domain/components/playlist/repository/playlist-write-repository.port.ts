@@ -6,12 +6,12 @@ export interface PlaylistWriteRepository {
 
   deleteById(id: string): Promise<PlaylistId | null>;
 
-  deleteByOwnerId(ownerId: string): Promise<{
+  deleteByUserId(userId: string): Promise<{
     deletedIds: PlaylistId[];
     total: number;
   }>;
 
   findById(id: string): Promise<Playlist | null>;
 
-  getNextPlaylistIndexByOwnerId(ownerId: string): Promise<number>;
+  getNextPlaylistIndexByUserId(userId: string): Promise<number>;
 }

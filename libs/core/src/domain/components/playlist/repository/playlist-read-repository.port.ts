@@ -1,4 +1,4 @@
-import { PlaylistWithOwnerDTO } from './dtos/playlist-with-owner.dto';
+import { PlaylistWithUserDTO } from './dtos/playlist-with-user.dto';
 import { OffsetLimitPaginationDTO } from '@core/shared/dtos/offset-limit-pagination/offset-limit-pagination-payload.dto';
 import { OffsetLimitPaginationResponseDTO } from '@core/shared/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
 
@@ -8,7 +8,15 @@ export interface PlaylistReadRepository {
     options?: Partial<{
       isPublic: boolean;
     }>,
-  ): Promise<PlaylistWithOwnerDTO | null>;
+  ): Promise<PlaylistWithUserDTO | null>;
+
+  findByUserId(
+    userId: string,
+    options?: Partial<{
+      isPublic: boolean;
+      pagination: OffsetLimitPaginationDTO;
+    }>,
+  ): Promise<OffsetLimitPaginationResponseDTO<PlaylistWithUserDTO>>;
 
   getTracks(
     id: string,

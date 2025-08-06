@@ -18,32 +18,32 @@ export class PlaylistCreateService {
 
   async create(payload: CreatePlaylistPayload): Promise<PlaylistId> {
     const generatedId = this._idService.generate();
-    const nextPlaylistIndex = await this._WR.getNextPlaylistIndexByOwnerId(payload.ownerId);
+    const nextPlaylistIndex = await this._WR.getNextPlaylistIndexByUserId(payload.userId);
     const createdPlaylist = PlaylistFactory.create({
       id: generatedId,
-      owner: payload.ownerId,
+      user: payload.userId,
       name: `Playlist #${nextPlaylistIndex}`,
     });
 
     await this._WR.save(createdPlaylist);
 
-    const foundPlaylistWithOwner = await this._RR.findById(createdPlaylist.getId());
+    const foundPlaylist = await this._RR.findById(createdPlaylist.getId());
 
-    if (!foundPlaylistWithOwner) {
+    if (!foundPlaylist) {
       throw new NotFoundException('Playlist does not exist');
     }
 
     this._EB.publish(
       new PlaylistCreatedEvent({
-        id: foundPlaylistWithOwner.id,
-        name: foundPlaylistWithOwner.name,
-        owner: {
-          id: foundPlaylistWithOwner.owner.id,
-          name: foundPlaylistWithOwner.owner.name,
-          isPublic: foundPlaylistWithOwner.owner.isPublic,
+        id: foundPlaylist.id,
+        name: foundPlaylist.name,
+        user: {
+          id: foundPlaylist.user.id,
+          name: foundPlaylist.user.name,
+          isPublic: foundPlaylist.user.isPublic,
         },
-        cover: foundPlaylistWithOwner.cover,
-        isPublic: foundPlaylistWithOwner.isPublic,
+        cover: foundPlaylist.cover,
+        isPublic: foundPlaylist.isPublic,
       }),
     );
 

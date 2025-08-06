@@ -18,8 +18,8 @@ export class PlaylistCollection extends BaseCollection<
         fields: [
           { name: 'id', type: 'string', index: false },
           { name: 'name', type: 'string' },
-          { name: 'ownerId', type: 'string' },
-          { name: 'ownerName', type: 'string', index: false },
+          { name: 'userId', type: 'string' },
+          { name: 'userName', type: 'string', index: false },
           { name: 'cover', type: 'string', optional: true, index: false },
           { name: 'isGlobal', type: 'bool' },
         ],
@@ -40,7 +40,7 @@ export class PlaylistCollection extends BaseCollection<
     return items.map((item) => this._mapper.toDTO(item));
   }
 
-  async updateOwnerDataByUserId(userId: string, payload: UserPayload) {
+  async updateUserDataByUserId(userId: string, payload: UserPayload) {
     const docs: Playlist[] = [];
     const limit = 250;
     let offset = 0;
@@ -48,7 +48,7 @@ export class PlaylistCollection extends BaseCollection<
     while (true) {
       const { items, hasMore } = await this.search({
         q: '*',
-        filter_by: `ownerId:=${userId}`,
+        filter_by: `userId:=${userId}`,
         offset,
         limit,
       });
@@ -63,7 +63,7 @@ export class PlaylistCollection extends BaseCollection<
     if (!docs.length) return;
 
     docs.forEach((doc) => {
-      doc.ownerName = payload.name;
+      doc.userName = payload.name;
     });
 
     await this._client.collections('playlists').documents().import(docs, { action: 'upsert' });
@@ -74,7 +74,7 @@ export class PlaylistCollection extends BaseCollection<
       .collections('playlists')
       .documents()
       .delete({
-        filter_by: `ownerId:${id}`,
+        filter_by: `userId:${id}`,
       });
   }
 }

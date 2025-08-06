@@ -4,6 +4,7 @@ import { PlaylistReadRepository } from '@core/domain/components/playlist/reposit
 import { TrackId } from '@core/domain/components/track/types';
 import { PlaylistDTO } from '../dtos/playlist.dto';
 import PlaylistMapper from '../dtos/playlist.mapper';
+import { OffsetLimitPaginationResponseDTO } from '@core/shared/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
 
 export class PlaylistService {
   constructor(private readonly _RR: PlaylistReadRepository) {}
@@ -17,6 +18,20 @@ export class PlaylistService {
     const foundPlaylist = await this._RR.findById(id, options);
 
     return foundPlaylist ? PlaylistMapper.toDTO(foundPlaylist) : null;
+  }
+
+  async findByUserId(
+    userId: string,
+    options?: Partial<{
+      isPublic: boolean;
+    }>,
+  ): Promise<OffsetLimitPaginationResponseDTO<PlaylistDTO>> {
+    const response = await this._RR.findByUserId(userId, options);
+
+    return {
+      ...response,
+      items: response.items.map((i) => PlaylistMapper.toDTO(i)),
+    };
   }
 
   async getTrackIds(

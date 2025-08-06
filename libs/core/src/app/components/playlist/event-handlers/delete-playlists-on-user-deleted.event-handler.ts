@@ -8,6 +8,6 @@ export class DeletePlaylistsOnUserDeletedEventHandler extends EventHandler<UserD
   }
 
   handle({ payload }: UserDeletedEvent) {
-    void this._service.deleteByOwnerId(payload.id);
+    void this._service.deleteByUserId(payload.id);
   }
 }

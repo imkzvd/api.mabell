@@ -1,23 +1,23 @@
 import { Types } from 'mongoose';
 import { Playlist as DomainPlaylist } from '@core/domain/components/playlist/playlist.entity';
 import { PlaylistFactory } from '@core/domain/components/playlist/playlist.factory';
-import { PlaylistWithOwnerDTO } from '@core/domain/components/playlist/repository/dtos/playlist-with-owner.dto';
+import { PlaylistWithUserDTO } from '@core/domain/components/playlist/repository/dtos/playlist-with-user.dto';
 import { PlaylistId } from '@core/domain/components/playlist/types';
 import { UserId } from '@core/domain/components/user/types';
 import { Playlist } from './playlist.schema';
-import { PlaylistDocument, PlaylistWithOwner, PlaylistWithOwnerDocument } from './types';
+import { PlaylistDocument, PlaylistWithUser, PlaylistWithUserDocument } from './types';
 import { ReadMapper, WriteMapper } from '../../base/mapper.interface';
 import UserMapper from '../user/user.mapper';
 
 class PlaylistMapper
   implements
     WriteMapper<Playlist, DomainPlaylist>,
-    ReadMapper<PlaylistWithOwnerDocument, PlaylistWithOwnerDTO>
+    ReadMapper<PlaylistWithUserDocument, PlaylistWithUserDTO>
 {
   toPersistenceEntity(entity: DomainPlaylist): Playlist {
     return {
       _id: new Types.ObjectId(entity.getId().toString()),
-      owner: new Types.ObjectId(entity.getOwner()),
+      user: new Types.ObjectId(entity.getUser()),
       name: entity.getName().value,
       genres: entity.getGenres().map(({ value }) => value),
       cover: entity.getCover(),
@@ -37,7 +37,7 @@ class PlaylistMapper
     return PlaylistFactory.create({
       id: doc._id.toHexString() as PlaylistId,
       name: doc.name,
-      owner: doc.owner.toHexString() as UserId,
+      user: doc.user.toHexString() as UserId,
       genres: doc.genres,
       cover: doc.cover,
       color: doc.color,
@@ -49,10 +49,10 @@ class PlaylistMapper
     });
   }
 
-  toDTO(doc: PlaylistWithOwner | PlaylistWithOwnerDocument): PlaylistWithOwnerDTO {
-    return new PlaylistWithOwnerDTO(
+  toDTO(doc: PlaylistWithUser | PlaylistWithUserDocument): PlaylistWithUserDTO {
+    return new PlaylistWithUserDTO(
       doc._id.toHexString() as PlaylistId,
-      UserMapper.toDTO(doc.owner),
+      UserMapper.toDTO(doc.user),
       doc.name,
       doc.genres,
       doc.cover,

@@ -4,10 +4,10 @@ import { Model } from 'mongoose';
 import { NotFoundException } from '@core/shared/exceptions';
 import { OffsetLimitPaginationDTO } from '@core/shared/dtos/offset-limit-pagination/offset-limit-pagination-payload.dto';
 import { PlaylistReadRepository as PlaylistReadRepositoryPort } from '@core/domain/components/playlist/repository/playlist-read-repository.port';
-import { PlaylistWithOwnerDTO } from '@core/domain/components/playlist/repository/dtos/playlist-with-owner.dto';
+import { PlaylistWithUserDTO } from '@core/domain/components/playlist/repository/dtos/playlist-with-user.dto';
 import { OffsetLimitPaginationResponseDTO } from '@core/shared/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
 import { Playlist } from './playlist.schema';
-import { PlaylistWithOwner, PlaylistWithOwnerDocument } from './types';
+import { PlaylistWithUser, PlaylistWithUserDocument } from './types';
 import PlaylistMapper from './playlist.mapper';
 import { POPULATE_OPTIONS } from './constants';
 
@@ -21,7 +21,7 @@ export class PlaylistReadRepository implements PlaylistReadRepositoryPort {
   async findById(
     id: string,
     options?: Partial<{ isPublic: boolean }>,
-  ): Promise<PlaylistWithOwnerDTO | null> {
+  ): Promise<PlaylistWithUserDTO | null> {
     const foundDoc = await this._playlistModel
       .findOne(
         {
@@ -30,8 +30,8 @@ export class PlaylistReadRepository implements PlaylistReadRepositoryPort {
         },
         null,
       )
-      .populate<PlaylistWithOwnerDocument>(POPULATE_OPTIONS)
-      .lean<PlaylistWithOwner>()
+      .populate<PlaylistWithUserDocument>(POPULATE_OPTIONS)
+      .lean<PlaylistWithUser>()
       .exec();
 
     if (!foundDoc) {
@@ -39,6 +39,36 @@ export class PlaylistReadRepository implements PlaylistReadRepositoryPort {
     }
 
     return PlaylistMapper.toDTO(foundDoc);
+  }
+
+  async findByUserId(
+    userId: string,
+    options?: Partial<{
+      isPublic: boolean;
+      pagination: OffsetLimitPaginationDTO;
+    }>,
+  ): Promise<OffsetLimitPaginationResponseDTO<PlaylistWithUserDTO>> {
+    const filter = {
+      user: userId,
+      ...(options?.isPublic !== undefined && { isPublic: options.isPublic }),
+    };
+    const docsTotal = await this._playlistModel.countDocuments(filter);
+    const foundDocs = await this._playlistModel
+      .find(filter, null)
+      .limit(options?.pagination?.limit ?? 50)
+      .sort({ createdAt: -1 })
+      .skip(options?.pagination?.offset ?? 0)
+      .populate<PlaylistWithUserDocument[]>(POPULATE_OPTIONS)
+      .lean<PlaylistWithUser[]>()
+      .exec();
+
+    return new OffsetLimitPaginationResponseDTO(
+      foundDocs.map((doc) => PlaylistMapper.toDTO(doc)),
+      docsTotal,
+      options?.pagination?.limit ?? 50,
+      options?.pagination?.offset ?? 0,
+      (options?.pagination?.limit ?? 50) + (options?.pagination?.offset ?? 0) < docsTotal,
+    );
   }
 
   async getTracks(
