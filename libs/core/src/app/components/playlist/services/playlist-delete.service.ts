@@ -21,14 +21,14 @@ export class PlaylistDeleteService {
     }
 
     await this._WR.deleteById(id);
-    await this._FS.deletePlaylistDirectory(foundPlaylist.getOwner(), foundPlaylist.getId());
+    await this._FS.deletePlaylistDirectory(foundPlaylist.getUser(), foundPlaylist.getId());
     this._EB.publish(new PlaylistDeletedEvent({ id: foundPlaylist.getId() }));
 
     return foundPlaylist.getId();
   }
 
-  async deleteByOwnerId(ownerId: string): Promise<PlaylistId[]> {
-    const { deletedIds } = await this._WR.deleteByOwnerId(ownerId);
+  async deleteByUserId(userId: string): Promise<PlaylistId[]> {
+    const { deletedIds } = await this._WR.deleteByUserId(userId);
 
     this._EB.publish(new PlaylistsDeletedEvent({ ids: deletedIds }));
 

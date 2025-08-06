@@ -1,11 +1,11 @@
-import { PlaylistWithOwnerDTO } from '@core/domain/components/playlist/repository/dtos/playlist-with-owner.dto';
+import { PlaylistWithUserDTO } from '@core/domain/components/playlist/repository/dtos/playlist-with-user.dto';
 import { PlaylistDTO } from './playlist.dto';
 
 class PlaylistMapper {
-  toDTO(dto: PlaylistWithOwnerDTO): PlaylistDTO {
+  toDTO(dto: PlaylistWithUserDTO): PlaylistDTO {
     return new PlaylistDTO(
       dto.id,
-      dto.owner,
+      dto.user,
       dto.name,
       dto.genres,
       dto.cover,

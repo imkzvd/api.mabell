@@ -7,6 +7,7 @@ import { EventBus } from '@core/app/common/ports/event-bus.port';
 import { TmpFileStorage } from '@core/app/common/ports/file-storages/tmp-file-storage.port';
 import { UserFileStorage } from '@core/app/common/ports/file-storages/user-file-storage.port';
 import { PlaylistUpdatedEvent } from '@core/app/common/events/playlist/playlist-updated.event';
+import { PlaylistWithUserDTO } from '@core/domain/components/playlist/repository/dtos/playlist-with-user.dto';
 import { UpdatePlaylistCoverPayload, UpdatePlaylistPayload } from '../types';
 
 export class PlaylistUpdateService {
@@ -43,25 +44,13 @@ export class PlaylistUpdateService {
 
     await this._WR.save(foundPlaylist);
 
-    const foundPlaylistWithOwner = await this._RR.findById(id);
+    const foundUpdatedPlaylist = await this._RR.findById(id);
 
-    if (!foundPlaylistWithOwner) {
+    if (!foundUpdatedPlaylist) {
       throw new NotFoundException('Playlist does not exist');
     }
 
-    this._EB.publish(
-      new PlaylistUpdatedEvent({
-        id: foundPlaylistWithOwner.id,
-        name: foundPlaylistWithOwner.name,
-        owner: {
-          id: foundPlaylistWithOwner.owner.id,
-          name: foundPlaylistWithOwner.owner.name,
-          isPublic: foundPlaylistWithOwner.owner.isPublic,
-        },
-        cover: foundPlaylistWithOwner.cover,
-        isPublic: foundPlaylistWithOwner.isPublic,
-      }),
-    );
+    this.publishPlaylistUpdatedEvent(foundUpdatedPlaylist);
 
     return foundPlaylist.getId();
   }
@@ -81,7 +70,7 @@ export class PlaylistUpdateService {
       }
 
       const storedFileData = await this._userFS.savePlaylistCover(
-        foundPlaylist.getOwner(),
+        foundPlaylist.getUser(),
         foundPlaylist.getId(),
         uploadedFile,
       );
@@ -95,25 +84,13 @@ export class PlaylistUpdateService {
 
     await this._WR.save(foundPlaylist);
 
-    const foundPlaylistWithOwner = await this._RR.findById(id);
+    const foundUpdatedPlaylist = await this._RR.findById(id);
 
-    if (!foundPlaylistWithOwner) {
+    if (!foundUpdatedPlaylist) {
       throw new NotFoundException('Playlist does not exist');
     }
 
-    this._EB.publish(
-      new PlaylistUpdatedEvent({
-        id: foundPlaylistWithOwner.id,
-        name: foundPlaylistWithOwner.name,
-        owner: {
-          id: foundPlaylistWithOwner.owner.id,
-          name: foundPlaylistWithOwner.owner.name,
-          isPublic: foundPlaylistWithOwner.owner.isPublic,
-        },
-        cover: foundPlaylistWithOwner.cover,
-        isPublic: foundPlaylistWithOwner.isPublic,
-      }),
-    );
+    this.publishPlaylistUpdatedEvent(foundUpdatedPlaylist);
 
     return foundPlaylist.getId();
   }
@@ -127,27 +104,15 @@ export class PlaylistUpdateService {
 
     foundPlaylist.deleteCover();
     await this._WR.save(foundPlaylist);
-    await this._userFS.deletePlaylistCover(foundPlaylist.getOwner(), foundPlaylist.getId());
+    await this._userFS.deletePlaylistCover(foundPlaylist.getUser(), foundPlaylist.getId());
 
-    const foundPlaylistWithOwner = await this._RR.findById(id);
+    const foundUpdatedPlaylist = await this._RR.findById(id);
 
-    if (!foundPlaylistWithOwner) {
+    if (!foundUpdatedPlaylist) {
       throw new NotFoundException('Playlist does not exist');
     }
 
-    this._EB.publish(
-      new PlaylistUpdatedEvent({
-        id: foundPlaylistWithOwner.id,
-        name: foundPlaylistWithOwner.name,
-        owner: {
-          id: foundPlaylistWithOwner.owner.id,
-          name: foundPlaylistWithOwner.owner.name,
-          isPublic: foundPlaylistWithOwner.owner.isPublic,
-        },
-        cover: foundPlaylistWithOwner.cover,
-        isPublic: foundPlaylistWithOwner.isPublic,
-      }),
-    );
+    this.publishPlaylistUpdatedEvent(foundUpdatedPlaylist);
 
     return foundPlaylist.getId();
   }
@@ -162,25 +127,13 @@ export class PlaylistUpdateService {
     foundPlaylist.addTrack(trackId);
     await this._WR.save(foundPlaylist);
 
-    const foundPlaylistWithOwner = await this._RR.findById(id);
+    const foundUpdatedPlaylist = await this._RR.findById(id);
 
-    if (!foundPlaylistWithOwner) {
+    if (!foundUpdatedPlaylist) {
       throw new NotFoundException('Playlist does not exist');
     }
 
-    this._EB.publish(
-      new PlaylistUpdatedEvent({
-        id: foundPlaylistWithOwner.id,
-        name: foundPlaylistWithOwner.name,
-        owner: {
-          id: foundPlaylistWithOwner.owner.id,
-          name: foundPlaylistWithOwner.owner.name,
-          isPublic: foundPlaylistWithOwner.owner.isPublic,
-        },
-        cover: foundPlaylistWithOwner.cover,
-        isPublic: foundPlaylistWithOwner.isPublic,
-      }),
-    );
+    this.publishPlaylistUpdatedEvent(foundUpdatedPlaylist);
 
     return foundPlaylist.getId();
   }
@@ -195,26 +148,30 @@ export class PlaylistUpdateService {
     foundPlaylist.deleteTrack(trackId);
     await this._WR.save(foundPlaylist);
 
-    const foundPlaylistWithOwner = await this._RR.findById(id);
+    const foundUpdatedPlaylist = await this._RR.findById(id);
 
-    if (!foundPlaylistWithOwner) {
+    if (!foundUpdatedPlaylist) {
       throw new NotFoundException('Playlist does not exist');
     }
 
-    this._EB.publish(
-      new PlaylistUpdatedEvent({
-        id: foundPlaylistWithOwner.id,
-        name: foundPlaylistWithOwner.name,
-        owner: {
-          id: foundPlaylistWithOwner.owner.id,
-          name: foundPlaylistWithOwner.owner.name,
-          isPublic: foundPlaylistWithOwner.owner.isPublic,
-        },
-        cover: foundPlaylistWithOwner.cover,
-        isPublic: foundPlaylistWithOwner.isPublic,
-      }),
-    );
+    this.publishPlaylistUpdatedEvent(foundUpdatedPlaylist);
 
     return foundPlaylist.getId();
+  }
+
+  private publishPlaylistUpdatedEvent(playlist: PlaylistWithUserDTO) {
+    this._EB.publish(
+      new PlaylistUpdatedEvent({
+        id: playlist.id,
+        name: playlist.name,
+        user: {
+          id: playlist.user.id,
+          name: playlist.user.name,
+          isPublic: playlist.user.isPublic,
+        },
+        cover: playlist.cover,
+        isPublic: playlist.isPublic,
+      }),
+    );
   }
 }
