@@ -53,6 +53,7 @@ export class AlbumReadRepository implements AlbumReadRepositoryPort {
     const foundDocs = await this._albumModel
       .find(filter, null)
       .limit(options?.pagination?.limit ?? 50)
+      .sort({ createdAt: -1 })
       .skip(options?.pagination?.offset ?? 0)
       .populate<AlbumWithArtistsDocument[]>(POPULATE_OPTIONS)
       .lean<AlbumWithArtists[]>()
