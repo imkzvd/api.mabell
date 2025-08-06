@@ -15,7 +15,7 @@ import { GetUserHandler } from './queries/get-user.handler';
 import { userCreateServiceProvider } from './providers/user-create-service.provider';
 import { userDeleteServiceProvider } from './providers/user-delete-service.provider';
 import { userUpdateServiceProvider } from './providers/user-update-service.provider';
-import { userServiceProvider } from '../../../../client/src/modules/user/providers/user-service.provider';
+import { userFindServiceProvider } from './providers/user-find-service.provider';
 
 @Module({
   imports: [RandomIdModule, FileStorageModule, PasswordModule],
@@ -23,7 +23,7 @@ import { userServiceProvider } from '../../../../client/src/modules/user/provide
     userCreateServiceProvider,
     userDeleteServiceProvider,
     userUpdateServiceProvider,
-    userServiceProvider,
+    userFindServiceProvider,
     CreateUserHandler,
     DeleteUserHandler,
     DeleteUserAvatarHandler,
