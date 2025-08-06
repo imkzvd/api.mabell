@@ -1,7 +1,7 @@
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import * as process from 'process';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import type { Request } from 'express';
 import { AccessTokenPayload } from '@core/app/components/admin-token/types';
 import { ACCESS_TOKEN_STRATEGY_NAME } from './constants';
@@ -13,10 +13,12 @@ function cookieExtractor({ cookies }: Request): string | null {
 
 @Injectable()
 export class AccessTokenStrategy extends PassportStrategy(Strategy, ACCESS_TOKEN_STRATEGY_NAME) {
-  constructor() {
+  constructor(private readonly _configService: ConfigService) {
+    const accessTokenSecret = _configService.get<string>('jwt.accessToken.secret');
+
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]),
-      secretOrKey: process.env.ACCESS_TOKEN_SECRET || 'accessSecret',
+      secretOrKey: accessTokenSecret || 'accessSecret',
     });
   }
 
