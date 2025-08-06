@@ -14,11 +14,14 @@ export class PlaylistRO {
   })
   id: string;
 
+  @ApiProperty({ type: String, description: 'User id' })
+  userId: string;
+
   @ApiProperty({
     type: () => UserRO,
-    description: 'Owner',
+    description: 'User',
   })
-  owner: UserRO;
+  user: UserRO;
 
   @ApiProperty({
     type: String,
@@ -75,7 +78,8 @@ export class PlaylistRO {
   constructor(dto: PlaylistDTO) {
     this.id = dto.id;
     this.name = dto.name;
-    this.owner = new UserRO(dto.owner);
+    this.userId = dto.user.id;
+    this.user = new UserRO(dto.user);
     this.genres = dto.genres.map((genre) => new LabelValueRO(genre, getGenreLabelByValue(genre)));
     this.cover = dto.cover ? `${process.env.API_URL}${dto.cover}` : null;
     this.color = dto.color;

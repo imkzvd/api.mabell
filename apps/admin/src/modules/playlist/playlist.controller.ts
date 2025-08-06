@@ -45,6 +45,8 @@ import { UpdatePlaylistDTO } from './dtos/update-playlist.dto';
 import { AddTrackInPlaylistDTO } from './dtos/add-track-in-playlist.dto';
 import { Roles } from '../../decorators/roles.decorator';
 import { PlaylistTracksRO } from '../track/ros/playlist-tracks.ro';
+import { PlaylistsRO } from './ros/playlists.ro';
+import { GetUserPlaylistsQuery } from '@core/app/cqrs/playlist/queries/get-user-playlists/get-user-playlists.query';
 
 @ApiTags('Playlist')
 @Roles(AdminRoles.Owner, AdminRoles.Admin)
@@ -59,8 +61,8 @@ export class PlaylistController {
   @ApiBody({ type: CreatePlaylistDTO })
   @ApiCreatedResponse({ description: 'Playlist', type: PlaylistRO })
   @Post('/')
-  async createPlaylist(@Body() { ownerId }: CreatePlaylistDTO): Promise<PlaylistRO> {
-    const createdPlaylistId = await this._commandBus.execute(new CreatePlaylistCommand(ownerId));
+  async createPlaylist(@Body() { userId }: CreatePlaylistDTO): Promise<PlaylistRO> {
+    const createdPlaylistId = await this._commandBus.execute(new CreatePlaylistCommand(userId));
     const foundPlaylist = await this._queryBus.execute(new GetPlaylistQuery(createdPlaylistId));
 
     if (!foundPlaylist) {
@@ -201,6 +203,23 @@ export class PlaylistController {
     @Param('trackId', ParseObjectIdPipe) trackId: string,
   ): Promise<void> {
     await this._commandBus.execute(new DeleteTrackFromPlaylistCommand(id, trackId));
+  }
+
+  @ApiOperation({ summary: 'Get playlists', operationId: 'getUserPlaylists' })
+  @ApiQuery({
+    required: true,
+    type: String,
+    name: 'userId',
+    description: 'User Id',
+    example: faker.database.mongodbObjectId(),
+  })
+  @Roles(AdminRoles.Guest)
+  @ApiOkResponse({ description: 'Playlist', type: PlaylistsRO })
+  @Get('/')
+  async getUserPlaylists(@Query('userId', ParseObjectIdPipe) userId: string): Promise<PlaylistsRO> {
+    const foundPlaylists = await this._queryBus.execute(new GetUserPlaylistsQuery(userId));
+
+    return new PlaylistsRO(foundPlaylists);
   }
 
   @ApiOperation({ summary: 'Get playlist by id', operationId: 'getPlaylist' })
