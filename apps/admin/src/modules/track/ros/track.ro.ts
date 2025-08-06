@@ -70,6 +70,9 @@ export class TrackRO {
   @ApiProperty({ type: Number, description: 'Duration', example: 240, nullable: true })
   duration: number | null;
 
+  @ApiProperty({ type: Number, description: 'Index', example: 0 })
+  trackNumber: number;
+
   @ApiProperty({ description: 'Explicit', example: true })
   isExplicit: boolean;
 
@@ -101,6 +104,7 @@ export class TrackRO {
     this.featArtistIds = dto.featArtists.map(({ id }) => id);
     this.file = dto.file ? `${process.env.API_URL}${dto.file}` : null;
     this.duration = dto.duration;
+    this.trackNumber = dto.trackNumber;
     this.isExplicit = dto.isExplicit;
     this.isActive = dto.isActive;
     this.isPublic = dto.isPublic;

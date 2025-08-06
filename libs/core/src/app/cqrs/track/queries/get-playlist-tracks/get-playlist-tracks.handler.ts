@@ -25,7 +25,12 @@ export class GetPlaylistTracksHandler implements QueryHandler<GetPlaylistTracksQ
 
     return new OffsetLimitPaginationResponseDTO(
       foundTracks.items.map(
-        (i, index) => new PlaylistTrackDTO(i, slicedFoundPlaylistTrackData[index].addedAt),
+        (i, index) =>
+          new PlaylistTrackDTO(
+            i,
+            slicedFoundPlaylistTrackData[index].id,
+            slicedFoundPlaylistTrackData[index].addedAt,
+          ),
       ),
       foundTracks.total,
       options?.pagination?.limit || 50,

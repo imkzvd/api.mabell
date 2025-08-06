@@ -7,6 +7,7 @@ import { JWTService as JWTServicePort } from '@core/app/common/ports/jwt.service
 import { AdminRefreshTokenWriteRepository } from '@infrastructure/mongoose/services/admin-refresh-token/admin-refresh-token-write-repository.service';
 import { RandomIdService } from '@infrastructure/random-id';
 import { JWTService } from '@infrastructure/jwt';
+import { ConfigService } from '@nestjs/config';
 
 export const adminTokenCreateServiceProvider: Provider = {
   provide: AdminTokenCreateService,
@@ -14,8 +15,9 @@ export const adminTokenCreateServiceProvider: Provider = {
     wr: AdminRefreshTokenWriteRepositoryPort,
     idService: IdServicePort<AdminRefreshTokenId>,
     jwtService: JWTServicePort,
+    configService: ConfigService,
   ) => {
-    return new AdminTokenCreateService(wr, idService, jwtService);
+    return new AdminTokenCreateService(wr, idService, jwtService, configService);
   },
-  inject: [AdminRefreshTokenWriteRepository, RandomIdService, JWTService],
+  inject: [AdminRefreshTokenWriteRepository, RandomIdService, JWTService, ConfigService],
 };

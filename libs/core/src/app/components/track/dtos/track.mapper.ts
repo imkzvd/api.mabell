@@ -14,6 +14,7 @@ class TrackMapper {
       dto.featArtists.map((i) => ArtistMapper.toDTO(i)),
       dto.file,
       dto.duration,
+      dto.trackNumber,
       dto.isExplicit,
       dto.isActive,
       dto.isPublic,
@@ -23,7 +24,7 @@ class TrackMapper {
   }
 
   toPlaylistTrackDTO(dto: TrackWithAlbumAndArtistsDTO, addedAt: Date): PlaylistTrackDTO {
-    return new PlaylistTrackDTO(this.toDTO(dto), addedAt);
+    return new PlaylistTrackDTO(this.toDTO(dto), dto.id, addedAt);
   }
 }
 

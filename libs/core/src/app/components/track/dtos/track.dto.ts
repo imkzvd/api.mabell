@@ -11,6 +11,7 @@ export class TrackDTO {
     public readonly featArtists: ArtistDTO[],
     public readonly file: string | null,
     public readonly duration: number | null,
+    public readonly trackNumber: number,
     public readonly isExplicit: boolean,
     public readonly isActive: boolean,
     public readonly isPublic: boolean,

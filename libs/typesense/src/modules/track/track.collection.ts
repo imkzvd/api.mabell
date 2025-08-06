@@ -68,6 +68,7 @@ export class TrackCollection extends BaseCollection<Track, IndexedTrackDTO, Trac
       doc.albumName = payload.name;
       doc.artistIds = payload.artists.map(({ id }) => id);
       doc.artistNames = payload.artists.map(({ name }) => name);
+      doc.cover = payload.cover || undefined;
     });
 
     await this._client.collections('tracks').documents().import(docs, { action: 'upsert' });

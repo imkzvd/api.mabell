@@ -213,7 +213,7 @@ export class AlbumController {
   @Get('/:id/tracks')
   async getAlbumTracks(
     @Param('id', ParseObjectIdPipe) id: string,
-    @Query('limit', new DefaultValuePipe(50), ParseIntPipe) limit: number,
+    @Query('limit', new DefaultValuePipe(100), ParseIntPipe) limit: number,
     @Query('offset', new DefaultValuePipe(0), ParseIntPipe) offset: number,
   ): Promise<TracksRO> {
     const foundTracks = await this._queryBus.execute(

@@ -12,6 +12,12 @@ export class PlaylistTrackRO {
   track: TrackRO | null;
 
   @ApiProperty({
+    type: String,
+    description: 'Track Id',
+  })
+  trackId: string;
+
+  @ApiProperty({
     description: 'Added date',
     example: faker.date.past().toISOString(),
   })
@@ -19,6 +25,7 @@ export class PlaylistTrackRO {
 
   constructor(dto: PlaylistTrackDTO) {
     this.track = dto.track ? new TrackRO(dto.track) : null;
+    this.trackId = dto.trackId;
     this.addedAt = dto.addedAt;
   }
 }

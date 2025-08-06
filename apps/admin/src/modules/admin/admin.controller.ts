@@ -17,6 +17,7 @@ import {
   ApiBody,
   ApiCreatedResponse,
   ApiNoContentResponse,
+  ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
   ApiParam,
@@ -30,6 +31,7 @@ import { QueryBus } from '@infrastructure/query-bus';
 import { CreateAdminCommand } from '@core/app/cqrs/admin/commands/create-admin/create-admin.command';
 import { GetAdminQuery } from '@core/app/cqrs/admin/queries/get-admin/get-admin.query';
 import { ParseObjectIdPipe } from '@shared/pipes/parse-object-id.pipe';
+import { ErrorRO } from '@shared/ros/error.ro';
 import { UpdateAdminCommand } from '@core/app/cqrs/admin/commands/update-admin/update-admin.command';
 import { UpdateAdminUsernameCommand } from '@core/app/cqrs/admin/commands/update-admin-username/update-admin-username.command';
 import { RefreshAdminPasswordCommand } from '@core/app/cqrs/admin/commands/refresh-admin-password/refresh-admin-password.command';
@@ -45,6 +47,7 @@ import { Roles } from '../../decorators/roles.decorator';
 
 @ApiTags('Admin')
 @Roles(AdminRoles.Owner)
+@ApiNotFoundResponse({ type: ErrorRO })
 @Controller('/admins')
 export class AdminController {
   constructor(
