@@ -6,7 +6,7 @@ import { AdminRefreshTokenId } from '@core/domain/components/admin-refresh-token
 import { JWTService as JWTServicePort } from '@core/app/common/ports/jwt.service.port';
 import { AdminRefreshTokenWriteRepository } from '@infrastructure/mongoose/services/admin-refresh-token/admin-refresh-token-write-repository.service';
 import { RandomIdService } from '@infrastructure/random-id';
-import { JWTService } from '@infrastructure/jwt';
+import { JWTService } from '@api.mabell/jwt';
 import { ConfigService } from '@nestjs/config';
 
 export const adminTokenCreateServiceProvider: Provider = {
