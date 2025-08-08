@@ -1,8 +1,7 @@
 {
   "name": "api.mabell",
-  "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "description": "API for the Mabell project",
+  "author": "imkzvd@gmail.com",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
@@ -125,5 +124,9 @@
       "^@shared(|/.*)$": "<rootDir>/libs/shared/src/$1",
       "^@types(|/.*)$": "<rootDir>/libs/types/src/$1"
     }
-  }
+  },
+  "workspaces": [
+    "apps/*",
+    "libs/*"
+  ]
 }
