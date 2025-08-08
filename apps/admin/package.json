@@ -1,0 +1,12 @@
+{
+  "name": "admin",
+  "version": "0.0.0",
+  "description": "Admin API for the Mabell project",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "imkzvd@gmail.com",
+  "license": "ISC"
+}
