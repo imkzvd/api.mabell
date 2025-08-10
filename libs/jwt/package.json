@@ -3,9 +3,6 @@
   "version": "1.0.0-alpha.0",
   "description": "Package for the Mabell API",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "author": "imkzvd@gmail.com",
   "license": "ISC",
   "dependencies": {
