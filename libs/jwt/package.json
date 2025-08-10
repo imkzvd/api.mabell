@@ -1,10 +1,14 @@
 {
   "name": "@api.mabell/jwt",
-  "version": "1.0.1-alpha.0",
+  "version": "1.0.2-alpha.0",
   "description": "Package for the Mabell API",
   "main": "index.js",
   "author": "imkzvd@gmail.com",
   "license": "ISC",
+  "keywords": [
+    "jwt",
+    "api.mabell"
+  ],
   "dependencies": {
     "@api.mabell/core": "^1.0.0-alpha.0",
     "@nestjs/common": "^11.1.6",
