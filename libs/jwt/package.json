@@ -1,6 +1,6 @@
 {
   "name": "@api.mabell/jwt",
-  "version": "1.0.0-alpha.0",
+  "version": "1.0.1-alpha.0",
   "description": "Package for the Mabell API",
   "main": "index.js",
   "author": "imkzvd@gmail.com",
