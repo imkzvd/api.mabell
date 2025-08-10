@@ -2,11 +2,15 @@
   "name": "@api.mabell/jwt",
   "version": "1.0.0",
   "description": "Package for the Mabell API",
-  "main": "src/index.js",
-  "devDependencies": {},
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "imkzvd@gmail.com",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@api.mabell/core": "^0.0.0",
+    "@nestjs/common": "^11.1.6",
+    "jsonwebtoken": "^9.0.2"
+  }
 }
