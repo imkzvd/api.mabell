@@ -1,0 +1,137 @@
+import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import {
+  OffsetLimitPaginationDTO,
+  OffsetLimitPaginationResponseDTO,
+  TrackReadRepository as TrackReadRepositoryPort,
+  TrackWithAlbumAndArtistsDTO,
+} from '@api.mabell/core';
+import TrackMapper from './track.mapper';
+import { Track } from './track.schema';
+import { TrackWithAlbumAndArtistsDocument, TrackWithAlbumAndArtists } from './types';
+import { POPULATE_OPTIONS } from './constants';
+
+@Injectable()
+export class TrackReadRepository implements TrackReadRepositoryPort {
+  constructor(
+    @InjectModel(Track.name)
+    private readonly _trackModel: Model<Track>,
+  ) {}
+
+  async findById(
+    id: string,
+    options?: Partial<{ isPublic: boolean }>,
+  ): Promise<TrackWithAlbumAndArtistsDTO | null> {
+    const foundDoc = await this._trackModel
+      .findOne(
+        {
+          _id: id,
+          ...(options?.isPublic !== undefined && { isPublic: options.isPublic }),
+        },
+        null,
+      )
+      .populate<TrackWithAlbumAndArtistsDocument[]>(POPULATE_OPTIONS)
+      .lean<TrackWithAlbumAndArtists>()
+      .exec();
+
+    if (!foundDoc) {
+      return null;
+    }
+
+    return TrackMapper.toDTO(foundDoc);
+  }
+
+  async findByIds(
+    ids: string[],
+    options?: Partial<{ isPublic: boolean }>,
+  ): Promise<{
+    items: (TrackWithAlbumAndArtistsDTO | null)[];
+    foundItems: TrackWithAlbumAndArtistsDTO[];
+    foundIds: string[];
+    total: number;
+    missingIds: string[];
+  }> {
+    const foundDocs = await this._trackModel
+      .find(
+        { _id: ids, ...(options?.isPublic !== undefined && { isPublic: options.isPublic }) },
+        null,
+      )
+      .populate<TrackWithAlbumAndArtistsDocument[]>(POPULATE_OPTIONS)
+      .lean<TrackWithAlbumAndArtists[]>()
+      .exec();
+
+    const foundDocsMap: Map<string, TrackWithAlbumAndArtists> = new Map(
+      foundDocs.map((doc) => [doc._id.toHexString(), doc]),
+    );
+    const itemsResult: (TrackWithAlbumAndArtistsDTO | null)[] = ids.map((id) => {
+      const doc = foundDocsMap.get(id);
+
+      return doc ? TrackMapper.toDTO(doc) : null;
+    });
+
+    return {
+      items: itemsResult,
+      foundItems: itemsResult.filter((i) => i !== null),
+      foundIds: [...foundDocsMap.keys()],
+      total: foundDocsMap.size,
+      missingIds: ids.filter((id) => !foundDocsMap.has(id)),
+    };
+  }
+
+  async findByAlbumId(
+    albumId: string,
+    options?: Partial<{
+      isPublic: boolean;
+      pagination: OffsetLimitPaginationDTO;
+    }>,
+  ): Promise<OffsetLimitPaginationResponseDTO<TrackWithAlbumAndArtistsDTO>> {
+    const filter = {
+      album: albumId,
+      ...(options?.isPublic !== undefined && { isPublic: options.isPublic }),
+    };
+    const docsTotal = await this._trackModel.countDocuments(filter);
+    const foundDocs = await this._trackModel
+      .find(filter, null)
+      .limit(options?.pagination?.limit ?? 50)
+      .skip(options?.pagination?.offset ?? 0)
+      .populate<TrackWithAlbumAndArtistsDocument[]>(POPULATE_OPTIONS)
+      .lean<TrackWithAlbumAndArtists[]>()
+      .exec();
+
+    return new OffsetLimitPaginationResponseDTO(
+      foundDocs.map((doc) => TrackMapper.toDTO(doc)),
+      docsTotal,
+      options?.pagination?.limit ?? 50,
+      options?.pagination?.offset ?? 0,
+      (options?.pagination?.limit ?? 50) + (options?.pagination?.offset ?? 0) < docsTotal,
+    );
+  }
+
+  async findByArtistId(
+    artistId: string,
+    options?: Partial<{
+      isPublic: boolean;
+      pagination: OffsetLimitPaginationDTO;
+    }>,
+  ): Promise<OffsetLimitPaginationResponseDTO<TrackWithAlbumAndArtistsDTO>> {
+    const filter = {
+      $or: [{ artists: artistId }, { featArtists: artistId }],
+      ...(options?.isPublic !== undefined && { isPublic: options.isPublic }),
+    };
+    const docsTotal = await this._trackModel.countDocuments(filter);
+    const foundDocs = await this._trackModel
+      .find(filter, null)
+      .populate<TrackWithAlbumAndArtistsDocument[]>(POPULATE_OPTIONS)
+      .lean<TrackWithAlbumAndArtists[]>()
+      .exec();
+
+    return new OffsetLimitPaginationResponseDTO(
+      foundDocs.map((doc) => TrackMapper.toDTO(doc)),
+      docsTotal,
+      options?.pagination?.limit ?? 50,
+      options?.pagination?.offset ?? 0,
+      (options?.pagination?.limit ?? 50) + (options?.pagination?.offset ?? 0) < docsTotal,
+    );
+  }
+}
