@@ -1,5 +1,5 @@
 import { Types } from 'mongoose';
-import { IdService } from '@core/app/common/ports/id.service.port';
+import { IdService } from '@api.mabell/core';
 
 export class RandomIdService implements IdService {
   generate(): string {
