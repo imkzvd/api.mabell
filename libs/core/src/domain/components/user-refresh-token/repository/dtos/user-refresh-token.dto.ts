@@ -1,5 +1,5 @@
-import { UserRefreshTokenId } from '../types';
-import { UserId } from '../../user/types';
+import { UserRefreshTokenId } from '../../types';
+import { UserId } from '../../../user/types';
 
 export class UserRefreshTokenDTO {
   constructor(

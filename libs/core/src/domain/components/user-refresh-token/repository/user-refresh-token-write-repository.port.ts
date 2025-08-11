@@ -1,5 +1,5 @@
-import { UserRefreshToken } from './user-refresh-token.entity';
-import { UserRefreshTokenId } from './types';
+import { UserRefreshToken } from '../user-refresh-token.entity';
+import { UserRefreshTokenId } from '../types';
 
 export interface UserRefreshTokenWriteRepository {
   save(entity: UserRefreshToken): Promise<void>;

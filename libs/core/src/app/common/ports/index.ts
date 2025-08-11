@@ -3,3 +3,4 @@ export * from './event-bus.port';
 export * from './id.service.port';
 export * from './jwt.service.port';
 export * from './password-service.port';
+export * from './search-service';
