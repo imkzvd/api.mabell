@@ -1,8 +1,7 @@
 import * as bcrypt from 'bcrypt';
 import * as generatePassword from 'generate-password';
 import * as process from 'process';
-import { PasswordService as PasswordServicePort } from '@core/app/common/ports/password-service.port';
-import { HashedPasswordVO } from '@core/domain/common/vos/hashed-password.vo';
+import { PasswordService as PasswordServicePort, HashedPasswordVO } from '@api.mabell/core';
 
 export class PasswordService implements PasswordServicePort {
   generate(options: { hash: false }): Promise<string>;
