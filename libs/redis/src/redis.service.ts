@@ -1,7 +1,7 @@
 import { Redis } from 'ioredis';
 import * as process from 'process';
 import { Injectable } from '@nestjs/common';
-import { CacheService } from '@core/app/common/ports/cache.service.port';
+import { CacheService } from '@api.mabell/core';
 
 @Injectable()
 export class RedisService implements CacheService {
