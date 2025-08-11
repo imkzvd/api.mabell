@@ -1,6 +1,6 @@
 import { CommandBus as NestCommandBus } from '@nestjs/cqrs';
 import { Injectable } from '@nestjs/common';
-import { Command } from '@core/app/types';
+import { Command } from '@api.mabell/core';
 
 type ExtractCommandResponse<TCommand extends Command<any>> =
   TCommand extends Command<infer R> ? R : never;
