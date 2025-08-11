@@ -6,7 +6,7 @@ import {
   EventConstructor,
   EventHandler,
   EventPayload,
-} from '@core/app/common/ports/event-bus.port';
+} from '@api.mabell/core';
 
 export class EventBus implements EventBusPort {
   constructor(@Inject(EventEmitter2) private readonly emitter: EventEmitter2) {}
