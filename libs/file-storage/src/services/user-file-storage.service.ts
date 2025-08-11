@@ -1,12 +1,14 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { FileStorage } from '@infrastructure/file-storage/base/file-storage.abstract';
-import { UserFileStorage as UserFileStoragePort } from '@core/app/common/ports/file-storages/user-file-storage.port';
-import { TmpFileStorage as TmpFileStoragePort } from '@core/app/common/ports/file-storages/tmp-file-storage.port';
-import { UserId } from '@core/domain/components/user/types';
-import { TmpFileDTO } from '@core/app/common/ports/file-storages/common/dtos/tmp-file.dto';
-import { StoredFileDTO } from '@core/app/common/ports/file-storages/common/dtos/stored-file.dto';
-import { PlaylistId } from '@core/domain/components/playlist/types';
-import { TmpFileStorage } from '@infrastructure/file-storage/services/tmp-file-storage.service';
+import {
+  UserFileStorage as UserFileStoragePort,
+  TmpFileStorage as TmpFileStoragePort,
+  UserId,
+  TmpFileDTO,
+  StoredFileDTO,
+  PlaylistId,
+} from '@api.mabell/core';
+import { FileStorage } from '../base/file-storage.abstract';
+import { TmpFileStorage } from './tmp-file-storage.service';
 
 @Injectable()
 export class UserFileStorage extends FileStorage implements UserFileStoragePort {

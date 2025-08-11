@@ -1,0 +1,22 @@
+{
+  "name": "@api.mabell/file-storage",
+  "version": "0.0.0",
+  "description": "Package for the Mabell API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "file-storage",
+    "files",
+    "api.mabell"
+  ],
+  "author": "imkzvd@gmail.com",
+  "license": "ISC",
+  "dependencies": {
+    "@api.mabell/redis": "^0.0.0",
+    "@nestjs/common": "^11.1.6",
+    "sharp": "^0.34.3",
+    "uuid": "^11.1.0"
+  }
+}

@@ -1,13 +1,15 @@
-import { Inject, Injectable } from '@nestjs/common';
 import * as path from 'path';
 import * as fsPromises from 'fs/promises';
 import * as process from 'process';
+import { Inject, Injectable } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
-import { CacheService } from '@core/app/common/ports/cache.service.port';
-import { TmpFileStorage as TmpFileStoragePort } from '@core/app/common/ports/file-storages/tmp-file-storage.port';
-import { TmpFileDTO } from '@core/app/common/ports/file-storages/common/dtos/tmp-file.dto';
-import { TmpFileId } from '@core/app/common/ports/file-storages/common/types';
-import { RedisService } from '@infrastructure/redis';
+import {
+  CacheService,
+  TmpFileStorage as TmpFileStoragePort,
+  TmpFileDTO,
+  TmpFileId,
+} from '@api.mabell/core';
+import { RedisService } from '@api.mabell/redis';
 
 @Injectable()
 export class TmpFileStorage implements TmpFileStoragePort {
