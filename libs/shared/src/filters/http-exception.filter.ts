@@ -6,7 +6,7 @@ import {
   ForbiddenException as CoreForbiddenException,
   NotFoundException as CoreNotFoundException,
   UnauthorizedException as CoreUnauthorizedException,
-} from '@core/shared/exceptions';
+} from '@api.mabell/core';
 import { ErrorRO } from '../ros/error.ro';
 
 @Catch()

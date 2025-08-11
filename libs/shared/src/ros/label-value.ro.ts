@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { getRegionLabelByValue, Regions } from '@core/domain/common/constants/regions';
+import { getRegionLabelByValue, Regions } from '@api.mabell/core';
 
 export class LabelValueRO {
   @ApiProperty({

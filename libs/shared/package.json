@@ -1,0 +1,24 @@
+{
+  "name": "@api.mabell/shared",
+  "version": "0.0.0",
+  "description": "Package for the Mabell API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "shared",
+    "api.mabell"
+  ],
+  "author": "imkzvd@gmail.com",
+  "license": "ISC",
+  "dependencies": {
+    "@api.mabell/core": "^1.0.0-alpha.0",
+    "@nestjs/common": "^11.1.6",
+    "@nestjs/swagger": "^11.2.0",
+    "mongoose": "^8.17.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.3"
+  }
+}

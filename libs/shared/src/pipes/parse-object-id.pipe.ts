@@ -1,6 +1,6 @@
 import { Types } from 'mongoose';
 import { PipeTransform } from '@nestjs/common';
-import { BadRequestException } from '@core/shared/exceptions';
+import { BadRequestException } from '@api.mabell/core';
 
 export class ParseObjectIdPipe implements PipeTransform<string, string> {
   transform(value: string): string {
