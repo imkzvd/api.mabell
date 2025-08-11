@@ -1,9 +1,8 @@
-import { IndexedAlbumDTO } from '@core/app/common/ports/search-service/dtos/indexed-album.dto';
-import { IndexedSimplifiedArtistDTO } from '@core/app/common/ports/search-service/dtos/indexed-simplified-artist.dto';
-import { BaseMapper } from '@infrastructure/typesense/base/base-mapper.interface';
-import { AlbumPayload } from '@infrastructure/typesense/modules/album/types';
-import { Album } from '@infrastructure/typesense/modules/album/album.document';
-import { AlbumFactory } from '@infrastructure/typesense/modules/album/album.factory';
+import { IndexedAlbumDTO, IndexedSimplifiedArtistDTO } from '@api.mabell/core';
+import { BaseMapper } from '../../base/base-mapper.interface';
+import { AlbumPayload } from './types';
+import { Album } from './album.document';
+import { AlbumFactory } from './album.factory';
 
 class AlbumMapper implements BaseMapper<Album, IndexedAlbumDTO, AlbumPayload> {
   toDocument(payload: AlbumPayload): Album {

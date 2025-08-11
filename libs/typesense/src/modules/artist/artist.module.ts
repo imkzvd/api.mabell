@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ArtistCollection } from '@infrastructure/typesense/modules/artist/artist.collection';
+import { ArtistCollection } from './artist.collection';
 
 @Module({
   providers: [

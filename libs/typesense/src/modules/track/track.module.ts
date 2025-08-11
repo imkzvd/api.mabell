@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { TrackCollection } from '@infrastructure/typesense/modules/track/track.collection';
+import { TrackCollection } from './track.collection';
 
 @Module({
   providers: [

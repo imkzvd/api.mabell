@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
-import { TypesenseEventSubscriber } from '@infrastructure/typesense/events/typesense.event-subscriber';
-import { UserModule } from '@infrastructure/typesense/modules/user/user.module';
-import { ArtistModule } from '@infrastructure/typesense/modules/artist/artist.module';
-import { AlbumModule } from '@infrastructure/typesense/modules/album/album.module';
-import { TrackModule } from '@infrastructure/typesense/modules/track/track.module';
-import { TypesenseService } from '@infrastructure/typesense/typesense.service';
-import { PlaylistModule } from '@infrastructure/typesense/modules/playlist/playlist.module';
+import { TypesenseEventSubscriber } from './events/typesense.event-subscriber';
+import { TypesenseService } from './typesense.service';
+import { UserModule } from './modules/user/user.module';
+import { ArtistModule } from './modules/artist/artist.module';
+import { AlbumModule } from './modules/album/album.module';
+import { TrackModule } from './modules/track/track.module';
+import { PlaylistModule } from './modules/playlist/playlist.module';
 
 @Module({
   imports: [UserModule, ArtistModule, AlbumModule, TrackModule, PlaylistModule],

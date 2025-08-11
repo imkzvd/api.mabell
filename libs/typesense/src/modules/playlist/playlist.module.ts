@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { PlaylistCollection } from '@infrastructure/typesense/modules/playlist/playlist.collection';
+import { PlaylistCollection } from './playlist.collection';
 
 @Module({
   providers: [

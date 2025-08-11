@@ -1,7 +1,6 @@
 import { Inject } from '@nestjs/common';
-import { EventHandler } from '@core/app/common/ports/event-bus.port';
-import { TrackCollection } from '@infrastructure/typesense/modules/track/track.collection';
-import { ArtistUpdatedEvent } from '@core/app/common/events/artist/artist-updated.event';
+import { EventHandler, ArtistUpdatedEvent } from '@api.mabell/core';
+import { TrackCollection } from '../track.collection';
 
 export class UpdateTrackDocumentsOnArtistUpdatedEventHandler extends EventHandler<ArtistUpdatedEvent> {
   constructor(@Inject(TrackCollection) private readonly _collection: TrackCollection) {

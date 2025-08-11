@@ -1,9 +1,9 @@
 import { CollectionCreateSchema } from 'typesense/lib/Typesense/Collections';
 import { SearchParams } from 'typesense/lib/Typesense/Documents';
-import { OffsetLimitPaginationResponseDTO } from '@core/shared/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
-import { BaseMapper } from '@infrastructure/typesense/base/base-mapper.interface';
-import { TypeSenseClient } from '@infrastructure/typesense/client';
-import { DEFAULT_LIMIT } from '@infrastructure/typesense/constants';
+import { OffsetLimitPaginationResponseDTO } from '@api.mabell/core';
+import { BaseMapper } from './base-mapper.interface';
+import { TypeSenseClient } from '../client';
+import { DEFAULT_LIMIT } from '../constants';
 
 export abstract class BaseCollection<
   Doc extends Record<string, any>,

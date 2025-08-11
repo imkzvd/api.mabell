@@ -1,9 +1,11 @@
 import { Inject } from '@nestjs/common';
-import { EventHandler } from '@core/app/common/ports/event-bus.port';
-import { UserUpdatedEvent } from '@core/app/common/events/user/user-updated.event';
-import { UserCreatedEvent } from '@core/app/common/events/user/user-created.event';
-import { UserRegisteredEvent } from '@core/app/common/events/user/user-registered.event';
-import { UserCollection } from '@infrastructure/typesense/modules/user/user.collection';
+import {
+  EventHandler,
+  UserUpdatedEvent,
+  UserCreatedEvent,
+  UserRegisteredEvent,
+} from '@api.mabell/core';
+import { UserCollection } from '../user.collection';
 
 export class CreateUserDocumentOnUserCreatedEventHandler extends EventHandler<
   UserCreatedEvent | UserRegisteredEvent | UserUpdatedEvent

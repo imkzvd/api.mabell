@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { UserCollection } from '@infrastructure/typesense/modules/user/user.collection';
+import { UserCollection } from './user.collection';
 
 @Module({
   providers: [

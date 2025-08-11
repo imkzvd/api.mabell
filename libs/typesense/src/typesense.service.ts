@@ -1,16 +1,18 @@
 import { Inject } from '@nestjs/common';
-import { SearchService } from '@core/app/common/ports/search-service/search-service.port';
-import { IndexedItemsDTO } from '@core/app/common/ports/search-service/dtos/indexed-items.dto';
-import { IndexedUserDTO } from '@core/app/common/ports/search-service/dtos/indexed-user.dto';
-import { IndexedArtistDTO } from '@core/app/common/ports/search-service/dtos/indexed-artist.dto';
-import { IndexedAlbumDTO } from '@core/app/common/ports/search-service/dtos/indexed-album.dto';
-import { IndexedTrackDTO } from '@core/app/common/ports/search-service/dtos/indexed-track.dto';
-import { IndexedPlaylistDTO } from '@core/app/common/ports/search-service/dtos/indexed-playlist.dto';
-import { UserCollection } from '@infrastructure/typesense/modules/user/user.collection';
-import { ArtistCollection } from '@infrastructure/typesense/modules/artist/artist.collection';
-import { AlbumCollection } from '@infrastructure/typesense/modules/album/album.collection';
-import { TrackCollection } from '@infrastructure/typesense/modules/track/track.collection';
-import { PlaylistCollection } from '@infrastructure/typesense/modules/playlist/playlist.collection';
+import {
+  SearchService,
+  IndexedItemsDTO,
+  IndexedUserDTO,
+  IndexedArtistDTO,
+  IndexedAlbumDTO,
+  IndexedTrackDTO,
+  IndexedPlaylistDTO,
+} from '@api.mabell/core';
+import { UserCollection } from './modules/user/user.collection';
+import { ArtistCollection } from './modules/artist/artist.collection';
+import { AlbumCollection } from './modules/album/album.collection';
+import { TrackCollection } from './modules/track/track.collection';
+import { PlaylistCollection } from './modules/playlist/playlist.collection';
 
 export class TypesenseService implements SearchService {
   constructor(

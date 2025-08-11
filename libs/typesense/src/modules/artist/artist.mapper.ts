@@ -1,8 +1,8 @@
-import { IndexedArtistDTO } from '@core/app/common/ports/search-service/dtos/indexed-artist.dto';
-import { ArtistFactory } from '@infrastructure/typesense/modules/artist/artist.factory';
-import { Artist } from '@infrastructure/typesense/modules/artist/artist.document';
-import { BaseMapper } from '@infrastructure/typesense/base/base-mapper.interface';
-import { ArtistPayload } from '@infrastructure/typesense/modules/artist/types';
+import { IndexedArtistDTO } from '@api.mabell/core';
+import { ArtistFactory } from './artist.factory';
+import { Artist } from './artist.document';
+import { ArtistPayload } from './types';
+import { BaseMapper } from '../../base/base-mapper.interface';
 
 class ArtistMapper implements BaseMapper<Artist, IndexedArtistDTO, ArtistPayload> {
   toDocument(payload: ArtistPayload): Artist {

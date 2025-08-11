@@ -1,10 +1,8 @@
-import { IndexedTrackDTO } from '@core/app/common/ports/search-service/dtos/indexed-track.dto';
-import { IndexedAlbumDTO } from '@core/app/common/ports/search-service/dtos/indexed-album.dto';
-import { IndexedSimplifiedArtistDTO } from '@core/app/common/ports/search-service/dtos/indexed-simplified-artist.dto';
-import { TrackPayload } from '@infrastructure/typesense/modules/track/types';
-import { TrackFactory } from '@infrastructure/typesense/modules/track/track.factory';
-import { Track } from '@infrastructure/typesense/modules/track/track.document';
-import { BaseMapper } from '@infrastructure/typesense/base/base-mapper.interface';
+import { IndexedTrackDTO, IndexedAlbumDTO, IndexedSimplifiedArtistDTO } from '@api.mabell/core';
+import { TrackPayload } from './types';
+import { TrackFactory } from './track.factory';
+import { Track } from './track.document';
+import { BaseMapper } from '../../base/base-mapper.interface';
 
 class TrackMapper implements BaseMapper<Track, IndexedTrackDTO, TrackPayload> {
   toDocument(payload: TrackPayload): Track {

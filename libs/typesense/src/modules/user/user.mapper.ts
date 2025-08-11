@@ -1,8 +1,8 @@
-import { IndexedUserDTO } from '@core/app/common/ports/search-service/dtos/indexed-user.dto';
-import { UserPayload } from '@infrastructure/typesense/modules/user/types';
-import { UserFactory } from '@infrastructure/typesense/modules/user/user.factory';
-import { User } from '@infrastructure/typesense/modules/user/user.document';
-import { BaseMapper } from '@infrastructure/typesense/base/base-mapper.interface';
+import { IndexedUserDTO } from '@api.mabell/core';
+import { UserPayload } from './types';
+import { UserFactory } from './user.factory';
+import { User } from './user.document';
+import { BaseMapper } from '../../base/base-mapper.interface';
 
 class UserMapper implements BaseMapper<User, IndexedUserDTO, UserPayload> {
   toDocument(payload: UserPayload): User {

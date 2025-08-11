@@ -1,9 +1,9 @@
-import { IndexedAlbumDTO } from '@core/app/common/ports/search-service/dtos/indexed-album.dto';
-import { BaseCollection } from '@infrastructure/typesense/base/base-collection.abstract';
-import { Album } from '@infrastructure/typesense/modules/album/album.document';
-import { AlbumPayload } from '@infrastructure/typesense/modules/album/types';
-import AlbumMapper from '@infrastructure/typesense/modules/album/album.mapper';
-import { ArtistPayload } from '@infrastructure/typesense/modules/artist/types';
+import { IndexedAlbumDTO } from '@api.mabell/core';
+import { BaseCollection } from '../../base/base-collection.abstract';
+import { Album } from './album.document';
+import { AlbumPayload } from './types';
+import AlbumMapper from './album.mapper';
+import { ArtistPayload } from '../artist/types';
 
 export class AlbumCollection extends BaseCollection<Album, IndexedAlbumDTO, AlbumPayload> {
   constructor() {

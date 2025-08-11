@@ -1,9 +1,8 @@
-import { IndexedPlaylistDTO } from '@core/app/common/ports/search-service/dtos/indexed-playlist.dto';
-import { IndexedSimplifiedUserDTO } from '@core/app/common/ports/search-service/dtos/indexed-simplified-user.dto';
-import { BaseMapper } from '@infrastructure/typesense/base/base-mapper.interface';
-import { Playlist } from '@infrastructure/typesense/modules/playlist/playlist.document';
-import { PlaylistPayload } from '@infrastructure/typesense/modules/playlist/types';
-import { PlaylistFactory } from '@infrastructure/typesense/modules/playlist/playlist.factory';
+import { IndexedPlaylistDTO, IndexedSimplifiedUserDTO } from '@api.mabell/core';
+import { Playlist } from './playlist.document';
+import { PlaylistPayload } from './types';
+import { PlaylistFactory } from './playlist.factory';
+import { BaseMapper } from '../../base/base-mapper.interface';
 
 class PlaylistMapper implements BaseMapper<Playlist, IndexedPlaylistDTO, PlaylistPayload> {
   toDocument(payload: PlaylistPayload): Playlist {

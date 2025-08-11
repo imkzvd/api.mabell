@@ -1,5 +1,5 @@
-import TypeSense from 'typesense';
 import * as process from 'process';
+import TypeSense from 'typesense';
 
 export const TypeSenseClient = new TypeSense.Client({
   nodes: [

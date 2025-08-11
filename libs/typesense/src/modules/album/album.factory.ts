@@ -1,5 +1,5 @@
-import { Album } from '@infrastructure/typesense/modules/album/album.document';
-import { AlbumPayload } from '@infrastructure/typesense/modules/album/types';
+import { Album } from './album.document';
+import { AlbumPayload } from './types';
 
 export class AlbumFactory {
   static create(payload: AlbumPayload) {

@@ -1,5 +1,5 @@
-import { UserPayload } from '@infrastructure/typesense/modules/user/types';
-import { User } from '@infrastructure/typesense/modules/user/user.document';
+import { UserPayload } from './types';
+import { User } from './user.document';
 
 export class UserFactory {
   static create(payload: UserPayload) {

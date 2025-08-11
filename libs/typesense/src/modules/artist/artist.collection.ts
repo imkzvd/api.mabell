@@ -1,8 +1,8 @@
-import { IndexedArtistDTO } from '@core/app/common/ports/search-service/dtos/indexed-artist.dto';
-import { Artist } from '@infrastructure/typesense/modules/artist/artist.document';
-import ArtistMapper from '@infrastructure/typesense/modules/artist/artist.mapper';
-import { BaseCollection } from '@infrastructure/typesense/base/base-collection.abstract';
-import { ArtistPayload } from '@infrastructure/typesense/modules/artist/types';
+import { IndexedArtistDTO } from '@api.mabell/core';
+import { Artist } from './artist.document';
+import ArtistMapper from './artist.mapper';
+import { ArtistPayload } from './types';
+import { BaseCollection } from '../../base/base-collection.abstract';
 
 export class ArtistCollection extends BaseCollection<Artist, IndexedArtistDTO, ArtistPayload> {
   constructor() {

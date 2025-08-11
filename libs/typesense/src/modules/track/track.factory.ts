@@ -1,5 +1,5 @@
-import { Track } from '@infrastructure/typesense/modules/track/track.document';
-import { TrackPayload } from '@infrastructure/typesense/modules/track/types';
+import { Track } from './track.document';
+import { TrackPayload } from './types';
 
 export class TrackFactory {
   static create(payload: TrackPayload) {

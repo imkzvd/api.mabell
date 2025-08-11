@@ -1,8 +1,6 @@
 import { Inject } from '@nestjs/common';
-import { EventHandler } from '@core/app/common/ports/event-bus.port';
-import { TrackCreatedEvent } from '@core/app/common/events/track/track-created.event';
-import { TrackUpdatedEvent } from '@core/app/common/events/track/track-updated.event';
-import { TrackCollection } from '@infrastructure/typesense/modules/track/track.collection';
+import { EventHandler, TrackCreatedEvent, TrackUpdatedEvent } from '@api.mabell/core';
+import { TrackCollection } from '../track.collection';
 
 export class CreateTrackDocumentOnTrackCreatedEventHandler extends EventHandler<
   TrackCreatedEvent | TrackUpdatedEvent

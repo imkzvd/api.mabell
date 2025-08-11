@@ -1,5 +1,5 @@
-import { PlaylistPayload } from '@infrastructure/typesense/modules/playlist/types';
-import { Playlist } from '@infrastructure/typesense/modules/playlist/playlist.document';
+import { PlaylistPayload } from './types';
+import { Playlist } from './playlist.document';
 
 export class PlaylistFactory {
   static create(payload: PlaylistPayload) {

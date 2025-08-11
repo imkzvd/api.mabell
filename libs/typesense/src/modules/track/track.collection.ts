@@ -1,10 +1,10 @@
-import { IndexedTrackDTO } from '@core/app/common/ports/search-service/dtos/indexed-track.dto';
-import { BaseCollection } from '@infrastructure/typesense/base/base-collection.abstract';
-import { TrackPayload } from '@infrastructure/typesense/modules/track/types';
-import { ArtistPayload } from '@infrastructure/typesense/modules/artist/types';
-import { AlbumPayload } from '@infrastructure/typesense/modules/album/types';
-import { Track } from '@infrastructure/typesense/modules/track/track.document';
-import TrackMapper from '@infrastructure/typesense/modules/track/track.mapper';
+import { IndexedTrackDTO } from '@api.mabell/core';
+import { TrackPayload } from './types';
+import { Track } from './track.document';
+import TrackMapper from './track.mapper';
+import { ArtistPayload } from '../artist/types';
+import { AlbumPayload } from '../album/types';
+import { BaseCollection } from '../../base/base-collection.abstract';
 
 export class TrackCollection extends BaseCollection<Track, IndexedTrackDTO, TrackPayload> {
   constructor() {

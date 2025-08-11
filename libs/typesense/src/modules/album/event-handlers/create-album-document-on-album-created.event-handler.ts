@@ -1,8 +1,6 @@
 import { Inject } from '@nestjs/common';
-import { EventHandler } from '@core/app/common/ports/event-bus.port';
-import { AlbumCreatedEvent } from '@core/app/common/events/album/album-created.event';
-import { AlbumUpdatedEvent } from '@core/app/common/events/album/album-updated.event';
-import { AlbumCollection } from '@infrastructure/typesense/modules/album/album.collection';
+import { EventHandler, AlbumCreatedEvent, AlbumUpdatedEvent } from '@api.mabell/core';
+import { AlbumCollection } from '../album.collection';
 
 export class CreateAlbumDocumentOnAlbumCreatedEventHandler extends EventHandler<
   AlbumCreatedEvent | AlbumUpdatedEvent

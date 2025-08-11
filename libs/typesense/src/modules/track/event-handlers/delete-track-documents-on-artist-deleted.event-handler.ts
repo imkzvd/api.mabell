@@ -1,7 +1,6 @@
 import { Inject } from '@nestjs/common';
-import { EventHandler } from '@core/app/common/ports/event-bus.port';
-import { ArtistDeletedEvent } from '@core/app/common/events/artist/artist-deleted.event';
-import { TrackCollection } from '@infrastructure/typesense/modules/track/track.collection';
+import { EventHandler, ArtistDeletedEvent } from '@api.mabell/core';
+import { TrackCollection } from '../track.collection';
 
 export class DeleteTrackDocumentsOnArtistDeletedEventHandler extends EventHandler<ArtistDeletedEvent> {
   constructor(@Inject(TrackCollection) private readonly _collection: TrackCollection) {

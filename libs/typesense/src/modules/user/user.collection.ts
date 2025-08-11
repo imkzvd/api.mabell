@@ -1,8 +1,8 @@
-import { IndexedUserDTO } from '@core/app/common/ports/search-service/dtos/indexed-user.dto';
-import { UserPayload } from '@infrastructure/typesense/modules/user/types';
-import UserMapper from '@infrastructure/typesense/modules/user/user.mapper';
-import { User } from '@infrastructure/typesense/modules/user/user.document';
-import { BaseCollection } from '@infrastructure/typesense/base/base-collection.abstract';
+import { IndexedUserDTO } from '@api.mabell/core';
+import { UserPayload } from './types';
+import UserMapper from './user.mapper';
+import { User } from './user.document';
+import { BaseCollection } from '../../base/base-collection.abstract';
 
 export class UserCollection extends BaseCollection<User, IndexedUserDTO, UserPayload> {
   constructor() {

@@ -1,0 +1,22 @@
+{
+  "name": "@api.mabell/typesense",
+  "version": "0.0.0",
+  "description": "Package for the Mabell API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "search",
+    "typesense",
+    "api.mabell"
+  ],
+  "author": "imkzvd@gmail.com",
+  "license": "ISC",
+  "dependencies": {
+    "@api.mabell/core": "^1.0.0-alpha.0",
+    "@api.mabell/event-bus": "^0.0.0",
+    "@nestjs/common": "^11.1.6",
+    "typesense": "^2.0.3"
+  }
+}

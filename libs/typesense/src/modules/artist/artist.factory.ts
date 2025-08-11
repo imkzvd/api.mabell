@@ -1,5 +1,5 @@
-import { ArtistPayload } from '@infrastructure/typesense/modules/artist/types';
-import { Artist } from '@infrastructure/typesense/modules/artist/artist.document';
+import { ArtistPayload } from './types';
+import { Artist } from './artist.document';
 
 export class ArtistFactory {
   static create(payload: ArtistPayload) {

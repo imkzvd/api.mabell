@@ -1,8 +1,6 @@
 import { Inject } from '@nestjs/common';
-import { EventHandler } from '@core/app/common/ports/event-bus.port';
-import { PlaylistCreatedEvent } from '@core/app/common/events/playlist/playlist-created.event';
-import { PlaylistUpdatedEvent } from '@core/app/common/events/playlist/playlist-updated.event';
-import { PlaylistCollection } from '@infrastructure/typesense/modules/playlist/playlist.collection';
+import { EventHandler, PlaylistCreatedEvent, PlaylistUpdatedEvent } from '@api.mabell/core';
+import { PlaylistCollection } from '../playlist.collection';
 
 export class CreatePlaylistDocumentOnPlaylistCreatedEventHandler extends EventHandler<
   PlaylistCreatedEvent | PlaylistUpdatedEvent

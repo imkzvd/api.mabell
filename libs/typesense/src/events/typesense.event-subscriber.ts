@@ -1,44 +1,46 @@
 import { Inject } from '@nestjs/common';
 import { EventBus as EventBusPort } from '@core/app/common/ports/event-bus.port';
-import { EventBus } from '@infrastructure/event-bus';
-import { CreateUserDocumentOnUserCreatedEventHandler } from '@infrastructure/typesense/modules/user/event-handlers/create-user-document-on-user-created.event-handler';
-import { UserCollection } from '@infrastructure/typesense/modules/user/user.collection';
-import { UserUpdatedEvent } from '@core/app/common/events/user/user-updated.event';
-import { CreateArtistDocumentOnArtistCreatedEventHandler } from '@infrastructure/typesense/modules/artist/event-handlers/create-artist-document-on-artist-created.event-handler';
-import { ArtistUpdatedEvent } from '@core/app/common/events/artist/artist-updated.event';
-import { ArtistCollection } from '@infrastructure/typesense/modules/artist/artist.collection';
-import { DeleteUserDocumentOnUserDeletedEventHandler } from '@infrastructure/typesense/modules/user/event-handlers/delete-user-document-on-user-deleted.event-handler';
-import { UserDeletedEvent } from '@core/app/common/events/user/user-deleted.event';
-import { UserCreatedEvent } from '@core/app/common/events/user/user-created.event';
-import { DeleteArtistDocumentOnArtistDeletedEventHandler } from '@infrastructure/typesense/modules/artist/event-handlers/delete-artist-document-on-artist-deleted.event-handler';
-import { ArtistDeletedEvent } from '@core/app/common/events/artist/artist-deleted.event';
-import { ArtistCreatedEvent } from '@core/app/common/events/artist/artist-created.event';
-import { AlbumCollection } from '@infrastructure/typesense/modules/album/album.collection';
-import { CreateAlbumDocumentOnAlbumCreatedEventHandler } from '@infrastructure/typesense/modules/album/event-handlers/create-album-document-on-album-created.event-handler';
-import { DeleteAlbumDocumentOnAlbumDeletedEventHandler } from '@infrastructure/typesense/modules/album/event-handlers/delete-album-document-on-album-deleted.event-handler';
-import { AlbumCreatedEvent } from '@core/app/common/events/album/album-created.event';
-import { AlbumUpdatedEvent } from '@core/app/common/events/album/album-updated.event';
-import { AlbumDeletedEvent } from '@core/app/common/events/album/album-deleted.event';
-import { UpdateAlbumDocumentsOnArtistUpdatedEventHandler } from '@infrastructure/typesense/modules/album/event-handlers/update-album-documents-on-artist-updated.event-handler';
-import { DeleteAlbumDocumentsOnArtistDeletedEventHandler } from '@infrastructure/typesense/modules/album/event-handlers/delete-album-documents-on-artist-deleted.event-handler';
-import { CreateTrackDocumentOnTrackCreatedEventHandler } from '@infrastructure/typesense/modules/track/event-handlers/create-track-document-on-track-created.event-handler';
-import { TrackCollection } from '@infrastructure/typesense/modules/track/track.collection';
-import { TrackCreatedEvent } from '@core/app/common/events/track/track-created.event';
-import { TrackUpdatedEvent } from '@core/app/common/events/track/track-updated.event';
-import { DeleteTrackDocumentOnTrackDeletedEventHandler } from '@infrastructure/typesense/modules/track/event-handlers/delete-track-document-on-track-deleted.event-handler';
-import { TrackDeletedEvent } from '@core/app/common/events/track/track-deleted.event';
-import { UpdateTrackDocumentsOnAlbumUpdatedEventHandler } from '@infrastructure/typesense/modules/track/event-handlers/update-track-documents-on-album-updated.event-handler';
-import { UpdateTrackDocumentsOnArtistUpdatedEventHandler } from '@infrastructure/typesense/modules/track/event-handlers/update-track-documents-on-artist-updated.event-handler';
-import { CreatePlaylistDocumentOnPlaylistCreatedEventHandler } from '@infrastructure/typesense/modules/playlist/event-handlers/create-playlist-document-on-playlist-created.event-handler';
-import { PlaylistCollection } from '@infrastructure/typesense/modules/playlist/playlist.collection';
-import { DeletePlaylistDocumentOnPlaylistDeletedEventHandler } from '@infrastructure/typesense/modules/playlist/event-handlers/delete-playlist-document-on-playlist-deleted.event-handler';
-import { PlaylistCreatedEvent } from '@core/app/common/events/playlist/playlist-created.event';
-import { PlaylistDeletedEvent } from '@core/app/common/events/playlist/playlist-deleted.event';
-import { DeleteTrackDocumentsOnArtistDeletedEventHandler } from '@infrastructure/typesense/modules/track/event-handlers/delete-track-documents-on-artist-deleted.event-handler';
-import { DeleteTrackDocumentsOnAlbumDeletedEventHandler } from '@infrastructure/typesense/modules/track/event-handlers/delete-track-documents-on-album-deleted.event-handler';
-import { PlaylistUpdatedEvent } from '@core/app/common/events/playlist/playlist-updated.event';
-import { DeletePlaylistDocumentsOnUserDeletedEventHandler } from '@infrastructure/typesense/modules/playlist/event-handlers/delete-playlist-documents-on-user-deleted.event-handler';
-import { UpdatePlaylistDocumentsOnUserUpdatedEventHandler } from '@infrastructure/typesense/modules/playlist/event-handlers/update-playlist-documents-on-user-updated.event-handler';
+import { EventBus } from '@api.mabell/event-bus';
+import {
+  UserUpdatedEvent,
+  ArtistUpdatedEvent,
+  UserDeletedEvent,
+  UserCreatedEvent,
+  ArtistDeletedEvent,
+  ArtistCreatedEvent,
+  AlbumCreatedEvent,
+  AlbumUpdatedEvent,
+  AlbumDeletedEvent,
+  TrackCreatedEvent,
+  TrackUpdatedEvent,
+  TrackDeletedEvent,
+  PlaylistCreatedEvent,
+  PlaylistDeletedEvent,
+  PlaylistUpdatedEvent,
+} from '@api.mabell/core';
+import { CreateUserDocumentOnUserCreatedEventHandler } from '../modules/user/event-handlers/create-user-document-on-user-created.event-handler';
+import { UserCollection } from '../modules/user/user.collection';
+import { CreateArtistDocumentOnArtistCreatedEventHandler } from '../modules/artist/event-handlers/create-artist-document-on-artist-created.event-handler';
+import { ArtistCollection } from '../modules/artist/artist.collection';
+import { DeleteUserDocumentOnUserDeletedEventHandler } from '../modules/user/event-handlers/delete-user-document-on-user-deleted.event-handler';
+import { DeleteArtistDocumentOnArtistDeletedEventHandler } from '../modules/artist/event-handlers/delete-artist-document-on-artist-deleted.event-handler';
+import { AlbumCollection } from '../modules/album/album.collection';
+import { CreateAlbumDocumentOnAlbumCreatedEventHandler } from '../modules/album/event-handlers/create-album-document-on-album-created.event-handler';
+import { DeleteAlbumDocumentOnAlbumDeletedEventHandler } from '../modules/album/event-handlers/delete-album-document-on-album-deleted.event-handler';
+import { UpdateAlbumDocumentsOnArtistUpdatedEventHandler } from '../modules/album/event-handlers/update-album-documents-on-artist-updated.event-handler';
+import { DeleteAlbumDocumentsOnArtistDeletedEventHandler } from '../modules/album/event-handlers/delete-album-documents-on-artist-deleted.event-handler';
+import { CreateTrackDocumentOnTrackCreatedEventHandler } from '../modules/track/event-handlers/create-track-document-on-track-created.event-handler';
+import { TrackCollection } from '../modules/track/track.collection';
+import { DeleteTrackDocumentOnTrackDeletedEventHandler } from '../modules/track/event-handlers/delete-track-document-on-track-deleted.event-handler';
+import { UpdateTrackDocumentsOnAlbumUpdatedEventHandler } from '../modules/track/event-handlers/update-track-documents-on-album-updated.event-handler';
+import { UpdateTrackDocumentsOnArtistUpdatedEventHandler } from '../modules/track/event-handlers/update-track-documents-on-artist-updated.event-handler';
+import { CreatePlaylistDocumentOnPlaylistCreatedEventHandler } from '../modules/playlist/event-handlers/create-playlist-document-on-playlist-created.event-handler';
+import { PlaylistCollection } from '../modules/playlist/playlist.collection';
+import { DeletePlaylistDocumentOnPlaylistDeletedEventHandler } from '../modules/playlist/event-handlers/delete-playlist-document-on-playlist-deleted.event-handler';
+import { DeleteTrackDocumentsOnArtistDeletedEventHandler } from '../modules/track/event-handlers/delete-track-documents-on-artist-deleted.event-handler';
+import { DeleteTrackDocumentsOnAlbumDeletedEventHandler } from '../modules/track/event-handlers/delete-track-documents-on-album-deleted.event-handler';
+import { DeletePlaylistDocumentsOnUserDeletedEventHandler } from '../modules/playlist/event-handlers/delete-playlist-documents-on-user-deleted.event-handler';
+import { UpdatePlaylistDocumentsOnUserUpdatedEventHandler } from '../modules/playlist/event-handlers/update-playlist-documents-on-user-updated.event-handler';
 
 export class TypesenseEventSubscriber {
   constructor(

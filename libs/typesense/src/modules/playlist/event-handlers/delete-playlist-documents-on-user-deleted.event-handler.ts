@@ -1,7 +1,6 @@
 import { Inject } from '@nestjs/common';
-import { EventHandler } from '@core/app/common/ports/event-bus.port';
-import { PlaylistCollection } from '@infrastructure/typesense/modules/playlist/playlist.collection';
-import { UserDeletedEvent } from '@core/app/common/events/user/user-deleted.event';
+import { EventHandler, UserDeletedEvent } from '@api.mabell/core';
+import { PlaylistCollection } from '../playlist.collection';
 
 export class DeletePlaylistDocumentsOnUserDeletedEventHandler extends EventHandler<UserDeletedEvent> {
   constructor(@Inject(PlaylistCollection) private readonly _collection: PlaylistCollection) {
