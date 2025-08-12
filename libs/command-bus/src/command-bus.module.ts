@@ -1,11 +1,11 @@
 import { Global, Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
-import { CommandBusService } from './command-bus.service';
+import { CommandBus } from './command-bus.service';
 
 @Global()
 @Module({
   imports: [CqrsModule],
-  providers: [CommandBusService],
-  exports: [CommandBusService],
+  providers: [CommandBus],
+  exports: [CommandBus],
 })
 export class CommandBusModule {}
