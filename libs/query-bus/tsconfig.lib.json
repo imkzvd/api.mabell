@@ -2,7 +2,12 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "declaration": true,
-    "outDir": "../../dist/libs/query-bus"
+    "outDir": "../../dist/libs/query-bus",
+    "baseUrl": "./", // Устанавливаем корень проекта
+    "paths": {
+      "@danya/*": ["src/*"]
+    },
+    "strict": true
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "test", "**/*spec.ts"]
