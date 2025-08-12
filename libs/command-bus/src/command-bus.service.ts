@@ -1,15 +1,13 @@
-import { CommandBus as NestCommandBus } from '@nestjs/cqrs';
+import { CommandBus } from '@nestjs/cqrs';
 import { Injectable } from '@nestjs/common';
-import { Command } from '@api.mabell/core';
-
-type ExtractCommandResponse<TCommand extends Command<any>> =
-  TCommand extends Command<infer R> ? R : never;
+import { App } from '@api.mabell/core';
+import { ExtractCommandResponse } from './types';
 
 @Injectable()
-export class CommandBus {
-  constructor(private readonly _CB: NestCommandBus) {}
+export class CommandBusService {
+  constructor(private readonly _CB: CommandBus) {}
 
-  execute<T extends Command<any>>(command: T): Promise<ExtractCommandResponse<T>> {
+  execute<T extends App.Types.Command<any>>(command: T): Promise<ExtractCommandResponse<T>> {
     return this._CB.execute(command);
   }
 }
