@@ -4,7 +4,7 @@ import { EventBus } from './event-bus.service';
 
 @Global()
 @Module({
-  imports: [EventEmitterModule.forRoot()],
+  imports: [EventEmitterModule],
   providers: [EventBus],
   exports: [EventBus],
 })

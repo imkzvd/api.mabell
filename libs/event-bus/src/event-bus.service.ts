@@ -1,29 +1,30 @@
-import { Inject } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import {
-  Event,
-  EventBus as EventBusPort,
-  EventConstructor,
-  EventHandler,
-  EventPayload,
-} from '@api.mabell/core';
+import { App } from '@api.mabell/core';
 
-export class EventBus implements EventBusPort {
-  constructor(@Inject(EventEmitter2) private readonly emitter: EventEmitter2) {}
+@Injectable()
+export class EventBus implements App.Common.Ports.EventBus {
+  constructor(private readonly emitter: EventEmitter2) {}
 
-  publish<T extends EventPayload>(event: Event<T>): void {
+  publish<T extends App.Common.Ports.EventPayload>(event: App.Common.Ports.Event<T>): void {
     this.emitter.emit(event.name, event);
   }
 
-  subscribe<T extends Event<EventPayload>>(event: EventConstructor, handler: EventHandler<T>) {
-    const eventInstance = new event({} as EventPayload);
+  subscribe<T extends App.Common.Ports.Event<App.Common.Ports.EventPayload>>(
+    event: App.Common.Ports.EventConstructor,
+    handler: App.Common.Ports.EventHandler<T>,
+  ) {
+    const eventInstance = new event({} as App.Common.Ports.EventPayload);
 
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     this.emitter.on(eventInstance.name, handler.handle.bind(handler));
   }
 
-  unsubscribe<T extends Event<EventPayload>>(event: EventConstructor, handler: EventHandler<T>) {
-    const eventInstance = new event({} as EventPayload);
+  unsubscribe<T extends App.Common.Ports.Event<App.Common.Ports.EventPayload>>(
+    event: App.Common.Ports.EventConstructor,
+    handler: App.Common.Ports.EventHandler<T>,
+  ) {
+    const eventInstance = new event({} as App.Common.Ports.EventPayload);
 
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     this.emitter.off(eventInstance.name, handler.handle.bind(handler));
