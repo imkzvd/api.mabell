@@ -3,7 +3,7 @@ import { NameVO } from './vos/name.vo';
 import { RegionVO } from '../../common/vos/region.vo';
 import { GenreVO } from '../../common/vos/genre.vo';
 import { EmailVO } from '../../common/vos/email.vo';
-import { HashedPasswordVO } from '../../common/vos/hashed-password.vo';
+import { HashedPasswordVO } from '../../common/vos';
 import { UserId } from './types';
 import { BirthDateVO } from './vos/birth-date.vo';
 

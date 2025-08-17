@@ -1,7 +1,6 @@
 import { AdminRefreshTokenId } from './types';
-import { AdminId } from '../admin/types';
 import { AdminRefreshToken } from './admin-refresh-token.entity';
-import { AdminRole } from '../admin/constants/admin-roles';
+import { AdminId, AdminRole } from '../admin/types';
 
 export class AdminRefreshTokenFactory {
   static create(props: {

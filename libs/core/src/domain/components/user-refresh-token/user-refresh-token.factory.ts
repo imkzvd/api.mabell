@@ -1,6 +1,6 @@
 import { UserRefreshTokenId } from './types';
-import { UserId } from '../user/types';
 import { UserRefreshToken } from './user-refresh-token.entity';
+import { UserId } from '../user/types';
 
 export class UserRefreshTokenFactory {
   static create(props: {
