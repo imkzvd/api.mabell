@@ -1,17 +1,10 @@
-import { Event } from '../../ports';
-import { AlbumId } from '../../../../domain/components/album';
+import { Event } from '../../ports/event-bus/types';
+import { AlbumEventPayload } from './types';
 
-export type AlbumArtistsUpdatedEventPayload = {
-  id: AlbumId;
-  name: string;
-  artists: { id: string; name: string }[];
-  cover: string | null;
-};
-
-export class AlbumArtistsUpdatedEvent extends Event<AlbumArtistsUpdatedEventPayload> {
+export class AlbumArtistsUpdatedEvent extends Event<AlbumEventPayload> {
   public readonly name = 'album.artists-updated';
 
-  constructor(public readonly payload: AlbumArtistsUpdatedEventPayload) {
+  constructor(public readonly payload: AlbumEventPayload) {
     super();
   }
 }

@@ -1,19 +1,10 @@
-import { Event } from '../../ports';
-import { PlaylistId } from '../../../../domain/components/playlist';
-import { UserId } from '../../../../domain/components/user';
+import { Event } from '../../ports/event-bus/types';
+import { PlaylistEventPayload } from './types';
 
-export type PlaylistCreatedEventPayload = {
-  id: PlaylistId;
-  name: string;
-  user: { id: UserId; name: string; isPublic: boolean };
-  cover: string | null;
-  isPublic: boolean;
-};
-
-export class PlaylistCreatedEvent extends Event<PlaylistCreatedEventPayload> {
+export class PlaylistCreatedEvent extends Event<PlaylistEventPayload> {
   public readonly name = 'playlist.created';
 
-  constructor(public readonly payload: PlaylistCreatedEventPayload) {
+  constructor(public readonly payload: PlaylistEventPayload) {
     super();
   }
 }

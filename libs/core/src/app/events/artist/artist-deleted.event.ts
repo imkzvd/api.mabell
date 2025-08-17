@@ -1,5 +1,5 @@
-import { Event } from '../../ports';
-import { ArtistId } from '../../../../domain/components/artist';
+import { Event } from '../../ports/event-bus/types';
+import { ArtistId } from '../../../domain/components/artist/types';
 
 export type ArtistDeletedEventPayload = {
   id: ArtistId;

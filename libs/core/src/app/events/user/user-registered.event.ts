@@ -1,17 +1,10 @@
-import { Event } from '../../ports';
-import { UserId } from '../../../../domain/components/user';
+import { Event } from '../../ports/event-bus/types';
+import { UserEventPayload } from './types';
 
-export type UserRegisteredEventEventPayload = {
-  id: UserId;
-  name: string;
-  email: string | null;
-  avatar: string | null;
-};
-
-export class UserRegisteredEvent extends Event<UserRegisteredEventEventPayload> {
+export class UserRegisteredEvent extends Event<UserEventPayload> {
   public readonly name = 'user.registered';
 
-  constructor(public readonly payload: UserRegisteredEventEventPayload) {
+  constructor(public readonly payload: UserEventPayload) {
     super();
   }
 }

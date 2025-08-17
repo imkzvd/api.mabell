@@ -1,17 +1,10 @@
-import { Event } from '../../ports';
-import { AlbumId } from '../../../../domain/components/album';
+import { Event } from '../../ports/event-bus/types';
+import { AlbumEventPayload } from './types';
 
-export type AlbumCoverDeletedEventPayload = {
-  id: AlbumId;
-  name: string;
-  artists: { id: string; name: string }[];
-  cover: string | null;
-};
-
-export class AlbumCoverDeletedEvent extends Event<AlbumCoverDeletedEventPayload> {
+export class AlbumCoverDeletedEvent extends Event<AlbumEventPayload> {
   public readonly name = 'album.cover-deleted';
 
-  constructor(public readonly payload: AlbumCoverDeletedEventPayload) {
+  constructor(public readonly payload: AlbumEventPayload) {
     super();
   }
 }

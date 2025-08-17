@@ -1,5 +1,5 @@
-import { Event } from '../../ports';
-import { TrackId } from '../../../../domain/components/track';
+import { Event } from '../../ports/event-bus/types';
+import { TrackId } from '../../../domain/components/track/types';
 
 export type TracksDeletedEventPayload = {
   ids: TrackId[];

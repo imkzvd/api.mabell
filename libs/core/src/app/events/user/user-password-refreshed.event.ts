@@ -1,5 +1,5 @@
-import { Event } from '../../ports';
-import { UserId } from '../../../../domain/components/user';
+import { Event } from '../../ports/event-bus/types';
+import { UserId } from '../../../domain/components/user/types';
 
 export type UserPasswordRefreshedEventPayload = {
   id: UserId;

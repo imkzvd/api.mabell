@@ -1,5 +1,5 @@
-import { Event } from '../../ports';
-import { AdminId } from '../../../../domain/components/admin';
+import { Event } from '../../ports/event-bus/types';
+import { AdminId } from '../../../domain/components/admin/types';
 
 export type AdminCreatedEventPayload = {
   id: AdminId;

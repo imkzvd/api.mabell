@@ -1,5 +1,5 @@
-import { Event } from '../../ports';
-import { PlaylistId } from '../../../../domain/components/playlist';
+import { Event } from '../../ports/event-bus/types';
+import { PlaylistId } from '../../../domain/components/playlist/types';
 
 export type PlaylistDeletedEventPayload = {
   id: PlaylistId;

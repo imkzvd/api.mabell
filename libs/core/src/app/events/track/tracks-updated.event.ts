@@ -1,25 +1,16 @@
-import { Event } from '../../ports';
-import { TrackId } from '../../../../domain/components/track';
-import { AlbumId } from '../../../../domain/components/album';
-import { ArtistId } from '../../../../domain/components/artist';
+import { Event } from '../../ports/event-bus/types';
+import { TrackEventPayload } from './types';
 
-export type TracksUpdatedEventPayload = {
-  tracks: {
-    id: TrackId;
-    name: string;
-    album: { id: AlbumId; name: string; isPublic: boolean };
-    artists: { id: ArtistId; name: string; isPublic: boolean }[];
-    featArtists: { id: ArtistId; name: string; isPublic: boolean }[];
-    cover: string | null;
-    isPublic: boolean;
-    isExplicit: boolean;
-  }[];
-};
-
-export class TracksUpdatedEvent extends Event<TracksUpdatedEventPayload> {
+export class TracksUpdatedEvent extends Event<{
+  tracks: TrackEventPayload[];
+}> {
   public readonly name = 'tracks.updated';
 
-  constructor(public readonly payload: TracksUpdatedEventPayload) {
+  constructor(
+    public readonly payload: {
+      tracks: TrackEventPayload[];
+    },
+  ) {
     super();
   }
 }
