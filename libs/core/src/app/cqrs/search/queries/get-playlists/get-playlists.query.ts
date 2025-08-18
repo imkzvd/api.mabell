@@ -1,5 +1,5 @@
-import { Query } from '@core/app/types';
-import { IndexedPlaylistDTO } from '@core/app/common/ports/search-service/dtos/indexed-playlist.dto';
+import { Query } from '../../../../types';
+import { IndexedPlaylistDTO } from '../../../../dtos';
 
 export class GetPlaylistsQuery extends Query<IndexedPlaylistDTO[]> {
   constructor(public readonly q: string) {

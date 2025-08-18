@@ -1,9 +1,8 @@
-import { NotFoundException } from '@core/shared/exceptions';
-import { AlbumWriteRepository } from '@core/domain/components/album/repository/album-write-repository.port';
-import { AlbumId } from '@core/domain/components/album/types';
-import { EventBus } from '@core/app/common/ports/event-bus.port';
-import { AlbumDeletedEvent } from '@core/app/common/events/album/album-deleted.event';
-import { AlbumsDeletedEvent } from '@core/app/common/events/album/albums-deleted.event';
+import { AlbumWriteRepository } from '../../../../domain/components/album';
+import { NotFoundException } from '../../../../shared/exceptions';
+import { EventBus } from '../../../ports';
+import { AlbumId } from '../../../../domain/components/album/types';
+import { AlbumDeletedEvent, AlbumsDeletedEvent } from '../../../events';
 
 export class AlbumDeleteService {
   constructor(
@@ -11,8 +10,8 @@ export class AlbumDeleteService {
     private readonly _WR: AlbumWriteRepository,
   ) {}
 
-  async delete(id: string): Promise<AlbumId> {
-    const deletedAlbumId = await this._WR.deleteById(id);
+  async deleteById(albumId: string): Promise<AlbumId> {
+    const deletedAlbumId = await this._WR.deleteById(albumId);
 
     if (!deletedAlbumId) {
       throw new NotFoundException('Album does not exist');
@@ -23,8 +22,8 @@ export class AlbumDeleteService {
     return deletedAlbumId;
   }
 
-  async deleteByArtistId(id: string): Promise<AlbumId[]> {
-    const { deletedIds } = await this._WR.deleteByArtistId(id);
+  async deleteByArtistId(artistId: string): Promise<AlbumId[]> {
+    const { deletedIds } = await this._WR.deleteByArtistId(artistId);
 
     this._EB.publish(new AlbumsDeletedEvent({ ids: deletedIds }));
 

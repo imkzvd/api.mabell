@@ -1,4 +1,4 @@
-import { UserRefreshTokenDTO } from './dtos/user-refresh-token.dto';
+import { UserRefreshTokenDTO } from '../../dtos';
 
 export interface UserRefreshTokenReadRepository {
   findById(id: string): Promise<UserRefreshTokenDTO | null>;

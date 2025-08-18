@@ -1,7 +1,6 @@
-import { Command } from '@core/app/types';
-import { TrackId } from '@core/domain/components/track/types';
+import { Command } from '../../../../types';
 
-export class UpdateTrackFeatArtistsCommand extends Command<TrackId> {
+export class UpdateTrackFeatArtistsCommand extends Command<void> {
   constructor(
     public readonly id: string,
     public readonly artistIds: string[],

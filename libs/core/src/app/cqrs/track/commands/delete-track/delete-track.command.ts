@@ -1,7 +1,6 @@
-import { Command } from '@core/app/types';
-import { TrackId } from '@core/domain/components/track/types';
+import { Command } from '../../../../types';
 
-export class DeleteTrackCommand extends Command<TrackId> {
+export class DeleteTrackCommand extends Command<void> {
   constructor(public readonly id: string) {
     super();
   }

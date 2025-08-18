@@ -1,8 +1,8 @@
-import { CommandHandler } from '@core/app/types';
-import { NotFoundException } from '@core/shared/exceptions';
-import { AddTrackInPlaylistCommand } from '@core/app/cqrs/playlist/commands/add-track-in-playlist/add-track-in-playlist.command';
-import { TrackVerifyService } from '@core/app/components/track/services/track-verify.service';
-import { PlaylistUpdateService } from '@core/app/components/playlist/services/playlist-update.service';
+import { CommandHandler } from '../../../../types';
+import { AddTrackInPlaylistCommand } from './add-track-in-playlist.command';
+import { TrackVerifyService } from '../../../../components/track';
+import { PlaylistUpdateService } from '../../../../components/playlist';
+import { NotFoundException } from '../../../../../shared/exceptions';
 
 export class AddTrackInPlaylistHandler implements CommandHandler<AddTrackInPlaylistCommand> {
   constructor(
@@ -17,6 +17,6 @@ export class AddTrackInPlaylistHandler implements CommandHandler<AddTrackInPlayl
       throw new NotFoundException('Track does not exist');
     }
 
-    return await this._playlistUpdateService.addTrack(playlistId, verifiedTrackId);
+    await this._playlistUpdateService.addTrack(playlistId, verifiedTrackId);
   }
 }

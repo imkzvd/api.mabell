@@ -1,8 +1,8 @@
-import { CommandHandler } from '@core/app/types';
-import { UnauthorizedException } from '@core/shared/exceptions';
-import { CreateAdminAccessTokenCommand } from '@core/app/cqrs/token/commands/create-admin-access-token/create-admin-access-token.command';
-import { AdminService } from '@core/app/components/admin/services/admin.service';
-import { AdminTokenCreateService } from '@core/app/components/admin-token/services/admin-token-create.service';
+import { CreateAdminAccessTokenCommand } from './create-admin-access-token.command';
+import { CommandHandler } from '../../../../types';
+import { AdminService } from '../../../../components/admin';
+import { AdminTokenCreateService } from '../../../../components/admin-token';
+import { UnauthorizedException } from '../../../../../shared/exceptions';
 
 export class CreateAdminAccessTokenHandler
   implements CommandHandler<CreateAdminAccessTokenCommand>
@@ -13,15 +13,17 @@ export class CreateAdminAccessTokenHandler
   ) {}
 
   async execute({ adminId }: CreateAdminAccessTokenCommand) {
-    const foundAdmin = await this._adminService.find(adminId);
+    const foundAdmin = await this._adminService.findById(adminId);
 
     if (!foundAdmin) {
       throw new UnauthorizedException();
     }
 
-    return this._adminTokenCreateService.createAccessToken({
+    const token = this._adminTokenCreateService.createAccessToken({
       adminId: foundAdmin.id,
-      role: foundAdmin.role,
+      role: foundAdmin.role.value,
     });
+
+    return { token };
   }
 }

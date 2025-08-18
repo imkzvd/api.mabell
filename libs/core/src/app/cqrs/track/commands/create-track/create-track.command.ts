@@ -1,7 +1,7 @@
-import { Command } from '@core/app/types';
-import { TrackId } from '@core/domain/components/track/types';
+import { Command } from '../../../../types';
+import { TrackId } from '../../../../../domain/components/track/types';
 
-export class CreateTrackCommand extends Command<TrackId> {
+export class CreateTrackCommand extends Command<{ id: TrackId }> {
   constructor(public readonly albumId: string) {
     super();
   }

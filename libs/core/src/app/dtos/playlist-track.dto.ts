@@ -1,9 +1,9 @@
-import { TrackDTO } from './track.dto';
-import { TrackId } from '../../../../domain/components/track';
+import { TrackId } from '../../domain/components/track/types';
+import { TrackWithAlbumDTO } from './track-with-album.dto';
 
 export class PlaylistTrackDTO {
   constructor(
-    public readonly track: TrackDTO | null,
+    public readonly track: TrackWithAlbumDTO | null,
     public readonly trackId: TrackId,
     public readonly addedAt: Date,
   ) {}

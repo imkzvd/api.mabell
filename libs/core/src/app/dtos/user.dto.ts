@@ -1,15 +1,16 @@
-import { UserId } from '../../../../domain/components/user';
-import { Genre, Region } from '../../../../domain/common';
+import { LabelValueDTO } from '../../shared/dtos';
+import { UserId } from '../../domain/components/user/types';
 
 export class UserDTO {
   constructor(
     public readonly id: UserId,
     public readonly username: string,
+    public readonly password: string,
     public readonly name: string,
     public readonly email: string | null,
     public readonly birthDate: Date | null,
-    public readonly region: Region,
-    public readonly genres: Genre[],
+    public readonly region: LabelValueDTO,
+    public readonly genres: LabelValueDTO[],
     public readonly avatar: string | null,
     public readonly color: string | null,
     public readonly isBlocked: boolean,

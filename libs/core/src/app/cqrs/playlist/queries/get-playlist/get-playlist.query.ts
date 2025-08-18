@@ -1,10 +1,12 @@
-import { Query } from '@core/app/types';
-import { PlaylistDTO } from '@core/app/components/playlist/dtos/playlist.dto';
+import { Query } from '../../../../types';
+import { PlaylistDTO } from '../../../../dtos';
 
 export class GetPlaylistQuery extends Query<PlaylistDTO | null> {
   constructor(
     public readonly id: string,
-    public readonly isPublic?: boolean,
+    public readonly options?: Partial<{
+      isPublic: boolean;
+    }>,
   ) {
     super();
   }

@@ -1,23 +1,21 @@
-import { TrackWriteRepository } from '@core/domain/components/track/repository/track-write-repository.port';
-import { TrackReadRepository } from '@core/domain/components/track/repository/track-read-repository.port';
-import { TrackFactory } from '@core/domain/components/track/track.factory';
-import { TrackId } from '@core/domain/components/track/types';
-import { EventBus } from '@core/app/common/ports/event-bus.port';
-import { IdService } from '@core/app/common/ports/id.service.port';
-import { TrackCreatedEvent } from '@core/app/common/events/track/track-created.event';
-import { NotFoundException } from '@core/shared/exceptions';
 import { CreateTrackPayload } from '../types';
+import { TrackFactory, TrackWriteRepository } from '../../../../domain/components/track';
+import { NotFoundException } from '../../../../shared/exceptions';
+import { EventBus, IdService, TrackReadRepository } from '../../../ports';
+import { TrackId } from '../../../../domain/components/track/types';
+import { TrackCreatedEvent } from '../../../events';
+import { prepareTrackEventPayload } from '../utils/prepare-track-event-payload.utility';
 
 export class TrackCreateService {
   constructor(
     private readonly _EB: EventBus,
     private readonly _WR: TrackWriteRepository,
     private readonly _RR: TrackReadRepository,
-    private readonly _idService: IdService<TrackId>,
+    private readonly _idService: IdService,
   ) {}
 
   async create(payload: CreateTrackPayload): Promise<TrackId> {
-    const generatedId = this._idService.generate();
+    const generatedId = this._idService.generate<TrackId>();
     const nextAlbumTrackIndex = await this._WR.getNextAlbumTrackIndex(payload.albumId);
     const createdTrack = TrackFactory.create({
       id: generatedId,
@@ -35,26 +33,7 @@ export class TrackCreateService {
       throw new NotFoundException('Track does not exist');
     }
 
-    this._EB.publish(
-      new TrackCreatedEvent({
-        id: foundTrack.id,
-        name: foundTrack.name,
-        album: {
-          id: foundTrack.album.id,
-          name: foundTrack.album.name,
-          isPublic: foundTrack.album.isPublic,
-        },
-        artists: foundTrack.artists.map(({ id, name, isPublic }) => ({ id, name, isPublic })),
-        featArtists: foundTrack.featArtists.map(({ id, name, isPublic }) => ({
-          id,
-          name,
-          isPublic,
-        })),
-        cover: foundTrack.album.cover,
-        isPublic: foundTrack.isPublic,
-        isExplicit: foundTrack.isExplicit,
-      }),
-    );
+    this._EB.publish(new TrackCreatedEvent(prepareTrackEventPayload(foundTrack)));
 
     return createdTrack.getId();
   }

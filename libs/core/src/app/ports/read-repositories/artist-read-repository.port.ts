@@ -1,4 +1,4 @@
-import { ArtistDTO } from './dtos/artist.dto';
+import { ArtistDTO } from '../../dtos';
 
 export interface ArtistReadRepository {
   findById(

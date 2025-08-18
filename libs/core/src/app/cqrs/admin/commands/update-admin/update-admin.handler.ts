@@ -1,11 +1,11 @@
-import { CommandHandler } from '@core/app/types';
-import { AdminUpdateService } from '@core/app/components/admin/services/admin-update.service';
-import { UpdateAdminCommand } from '@core/app/cqrs/admin/commands/update-admin/update-admin.command';
+import { CommandHandler } from '../../../../types';
+import { UpdateAdminCommand } from './update-admin.command';
+import { AdminUpdateService } from '../../../../components/admin';
 
 export class UpdateAdminHandler implements CommandHandler<UpdateAdminCommand> {
   constructor(private _service: AdminUpdateService) {}
 
   async execute({ id, payload }: UpdateAdminCommand) {
-    return await this._service.update(id, payload);
+    await this._service.updateById(id, payload);
   }
 }

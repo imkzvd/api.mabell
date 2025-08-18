@@ -1,11 +1,9 @@
-import { NotFoundException } from '@core/shared/exceptions';
-import { OffsetLimitPaginationDTO } from '@core/shared/dtos/offset-limit-pagination/offset-limit-pagination-payload.dto';
-import { OffsetLimitPaginationResponseDTO } from '@core/shared/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
-import { AlbumWriteRepository } from '@core/domain/components/album/repository/album-write-repository.port';
-import { AlbumReadRepository } from '@core/domain/components/album/repository/album-read-repository.port';
-import { ArtistId } from '@core/domain/components/artist/types';
-import AlbumMapper from '../dtos/album.mapper';
-import { AlbumDTO } from '../dtos/album.dto';
+import { AlbumWriteRepository } from '../../../../domain/components/album';
+import { OffsetLimitPaginationDTO } from '../../../../shared/dtos';
+import { AlbumDTO } from '../../../dtos';
+import { ArtistId } from '../../../../domain/components/artist/types';
+import { AlbumReadRepository } from '../../../ports';
+import { AlbumsDTO } from '../../../dtos/albums.dto';
 
 export class AlbumService {
   constructor(
@@ -13,34 +11,21 @@ export class AlbumService {
     private readonly _RR: AlbumReadRepository,
   ) {}
 
-  async find(id: string, options?: Partial<{ isPublic: boolean }>): Promise<AlbumDTO | null> {
-    const foundAlbum = await this._RR.findById(id, options);
-
-    return foundAlbum ? AlbumMapper.toDTO(foundAlbum) : null;
+  findById(albumId: string, options?: Partial<{ isPublic: boolean }>): Promise<AlbumDTO | null> {
+    return this._RR.findById(albumId, options);
   }
 
-  async findByArtistId(
-    id: string,
+  findByArtistId(
+    artistId: string,
     options?: Partial<{
       isPublic: boolean;
       pagination: OffsetLimitPaginationDTO;
     }>,
-  ): Promise<OffsetLimitPaginationResponseDTO<AlbumDTO>> {
-    const resp = await this._RR.findByArtistId(id, options);
-
-    return {
-      ...resp,
-      items: resp.items.map((i) => AlbumMapper.toDTO(i)),
-    };
+  ): Promise<AlbumsDTO> {
+    return this._RR.findByArtistId(artistId, options);
   }
 
-  async getArtistIds(id: string): Promise<ArtistId[]> {
-    const foundAlbum = await this._WR.findById(id);
-
-    if (!foundAlbum) {
-      throw new NotFoundException('Album does not exist');
-    }
-
-    return foundAlbum.getArtists();
+  getArtistIdsById(albumId: string): Promise<ArtistId[]> {
+    return this._RR.getArtistIdsById(albumId);
   }
 }

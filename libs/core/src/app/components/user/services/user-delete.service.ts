@@ -1,9 +1,8 @@
-import { NotFoundException } from '@core/shared/exceptions';
-import { UserWriteRepository } from '@core/domain/components/user/repository/user-write-repository.port';
-import { UserId } from '@core/domain/components/user/types';
-import { EventBus } from '@core/app/common/ports/event-bus.port';
-import { UserFileStorage } from '@core/app/common/ports/file-storages/user-file-storage.port';
-import { UserDeletedEvent } from '@core/app/common/events/user/user-deleted.event';
+import { UserWriteRepository } from '../../../../domain/components/user';
+import { NotFoundException } from '../../../../shared/exceptions';
+import { EventBus, UserFileStorage } from '../../../ports';
+import { UserId } from '../../../../domain/components/user/types';
+import { UserDeletedEvent } from '../../../events';
 
 export class UserDeleteService {
   constructor(
@@ -12,14 +11,15 @@ export class UserDeleteService {
     private readonly _FS: UserFileStorage,
   ) {}
 
-  async delete(id: string): Promise<UserId> {
-    const deletedUserId = await this._WR.deleteById(id);
+  async deleteById(userId: string): Promise<UserId> {
+    const deletedUserId = await this._WR.deleteById(userId);
 
     if (!deletedUserId) {
       throw new NotFoundException('User does not exist');
     }
 
     await this._FS.deleteUserDirectory(deletedUserId);
+
     this._EB.publish(new UserDeletedEvent({ id: deletedUserId }));
 
     return deletedUserId;

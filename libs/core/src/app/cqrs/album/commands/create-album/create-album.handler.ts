@@ -1,8 +1,8 @@
-import { NotFoundException } from '@core/shared/exceptions';
-import { CommandHandler } from '@core/app/types';
-import { CreateAlbumCommand } from '@core/app/cqrs/album/commands/create-album/create-album.command';
-import { ArtistVerifyService } from '@core/app/components/artist/services/artist-verify.service';
-import { AlbumCreateService } from '@core/app/components/album/services/album-create.service';
+import { CreateAlbumCommand } from './create-album.command';
+import { CommandHandler } from '../../../../types';
+import { ArtistVerifyService } from '../../../../components/artist';
+import { AlbumCreateService } from '../../../../components/album';
+import { NotFoundException } from '../../../../../shared/exceptions';
 
 export class CreateAlbumHandler implements CommandHandler<CreateAlbumCommand> {
   constructor(
@@ -11,12 +11,14 @@ export class CreateAlbumHandler implements CommandHandler<CreateAlbumCommand> {
   ) {}
 
   async execute({ artistId }: CreateAlbumCommand) {
-    const verifiedArtistId = await this._artistVerifyService.verify(artistId);
+    const verifiedArtistId = await this._artistVerifyService.verifyById(artistId);
 
     if (!verifiedArtistId) {
       throw new NotFoundException('Artist not found');
     }
 
-    return await this._albumCreateService.create({ artistId: verifiedArtistId });
+    const id = await this._albumCreateService.create({ artistId: verifiedArtistId });
+
+    return { id };
   }
 }

@@ -1,9 +1,8 @@
-import { Query } from '@core/app/types';
-import { OffsetLimitPaginationResponseDTO } from '@core/shared/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
-import { OffsetLimitPaginationDTO } from '@core/shared/dtos/offset-limit-pagination/offset-limit-pagination-payload.dto';
-import { PlaylistDTO } from '@core/app/components/playlist/dtos/playlist.dto';
+import { Query } from '../../../../types';
+import { OffsetLimitPaginationDTO } from '../../../../../shared/dtos';
+import { PlaylistsDTO } from '../../../../dtos/playlists.dto';
 
-export class GetUserPlaylistsQuery extends Query<OffsetLimitPaginationResponseDTO<PlaylistDTO>> {
+export class GetUserPlaylistsQuery extends Query<PlaylistsDTO> {
   constructor(
     public readonly userId: string,
     public readonly options?: Partial<{

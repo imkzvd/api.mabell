@@ -1,14 +1,11 @@
-import { NotFoundException } from '@core/shared/exceptions';
-import { PlaylistWriteRepository } from '@core/domain/components/playlist/repository/playlist-write-repository.port';
-import { PlaylistReadRepository } from '@core/domain/components/playlist/repository/playlist-read-repository.port';
-import { PlaylistId } from '@core/domain/components/playlist/types';
-import { TrackId } from '@core/domain/components/track/types';
-import { EventBus } from '@core/app/common/ports/event-bus.port';
-import { TmpFileStorage } from '@core/app/common/ports/file-storages/tmp-file-storage.port';
-import { UserFileStorage } from '@core/app/common/ports/file-storages/user-file-storage.port';
-import { PlaylistUpdatedEvent } from '@core/app/common/events/playlist/playlist-updated.event';
-import { PlaylistWithUserDTO } from '@core/domain/components/playlist/repository/dtos/playlist-with-user.dto';
 import { UpdatePlaylistCoverPayload, UpdatePlaylistPayload } from '../types';
+import { PlaylistWriteRepository } from '../../../../domain/components/playlist';
+import { NotFoundException } from '../../../../shared/exceptions';
+import { EventBus, PlaylistReadRepository, TmpFileStorage, UserFileStorage } from '../../../ports';
+import { PlaylistId } from '../../../../domain/components/playlist/types';
+import { PlaylistUpdatedEvent } from '../../../events';
+import { TrackId } from '../../../../domain/components/track/types';
+import { preparePlaylistEventPayload } from '../utils/prepare-playlist-event-payload.utility';
 
 export class PlaylistUpdateService {
   constructor(
@@ -19,46 +16,49 @@ export class PlaylistUpdateService {
     private readonly _userFS: UserFileStorage,
   ) {}
 
-  async update(id: string, payload: UpdatePlaylistPayload): Promise<PlaylistId> {
-    const foundPlaylist = await this._WR.findById(id);
+  async updateById(playlistId: string, payload: UpdatePlaylistPayload): Promise<PlaylistId> {
+    const foundPlaylistEntity = await this._WR.findById(playlistId);
 
-    if (!foundPlaylist) {
+    if (!foundPlaylistEntity) {
       throw new NotFoundException('Playlist does not exist');
     }
 
     if (payload.name) {
-      foundPlaylist.updateName(payload.name);
+      foundPlaylistEntity.updateName(payload.name);
     }
 
     if (payload.genres) {
-      foundPlaylist.updateGenres(payload.genres);
+      foundPlaylistEntity.updateGenres(payload.genres);
     }
 
     if (payload.description) {
-      foundPlaylist.updateDescription(payload.description);
+      foundPlaylistEntity.updateDescription(payload.description);
     }
 
     if (typeof payload.isPublic === 'boolean') {
-      foundPlaylist.updatePublicStatus(payload.isPublic);
+      foundPlaylistEntity.updatePublicStatus(payload.isPublic);
     }
 
-    await this._WR.save(foundPlaylist);
+    await this._WR.save(foundPlaylistEntity);
 
-    const foundUpdatedPlaylist = await this._RR.findById(id);
+    const foundPlaylist = await this._RR.findById(foundPlaylistEntity.getId());
 
-    if (!foundUpdatedPlaylist) {
+    if (!foundPlaylist) {
       throw new NotFoundException('Playlist does not exist');
     }
 
-    this.publishPlaylistUpdatedEvent(foundUpdatedPlaylist);
+    this._EB.publish(new PlaylistUpdatedEvent(preparePlaylistEventPayload(foundPlaylist)));
 
-    return foundPlaylist.getId();
+    return foundPlaylist.id;
   }
 
-  async updateCover(id: string, payload: UpdatePlaylistCoverPayload): Promise<PlaylistId> {
-    const foundPlaylist = await this._WR.findById(id);
+  async updateCoverById(
+    playlistId: string,
+    payload: UpdatePlaylistCoverPayload,
+  ): Promise<PlaylistId> {
+    const foundPlaylistEntity = await this._WR.findById(playlistId);
 
-    if (!foundPlaylist) {
+    if (!foundPlaylistEntity) {
       throw new NotFoundException('Playlist does not exist');
     }
 
@@ -70,108 +70,95 @@ export class PlaylistUpdateService {
       }
 
       const storedFileData = await this._userFS.savePlaylistCover(
-        foundPlaylist.getUser(),
-        foundPlaylist.getId(),
+        foundPlaylistEntity.getUser(),
+        foundPlaylistEntity.getId(),
         uploadedFile,
       );
 
-      foundPlaylist.updateCover(storedFileData.path);
+      foundPlaylistEntity.updateCover(storedFileData.path);
     }
 
     if (payload.color !== undefined) {
-      foundPlaylist.updateColor(payload.color);
+      foundPlaylistEntity.updateColor(payload.color);
     }
 
-    await this._WR.save(foundPlaylist);
+    await this._WR.save(foundPlaylistEntity);
 
-    const foundUpdatedPlaylist = await this._RR.findById(id);
-
-    if (!foundUpdatedPlaylist) {
-      throw new NotFoundException('Playlist does not exist');
-    }
-
-    this.publishPlaylistUpdatedEvent(foundUpdatedPlaylist);
-
-    return foundPlaylist.getId();
-  }
-
-  async deleteCover(id: string): Promise<PlaylistId> {
-    const foundPlaylist = await this._WR.findById(id);
+    const foundPlaylist = await this._RR.findById(foundPlaylistEntity.getId());
 
     if (!foundPlaylist) {
       throw new NotFoundException('Playlist does not exist');
     }
 
-    foundPlaylist.deleteCover();
-    await this._WR.save(foundPlaylist);
-    await this._userFS.deletePlaylistCover(foundPlaylist.getUser(), foundPlaylist.getId());
+    this._EB.publish(new PlaylistUpdatedEvent(preparePlaylistEventPayload(foundPlaylist)));
 
-    const foundUpdatedPlaylist = await this._RR.findById(id);
+    return foundPlaylist.id;
+  }
 
-    if (!foundUpdatedPlaylist) {
+  async deleteCoverById(playlistId: string): Promise<PlaylistId> {
+    const foundPlaylistEntity = await this._WR.findById(playlistId);
+
+    if (!foundPlaylistEntity) {
       throw new NotFoundException('Playlist does not exist');
     }
 
-    this.publishPlaylistUpdatedEvent(foundUpdatedPlaylist);
+    foundPlaylistEntity.deleteCover();
+    await this._WR.save(foundPlaylistEntity);
+    await this._userFS.deletePlaylistCover(
+      foundPlaylistEntity.getUser(),
+      foundPlaylistEntity.getId(),
+    );
 
-    return foundPlaylist.getId();
+    const foundPlaylist = await this._RR.findById(foundPlaylistEntity.getId());
+
+    if (!foundPlaylist) {
+      throw new NotFoundException('Playlist does not exist');
+    }
+
+    this._EB.publish(new PlaylistUpdatedEvent(preparePlaylistEventPayload(foundPlaylist)));
+
+    return foundPlaylist.id;
   }
 
   async addTrack(id: string, trackId: TrackId): Promise<PlaylistId> {
-    const foundPlaylist = await this._WR.findById(id);
+    const foundPlaylistEntity = await this._WR.findById(id);
+
+    if (!foundPlaylistEntity) {
+      throw new NotFoundException('Playlist does not exist');
+    }
+
+    foundPlaylistEntity.addTrack(trackId);
+    await this._WR.save(foundPlaylistEntity);
+
+    const foundPlaylist = await this._RR.findById(foundPlaylistEntity.getId());
 
     if (!foundPlaylist) {
       throw new NotFoundException('Playlist does not exist');
     }
 
-    foundPlaylist.addTrack(trackId);
-    await this._WR.save(foundPlaylist);
+    this._EB.publish(new PlaylistUpdatedEvent(preparePlaylistEventPayload(foundPlaylist)));
 
-    const foundUpdatedPlaylist = await this._RR.findById(id);
-
-    if (!foundUpdatedPlaylist) {
-      throw new NotFoundException('Playlist does not exist');
-    }
-
-    this.publishPlaylistUpdatedEvent(foundUpdatedPlaylist);
-
-    return foundPlaylist.getId();
+    return foundPlaylist.id;
   }
 
   async deleteTrack(id: string, trackId: TrackId | string): Promise<PlaylistId> {
-    const foundPlaylist = await this._WR.findById(id);
+    const foundPlaylistEntity = await this._WR.findById(id);
+
+    if (!foundPlaylistEntity) {
+      throw new NotFoundException('Playlist does not exist');
+    }
+
+    foundPlaylistEntity.deleteTrack(trackId);
+    await this._WR.save(foundPlaylistEntity);
+
+    const foundPlaylist = await this._RR.findById(foundPlaylistEntity.getId());
 
     if (!foundPlaylist) {
       throw new NotFoundException('Playlist does not exist');
     }
 
-    foundPlaylist.deleteTrack(trackId);
-    await this._WR.save(foundPlaylist);
+    this._EB.publish(new PlaylistUpdatedEvent(preparePlaylistEventPayload(foundPlaylist)));
 
-    const foundUpdatedPlaylist = await this._RR.findById(id);
-
-    if (!foundUpdatedPlaylist) {
-      throw new NotFoundException('Playlist does not exist');
-    }
-
-    this.publishPlaylistUpdatedEvent(foundUpdatedPlaylist);
-
-    return foundPlaylist.getId();
-  }
-
-  private publishPlaylistUpdatedEvent(playlist: PlaylistWithUserDTO) {
-    this._EB.publish(
-      new PlaylistUpdatedEvent({
-        id: playlist.id,
-        name: playlist.name,
-        user: {
-          id: playlist.user.id,
-          name: playlist.user.name,
-          isPublic: playlist.user.isPublic,
-        },
-        cover: playlist.cover,
-        isPublic: playlist.isPublic,
-      }),
-    );
+    return foundPlaylist.id;
   }
 }

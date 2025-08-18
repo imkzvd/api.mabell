@@ -1,4 +1,4 @@
-import { TmpFileId } from '../types';
+import { TmpFileId } from '../ports/file-storages/types';
 
 export class TmpFileDTO {
   constructor(

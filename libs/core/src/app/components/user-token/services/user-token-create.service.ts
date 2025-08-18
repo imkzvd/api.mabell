@@ -1,20 +1,22 @@
 import * as process from 'process';
-import { UserRefreshTokenId } from '@core/domain/components/user-refresh-token/types';
-import { UserRefreshTokenFactory } from '@core/domain/components/user-refresh-token/user-refresh-token.factory';
-import { UserRefreshTokenWriteRepository } from '@core/domain/components/user-refresh-token/user-refresh-token-write-repository.port';
-import { IdService } from '@core/app/common/ports/id.service.port';
-import { JWTService, TokenTypes } from '@core/app/common/ports/jwt.service.port';
 import {
   AccessTokenPayload,
   CreateAccessTokenPayload,
   CreateRefreshTokenPayload,
   RefreshTokenPayload,
 } from '../types';
+import {
+  UserRefreshTokenFactory,
+  UserRefreshTokenWriteRepository,
+} from '../../../../domain/components/user-refresh-token';
+import { IdService, JWTService } from '../../../ports';
+import { TokenTypes } from '../../../ports/jwt/types';
+import { UserRefreshTokenId } from '../../../../domain/components/user-refresh-token/types';
 
 export class UserTokenCreateService {
   constructor(
     private readonly _WR: UserRefreshTokenWriteRepository,
-    private readonly _IdService: IdService<UserRefreshTokenId>,
+    private readonly _IdService: IdService,
     private readonly _JWTService: JWTService,
   ) {}
 
@@ -30,7 +32,7 @@ export class UserTokenCreateService {
   }
 
   async createRefreshToken({ userId, ip, userAgent }: CreateRefreshTokenPayload): Promise<string> {
-    const generatedRefreshTokenId = this._IdService.generate();
+    const generatedRefreshTokenId = this._IdService.generate<UserRefreshTokenId>();
     const createdRefreshedToken = UserRefreshTokenFactory.create({
       id: generatedRefreshTokenId,
       owner: userId,

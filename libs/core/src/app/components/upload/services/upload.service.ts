@@ -1,6 +1,6 @@
-import { TmpFileStorage } from '@core/app/common/ports/file-storages/tmp-file-storage.port';
-import { TmpFileId } from '@core/app/common/ports/file-storages/common/types';
-import { UploadFilePayload } from '@core/app/components/upload/types';
+import { UploadFilePayload } from '../types';
+import { TmpFileStorage } from '../../../ports';
+import { TmpFileId } from '../../../ports/file-storages/types';
 
 export class UploadService {
   constructor(private readonly _FS: TmpFileStorage) {}

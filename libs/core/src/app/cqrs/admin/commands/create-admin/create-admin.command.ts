@@ -1,7 +1,7 @@
-import { AdminId } from '@core/domain/components/admin/types';
-import { Command } from '@core/app/types';
+import { Command } from '../../../../types';
+import { AdminId } from '../../../../../domain/components/admin/types';
 
-export class CreateAdminCommand extends Command<AdminId> {
+export class CreateAdminCommand extends Command<{ id: AdminId }> {
   constructor() {
     super();
   }

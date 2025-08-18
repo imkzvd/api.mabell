@@ -1,8 +1,8 @@
-import { Command } from '@core/app/types';
-import { UserId } from '@core/domain/components/user/types';
-import { RegisterUserPayload } from '@core/app/components/user/types';
+import { Command } from '../../../../types';
+import { RegisterUserPayload } from '../../../../components/user/types';
+import { UserId } from '../../../../../domain/components/user/types';
 
-export class RegisterUserCommand extends Command<UserId> {
+export class RegisterUserCommand extends Command<{ id: UserId }> {
   constructor(public readonly payload: RegisterUserPayload) {
     super();
   }

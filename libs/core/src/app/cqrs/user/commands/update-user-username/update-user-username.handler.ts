@@ -1,11 +1,11 @@
-import { CommandHandler } from '@core/app/types';
-import { UserUpdateService } from '@core/app/components/user/services/user-update.service';
-import { UpdateUserUsernameCommand } from '@core/app/cqrs/user/commands/update-user-username/update-user-username.command';
+import { CommandHandler } from '../../../../types';
+import { UpdateUserUsernameCommand } from './update-user-username.command';
+import { UserUpdateService } from '../../../../components/user';
 
 export class UpdateUserUsernameHandler implements CommandHandler<UpdateUserUsernameCommand> {
   constructor(private readonly _service: UserUpdateService) {}
 
   async execute({ id, username }: UpdateUserUsernameCommand) {
-    return await this._service.updateUsername(id, username);
+    await this._service.updateUsernameById(id, username);
   }
 }

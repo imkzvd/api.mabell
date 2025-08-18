@@ -1,5 +1,5 @@
-import { ArtistId } from '../../../../domain/components/artist';
-import { Genre } from '../../../../domain/common';
+import { LabelValueDTO } from '../../shared/dtos';
+import { ArtistId } from '../../domain/components/artist/types';
 
 export class ArtistDTO {
   constructor(
@@ -7,7 +7,7 @@ export class ArtistDTO {
     public readonly name: string,
     public readonly birthName: string | null,
     public readonly birthDate: Date | null,
-    public readonly genres: Genre[],
+    public readonly genres: LabelValueDTO[],
     public readonly biography: string,
     public readonly avatar: string | null,
     public readonly cover: string | null,

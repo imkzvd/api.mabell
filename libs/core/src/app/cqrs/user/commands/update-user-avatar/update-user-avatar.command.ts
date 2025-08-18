@@ -1,8 +1,7 @@
-import { Command } from '@core/app/types';
-import { UserId } from '@core/domain/components/user/types';
-import { UpdateUserAvatarPayload } from '@core/app/components/user/types';
+import { Command } from '../../../../types';
+import { UpdateUserAvatarPayload } from '../../../../components/user/types';
 
-export class UpdateUserAvatarCommand extends Command<UserId> {
+export class UpdateUserAvatarCommand extends Command<void> {
   constructor(
     public readonly id: string,
     public readonly payload: UpdateUserAvatarPayload,

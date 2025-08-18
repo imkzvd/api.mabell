@@ -1,5 +1,5 @@
-import { TmpFileDTO } from './common/dtos/tmp-file.dto';
-import { TmpFileId } from './common/types';
+import { TmpFileId } from './types';
+import { TmpFileDTO } from '../../dtos';
 
 export interface TmpFileStorage {
   upload(file: Express.Multer.File): Promise<TmpFileDTO>;

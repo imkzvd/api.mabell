@@ -1,23 +1,21 @@
-import { AlbumWriteRepository } from '@core/domain/components/album/repository/album-write-repository.port';
-import { AlbumReadRepository } from '@core/domain/components/album/repository/album-read-repository.port';
-import { AlbumId } from '@core/domain/components/album/types';
-import { AlbumFactory } from '@core/domain/components/album/album.factory';
-import { EventBus } from '@core/app/common/ports/event-bus.port';
-import { IdService } from '@core/app/common/ports/id.service.port';
-import { AlbumCreatedEvent } from '@core/app/common/events/album/album-created.event';
-import { NotFoundException } from '@core/shared/exceptions';
 import { CreateAlbumPayload } from '../types';
+import { AlbumFactory, AlbumWriteRepository } from '../../../../domain/components/album';
+import { NotFoundException } from '../../../../shared/exceptions';
+import { AlbumReadRepository, EventBus, IdService } from '../../../ports';
+import { AlbumId } from '../../../../domain/components/album/types';
+import { AlbumCreatedEvent } from '../../../events';
+import { prepareAlbumEventPayload } from '../utils/prepare-album-event-payload.utility';
 
 export class AlbumCreateService {
   constructor(
     private readonly _EB: EventBus,
     private readonly _WR: AlbumWriteRepository,
     private readonly _RR: AlbumReadRepository,
-    private readonly _idService: IdService<AlbumId>,
+    private readonly _idService: IdService,
   ) {}
 
   async create(payload: CreateAlbumPayload): Promise<AlbumId> {
-    const generatedId = this._idService.generate();
+    const generatedId = this._idService.generate<AlbumId>();
     const nextAlbumIndex = await this._WR.getNextArtistAlbumIndex(payload.artistId);
     const createdAlbum = AlbumFactory.create({
       id: generatedId,
@@ -33,16 +31,8 @@ export class AlbumCreateService {
       throw new NotFoundException('Album does not exist');
     }
 
-    this._EB.publish(
-      new AlbumCreatedEvent({
-        id: foundAlbum.id,
-        name: foundAlbum.name,
-        artists: foundAlbum.artists.map(({ id, name, isPublic }) => ({ id, name, isPublic })),
-        cover: foundAlbum.cover,
-        isPublic: foundAlbum.isPublic,
-      }),
-    );
+    this._EB.publish(new AlbumCreatedEvent(prepareAlbumEventPayload(foundAlbum)));
 
-    return generatedId;
+    return foundAlbum.id;
   }
 }

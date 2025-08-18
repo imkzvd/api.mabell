@@ -1,6 +1,6 @@
-import { QueryHandler } from '@core/app/types';
-import { GetTracksByIdsQuery } from '@core/app/cqrs/track/queries/get-tracks-by-ids/get-tracks-by-ids.query';
-import { TrackService } from '@core/app/components/track/services/track.service';
+import { QueryHandler } from '../../../../types';
+import { GetTracksByIdsQuery } from './get-tracks-by-ids.query';
+import { TrackService } from '../../../../components/track';
 
 export class GetTrackByIdsHandler implements QueryHandler<GetTracksByIdsQuery> {
   constructor(private readonly _service: TrackService) {}

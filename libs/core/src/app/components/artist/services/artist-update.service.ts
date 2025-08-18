@@ -1,11 +1,10 @@
-import { NotFoundException } from '@core/shared/exceptions';
-import { ArtistWriteRepository } from '@core/domain/components/artist/repository/artist-write-repository.port';
-import { ArtistId } from '@core/domain/components/artist/types';
-import { EventBus } from '@core/app/common/ports/event-bus.port';
-import { TmpFileStorage } from '@core/app/common/ports/file-storages/tmp-file-storage.port';
-import { ArtistFileStorage } from '@core/app/common/ports/file-storages/artist-file-storage.port';
-import { ArtistUpdatedEvent } from '@core/app/common/events/artist/artist-updated.event';
 import { UpdateArtistAvatarPayload, UpdateArtistCoverPayload, UpdateArtistPayload } from '../types';
+import { ArtistWriteRepository } from '../../../../domain/components/artist';
+import { NotFoundException } from '../../../../shared/exceptions';
+import { ArtistFileStorage, EventBus, TmpFileStorage } from '../../../ports';
+import { ArtistId } from '../../../../domain/components/artist/types';
+import { ArtistUpdatedEvent } from '../../../events';
+import { prepareArtistEventPayload } from '../utils/prepare-artist-event-payload.utility';
 
 export class ArtistUpdateService {
   constructor(
@@ -15,8 +14,8 @@ export class ArtistUpdateService {
     private readonly _artistFS: ArtistFileStorage,
   ) {}
 
-  async update(id: string, payload: UpdateArtistPayload): Promise<ArtistId> {
-    const foundArtist = await this._WR.findById(id);
+  async updateById(artistId: string, payload: UpdateArtistPayload): Promise<ArtistId> {
+    const foundArtist = await this._WR.findById(artistId);
 
     if (!foundArtist) {
       throw new NotFoundException(`Artist does not exist`);
@@ -51,20 +50,14 @@ export class ArtistUpdateService {
     }
 
     await this._WR.save(foundArtist);
-    this._EB.publish(
-      new ArtistUpdatedEvent({
-        id: foundArtist.getId(),
-        name: foundArtist.getName().value,
-        avatar: foundArtist.getAvatar(),
-        isPublic: foundArtist.getPublicStatus(),
-      }),
-    );
+
+    this._EB.publish(new ArtistUpdatedEvent(prepareArtistEventPayload(foundArtist)));
 
     return foundArtist.getId();
   }
 
-  async updateAvatar(id: string, payload: UpdateArtistAvatarPayload): Promise<ArtistId> {
-    const foundArtist = await this._WR.findById(id);
+  async updateAvatarById(artistId: string, payload: UpdateArtistAvatarPayload): Promise<ArtistId> {
+    const foundArtist = await this._WR.findById(artistId);
 
     if (!foundArtist) {
       throw new NotFoundException('Artist does not exist');
@@ -87,20 +80,14 @@ export class ArtistUpdateService {
     }
 
     await this._WR.save(foundArtist);
-    this._EB.publish(
-      new ArtistUpdatedEvent({
-        id: foundArtist.getId(),
-        name: foundArtist.getName().value,
-        avatar: foundArtist.getAvatar(),
-        isPublic: foundArtist.getPublicStatus(),
-      }),
-    );
+
+    this._EB.publish(new ArtistUpdatedEvent(prepareArtistEventPayload(foundArtist)));
 
     return foundArtist.getId();
   }
 
-  async deleteAvatar(id: string): Promise<ArtistId> {
-    const foundArtist = await this._WR.findById(id);
+  async deleteAvatarById(artistId: string): Promise<ArtistId> {
+    const foundArtist = await this._WR.findById(artistId);
 
     if (!foundArtist) {
       throw new NotFoundException('Artist does not exist');
@@ -110,20 +97,14 @@ export class ArtistUpdateService {
 
     await this._WR.save(foundArtist);
     await this._artistFS.deleteArtistAvatar(foundArtist.getId());
-    this._EB.publish(
-      new ArtistUpdatedEvent({
-        id: foundArtist.getId(),
-        name: foundArtist.getName().value,
-        avatar: foundArtist.getAvatar(),
-        isPublic: foundArtist.getPublicStatus(),
-      }),
-    );
+
+    this._EB.publish(new ArtistUpdatedEvent(prepareArtistEventPayload(foundArtist)));
 
     return foundArtist.getId();
   }
 
-  async updateCover(id: string, payload: UpdateArtistCoverPayload): Promise<ArtistId> {
-    const foundArtist = await this._WR.findById(id);
+  async updateCoverById(artistId: string, payload: UpdateArtistCoverPayload): Promise<ArtistId> {
+    const foundArtist = await this._WR.findById(artistId);
 
     if (!foundArtist) {
       throw new NotFoundException('Artist does not exist');
@@ -146,20 +127,14 @@ export class ArtistUpdateService {
     }
 
     await this._WR.save(foundArtist);
-    this._EB.publish(
-      new ArtistUpdatedEvent({
-        id: foundArtist.getId(),
-        name: foundArtist.getName().value,
-        avatar: foundArtist.getAvatar(),
-        isPublic: foundArtist.getPublicStatus(),
-      }),
-    );
+
+    this._EB.publish(new ArtistUpdatedEvent(prepareArtistEventPayload(foundArtist)));
 
     return foundArtist.getId();
   }
 
-  async deleteCover(id: string): Promise<ArtistId> {
-    const foundArtist = await this._WR.findById(id);
+  async deleteCoverById(artistId: string): Promise<ArtistId> {
+    const foundArtist = await this._WR.findById(artistId);
 
     if (!foundArtist) {
       throw new NotFoundException('Artist does not exist');
@@ -168,14 +143,8 @@ export class ArtistUpdateService {
     foundArtist.deleteCover();
     await this._WR.save(foundArtist);
     await this._artistFS.deleteArtistCover(foundArtist.getId());
-    this._EB.publish(
-      new ArtistUpdatedEvent({
-        id: foundArtist.getId(),
-        name: foundArtist.getName().value,
-        avatar: foundArtist.getAvatar(),
-        isPublic: foundArtist.getPublicStatus(),
-      }),
-    );
+
+    this._EB.publish(new ArtistUpdatedEvent(prepareArtistEventPayload(foundArtist)));
 
     return foundArtist.getId();
   }

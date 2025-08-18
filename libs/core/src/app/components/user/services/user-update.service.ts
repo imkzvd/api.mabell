@@ -1,22 +1,22 @@
+import { USER_MIN_LENGTH_PASSWORD } from '../constants';
+import { UpdateUserAvatarPayload, UpdateUserPasswordPayload, UpdateUserPayload } from '../types';
+import { UserWriteRepository } from '../../../../domain/components/user';
 import {
   BadRequestException,
   DuplicationException,
   NotFoundException,
   UnauthorizedException,
-} from '@core/shared/exceptions';
-import { UserWriteRepository } from '@core/domain/components/user/repository/user-write-repository.port';
-import { UserId } from '@core/domain/components/user/types';
-import { EventBus } from '@core/app/common/ports/event-bus.port';
-import { PasswordService } from '@core/app/common/ports/password-service.port';
-import { TmpFileStorage } from '@core/app/common/ports/file-storages/tmp-file-storage.port';
-import { UserFileStorage } from '@core/app/common/ports/file-storages/user-file-storage.port';
-import { UserBlockedEvent } from '@core/app/common/events/user/user-blocked.event';
-import { UserUnblockedEvent } from '@core/app/common/events/user/user-unblocked.event';
-import { UserUpdatedEvent } from '@core/app/common/events/user/user-updated.event';
-import { UserEmailUpdatedEvent } from '@core/app/common/events/user/user-email-updated.event';
-import { UserPasswordUpdatedEvent } from '@core/app/common/events/user/user-password-updated.event';
-import { USER_MIN_LENGTH_PASSWORD } from '../constants';
-import { UpdateUserAvatarPayload, UpdateUserPasswordPayload, UpdateUserPayload } from '../types';
+} from '../../../../shared/exceptions';
+import { EventBus, PasswordService, TmpFileStorage, UserFileStorage } from '../../../ports';
+import { UserId } from '../../../../domain/components/user/types';
+import {
+  UserBlockedEvent,
+  UserEmailUpdatedEvent,
+  UserPasswordUpdatedEvent,
+  UserUnblockedEvent,
+  UserUpdatedEvent,
+} from '../../../events';
+import { prepareUserEventPayload } from '../utils/prepare-user-event-payload.utility';
 
 export class UserUpdateService {
   constructor(
@@ -27,8 +27,8 @@ export class UserUpdateService {
     private readonly _userFS: UserFileStorage,
   ) {}
 
-  async update(id: string, payload: UpdateUserPayload): Promise<UserId> {
-    const foundUser = await this._WR.findById(id);
+  async updateById(userId: string, payload: UpdateUserPayload): Promise<UserId> {
+    const foundUser = await this._WR.findById(userId);
 
     if (!foundUser) {
       throw new NotFoundException('User does not exist');
@@ -64,20 +64,14 @@ export class UserUpdateService {
     }
 
     await this._WR.save(foundUser);
-    this._EB.publish(
-      new UserUpdatedEvent({
-        id: foundUser.getId(),
-        name: foundUser.getName().value,
-        email: foundUser.getEmail()?.value || null,
-        avatar: foundUser.getAvatar(),
-      }),
-    );
+
+    this._EB.publish(new UserUpdatedEvent(prepareUserEventPayload(foundUser)));
 
     return foundUser.getId();
   }
 
-  async updateUsername(id: string, username: string): Promise<UserId> {
-    const foundUser = await this._WR.findById(id);
+  async updateUsernameById(userId: string, username: string): Promise<UserId> {
+    const foundUser = await this._WR.findById(userId);
 
     if (!foundUser) {
       throw new NotFoundException('User does not exist');
@@ -96,20 +90,14 @@ export class UserUpdateService {
     foundUser.updateUsername(username);
 
     await this._WR.save(foundUser);
-    this._EB.publish(
-      new UserUpdatedEvent({
-        id: foundUser.getId(),
-        name: foundUser.getName().value,
-        email: foundUser.getEmail()?.value || null,
-        avatar: foundUser.getAvatar(),
-      }),
-    );
+
+    this._EB.publish(new UserUpdatedEvent(prepareUserEventPayload(foundUser)));
 
     return foundUser.getId();
   }
 
-  async updateEmail(id: string, email: string): Promise<UserId> {
-    const foundUser = await this._WR.findById(id);
+  async updateEmailById(userId: string, email: string): Promise<UserId> {
+    const foundUser = await this._WR.findById(userId);
 
     if (!foundUser) {
       throw new NotFoundException(`There is no user with the specified ID`);
@@ -129,20 +117,16 @@ export class UserUpdateService {
 
     await this._WR.save(foundUser);
 
-    const eventPayload = {
-      id: foundUser.getId(),
-      name: foundUser.getName().value,
-      email: foundUser.getEmail()?.value || null,
-      avatar: foundUser.getAvatar(),
-    };
-    this._EB.publish(new UserEmailUpdatedEvent(eventPayload));
-    this._EB.publish(new UserUpdatedEvent(eventPayload));
+    const prepUserEventPayload = prepareUserEventPayload(foundUser);
+
+    this._EB.publish(new UserEmailUpdatedEvent(prepUserEventPayload));
+    this._EB.publish(new UserUpdatedEvent(prepUserEventPayload));
 
     return foundUser.getId();
   }
 
-  async updatePassword(id: string, payload: UpdateUserPasswordPayload): Promise<UserId> {
-    const foundUser = await this._WR.findById(id);
+  async updatePasswordById(userId: string, payload: UpdateUserPasswordPayload): Promise<UserId> {
+    const foundUser = await this._WR.findById(userId);
 
     if (!foundUser) {
       throw new NotFoundException('User does not exist');
@@ -164,15 +148,15 @@ export class UserUpdateService {
     const hashedNewPassword = await this._passwordService.hash(payload.newPassword);
 
     foundUser.updatePassword(hashedNewPassword);
-
     await this._WR.save(foundUser);
+
     this._EB.publish(new UserPasswordUpdatedEvent({ id: foundUser.getId() }));
 
     return foundUser.getId();
   }
 
-  async refreshPassword(id: string): Promise<{ id: UserId; password: string }> {
-    const foundUser = await this._WR.findById(id);
+  async refreshPasswordById(userId: string): Promise<{ id: UserId; password: string }> {
+    const foundUser = await this._WR.findById(userId);
 
     if (!foundUser) {
       throw new NotFoundException('User does not exist');
@@ -184,22 +168,15 @@ export class UserUpdateService {
     });
 
     foundUser.updatePassword(hashPassword);
-
     await this._WR.save(foundUser);
-    this._EB.publish(
-      new UserUpdatedEvent({
-        id: foundUser.getId(),
-        name: foundUser.getName().value,
-        email: foundUser.getEmail()?.value || null,
-        avatar: foundUser.getAvatar(),
-      }),
-    );
+
+    this._EB.publish(new UserUpdatedEvent(prepareUserEventPayload(foundUser)));
 
     return { id: foundUser.getId(), password };
   }
 
-  async updateAvatar(id: string, payload: UpdateUserAvatarPayload): Promise<UserId> {
-    const foundUser = await this._WR.findById(id);
+  async updateAvatarById(userId: string, payload: UpdateUserAvatarPayload): Promise<UserId> {
+    const foundUser = await this._WR.findById(userId);
 
     if (!foundUser) {
       throw new NotFoundException('User does not exist');
@@ -222,20 +199,14 @@ export class UserUpdateService {
     }
 
     await this._WR.save(foundUser);
-    this._EB.publish(
-      new UserUpdatedEvent({
-        id: foundUser.getId(),
-        name: foundUser.getName().value,
-        email: foundUser.getEmail()?.value || null,
-        avatar: foundUser.getAvatar(),
-      }),
-    );
+
+    this._EB.publish(new UserUpdatedEvent(prepareUserEventPayload(foundUser)));
 
     return foundUser.getId();
   }
 
-  async deleteAvatar(id: string): Promise<UserId> {
-    const foundUser = await this._WR.findById(id);
+  async deleteAvatarById(userId: string): Promise<UserId> {
+    const foundUser = await this._WR.findById(userId);
 
     if (!foundUser) {
       throw new NotFoundException('User does not exist');
@@ -245,14 +216,8 @@ export class UserUpdateService {
     foundUser.deleteColor();
     await this._WR.save(foundUser);
     await this._userFS.deleteUserAvatar(foundUser.getId());
-    this._EB.publish(
-      new UserUpdatedEvent({
-        id: foundUser.getId(),
-        name: foundUser.getName().value,
-        email: foundUser.getEmail()?.value || null,
-        avatar: foundUser.getAvatar(),
-      }),
-    );
+
+    this._EB.publish(new UserUpdatedEvent(prepareUserEventPayload(foundUser)));
 
     return foundUser.getId();
   }

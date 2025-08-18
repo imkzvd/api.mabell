@@ -1,11 +1,11 @@
-import { CommandHandler } from '@core/app/types';
-import { DeletePlaylistCoverCommand } from '@core/app/cqrs/playlist/commands/delete-playlist-cover/delete-playlist-cover.command';
-import { PlaylistUpdateService } from '@core/app/components/playlist/services/playlist-update.service';
+import { CommandHandler } from '../../../../types';
+import { DeletePlaylistCoverCommand } from './delete-playlist-cover.command';
+import { PlaylistUpdateService } from '../../../../components/playlist';
 
 export class DeletePlaylistCoverHandler implements CommandHandler<DeletePlaylistCoverCommand> {
   constructor(private readonly _service: PlaylistUpdateService) {}
 
   async execute({ id }: DeletePlaylistCoverCommand) {
-    return await this._service.deleteCover(id);
+    await this._service.deleteCoverById(id);
   }
 }

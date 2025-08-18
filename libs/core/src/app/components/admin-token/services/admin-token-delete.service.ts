@@ -1,9 +1,9 @@
 import * as process from 'process';
-import { NotFoundException } from '@core/shared/exceptions';
-import { AdminRefreshTokenId } from '@core/domain/components/admin-refresh-token/types';
-import { AdminRefreshTokenWriteRepository } from '@core/domain/components/admin-refresh-token/repository/admin-refresh-token-write-repository.port';
-import { JWTService } from '@core/app/common/ports/jwt.service.port';
 import { RefreshTokenPayload } from '../types';
+import { AdminRefreshTokenWriteRepository } from '../../../../domain/components/admin-refresh-token';
+import { NotFoundException } from '../../../../shared/exceptions';
+import { JWTService } from '../../../ports';
+import { AdminRefreshTokenId } from '../../../../domain/components/admin-refresh-token/types';
 
 export class AdminTokenDeleteService {
   constructor(
@@ -11,7 +11,7 @@ export class AdminTokenDeleteService {
     private readonly _JWTService: JWTService,
   ) {}
 
-  async deleteRefreshToken(token: string): Promise<void> {
+  async deleteRefreshTokenByToken(token: string): Promise<void> {
     const tokenPayload = this._JWTService.decode<RefreshTokenPayload>(
       token,
       process.env.REFRESH_TOKEN_SECRET || 'refreshSecret',
@@ -22,8 +22,8 @@ export class AdminTokenDeleteService {
     await this._WR.deleteById(tokenPayload.jti);
   }
 
-  async deleteRefreshTokenById(id: string): Promise<AdminRefreshTokenId> {
-    const deletedRefreshTokenId = await this._WR.deleteById(id);
+  async deleteRefreshTokenById(tokenId: string): Promise<AdminRefreshTokenId> {
+    const deletedRefreshTokenId = await this._WR.deleteById(tokenId);
 
     if (!deletedRefreshTokenId) {
       throw new NotFoundException('Refresh token does not exist');
@@ -32,7 +32,7 @@ export class AdminTokenDeleteService {
     return deletedRefreshTokenId;
   }
 
-  async deleteRefreshTokensByAdminId(id: string) {
-    await this._WR.deleteByOwnerId(id);
+  async deleteRefreshTokensByAdminId(adminId: string) {
+    await this._WR.deleteByOwnerId(adminId);
   }
 }

@@ -1,6 +1,5 @@
-import { AdminRole } from '@core/domain/components/admin/constants/admin-roles';
-import { AdminId } from '@core/domain/components/admin/types';
-import { BaseTokenPayload, BaseTokenWithIdPayload } from '@core/app/common/ports/jwt.service.port';
+import { AdminId, AdminRole } from '../../../domain/components/admin/types';
+import { BaseTokenPayload, BaseTokenWithIdPayload } from '../../ports/jwt/types';
 
 export type AccessTokenCustomPayload = { role: AdminRole };
 
@@ -14,6 +13,12 @@ export type CreateAccessTokenPayload = {
 };
 
 export type CreateRefreshTokenPayload = CreateAccessTokenPayload & {
+  ip: string;
+  userAgent: string;
+};
+
+export type ValidateRefreshTokenPayload = {
+  token: string;
   ip: string;
   userAgent: string;
 };

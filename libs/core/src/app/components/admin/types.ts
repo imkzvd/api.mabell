@@ -1,4 +1,4 @@
-import { AdminRole } from '@core/domain/components/admin/constants/admin-roles';
+import { AdminRole } from '../../../domain/components/admin/types';
 
 export type UpdateAdminPayload = Partial<{
   name: string;

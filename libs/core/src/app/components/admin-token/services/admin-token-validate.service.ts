@@ -1,9 +1,7 @@
 import * as process from 'process';
-import { AdminRefreshTokenReadRepository } from '@core/domain/components/admin-refresh-token/repository/admin-refresh-token-read-repository.port';
-import { JWTService } from '@core/app/common/ports/jwt.service.port';
-import { RefreshTokenPayload } from '../types';
-import { AdminRefreshTokenDTO } from '../dtos/admin-refresh-token.dto';
-import AdminRefreshTokenMapper from '../dtos/admin-refresh-token.mapper';
+import { RefreshTokenPayload, ValidateRefreshTokenPayload } from '../types';
+import { AdminRefreshTokenReadRepository, JWTService } from '../../../ports';
+import { AdminRefreshTokenDTO } from '../../../dtos';
 
 export class AdminTokenValidateService {
   constructor(
@@ -11,11 +9,9 @@ export class AdminTokenValidateService {
     private readonly _JWTService: JWTService,
   ) {}
 
-  async validateRefreshToken(payload: {
-    token: string;
-    ip: string;
-    userAgent: string;
-  }): Promise<AdminRefreshTokenDTO | null> {
+  async validateRefreshToken(
+    payload: ValidateRefreshTokenPayload,
+  ): Promise<AdminRefreshTokenDTO | null> {
     const refreshTokenPayload = this._JWTService.decode<RefreshTokenPayload>(
       payload.token,
       process.env.REFRESH_TOKEN_SECRET || 'refreshSecret',
@@ -36,6 +32,6 @@ export class AdminTokenValidateService {
       return null;
     }
 
-    return AdminRefreshTokenMapper.toDTO(foundRefreshToken);
+    return foundRefreshToken;
   }
 }

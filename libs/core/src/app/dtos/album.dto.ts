@@ -1,14 +1,14 @@
-import { AlbumId, AlbumType } from '../../../../domain/components/album';
-import { Genre } from '../../../../domain/common';
-import { ArtistDTO } from '../../artist';
+import { SimplifiedArtistDTO } from './simplified-artist.dto';
+import { LabelValueDTO } from '../../shared/dtos';
+import { AlbumId } from '../../domain/components/album/types';
 
 export class AlbumDTO {
   constructor(
     public readonly id: AlbumId,
     public readonly name: string,
-    public readonly artists: ArtistDTO[],
-    public readonly type: AlbumType,
-    public readonly genres: Genre[],
+    public readonly artists: SimplifiedArtistDTO[],
+    public readonly type: LabelValueDTO,
+    public readonly genres: LabelValueDTO[],
     public readonly cover: string | null,
     public readonly color: string | null,
     public readonly description: string,

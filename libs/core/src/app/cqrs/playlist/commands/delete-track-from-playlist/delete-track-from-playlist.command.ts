@@ -1,7 +1,6 @@
-import { Command } from '@core/app/types';
-import { PlaylistId } from '@core/domain/components/playlist/types';
+import { Command } from '../../../../types';
 
-export class DeleteTrackFromPlaylistCommand extends Command<PlaylistId> {
+export class DeleteTrackFromPlaylistCommand extends Command<void> {
   constructor(
     public readonly playlistId: string,
     public readonly trackId: string,

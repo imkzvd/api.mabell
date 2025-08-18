@@ -1,11 +1,11 @@
-import { CommandHandler } from '@core/app/types';
-import { DeleteTrackFileCommand } from '@core/app/cqrs/track/commands/delete-track-file/delete-track-file.command';
-import { TrackUpdateService } from '@core/app/components/track/services/track-update.service';
+import { CommandHandler } from '../../../../types';
+import { DeleteTrackFileCommand } from './delete-track-file.command';
+import { TrackUpdateService } from '../../../../components/track';
 
 export class DeleteTrackFileHandler implements CommandHandler<DeleteTrackFileCommand> {
   constructor(private readonly _service: TrackUpdateService) {}
 
   async execute({ id }: DeleteTrackFileCommand) {
-    return await this._service.deleteFile(id);
+    await this._service.deleteFileById(id);
   }
 }

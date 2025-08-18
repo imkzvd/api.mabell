@@ -46,8 +46,8 @@ export class User {
     return this._password;
   }
 
-  updatePassword(value: HashedPasswordVO): this {
-    this._password = value;
+  updatePassword(value: string): this {
+    this._password = HashedPasswordVO.create(value);
     this.refreshUpdatedAt();
 
     return this;

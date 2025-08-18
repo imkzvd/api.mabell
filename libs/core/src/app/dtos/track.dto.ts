@@ -1,14 +1,13 @@
-import { TrackId } from '../../../../domain/components/track';
-import { AlbumDTO } from '../../album/dtos/album.dto';
-import { ArtistDTO } from '../../artist/dtos/artist.dto';
+import { SimplifiedArtistDTO } from './simplified-artist.dto';
+import { TrackId } from '../../domain/components/track/types';
 
 export class TrackDTO {
   constructor(
     public readonly id: TrackId,
     public readonly name: string,
-    public readonly album: AlbumDTO,
-    public readonly artists: ArtistDTO[],
-    public readonly featArtists: ArtistDTO[],
+    public readonly album: string,
+    public readonly artists: SimplifiedArtistDTO[],
+    public readonly featArtists: SimplifiedArtistDTO[],
     public readonly file: string | null,
     public readonly duration: number | null,
     public readonly trackNumber: number,

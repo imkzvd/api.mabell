@@ -1,15 +1,12 @@
-import { NotFoundException } from '@core/shared/exceptions';
-import { ArtistReadRepository } from '@core/domain/components/artist/repository/artist-read-repository.port';
-import { ArtistDTO } from '../dtos/artist.dto';
-import ArtistMapper from '../dtos/artist.mapper';
+import { NotFoundException } from '../../../../shared/exceptions';
+import { ArtistDTO } from '../../../dtos';
+import { ArtistReadRepository } from '../../../ports';
 
 export class ArtistService {
   constructor(private readonly _RR: ArtistReadRepository) {}
 
-  async find(id: string, options?: Partial<{ isPublic: boolean }>): Promise<ArtistDTO | null> {
-    const foundArtist = await this._RR.findById(id, options);
-
-    return foundArtist ? ArtistMapper.toDTO(foundArtist) : null;
+  findById(artistId: string, options?: Partial<{ isPublic: boolean }>): Promise<ArtistDTO | null> {
+    return this._RR.findById(artistId, options);
   }
 
   async checkPublicStatus(id: string): Promise<boolean> {

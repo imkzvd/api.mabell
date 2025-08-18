@@ -1,11 +1,11 @@
-import { QueryHandler } from '@core/app/types';
-import { GetTracksQuery } from '@core/app/cqrs/search/queries/get-tracks/get-tracks.query';
-import { SearchService } from '@core/app/common/ports/search-service/search-service.port';
+import { QueryHandler } from '../../../../types';
+import { GetTracksQuery } from './get-tracks.query';
+import { SearchService } from '../../../../ports';
 
 export class GetTracksHandler implements QueryHandler<GetTracksQuery> {
   constructor(private readonly _service: SearchService) {}
 
-  async execute({ q }: GetTracksQuery) {
+  execute({ q }: GetTracksQuery) {
     return this._service.findTracks(q);
   }
 }

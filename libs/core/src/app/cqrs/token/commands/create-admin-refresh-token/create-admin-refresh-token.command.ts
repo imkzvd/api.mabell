@@ -1,6 +1,6 @@
-import { Command } from '@core/app/types';
+import { Command } from '../../../../types';
 
-export class CreateAdminRefreshTokenCommand extends Command<string> {
+export class CreateAdminRefreshTokenCommand extends Command<{ token: string }> {
   constructor(
     public readonly payload: {
       adminId: string;

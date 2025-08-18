@@ -1,8 +1,8 @@
-import { QueryHandler } from '@core/app/types';
-import { NotFoundException } from '@core/shared/exceptions';
-import { GetArtistTracksQuery } from '@core/app/cqrs/track/queries/get-artist-tracks/get-artist-tracks.query';
-import { ArtistVerifyService } from '@core/app/components/artist/services/artist-verify.service';
-import { TrackService } from '@core/app/components/track/services/track.service';
+import { QueryHandler } from '../../../../types';
+import { GetArtistTracksQuery } from './get-artist-tracks.query';
+import { ArtistVerifyService } from '../../../../components/artist';
+import { TrackService } from '../../../../components/track';
+import { NotFoundException } from '../../../../../shared/exceptions';
 
 export class GetArtistTracksHandler implements QueryHandler<GetArtistTracksQuery> {
   constructor(
@@ -11,7 +11,7 @@ export class GetArtistTracksHandler implements QueryHandler<GetArtistTracksQuery
   ) {}
 
   async execute({ artistId, options }: GetArtistTracksQuery) {
-    const verifiedArtistId = await this._artistVerifyService.verify(artistId);
+    const verifiedArtistId = await this._artistVerifyService.verifyById(artistId);
 
     if (!verifiedArtistId) {
       throw new NotFoundException('Artist does not exist');

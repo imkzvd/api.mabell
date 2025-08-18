@@ -1,10 +1,8 @@
-import { NotFoundException } from '@core/shared/exceptions';
-import { PlaylistWriteRepository } from '@core/domain/components/playlist/repository/playlist-write-repository.port';
-import { PlaylistId } from '@core/domain/components/playlist/types';
-import { EventBus } from '@core/app/common/ports/event-bus.port';
-import { UserFileStorage } from '@core/app/common/ports/file-storages/user-file-storage.port';
-import { PlaylistDeletedEvent } from '@core/app/common/events/playlist/playlist-deleted.event';
-import { PlaylistsDeletedEvent } from '@core/app/common/events/playlist/playlists-deleted.event';
+import { PlaylistWriteRepository } from '../../../../domain/components/playlist';
+import { NotFoundException } from '../../../../shared/exceptions';
+import { EventBus, UserFileStorage } from '../../../ports';
+import { PlaylistId } from '../../../../domain/components/playlist/types';
+import { PlaylistDeletedEvent, PlaylistsDeletedEvent } from '../../../events';
 
 export class PlaylistDeleteService {
   constructor(
@@ -13,15 +11,16 @@ export class PlaylistDeleteService {
     private readonly _FS: UserFileStorage,
   ) {}
 
-  async delete(id: string): Promise<PlaylistId> {
-    const foundPlaylist = await this._WR.findById(id);
+  async deleteById(playlistId: string): Promise<PlaylistId> {
+    const foundPlaylist = await this._WR.findById(playlistId);
 
     if (!foundPlaylist) {
       throw new NotFoundException('Playlist does not exist');
     }
 
-    await this._WR.deleteById(id);
+    await this._WR.deleteById(playlistId);
     await this._FS.deletePlaylistDirectory(foundPlaylist.getUser(), foundPlaylist.getId());
+
     this._EB.publish(new PlaylistDeletedEvent({ id: foundPlaylist.getId() }));
 
     return foundPlaylist.getId();

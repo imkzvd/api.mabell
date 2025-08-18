@@ -1,4 +1,4 @@
-import { AdminRefreshTokenDTO } from './dtos/admin-refresh-token.dto';
+import { AdminRefreshTokenDTO } from '../../dtos';
 
 export interface AdminRefreshTokenReadRepository {
   findById(id: string): Promise<AdminRefreshTokenDTO | null>;

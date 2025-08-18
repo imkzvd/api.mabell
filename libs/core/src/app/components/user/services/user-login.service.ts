@@ -1,8 +1,7 @@
-import { UnauthorizedException } from '@core/shared/exceptions';
-import { UserId } from '@core/domain/components/user/types';
-import { UserReadRepository } from '@core/domain/components/user/repository/user-read-repository.port';
-import { PasswordService } from '@core/app/common/ports/password-service.port';
 import { LoginUserPayload } from '../types';
+import { UnauthorizedException } from '../../../../shared/exceptions';
+import { PasswordService, UserReadRepository } from '../../../ports';
+import { UserId } from '../../../../domain/components/user/types';
 
 export class UserLoginService {
   constructor(

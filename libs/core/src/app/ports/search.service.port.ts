@@ -1,20 +1,52 @@
-import { IndexedUserDTO } from './dtos/indexed-user.dto';
-import { IndexedArtistDTO } from './dtos/indexed-artist.dto';
-import { IndexedAlbumDTO } from './dtos/indexed-album.dto';
-import { IndexedTrackDTO } from './dtos/indexed-track.dto';
-import { IndexedItemsDTO } from './dtos/indexed-items.dto';
-import { IndexedPlaylistDTO } from './dtos/indexed-playlist.dto';
+import {
+  IndexedItemsDTO,
+  IndexedUserDTO,
+  IndexedArtistDTO,
+  IndexedAlbumDTO,
+  IndexedTrackDTO,
+  IndexedPlaylistDTO,
+} from '../dtos';
 
 export interface SearchService {
-  find(q: string, isGlobal?: boolean): Promise<IndexedItemsDTO>;
+  find(
+    q: string,
+    options?: Partial<{
+      isGlobal?: boolean;
+    }>,
+  ): Promise<IndexedItemsDTO>;
 
-  findUsers(q: string): Promise<IndexedUserDTO[]>;
+  findUsers(
+    q: string,
+    options?: Partial<{
+      isGlobal?: boolean;
+    }>,
+  ): Promise<IndexedUserDTO[]>;
 
-  findArtists(q: string, isGlobal?: boolean): Promise<IndexedArtistDTO[]>;
+  findArtists(
+    q: string,
+    options?: Partial<{
+      isGlobal?: boolean;
+    }>,
+  ): Promise<IndexedArtistDTO[]>;
 
-  findAlbums(q: string, isGlobal?: boolean): Promise<IndexedAlbumDTO[]>;
+  findAlbums(
+    q: string,
+    options?: Partial<{
+      isGlobal?: boolean;
+    }>,
+  ): Promise<IndexedAlbumDTO[]>;
 
-  findTracks(q: string, isGlobal?: boolean): Promise<IndexedTrackDTO[]>;
+  findTracks(
+    q: string,
+    options?: Partial<{
+      isGlobal?: boolean;
+    }>,
+  ): Promise<IndexedTrackDTO[]>;
 
-  findPlaylists(q: string, isGlobal?: boolean): Promise<IndexedPlaylistDTO[]>;
+  findPlaylists(
+    q: string,
+    options?: Partial<{
+      isGlobal?: boolean;
+    }>,
+  ): Promise<IndexedPlaylistDTO[]>;
 }

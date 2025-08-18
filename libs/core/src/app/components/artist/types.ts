@@ -1,4 +1,4 @@
-import { Genre } from '@core/domain/common/constants/genres';
+import { Genre } from '../../../domain/common';
 
 export type UpdateArtistPayload = Partial<{
   name: string;

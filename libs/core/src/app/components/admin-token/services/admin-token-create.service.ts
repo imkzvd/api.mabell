@@ -1,31 +1,33 @@
 import { ConfigService } from '@nestjs/config';
-import { AdminRefreshTokenFactory } from '@core/domain/components/admin-refresh-token/admin-refresh-token.factory';
-import { AdminRefreshTokenId } from '@core/domain/components/admin-refresh-token/types';
-import { AdminRefreshTokenWriteRepository } from '@core/domain/components/admin-refresh-token/repository/admin-refresh-token-write-repository.port';
-import { IdService } from '@core/app/common/ports/id.service.port';
-import { JWTService, TokenTypes } from '@core/app/common/ports/jwt.service.port';
 import {
   AccessTokenCustomPayload,
   CreateAccessTokenPayload,
   CreateRefreshTokenPayload,
 } from '../types';
+import {
+  AdminRefreshTokenFactory,
+  AdminRefreshTokenWriteRepository,
+} from '../../../../domain/components/admin-refresh-token';
+import { IdService, JWTService } from '../../../ports';
+import { TokenTypes } from '../../../ports/jwt/types';
+import { AdminRefreshTokenId } from '../../../../domain/components/admin-refresh-token/types';
 
 export class AdminTokenCreateService {
   constructor(
     private readonly _WR: AdminRefreshTokenWriteRepository,
-    private readonly _IdService: IdService<AdminRefreshTokenId>,
+    private readonly _IdService: IdService,
     private readonly _JWTService: JWTService,
     private readonly _configService: ConfigService,
   ) {}
 
-  createAccessToken(payload: CreateAccessTokenPayload): string {
+  createAccessToken({ adminId, role }: CreateAccessTokenPayload): string {
     const accessTokenSecret = this._configService.get<string>('jwt.accessToken.secret');
     const accessTokenExpiration = this._configService.get<number>('jwt.accessToken.expiresIn');
 
     return this._JWTService.create<AccessTokenCustomPayload>({
-      subject: payload.adminId,
+      subject: adminId,
       type: TokenTypes.Access,
-      payload: { role: payload.role },
+      payload: { role },
       secret: accessTokenSecret || 'accessSecret',
       expiresIn: accessTokenExpiration || 300,
     });
@@ -37,7 +39,7 @@ export class AdminTokenCreateService {
     ip,
     userAgent,
   }: CreateRefreshTokenPayload): Promise<string> {
-    const generatedRefreshTokenId = this._IdService.generate();
+    const generatedRefreshTokenId = this._IdService.generate<AdminRefreshTokenId>();
     const createdRefreshedToken = AdminRefreshTokenFactory.create({
       id: generatedRefreshTokenId,
       owner: adminId,

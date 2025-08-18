@@ -1,4 +1,4 @@
-import { Command } from '@core/app/types/command.types';
+import { Command } from './command.types';
 
 export type CommandHandler<TCommand> =
   TCommand extends Command<infer R>

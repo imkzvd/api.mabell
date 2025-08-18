@@ -1,14 +1,14 @@
-import { PlaylistId } from '../../../../domain/components/playlist';
-import { UserDTO } from '../../user/dtos/user.dto';
-import { Genre } from '../../../../domain/common';
-import { TrackId } from '../../../../domain/components/track';
+import { SimplifiedUserDTO } from './simplified-user.dto';
+import { LabelValueDTO } from '../../shared/dtos';
+import { PlaylistId } from '../../domain/components/playlist/types';
+import { TrackId } from '../../domain/components/track/types';
 
 export class PlaylistDTO {
   constructor(
     public readonly id: PlaylistId,
-    public readonly user: UserDTO,
+    public readonly user: SimplifiedUserDTO,
     public readonly name: string,
-    public readonly genres: Genre[],
+    public readonly genres: LabelValueDTO[],
     public readonly cover: string | null,
     public readonly color: string | null,
     public readonly description: string,

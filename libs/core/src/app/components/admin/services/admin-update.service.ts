@@ -1,14 +1,15 @@
-import { DuplicationException, NotFoundException } from '@core/shared/exceptions';
-import { AdminWriteRepository } from '@core/domain/components/admin/repository/admin-write-repository.port';
-import { AdminId } from '@core/domain/components/admin/types';
-import { EventBus } from '@core/app/common/ports/event-bus.port';
-import { PasswordService } from '@core/app/common/ports/password-service.port';
-import { AdminBlockedEvent } from '@core/app/common/events/admin/admin-blocked.event';
-import { AdminUnblockedEvent } from '@core/app/common/events/admin/admin-unblocked.event';
-import { AdminUpdatedEvent } from '@core/app/common/events/admin/admin-updated.event';
-import { AdminPasswordRefreshedEvent } from '@core/app/common/events/admin/admin-password-refreshed.event';
 import { ADMIN_PASSWORD_LENGTH } from '../constants';
 import { UpdateAdminPayload } from '../types';
+import { AdminWriteRepository } from '../../../../domain/components/admin';
+import { DuplicationException, NotFoundException } from '../../../../shared/exceptions';
+import {
+  AdminBlockedEvent,
+  AdminPasswordRefreshedEvent,
+  AdminUnblockedEvent,
+  AdminUpdatedEvent,
+} from '../../../events';
+import { EventBus, PasswordService } from '../../../ports';
+import { AdminId } from '../../../../domain/components/admin/types';
 
 export class AdminUpdateService {
   constructor(
@@ -17,8 +18,8 @@ export class AdminUpdateService {
     private readonly _passwordService: PasswordService,
   ) {}
 
-  async update(id: string, payload: UpdateAdminPayload): Promise<AdminId> {
-    const foundAdmin = await this._WR.findById(id);
+  async updateById(adminId: string, payload: UpdateAdminPayload): Promise<AdminId> {
+    const foundAdmin = await this._WR.findById(adminId);
 
     if (!foundAdmin) {
       throw new NotFoundException('Admin does not exist');
@@ -43,13 +44,14 @@ export class AdminUpdateService {
     }
 
     await this._WR.save(foundAdmin);
+
     this._EB.publish(new AdminUpdatedEvent({ id: foundAdmin.getId() }));
 
     return foundAdmin.getId();
   }
 
-  async updateUsername(id: string, username: string): Promise<AdminId> {
-    const foundAdmin = await this._WR.findById(id);
+  async updateUsernameById(adminId: string, username: string): Promise<AdminId> {
+    const foundAdmin = await this._WR.findById(adminId);
 
     if (!foundAdmin) {
       throw new NotFoundException(`Admin does not exist`);
@@ -63,13 +65,14 @@ export class AdminUpdateService {
 
     foundAdmin.updateUsername(username);
     await this._WR.save(foundAdmin);
+
     this._EB.publish(new AdminUpdatedEvent({ id: foundAdmin.getId() }));
 
     return foundAdmin.getId();
   }
 
-  async refreshPassword(id: string): Promise<{ id: AdminId; password: string }> {
-    const foundAdmin = await this._WR.findById(id);
+  async refreshPasswordById(adminId: string): Promise<{ id: AdminId; password: string }> {
+    const foundAdmin = await this._WR.findById(adminId);
 
     if (!foundAdmin) {
       throw new NotFoundException('Admin does not exist');
@@ -82,6 +85,7 @@ export class AdminUpdateService {
     foundAdmin.updatePassword(hashPassword);
 
     await this._WR.save(foundAdmin);
+
     this._EB.publish(new AdminPasswordRefreshedEvent({ id: foundAdmin.getId(), password }));
 
     return { id: foundAdmin.getId(), password };

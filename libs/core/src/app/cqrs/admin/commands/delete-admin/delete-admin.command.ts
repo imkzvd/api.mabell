@@ -1,7 +1,6 @@
-import { Command } from '@core/app/types';
-import { AdminId } from '@core/domain/components/admin/types';
+import { Command } from '../../../../types';
 
-export class DeleteAdminCommand extends Command<AdminId> {
+export class DeleteAdminCommand extends Command<void> {
   constructor(public readonly id: string) {
     super();
   }

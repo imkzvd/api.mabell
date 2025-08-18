@@ -1,5 +1,5 @@
-import { Query } from '@core/app/types';
-import { UserDTO } from '@core/app/components/user/dtos/user.dto';
+import { Query } from '../../../../types';
+import { UserDTO } from '../../../../dtos';
 
 export class GetUserQuery extends Query<UserDTO | null> {
   constructor(

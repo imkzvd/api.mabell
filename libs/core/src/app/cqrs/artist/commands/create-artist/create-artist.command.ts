@@ -1,7 +1,7 @@
-import { Command } from '@core/app/types';
-import { ArtistId } from '@core/domain/components/artist/types';
+import { Command } from '../../../../types';
+import { ArtistId } from '../../../../../domain/components/artist/types';
 
-export class CreateArtistCommand extends Command<ArtistId> {
+export class CreateArtistCommand extends Command<{ id: ArtistId }> {
   constructor() {
     super();
   }

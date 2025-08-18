@@ -1,8 +1,7 @@
-import { TrackWithAlbumDTO } from './dtos/track-with-album.dto';
-import {
-  OffsetLimitPaginationDTO,
-  OffsetLimitPaginationResponseDTO,
-} from '../../../../shared/dtos';
+import { TrackWithAlbumDTO } from '../../dtos';
+import { OffsetLimitPaginationDTO } from '../../../shared/dtos';
+import { TracksDTO } from '../../dtos/tracks.dto';
+import { TrackId } from '../../../domain/components/track/types';
 
 export interface TrackReadRepository {
   findById(
@@ -20,7 +19,7 @@ export interface TrackReadRepository {
   ): Promise<{
     items: (TrackWithAlbumDTO | null)[];
     foundItems: TrackWithAlbumDTO[];
-    foundIds: string[];
+    foundIds: TrackId[];
     total: number;
     missingIds: string[];
   }>;
@@ -31,7 +30,7 @@ export interface TrackReadRepository {
       isPublic: boolean;
       pagination: OffsetLimitPaginationDTO;
     }>,
-  ): Promise<OffsetLimitPaginationResponseDTO<TrackWithAlbumDTO>>;
+  ): Promise<TracksDTO>;
 
   findByArtistId(
     artistId: string,
@@ -39,5 +38,5 @@ export interface TrackReadRepository {
       isPublic: boolean;
       pagination: OffsetLimitPaginationDTO;
     }>,
-  ): Promise<OffsetLimitPaginationResponseDTO<TrackWithAlbumDTO>>;
+  ): Promise<TracksDTO>;
 }

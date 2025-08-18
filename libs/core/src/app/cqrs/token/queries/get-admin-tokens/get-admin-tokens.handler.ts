@@ -1,6 +1,6 @@
-import { QueryHandler } from '@core/app/types';
-import { GetAdminTokensQuery } from '@core/app/cqrs/token/queries/get-admin-tokens/get-admin-tokens.query';
-import { AdminTokenService } from '@core/app/components/admin-token/services/admin-token.service';
+import { GetAdminTokensQuery } from './get-admin-tokens.query';
+import { QueryHandler } from '../../../../types';
+import { AdminTokenService } from '../../../../components/admin-token';
 
 export class GetAdminTokensHandler implements QueryHandler<GetAdminTokensQuery> {
   constructor(private readonly _service: AdminTokenService) {}

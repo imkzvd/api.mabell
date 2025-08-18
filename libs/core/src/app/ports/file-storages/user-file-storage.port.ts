@@ -1,18 +1,15 @@
-import { StoredFileDTO } from './common/dtos/stored-file.dto';
-import { TmpFileDTO } from './common/dtos/tmp-file.dto';
-import { UserId } from '../../../../domain/components/user';
-import { PlaylistId } from '../../../../domain/components/playlist';
+import { TmpFileDTO, StoredFileDTO } from '../../dtos';
 
 export interface UserFileStorage {
-  saveUserAvatar(id: UserId, file: TmpFileDTO): Promise<StoredFileDTO>;
+  saveUserAvatar(id: string, file: TmpFileDTO): Promise<StoredFileDTO>;
 
-  deleteUserAvatar(id: UserId): Promise<void>;
+  deleteUserAvatar(id: string): Promise<void>;
 
-  deleteUserDirectory(id: UserId): Promise<void>;
+  deleteUserDirectory(id: string): Promise<void>;
 
-  savePlaylistCover(id: UserId, playlistId: PlaylistId, file: TmpFileDTO): Promise<StoredFileDTO>;
+  savePlaylistCover(id: string, playlistId: string, file: TmpFileDTO): Promise<StoredFileDTO>;
 
-  deletePlaylistCover(id: UserId, playlistId: PlaylistId): Promise<void>;
+  deletePlaylistCover(id: string, playlistId: string): Promise<void>;
 
-  deletePlaylistDirectory(id: UserId, playlistId: PlaylistId): Promise<void>;
+  deletePlaylistDirectory(id: string, playlistId: string): Promise<void>;
 }

@@ -1,3 +1,3 @@
-export interface IdService<T = string> {
-  generate: () => T;
+export interface IdService {
+  generate: <T>() => T;
 }
