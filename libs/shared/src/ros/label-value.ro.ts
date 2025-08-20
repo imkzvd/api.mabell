@@ -1,23 +1,23 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { getRegionLabelByValue, Regions } from '@api.mabell/core';
+import { Shared } from '@api.mabell/core';
 
 export class LabelValueRO {
   @ApiProperty({
     type: String,
     description: 'Value',
-    example: Regions['Russian Federation'],
+    example: 'Hip-Hop',
   })
-  value: string;
+  value: string | number;
 
   @ApiProperty({
     type: String,
     description: 'Label',
-    example: getRegionLabelByValue(Regions['Russian Federation']),
+    example: 'HH',
   })
   label: string;
 
-  constructor(value: string, label: string) {
-    this.value = value;
-    this.label = label;
+  constructor(dto: Shared.DTOs.LabelValueDTO) {
+    this.label = dto.label;
+    this.value = dto.value;
   }
 }
