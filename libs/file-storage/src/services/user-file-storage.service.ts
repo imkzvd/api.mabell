@@ -1,81 +1,70 @@
 import { Inject, Injectable } from '@nestjs/common';
-import {
-  UserFileStorage as UserFileStoragePort,
-  TmpFileStorage as TmpFileStoragePort,
-  UserId,
-  TmpFileDTO,
-  StoredFileDTO,
-  PlaylistId,
-} from '@api.mabell/core';
+import { App } from '@api.mabell/core';
 import { FileStorage } from '../base/file-storage.abstract';
 import { TmpFileStorage } from './tmp-file-storage.service';
 
 @Injectable()
-export class UserFileStorage extends FileStorage implements UserFileStoragePort {
-  constructor(@Inject(TmpFileStorage) private readonly _tmpFileStorage: TmpFileStoragePort) {
+export class UserFileStorage extends FileStorage implements App.Ports.UserFileStorage {
+  constructor(@Inject(TmpFileStorage) private readonly _tmpFileStorage: TmpFileStorage) {
     super('users');
   }
 
-  async saveUserAvatar(id: UserId, file: TmpFileDTO): Promise<StoredFileDTO> {
-    const { fileName, absPath, relPath } = this.getUserAvatarMetaById(id);
+  async saveUserAvatar(userId: string, file: App.DTOs.TmpFileDTO) {
+    const { fileName, absPath, relPath } = this.getUserAvatarMetaById(userId);
 
-    await this.createUserDirectoryById(id);
+    await this.createUserDirectoryById(userId);
     await this.convertAndSaveImage(file.path, absPath);
     await this._tmpFileStorage.deleteById(file.id);
 
-    return new StoredFileDTO(fileName, relPath, absPath, file.size, file.type);
+    return new App.DTOs.StoredFileDTO(fileName, relPath, absPath, file.size, file.type);
   }
 
-  deleteUserAvatar(id: UserId): Promise<void> {
-    const { absPath } = this.getUserAvatarMetaById(id);
+  deleteUserAvatar(userId: string) {
+    const { absPath } = this.getUserAvatarMetaById(userId);
 
     return this.deleteByPath(absPath);
   }
 
-  async deleteUserDirectory(id: UserId): Promise<void> {
-    const { absPath } = this.resolveProjectPath(id);
+  async deleteUserDirectory(userId: string) {
+    const { absPath } = this.resolveProjectPath(userId);
 
     return this.deleteByPath(absPath);
   }
 
-  async savePlaylistCover(
-    id: UserId,
-    playlistId: PlaylistId,
-    file: TmpFileDTO,
-  ): Promise<StoredFileDTO> {
-    await this.createPlaylistDirectoryById(id, playlistId);
+  async savePlaylistCover(userId: string, playlistId: string, file: App.DTOs.TmpFileDTO) {
+    await this.createPlaylistDirectoryById(userId, playlistId);
 
-    const { fileName, absPath, relPath } = this.getPlaylistCoverMetaById(id, playlistId);
+    const { fileName, absPath, relPath } = this.getPlaylistCoverMetaById(userId, playlistId);
     await this.convertAndSaveImage(file.path, absPath);
     await this._tmpFileStorage.deleteById(file.id);
 
-    return new StoredFileDTO(fileName, relPath, absPath, file.size, file.type);
+    return new App.DTOs.StoredFileDTO(fileName, relPath, absPath, file.size, file.type);
   }
 
-  async deletePlaylistCover(id: UserId, playlistId: PlaylistId): Promise<void> {
-    const { absPath } = this.getPlaylistCoverMetaById(id, playlistId);
+  async deletePlaylistCover(userId: string, playlistId: string) {
+    const { absPath } = this.getPlaylistCoverMetaById(userId, playlistId);
 
     return this.deleteByPath(absPath);
   }
 
-  deletePlaylistDirectory(id: UserId, playlistId: PlaylistId): Promise<void> {
-    const { absPath } = this.resolveProjectPath(id, 'playlists', playlistId);
+  deletePlaylistDirectory(userId: string, playlistId: string) {
+    const { absPath } = this.resolveProjectPath(userId, 'playlists', playlistId);
 
     return this.deleteByPath(absPath);
   }
 
-  private createUserDirectoryById(id: UserId): Promise<{ absPath: string; relPath: string }> {
+  private createUserDirectoryById(id: string): Promise<{ absPath: string; relPath: string }> {
     return this.createDirectory(id);
   }
 
   private createPlaylistDirectoryById(
-    userId: UserId,
-    playlistId: PlaylistId,
+    userId: string,
+    playlistId: string,
   ): Promise<{ absPath: string; relPath: string }> {
     return this.createDirectory(userId, 'playlists', playlistId);
   }
 
-  private getUserAvatarMetaById(id: UserId): {
+  private getUserAvatarMetaById(userId: string): {
     fileName: string;
     absPath: string;
     relPath: string;
@@ -84,13 +73,13 @@ export class UserFileStorage extends FileStorage implements UserFileStoragePort 
 
     return {
       fileName,
-      ...this.resolveProjectPath(id, fileName),
+      ...this.resolveProjectPath(userId, fileName),
     };
   }
 
   private getPlaylistCoverMetaById(
-    userId: UserId,
-    playlistId: PlaylistId,
+    userId: string,
+    playlistId: string,
   ): {
     fileName: string;
     absPath: string;
