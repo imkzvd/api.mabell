@@ -1,0 +1,31 @@
+import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import type { Model } from 'mongoose';
+import { App } from '@api.mabell/core';
+import { AdminRefreshTokenDocument } from './types';
+import { AdminRefreshToken } from './admin-refresh-token.schema';
+import AdminRefreshTokenMapper from './admin-refresh-token.mapper';
+
+@Injectable()
+export class AdminRefreshTokenReadRepository implements App.Ports.AdminRefreshTokenReadRepository {
+  constructor(
+    @InjectModel(AdminRefreshToken.name) private readonly _model: Model<AdminRefreshTokenDocument>,
+  ) {}
+
+  async findById(tokenId: string) {
+    const foundDoc = await this._model.findById(tokenId, null).lean<AdminRefreshToken>().exec();
+
+    if (!foundDoc) {
+      return null;
+    }
+
+    return AdminRefreshTokenMapper.toDTO(foundDoc);
+  }
+
+  async findByOwnerId(ownerId: string) {
+    const filter = { owner: ownerId };
+    const foundDocs = await this._model.find(filter).lean<AdminRefreshToken[]>().exec();
+
+    return foundDocs.map((doc) => AdminRefreshTokenMapper.toDTO(doc));
+  }
+}
