@@ -2,7 +2,6 @@
   "name": "@api.mabell/password",
   "version": "0.0.0",
   "description": "Package for the Mabell API",
-  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -15,7 +14,8 @@
   "dependencies": {
     "@api.mabell/core": "^1.0.0-alpha.0",
     "@nestjs/common": "^11.1.6",
-    "bcrypt": "^6.0.0"
+    "bcrypt": "^6.0.0",
+    "generate-password": "^1.7.1"
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0"
