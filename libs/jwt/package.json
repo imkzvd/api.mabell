@@ -2,7 +2,6 @@
   "name": "@api.mabell/jwt",
   "version": "1.0.2-alpha.0",
   "description": "Package for the Mabell API",
-  "main": "index.js",
   "author": "imkzvd@gmail.com",
   "license": "ISC",
   "keywords": [
