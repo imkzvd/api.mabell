@@ -4,11 +4,11 @@ import { UserId } from '../types';
 export interface UserWriteRepository {
   save(entity: User): Promise<void>;
 
-  deleteById(id: string): Promise<UserId | null>;
+  deleteById(userId: string): Promise<UserId | null>;
 
-  findById(id: string): Promise<User | null>;
+  findById(userId: string): Promise<User | null>;
 
-  existsById(id: string): Promise<UserId | null>;
+  existsById(userId: string): Promise<UserId | null>;
 
   existsByEmail(email: string): Promise<UserId | null>;
 

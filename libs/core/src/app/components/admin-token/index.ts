@@ -4,3 +4,4 @@ export * from './services/admin-token.service';
 export * from './services/admin-token-create.service';
 export * from './services/admin-token-delete.service';
 export * from './services/admin-token-validate.service';
+export * from './types';

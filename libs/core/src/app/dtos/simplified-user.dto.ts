@@ -1,4 +1,4 @@
-import { UserId } from '../../domain/components/user/types';
+import { UserId } from '../../domain/components/user';
 
 export class SimplifiedUserDTO {
   constructor(

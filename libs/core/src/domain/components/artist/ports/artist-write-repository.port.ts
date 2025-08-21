@@ -4,11 +4,11 @@ import { ArtistId } from '../types';
 export interface ArtistWriteRepository {
   save(entity: Artist): Promise<void>;
 
-  deleteById(id: string): Promise<ArtistId | null>;
+  deleteById(artistId: string): Promise<ArtistId | null>;
 
-  findById(id: string): Promise<Artist | null>;
+  findById(artistId: string): Promise<Artist | null>;
 
-  findByIds(ids: string[]): Promise<{
+  findByIds(artistIds: string[]): Promise<{
     items: (Artist | null)[];
     foundItems: Artist[];
     foundIds: ArtistId[];
@@ -16,9 +16,9 @@ export interface ArtistWriteRepository {
     missingIds: string[];
   }>;
 
-  existsById(id: string): Promise<ArtistId | null>;
+  existsById(artistId: string): Promise<ArtistId | null>;
 
-  existsByIds(ids: string[]): Promise<{
+  existsByIds(artistIds: string[]): Promise<{
     items: (ArtistId | null)[];
     foundIds: ArtistId[];
     total: number;

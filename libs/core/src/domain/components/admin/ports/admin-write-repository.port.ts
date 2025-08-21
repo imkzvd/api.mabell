@@ -4,9 +4,9 @@ import { AdminId } from '../types';
 export interface AdminWriteRepository {
   save(entity: Admin): Promise<void>;
 
-  deleteById(id: string): Promise<AdminId | null>;
+  deleteById(adminId: string): Promise<AdminId | null>;
 
-  findById(id: string): Promise<Admin | null>;
+  findById(adminId: string): Promise<Admin | null>;
 
   existsByUsername(username: string): Promise<AdminId | null>;
 

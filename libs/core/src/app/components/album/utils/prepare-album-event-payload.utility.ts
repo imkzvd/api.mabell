@@ -5,7 +5,7 @@ export function prepareAlbumEventPayload(album: AlbumDTO): AlbumEventPayload {
   return {
     id: album.id,
     name: album.name,
-    artists: album.artists.map((i) => i),
+    artists: album.artists.map(({ id, name, isPublic }) => ({ id, name, isPublic })),
     cover: album.cover,
     isPublic: album.isPublic,
   };

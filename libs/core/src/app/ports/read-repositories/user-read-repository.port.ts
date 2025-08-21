@@ -2,7 +2,7 @@ import { UserDTO } from '../../dtos';
 
 export interface UserReadRepository {
   findById(
-    id: string,
+    userId: string,
     options?: Partial<{
       isPublic: boolean;
     }>,

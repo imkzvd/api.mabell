@@ -16,7 +16,7 @@ export class TrackCreateService {
 
   async create(payload: CreateTrackPayload): Promise<TrackId> {
     const generatedId = this._idService.generate<TrackId>();
-    const nextAlbumTrackIndex = await this._WR.getNextAlbumTrackIndex(payload.albumId);
+    const nextAlbumTrackIndex = await this._WR.getNextTrackIndexByAlbumId(payload.albumId);
     const createdTrack = TrackFactory.create({
       id: generatedId,
       name: `Track #${nextAlbumTrackIndex + 1}`,

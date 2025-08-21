@@ -4,9 +4,9 @@ import { TmpFileDTO } from '../../dtos';
 export interface TmpFileStorage {
   upload(file: Express.Multer.File): Promise<TmpFileDTO>;
 
-  findById(id: string): Promise<TmpFileDTO | null>;
+  findById(fileId: string): Promise<TmpFileDTO | null>;
 
-  deleteById(id: string): Promise<TmpFileId | null>;
+  deleteById(fileId: string): Promise<TmpFileId | null>;
 
   clear(): Promise<void>;
 }

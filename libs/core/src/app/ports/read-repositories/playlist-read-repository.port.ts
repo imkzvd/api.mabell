@@ -1,11 +1,11 @@
 import { PlaylistDTO } from '../../dtos';
-import { OffsetLimitPaginationDTO, OffsetLimitPaginationResponseDTO } from '../../../shared/dtos';
+import { OffsetLimitPaginationDTO } from '../../../shared/dtos';
 import { PlaylistsDTO } from '../../dtos/playlists.dto';
-import { TrackId } from '../../../domain/components/track/types';
+import { PlaylistTrackIdsDTO } from '../../dtos/playlist-track-ids.dto';
 
 export interface PlaylistReadRepository {
   findById(
-    id: string,
+    playlistId: string,
     options?: Partial<{
       isPublic: boolean;
     }>,
@@ -19,12 +19,12 @@ export interface PlaylistReadRepository {
     }>,
   ): Promise<PlaylistsDTO>;
 
-  getTracks(
-    id: string,
+  getTrackIdsById(
+    playlistId: string,
     options?: Partial<{
       pagination?: OffsetLimitPaginationDTO;
     }>,
-  ): Promise<OffsetLimitPaginationResponseDTO<{ id: TrackId; addedAt: Date }>>;
+  ): Promise<PlaylistTrackIdsDTO>;
 
-  getPublicStatus(id: string): Promise<boolean>;
+  getPublicStatusById(playlistId: string): Promise<boolean>;
 }

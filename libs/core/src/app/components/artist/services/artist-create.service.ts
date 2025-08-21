@@ -1,6 +1,6 @@
 import { ArtistFactory, ArtistWriteRepository } from '../../../../domain/components/artist';
-import { ArtistReadRepository, EventBus, IdService } from '../../../ports';
-import { ArtistId } from '../../../../domain/components/artist/types';
+import { EventBus, IdService } from '../../../ports';
+import { ArtistId } from '../../../../domain/components/artist';
 import { ArtistCreatedEvent } from '../../../events';
 import { prepareArtistEventPayload } from '../utils/prepare-artist-event-payload.utility';
 
@@ -8,7 +8,6 @@ export class ArtistCreateService {
   constructor(
     private readonly _EB: EventBus,
     private readonly _WR: ArtistWriteRepository,
-    private readonly _RR: ArtistReadRepository,
     private readonly _idService: IdService,
   ) {}
 

@@ -16,7 +16,7 @@ export class AlbumCreateService {
 
   async create(payload: CreateAlbumPayload): Promise<AlbumId> {
     const generatedId = this._idService.generate<AlbumId>();
-    const nextAlbumIndex = await this._WR.getNextArtistAlbumIndex(payload.artistId);
+    const nextAlbumIndex = await this._WR.getNextAlbumIndexByArtistId(payload.artistId);
     const createdAlbum = AlbumFactory.create({
       id: generatedId,
       name: `Album #${nextAlbumIndex}`,

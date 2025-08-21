@@ -1,5 +1,5 @@
 import { AdminRefreshTokenId } from './types';
-import { AdminId, AdminRole } from '../admin/types';
+import { AdminId, AdminRole } from '../admin';
 
 export class AdminRefreshToken {
   constructor(

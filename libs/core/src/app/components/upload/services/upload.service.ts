@@ -1,6 +1,6 @@
 import { UploadFilePayload } from '../types';
 import { TmpFileStorage } from '../../../ports';
-import { TmpFileId } from '../../../ports/file-storages/types';
+import { TmpFileId } from '../../../ports';
 
 export class UploadService {
   constructor(private readonly _FS: TmpFileStorage) {}

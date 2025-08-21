@@ -1,18 +1,18 @@
 import { TrackWithAlbumDTO } from '../../dtos';
 import { OffsetLimitPaginationDTO } from '../../../shared/dtos';
-import { TracksDTO } from '../../dtos/tracks.dto';
-import { TrackId } from '../../../domain/components/track/types';
+import { TracksDTO } from '../../dtos';
+import { TrackId } from '../../../domain/components/track';
 
 export interface TrackReadRepository {
   findById(
-    id: string,
+    trackId: string,
     options?: Partial<{
       isPublic: boolean;
     }>,
   ): Promise<TrackWithAlbumDTO | null>;
 
   findByIds(
-    ids: string[],
+    trackIds: string[],
     options?: Partial<{
       isPublic: boolean;
     }>,

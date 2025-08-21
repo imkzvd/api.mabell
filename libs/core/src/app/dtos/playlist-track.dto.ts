@@ -1,5 +1,5 @@
-import { TrackId } from '../../domain/components/track/types';
 import { TrackWithAlbumDTO } from './track-with-album.dto';
+import { TrackId } from '../../domain/components/track';
 
 export class PlaylistTrackDTO {
   constructor(

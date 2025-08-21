@@ -3,13 +3,13 @@ import { TmpFileDTO, StoredFileDTO } from '../../dtos';
 export interface ArtistFileStorage {
   saveArtistAvatar(artistId: string, file: TmpFileDTO): Promise<StoredFileDTO>;
 
-  deleteArtistAvatar(id: string): Promise<void>;
+  deleteArtistAvatar(artistId: string): Promise<void>;
 
   saveArtistCover(artistId: string, file: TmpFileDTO): Promise<StoredFileDTO>;
 
-  deleteArtistCover(id: string): Promise<void>;
+  deleteArtistCover(artistId: string): Promise<void>;
 
-  deleteArtistDirectory(id: string): Promise<void>;
+  deleteArtistDirectory(artistId: string): Promise<void>;
 
   saveAlbumCover(artistId: string, albumId: string, file: TmpFileDTO): Promise<StoredFileDTO>;
 

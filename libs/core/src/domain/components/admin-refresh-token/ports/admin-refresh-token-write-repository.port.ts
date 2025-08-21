@@ -4,7 +4,7 @@ import { AdminRefreshTokenId } from '../types';
 export interface AdminRefreshTokenWriteRepository {
   save(entity: AdminRefreshToken): Promise<void>;
 
-  deleteById(id: string): Promise<AdminRefreshTokenId | null>;
+  deleteById(tokenId: string): Promise<AdminRefreshTokenId | null>;
 
   deleteByOwnerId(ownerId: string): Promise<{
     deletedIds: AdminRefreshTokenId[];

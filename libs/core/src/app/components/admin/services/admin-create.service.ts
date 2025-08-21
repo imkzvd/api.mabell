@@ -1,7 +1,7 @@
 import { ADMIN_PASSWORD_LENGTH } from '../constants';
 import { AdminFactory, AdminWriteRepository } from '../../../../domain/components/admin';
 import { EventBus, IdService, PasswordService } from '../../../ports';
-import { AdminId } from '../../../../domain/components/admin/types';
+import { AdminId } from '../../../../domain/components/admin';
 import { AdminCreatedEvent } from '../../../events';
 
 export class AdminCreateService {

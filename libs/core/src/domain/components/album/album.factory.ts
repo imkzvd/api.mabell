@@ -7,7 +7,7 @@ import { AlbumTypes } from './constants/album-types';
 import { DescriptionVO } from './vos/description.vo';
 import { ReleaseDateVO } from './vos/release-date.vo';
 import { AlbumId } from './types';
-import { ArtistId } from '../artist/types';
+import { ArtistId } from '../artist';
 
 export class AlbumFactory {
   static create(props: {

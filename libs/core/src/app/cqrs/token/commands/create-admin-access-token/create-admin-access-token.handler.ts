@@ -21,7 +21,7 @@ export class CreateAdminAccessTokenHandler
 
     const token = this._adminTokenCreateService.createAccessToken({
       adminId: foundAdmin.id,
-      role: foundAdmin.role.value,
+      role: foundAdmin.role,
     });
 
     return { token };

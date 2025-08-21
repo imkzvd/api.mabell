@@ -1,5 +1,5 @@
 import { SimplifiedArtistDTO } from './simplified-artist.dto';
-import { TrackId } from '../../domain/components/track/types';
+import { TrackId } from '../../domain/components/track';
 
 export class TrackDTO {
   constructor(

@@ -1,4 +1,4 @@
-import { Event } from '../../ports/event-bus/types';
+import { Event } from '../../ports';
 import { AlbumEventPayload } from './types';
 
 export class AlbumCreatedEvent extends Event<AlbumEventPayload> {

@@ -1,11 +1,11 @@
 import { AlbumDTO } from '../../dtos';
 import { OffsetLimitPaginationDTO } from '../../../shared/dtos';
-import { AlbumsDTO } from '../../dtos/albums.dto';
-import { ArtistId } from '../../../domain/components/artist/types';
+import { AlbumsDTO } from '../../dtos';
+import { ArtistId } from '../../../domain/components/artist';
 
 export interface AlbumReadRepository {
   findById(
-    id: string,
+    albumId: string,
     options?: Partial<{
       isPublic: boolean;
     }>,
@@ -19,7 +19,7 @@ export interface AlbumReadRepository {
     }>,
   ): Promise<AlbumsDTO>;
 
-  getPublicStatus(id: string): Promise<boolean>;
+  getPublicStatusById(albumId: string): Promise<boolean>;
 
-  getArtistIdsById(id: string): Promise<ArtistId[]>;
+  getArtistIdsById(albumId: string): Promise<ArtistId[]>;
 }

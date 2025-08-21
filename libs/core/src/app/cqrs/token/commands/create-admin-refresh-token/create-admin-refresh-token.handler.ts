@@ -21,7 +21,7 @@ export class CreateAdminRefreshTokenHandler
 
     const token = await this._adminTokenCreateService.createRefreshToken({
       adminId: foundAdmin.id,
-      role: foundAdmin.role.value,
+      role: foundAdmin.role,
       userAgent: payload.userAgent,
       ip: payload.ip,
     });

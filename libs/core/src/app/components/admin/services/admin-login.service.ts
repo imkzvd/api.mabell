@@ -1,7 +1,7 @@
 import { LoginAdminPayload } from '../types';
 import { UnauthorizedException } from '../../../../shared/exceptions';
 import { AdminReadRepository, PasswordService } from '../../../ports';
-import { AdminId } from '../../../../domain/components/admin/types';
+import { AdminId } from '../../../../domain/components/admin';
 
 export class AdminLoginService {
   constructor(

@@ -1,4 +1,4 @@
-import { UserRefreshTokenId } from '../../domain/components/user-refresh-token/types';
+import { UserRefreshTokenId } from '../../domain/components/user-refresh-token';
 
 export class UserRefreshTokenDTO {
   constructor(

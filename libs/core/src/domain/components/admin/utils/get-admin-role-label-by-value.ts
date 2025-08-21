@@ -1,7 +1,7 @@
 import { AdminRoles } from '../constants/admin-roles';
-import { AdminRole, AdminRoleLabel } from '../types';
+import { AdminRoleLabel } from '../types';
 
-export function getAdminRoleLabelByValue(value: AdminRole): AdminRoleLabel {
+export function getAdminRoleLabelByValue(value: string): AdminRoleLabel {
   return (Object.keys(AdminRoles) as AdminRoleLabel[]).find(
     (key) => AdminRoles[key] === value,
   ) as AdminRoleLabel;

@@ -2,7 +2,7 @@ import { AdminDTO, AdminsDTO } from '../../dtos';
 import { OffsetLimitPaginationDTO } from '../../../shared/dtos';
 
 export interface AdminReadRepository {
-  findById(id: string): Promise<AdminDTO | null>;
+  findById(adminId: string): Promise<AdminDTO | null>;
 
   findByUsername(username: string): Promise<AdminDTO | null>;
 

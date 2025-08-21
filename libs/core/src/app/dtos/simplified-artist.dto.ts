@@ -1,4 +1,4 @@
-import { ArtistId } from '../../domain/components/artist/types';
+import { ArtistId } from '../../domain/components/artist';
 
 export class SimplifiedArtistDTO {
   constructor(
