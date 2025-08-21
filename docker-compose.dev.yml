@@ -1,34 +1,44 @@
 services:
-  mongo:
-    image: mongo
-    container_name: mongo-dev-container
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb-dev
     ports:
-      - "${MONGO_PORT:-27017}:27017"
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      - "${DB_PORT:-27017}:27017"
+#    environment:
+#      - MONGO_INITDB_ROOT_USERNAME=devrootusername
+#      - MONGO_INITDB_ROOT_PASSWORD=devrootpass
     volumes:
-      - mongo_data:/data/db
-    restart: always
+      - mongo-data:/data/db:rw
+    restart: on-failure
+
   redis:
-    image: redis
-    container_name: redis-dev-container
+    image: redis:latest
+    container_name: cache-dev
     ports:
       - "${REDIS_PORT:-6379}:6379"
     environment:
       - REDIS_PASSWORD=${REDIS_PASSWORD}
     volumes:
-      - redis_data:/data
-    restart: always
+      - cache-data:/data:rw
+    restart: on-failure
+
   typesense:
     image: typesense/typesense:28.0
-    restart: on-failure
+    container_name: search-dev
     ports:
-      - "8108:8108"
+      - "${TYPESENSE_PORT:-8108}:8108"
+    environment:
+      - TYPESENSE_DATA_DIR=/data
+      - TYPESENSE_API_KEY=${TYPESENSE_KEY}
     volumes:
-      - ./typesense-data:/data
-    command: '--data-dir /data --api-key=xyz --enable-cors'
+      - search-data:/data:rw
+    command: '--enable-cors'
+    restart: on-failure
 
 volumes:
-  mongo_data:
-  redis_data:
+  mongo-data:
+    driver: local
+  redis-data:
+    driver: local
+  typesense-data:
+    driver: local
