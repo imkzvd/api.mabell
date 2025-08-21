@@ -16,6 +16,6 @@
     "@api.mabell/core": "^1.0.0-alpha.0",
     "@api.mabell/event-bus": "^0.0.0",
     "@nestjs/common": "^11.1.6",
-    "typesense": "^2.0.3"
+    "typesense": "^2.1.0"
   }
 }
