@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { faker } from '@faker-js/faker';
-import { IndexedTrackDTO } from '@core/app/common/ports/search-service/dtos/indexed-track.dto';
+import { App } from '@api.mabell/core';
 import { IndexedSimplifiedArtistRO } from './indexed-simplified-artist.ro';
 import { IndexedAlbumRO } from './indexed-album.ro';
 
@@ -25,7 +25,7 @@ export class IndexedTrackRO {
   })
   featArtists: IndexedSimplifiedArtistRO[];
 
-  constructor(dto: IndexedTrackDTO) {
+  constructor(dto: App.DTOs.IndexedTrackDTO) {
     this.id = dto.id;
     this.name = dto.name;
     this.album = new IndexedAlbumRO(dto.album);

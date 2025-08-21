@@ -1,5 +1,6 @@
-import { BadRequestException } from '@core/shared/exceptions';
-import { AlbumType, AlbumTypes } from '../constants/album-types';
+import { AlbumTypes } from '../constants/album-types';
+import { BadRequestException } from '../../../../shared/exceptions';
+import { AlbumType } from '../types';
 
 export class AlbumTypeVO {
   private constructor(public readonly value: AlbumType) {}

@@ -1,11 +1,9 @@
-import { CommandHandler } from '@nestjs/cqrs';
-import { DeleteTrackFileCommand } from '@core/app/cqrs/track/commands/delete-track-file/delete-track-file.command';
-import { DeleteTrackFileHandler as CoreDeleteTrackFileHandler } from '@core/app/cqrs/track/commands/delete-track-file/delete-track-file.handler';
-import { TrackUpdateService } from '@core/app/components/track/services/track-update.service';
+import { CommandHandler } from '@api.mabell/cqrs';
+import { App } from '@api.mabell/core';
 
-@CommandHandler(DeleteTrackFileCommand)
-export class DeleteTrackFileHandler extends CoreDeleteTrackFileHandler {
-  constructor(service: TrackUpdateService) {
+@CommandHandler(App.CQRS.DeleteTrackFileCommand)
+export class DeleteTrackFileHandler extends App.CQRS.DeleteTrackFileHandler {
+  constructor(service: App.Components.Track.TrackUpdateService) {
     super(service);
   }
 }

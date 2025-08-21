@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { OffsetLimitPaginationResponseDTO } from '@core/shared/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
+import { Shared } from '@api.mabell/core';
 
 export class OffsetLimitPaginationRO<T extends Record<string, any>>
-  implements OffsetLimitPaginationResponseDTO<T>
+  implements Shared.DTOs.OffsetLimitPaginationResponseDTO<T>
 {
   @ApiProperty({ type: Array, description: 'Items' })
   public items: T[];

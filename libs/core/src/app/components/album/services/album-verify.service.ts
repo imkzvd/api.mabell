@@ -1,5 +1,5 @@
-import { AlbumWriteRepository } from '@core/domain/components/album/repository/album-write-repository.port';
-import { AlbumId } from '@core/domain/components/album/types';
+import { AlbumWriteRepository } from '../../../../domain/components/album';
+import { AlbumId } from '../../../../domain/components/album/types';
 
 export class AlbumVerifyService {
   constructor(private readonly _WR: AlbumWriteRepository) {}

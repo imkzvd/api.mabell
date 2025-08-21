@@ -1,6 +1,6 @@
-import { EventHandler } from '@core/app/common/ports/event-bus.port';
-import { UserDeletedEvent } from '@core/app/common/events/user/user-deleted.event';
-import { UserTokenDeleteService } from '@core/app/components/user-token/services/user-token-delete.service';
+import { UserTokenDeleteService } from '../services/user-token-delete.service';
+import { EventHandler } from '../../../ports/event-bus/types';
+import { UserDeletedEvent } from '../../../events';
 
 export class DeleteRefreshTokensOnUserDeletedEventHandler extends EventHandler<UserDeletedEvent> {
   constructor(private readonly _service: UserTokenDeleteService) {

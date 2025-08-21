@@ -1,16 +1,12 @@
-import { CommandHandler } from '@nestjs/cqrs';
-import { CreateTrackCommand } from '@core/app/cqrs/track/commands/create-track/create-track.command';
-import { CreateTrackHandler as CoreCreateTrackHandler } from '@core/app/cqrs/track/commands/create-track/create-track.handler';
-import { AlbumVerifyService } from '@core/app/components/album/services/album-verify.service';
-import { AlbumService } from '@core/app/components/album/services/album.service';
-import { TrackCreateService } from '@core/app/components/track/services/track-create.service';
+import { CommandHandler } from '@api.mabell/cqrs';
+import { App } from '@api.mabell/core';
 
-@CommandHandler(CreateTrackCommand)
-export class CreateTrackHandler extends CoreCreateTrackHandler {
+@CommandHandler(App.CQRS.CreateTrackCommand)
+export class CreateTrackHandler extends App.CQRS.CreateTrackHandler {
   constructor(
-    albumVerifyService: AlbumVerifyService,
-    albumService: AlbumService,
-    trackCreateService: TrackCreateService,
+    albumVerifyService: App.Components.Album.AlbumVerifyService,
+    albumService: App.Components.Album.AlbumService,
+    trackCreateService: App.Components.Track.TrackCreateService,
   ) {
     super(albumVerifyService, albumService, trackCreateService);
   }

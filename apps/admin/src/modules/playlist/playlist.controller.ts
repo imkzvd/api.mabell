@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   DefaultValuePipe,
@@ -24,20 +25,11 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { faker } from '@faker-js/faker';
-import { AdminRoles } from '@core/domain/components/admin/constants/admin-roles';
-import { CommandBus } from '@infrastructure/command-bus';
-import { QueryBus } from '@infrastructure/query-bus';
-import { CreatePlaylistCommand } from '@core/app/cqrs/playlist/commands/create-playlist/create-playlist.command';
-import { GetPlaylistQuery } from '@core/app/cqrs/playlist/queries/get-playlist/get-playlist.query';
-import { BadRequestException } from '@core/shared/exceptions';
-import { ParseObjectIdPipe } from '@shared/pipes/parse-object-id.pipe';
-import { UpdatePlaylistCommand } from '@core/app/cqrs/playlist/commands/update-playlist/update-playlist.command';
-import { UpdatePlaylistCoverCommand } from '@core/app/cqrs/playlist/commands/update-playlist-cover/update-playlist-cover.command';
-import { DeletePlaylistCoverCommand } from '@core/app/cqrs/playlist/commands/delete-playlist-cover/delete-playlist-cover.command';
-import { DeletePlaylistCommand } from '@core/app/cqrs/playlist/commands/delete-playlist/delete-playlist.command';
-import { AddTrackInPlaylistCommand } from '@core/app/cqrs/playlist/commands/add-track-in-playlist/add-track-in-playlist.command';
-import { DeleteTrackFromPlaylistCommand } from '@core/app/cqrs/playlist/commands/delete-track-from-playlist/delete-track-from-playlist.command';
-import { GetPlaylistTracksQuery } from '@core/app/cqrs/track/queries/get-playlist-tracks/get-playlist-tracks.query';
+import { Domain } from '@api.mabell/core';
+import { CommandBus } from '@api.mabell/cqrs';
+import { QueryBus } from '@api.mabell/cqrs';
+import { App } from '@api.mabell/core';
+import { ParseObjectIdPipe } from '@api.mabell/shared';
 import { PlaylistRO } from './ros/playlist.ro';
 import { UpdatePlaylistCoverDTO } from './dtos/update-playlist-cover.dto';
 import { CreatePlaylistDTO } from './dtos/create-playlist.dto';
@@ -46,10 +38,9 @@ import { AddTrackInPlaylistDTO } from './dtos/add-track-in-playlist.dto';
 import { Roles } from '../../decorators/roles.decorator';
 import { PlaylistTracksRO } from '../track/ros/playlist-tracks.ro';
 import { PlaylistsRO } from './ros/playlists.ro';
-import { GetUserPlaylistsQuery } from '@core/app/cqrs/playlist/queries/get-user-playlists/get-user-playlists.query';
 
 @ApiTags('Playlist')
-@Roles(AdminRoles.Owner, AdminRoles.Admin)
+@Roles(Domain.Admin.AdminRoles.Owner, Domain.Admin.AdminRoles.Admin)
 @Controller({ path: '/playlists' })
 export class PlaylistController {
   constructor(
@@ -62,8 +53,12 @@ export class PlaylistController {
   @ApiCreatedResponse({ description: 'Playlist', type: PlaylistRO })
   @Post('/')
   async createPlaylist(@Body() { userId }: CreatePlaylistDTO): Promise<PlaylistRO> {
-    const createdPlaylistId = await this._commandBus.execute(new CreatePlaylistCommand(userId));
-    const foundPlaylist = await this._queryBus.execute(new GetPlaylistQuery(createdPlaylistId));
+    const { id: createdPlaylistId } = await this._commandBus.execute(
+      new App.CQRS.CreatePlaylistCommand(userId),
+    );
+    const foundPlaylist = await this._queryBus.execute(
+      new App.CQRS.GetPlaylistQuery(createdPlaylistId),
+    );
 
     if (!foundPlaylist) {
       throw new BadRequestException('Playlist does not created');
@@ -86,8 +81,8 @@ export class PlaylistController {
     @Param('id', ParseObjectIdPipe) id: string,
     @Body() dto: UpdatePlaylistDTO,
   ): Promise<PlaylistRO> {
-    await this._commandBus.execute(new UpdatePlaylistCommand(id, dto));
-    const foundPlaylist = await this._queryBus.execute(new GetPlaylistQuery(id));
+    await this._commandBus.execute(new App.CQRS.UpdatePlaylistCommand(id, dto));
+    const foundPlaylist = await this._queryBus.execute(new App.CQRS.GetPlaylistQuery(id));
 
     if (!foundPlaylist) {
       throw new BadRequestException('Playlist does not found');
@@ -110,8 +105,8 @@ export class PlaylistController {
     @Param('id', ParseObjectIdPipe) id: string,
     @Body() dto: UpdatePlaylistCoverDTO,
   ): Promise<PlaylistRO> {
-    await this._commandBus.execute(new UpdatePlaylistCoverCommand(id, dto));
-    const foundPlaylist = await this._queryBus.execute(new GetPlaylistQuery(id));
+    await this._commandBus.execute(new App.CQRS.UpdatePlaylistCoverCommand(id, dto));
+    const foundPlaylist = await this._queryBus.execute(new App.CQRS.GetPlaylistQuery(id));
 
     if (!foundPlaylist) {
       throw new BadRequestException('Playlist does not found');
@@ -130,8 +125,8 @@ export class PlaylistController {
   @ApiOkResponse({ description: 'Playlist', type: PlaylistRO })
   @Delete('/:id/cover')
   async deletePlaylistCover(@Param('id', ParseObjectIdPipe) id: string): Promise<PlaylistRO> {
-    await this._commandBus.execute(new DeletePlaylistCoverCommand(id));
-    const foundPlaylist = await this._queryBus.execute(new GetPlaylistQuery(id));
+    await this._commandBus.execute(new App.CQRS.DeletePlaylistCoverCommand(id));
+    const foundPlaylist = await this._queryBus.execute(new App.CQRS.GetPlaylistQuery(id));
 
     if (!foundPlaylist) {
       throw new BadRequestException('Playlist does not found');
@@ -151,7 +146,7 @@ export class PlaylistController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete('/:id')
   async deletePlaylist(@Param('id', ParseObjectIdPipe) id: string): Promise<void> {
-    await this._commandBus.execute(new DeletePlaylistCommand(id));
+    await this._commandBus.execute(new App.CQRS.DeletePlaylistCommand(id));
   }
 
   @ApiOperation({ summary: 'Add artist in playlist', operationId: 'addTrackInPlaylist' })
@@ -168,9 +163,9 @@ export class PlaylistController {
     @Param('id', ParseObjectIdPipe) id: string,
     @Body() { trackId }: AddTrackInPlaylistDTO,
   ): Promise<PlaylistRO> {
-    await this._commandBus.execute(new AddTrackInPlaylistCommand(id, trackId));
+    await this._commandBus.execute(new App.CQRS.AddTrackInPlaylistCommand(id, trackId));
 
-    const foundPlaylist = await this._queryBus.execute(new GetPlaylistQuery(id));
+    const foundPlaylist = await this._queryBus.execute(new App.CQRS.GetPlaylistQuery(id));
 
     if (!foundPlaylist) {
       throw new BadRequestException('Playlist does not found');
@@ -202,7 +197,7 @@ export class PlaylistController {
     @Param('id', ParseObjectIdPipe) id: string,
     @Param('trackId', ParseObjectIdPipe) trackId: string,
   ): Promise<void> {
-    await this._commandBus.execute(new DeleteTrackFromPlaylistCommand(id, trackId));
+    await this._commandBus.execute(new App.CQRS.DeleteTrackFromPlaylistCommand(id, trackId));
   }
 
   @ApiOperation({ summary: 'Get playlists', operationId: 'getUserPlaylists' })
@@ -213,11 +208,11 @@ export class PlaylistController {
     description: 'User Id',
     example: faker.database.mongodbObjectId(),
   })
-  @Roles(AdminRoles.Guest)
+  @Roles(Domain.Admin.AdminRoles.Guest)
   @ApiOkResponse({ description: 'Playlist', type: PlaylistsRO })
   @Get('/')
   async getUserPlaylists(@Query('userId', ParseObjectIdPipe) userId: string): Promise<PlaylistsRO> {
-    const foundPlaylists = await this._queryBus.execute(new GetUserPlaylistsQuery(userId));
+    const foundPlaylists = await this._queryBus.execute(new App.CQRS.GetUserPlaylistsQuery(userId));
 
     return new PlaylistsRO(foundPlaylists);
   }
@@ -229,11 +224,11 @@ export class PlaylistController {
     description: 'Id',
     example: faker.database.mongodbObjectId(),
   })
-  @Roles(AdminRoles.Guest)
+  @Roles(Domain.Admin.AdminRoles.Guest)
   @ApiOkResponse({ description: 'Playlist', type: PlaylistRO })
   @Get('/:id')
   async getPlaylist(@Param('id', ParseObjectIdPipe) id: string): Promise<PlaylistRO> {
-    const foundPlaylist = await this._queryBus.execute(new GetPlaylistQuery(id));
+    const foundPlaylist = await this._queryBus.execute(new App.CQRS.GetPlaylistQuery(id));
 
     if (!foundPlaylist) {
       throw new NotFoundException(`The playlists does not exist`);
@@ -252,7 +247,7 @@ export class PlaylistController {
   @ApiQuery({ required: false, type: String, name: 'limit', description: 'Limit', example: 50 })
   @ApiQuery({ required: false, type: String, name: 'offset', description: 'Offset', example: 0 })
   @ApiOkResponse({ description: 'Playlist tracks', type: PlaylistTracksRO })
-  @Roles(AdminRoles.Guest)
+  @Roles(Domain.Admin.AdminRoles.Guest)
   @Get('/:id/tracks')
   async getPlaylistTracks(
     @Param('id', ParseObjectIdPipe) id: string,
@@ -260,7 +255,7 @@ export class PlaylistController {
     @Query('offset', new DefaultValuePipe(0), ParseIntPipe) offset: number,
   ): Promise<PlaylistTracksRO> {
     const foundTracks = await this._queryBus.execute(
-      new GetPlaylistTracksQuery(id, { pagination: { limit, offset } }),
+      new App.CQRS.GetPlaylistTracksQuery(id, { pagination: { limit, offset } }),
     );
 
     return new PlaylistTracksRO(foundTracks);

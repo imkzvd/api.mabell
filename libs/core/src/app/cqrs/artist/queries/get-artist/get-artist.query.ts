@@ -1,5 +1,5 @@
-import { Query } from '@core/app/types';
-import { ArtistDTO } from '@core/app/components/artist/dtos/artist.dto';
+import { Query } from '../../../../types';
+import { ArtistDTO } from '../../../../dtos';
 
 export class GetArtistQuery extends Query<ArtistDTO | null> {
   constructor(

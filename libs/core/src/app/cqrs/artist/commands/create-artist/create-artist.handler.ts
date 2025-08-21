@@ -1,11 +1,13 @@
-import { CommandHandler } from '@core/app/types';
-import { CreateArtistCommand } from '@core/app/cqrs/artist/commands/create-artist/create-artist.command';
-import { ArtistCreateService } from '@core/app/components/artist/services/artist-create.service';
+import { CommandHandler } from '../../../../types';
+import { CreateArtistCommand } from './create-artist.command';
+import { ArtistCreateService } from '../../../../components/artist';
 
 export class CreateArtistHandler implements CommandHandler<CreateArtistCommand> {
   constructor(private readonly _service: ArtistCreateService) {}
 
   async execute() {
-    return await this._service.create();
+    const id = await this._service.create();
+
+    return { id };
   }
 }

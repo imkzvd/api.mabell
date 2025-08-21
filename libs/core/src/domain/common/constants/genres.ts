@@ -131,6 +131,6 @@ export type GenreLabel = keyof typeof Genres;
 
 export type Genre = (typeof Genres)[GenreLabel];
 
-export function getGenreLabelByValue(value: Genre): GenreLabel {
+export function getGenreLabelByValue(value: string): GenreLabel {
   return (Object.keys(Genres) as GenreLabel[]).find((key) => Genres[key] === value) as GenreLabel;
 }

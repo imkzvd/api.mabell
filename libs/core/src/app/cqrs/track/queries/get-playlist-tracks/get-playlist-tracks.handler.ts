@@ -1,9 +1,9 @@
-import { QueryHandler } from '@core/app/types';
-import { PlaylistTrackDTO } from '@core/app/components/track/dtos/playlist-track.dto';
-import { OffsetLimitPaginationResponseDTO } from '@core/shared/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
-import { GetPlaylistTracksQuery } from '@core/app/cqrs/track/queries/get-playlist-tracks/get-playlist-tracks.query';
-import { PlaylistService } from '@core/app/components/playlist/services/playlist.service';
-import { TrackService } from '@core/app/components/track/services/track.service';
+import { QueryHandler } from '../../../../types';
+import { GetPlaylistTracksQuery } from './get-playlist-tracks.query';
+import { PlaylistService } from '../../../../components/playlist';
+import { TrackService } from '../../../../components/track';
+import { OffsetLimitPaginationResponseDTO } from '../../../../../shared/dtos';
+import { PlaylistTrackDTO } from '../../../../dtos';
 
 export class GetPlaylistTracksHandler implements QueryHandler<GetPlaylistTracksQuery> {
   constructor(
@@ -12,7 +12,7 @@ export class GetPlaylistTracksHandler implements QueryHandler<GetPlaylistTracksQ
   ) {}
 
   async execute({ playlistId, options }: GetPlaylistTracksQuery) {
-    const foundPlaylistTrackData = await this._playlistService.getTrackIds(playlistId);
+    const foundPlaylistTrackData = await this._playlistService.getTrackIdsById(playlistId);
     const slicedFoundPlaylistTrackData = foundPlaylistTrackData.slice(
       options?.pagination?.offset || 0,
       (options?.pagination?.limit || 50) + (options?.pagination?.offset || 0),

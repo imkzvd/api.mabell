@@ -1,12 +1,12 @@
-import { QueryHandler } from '@nestjs/cqrs';
-import { GetUserPlaylistsQuery } from '@core/app/cqrs/playlist/queries/get-user-playlists/get-user-playlists.query';
-import { GetUserPlaylistsHandler as CoreGetUserPlaylistsHandler } from '@core/app/cqrs/playlist/queries/get-user-playlists/get-user-playlists.handler';
-import { UserVerifyService } from '@core/app/components/user/services/user-verify.service';
-import { PlaylistService } from '@core/app/components/playlist/services/playlist.service';
+import { QueryHandler } from '@api.mabell/cqrs';
+import { App } from '@api.mabell/core';
 
-@QueryHandler(GetUserPlaylistsQuery)
-export class GetUserPlaylistsHandler extends CoreGetUserPlaylistsHandler {
-  constructor(userVerifyService: UserVerifyService, playlistService: PlaylistService) {
+@QueryHandler(App.CQRS.GetUserPlaylistsQuery)
+export class GetUserPlaylistsHandler extends App.CQRS.GetUserPlaylistsHandler {
+  constructor(
+    userVerifyService: App.Components.User.UserVerifyService,
+    playlistService: App.Components.Playlist.PlaylistService,
+  ) {
     super(userVerifyService, playlistService);
   }
 }

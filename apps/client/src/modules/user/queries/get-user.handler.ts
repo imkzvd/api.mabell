@@ -1,11 +1,9 @@
-import { QueryHandler } from '@nestjs/cqrs';
-import { GetUserQuery } from '@core/app/cqrs/user/queries/get-user/get-user.query';
-import { GetUserHandler as CoreGetUserHandler } from '@core/app/cqrs/user/queries/get-user/get-user.handler';
-import { UserService } from '@core/app/components/user/services/user.service';
+import { QueryHandler } from '@api.mabell/cqrs';
+import { App } from '@api.mabell/core';
 
-@QueryHandler(GetUserQuery)
-export class GetUserHandler extends CoreGetUserHandler {
-  constructor(userService: UserService) {
+@QueryHandler(App.CQRS.GetUserQuery)
+export class GetUserHandler extends App.CQRS.GetUserHandler {
+  constructor(userService: App.Components.User.UserService) {
     super(userService);
   }
 }

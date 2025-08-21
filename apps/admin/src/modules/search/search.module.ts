@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { TypesenseModule } from '@infrastructure/typesense';
+import { SearchModule as SearchPackageModule } from '@api.mabell/search';
 import { SearchController } from './search.controller';
 import { GetAlbumsHandler } from './queries/get-albums.handler';
 import { GetArtistsHandler } from './queries/get-artists.handler';
@@ -9,7 +9,7 @@ import { GetTracksHandler } from './queries/get-tracks.handler';
 import { GetUsersHandler } from './queries/get-users.handler';
 
 @Module({
-  imports: [TypesenseModule],
+  imports: [SearchPackageModule],
   providers: [
     GetAlbumsHandler,
     GetArtistsHandler,

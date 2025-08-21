@@ -1,10 +1,9 @@
 import { Provider } from '@nestjs/common';
-import { PlaylistReadRepository as PlaylistReadRepositoryPort } from '@core/domain/components/playlist/repository/playlist-read-repository.port';
-import { PlaylistReadRepository } from '@infrastructure/mongoose/services/playlist/playlist-read-repository.service';
-import { PlaylistService } from '@core/app/components/playlist/services/playlist.service';
+import { App } from '@api.mabell/core';
+import { PlaylistDBModule } from '@api.mabell/db';
 
 export const playlistServiceProvider: Provider = {
-  provide: PlaylistService,
-  useFactory: (rr: PlaylistReadRepositoryPort) => new PlaylistService(rr),
-  inject: [PlaylistReadRepository],
+  provide: App.Components.Playlist.PlaylistService,
+  useFactory: (rr) => new App.Components.Playlist.PlaylistService(rr),
+  inject: [PlaylistDBModule.PlaylistReadRepository],
 };

@@ -1,11 +1,11 @@
-import { CommandHandler } from '@core/app/types';
-import { AdminDeleteService } from '@core/app/components/admin/services/admin-delete.service';
-import { DeleteAdminCommand } from '@core/app/cqrs/admin/commands/delete-admin/delete-admin.command';
+import { CommandHandler } from '../../../../types';
+import { DeleteAdminCommand } from './delete-admin.command';
+import { AdminDeleteService } from '../../../../components/admin';
 
 export class DeleteAdminHandler implements CommandHandler<DeleteAdminCommand> {
   constructor(private readonly _service: AdminDeleteService) {}
 
   async execute({ id }: DeleteAdminCommand) {
-    return await this._service.delete(id);
+    await this._service.deleteById(id);
   }
 }

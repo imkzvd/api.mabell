@@ -1,7 +1,6 @@
-import { Command } from '@core/app/types';
-import { AdminId } from '@core/domain/components/admin/types';
+import { Command } from '../../../../types';
 
-export class RefreshAdminPasswordCommand extends Command<{ id: AdminId; password: string }> {
+export class RefreshAdminPasswordCommand extends Command<{ password: string }> {
   constructor(public readonly id: string) {
     super();
   }

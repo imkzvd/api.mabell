@@ -1,19 +1,16 @@
-import { NotFoundException } from '@core/shared/exceptions';
-import { TrackWriteRepository } from '@core/domain/components/track/repository/track-write-repository.port';
-import { TrackReadRepository } from '@core/domain/components/track/repository/track-read-repository.port';
-import { TrackId } from '@core/domain/components/track/types';
-import { ArtistId } from '@core/domain/components/artist/types';
-import { EventBus } from '@core/app/common/ports/event-bus.port';
-import { TmpFileStorage } from '@core/app/common/ports/file-storages/tmp-file-storage.port';
-import { ArtistFileStorage } from '@core/app/common/ports/file-storages/artist-file-storage.port';
-import { TrackUpdatedEvent } from '@core/app/common/events/track/track-updated.event';
-import { TracksUpdatedEvent } from '@core/app/common/events/track/tracks-updated.event';
 import {
   UpdateTrackArtistsPayload,
   UpdateTrackFeatArtistsPayload,
   UpdateTrackFilePayload,
   UpdateTrackPayload,
 } from '../types';
+import { TrackWriteRepository } from '../../../../domain/components/track';
+import { NotFoundException } from '../../../../shared/exceptions';
+import { ArtistFileStorage, EventBus, TmpFileStorage, TrackReadRepository } from '../../../ports';
+import { TrackId } from '../../../../domain/components/track/types';
+import { prepareTrackEventPayload } from '../utils/prepare-track-event-payload.utility';
+import { TracksUpdatedEvent, TrackUpdatedEvent } from '../../../events';
+import { ArtistId } from '../../../../domain/components/artist/types';
 
 export class TrackUpdateService {
   constructor(
@@ -24,69 +21,46 @@ export class TrackUpdateService {
     private readonly _artistFS: ArtistFileStorage,
   ) {}
 
-  async update(id: string, payload: UpdateTrackPayload): Promise<TrackId> {
-    const foundTrack = await this._WR.findById(id);
+  async updateById(trackId: string, payload: UpdateTrackPayload): Promise<TrackId> {
+    const foundTrackEntity = await this._WR.findById(trackId);
 
-    if (!foundTrack) {
+    if (!foundTrackEntity) {
       throw new NotFoundException('Track does not exist');
     }
 
     if (payload.name) {
-      foundTrack.updateName(payload.name);
+      foundTrackEntity.updateName(payload.name);
     }
 
     if (typeof payload.isExplicit === 'boolean') {
-      foundTrack.updateExplicitStatus(payload.isExplicit);
+      foundTrackEntity.updateExplicitStatus(payload.isExplicit);
     }
 
     if (typeof payload.isActive === 'boolean') {
-      foundTrack.updateActiveStatus(payload.isActive);
+      foundTrackEntity.updateActiveStatus(payload.isActive);
     }
 
     if (typeof payload.isPublic === 'boolean') {
-      foundTrack.updatePublicStatus(payload.isPublic);
+      foundTrackEntity.updatePublicStatus(payload.isPublic);
     }
 
-    await this._WR.save(foundTrack);
+    await this._WR.save(foundTrackEntity);
 
-    const foundTrackWithAlbumAndArtists = await this._RR.findById(id);
+    const foundTrackWithAlbum = await this._RR.findById(foundTrackEntity.getId());
 
-    if (!foundTrackWithAlbumAndArtists) {
+    if (!foundTrackWithAlbum) {
       throw new NotFoundException('Track does not exist');
     }
 
-    this._EB.publish(
-      new TrackUpdatedEvent({
-        id: foundTrackWithAlbumAndArtists.id,
-        name: foundTrackWithAlbumAndArtists.name,
-        album: {
-          id: foundTrackWithAlbumAndArtists.album.id,
-          name: foundTrackWithAlbumAndArtists.album.name,
-          isPublic: foundTrackWithAlbumAndArtists.album.isPublic,
-        },
-        artists: foundTrackWithAlbumAndArtists.artists.map(({ id, name, isPublic }) => ({
-          id,
-          name,
-          isPublic,
-        })),
-        featArtists: foundTrackWithAlbumAndArtists.featArtists.map(({ id, name, isPublic }) => ({
-          id,
-          name,
-          isPublic,
-        })),
-        cover: foundTrackWithAlbumAndArtists.album.cover,
-        isPublic: foundTrackWithAlbumAndArtists.isPublic,
-        isExplicit: foundTrackWithAlbumAndArtists.isExplicit,
-      }),
-    );
+    this._EB.publish(new TrackUpdatedEvent(prepareTrackEventPayload(foundTrackWithAlbum)));
 
-    return foundTrack.getId();
+    return foundTrackWithAlbum.id;
   }
 
-  async updateFile(id: string, payload: UpdateTrackFilePayload): Promise<TrackId> {
-    const foundTrack = await this._WR.findById(id);
+  async updateFileById(trackId: string, payload: UpdateTrackFilePayload): Promise<TrackId> {
+    const foundTrackEntity = await this._WR.findById(trackId);
 
-    if (!foundTrack) {
+    if (!foundTrackEntity) {
       throw new NotFoundException('Track does not exist');
     }
 
@@ -97,216 +71,132 @@ export class TrackUpdateService {
     }
 
     const storedFileData = await this._artistFS.saveTrack(
-      foundTrack.getMainArtist(),
-      foundTrack.getAlbum(),
-      foundTrack.getId(),
+      foundTrackEntity.getMainArtist(),
+      foundTrackEntity.getAlbum(),
+      foundTrackEntity.getId(),
       tmpFile,
     );
 
-    foundTrack.updateFile(storedFileData.path);
-    foundTrack.updateDuration(payload.duration);
+    foundTrackEntity.updateFile(storedFileData.path);
+    foundTrackEntity.updateDuration(payload.duration);
 
-    await this._WR.save(foundTrack);
+    await this._WR.save(foundTrackEntity);
 
-    const foundTrackWithAlbumAndArtists = await this._RR.findById(id);
+    const foundTrackWithAlbum = await this._RR.findById(trackId);
 
-    if (!foundTrackWithAlbumAndArtists) {
+    if (!foundTrackWithAlbum) {
       throw new NotFoundException('Track does not exist');
     }
 
-    this._EB.publish(
-      new TrackUpdatedEvent({
-        id: foundTrackWithAlbumAndArtists.id,
-        name: foundTrackWithAlbumAndArtists.name,
-        album: {
-          id: foundTrackWithAlbumAndArtists.album.id,
-          name: foundTrackWithAlbumAndArtists.album.name,
-          isPublic: foundTrackWithAlbumAndArtists.album.isPublic,
-        },
-        artists: foundTrackWithAlbumAndArtists.artists.map(({ id, name, isPublic }) => ({
-          id,
-          name,
-          isPublic,
-        })),
-        featArtists: foundTrackWithAlbumAndArtists.featArtists.map(({ id, name, isPublic }) => ({
-          id,
-          name,
-          isPublic,
-        })),
-        cover: foundTrackWithAlbumAndArtists.album.cover,
-        isPublic: foundTrackWithAlbumAndArtists.isPublic,
-        isExplicit: foundTrackWithAlbumAndArtists.isExplicit,
-      }),
-    );
+    this._EB.publish(new TrackUpdatedEvent(prepareTrackEventPayload(foundTrackWithAlbum)));
 
-    return foundTrack.getId();
+    return foundTrackWithAlbum.id;
   }
 
-  async deleteFile(id: string): Promise<TrackId> {
-    const foundTrack = await this._WR.findById(id);
+  async deleteFileById(trackId: string): Promise<TrackId> {
+    const foundTrackEntity = await this._WR.findById(trackId);
 
-    if (!foundTrack) {
+    if (!foundTrackEntity) {
       throw new NotFoundException('Track does not exist');
     }
 
-    foundTrack.deleteFile();
-    foundTrack.deleteDuration();
-    foundTrack.updateActiveStatus(false);
+    foundTrackEntity.deleteFile();
+    foundTrackEntity.deleteDuration();
+    foundTrackEntity.updateActiveStatus(false);
 
-    await this._WR.save(foundTrack);
+    await this._WR.save(foundTrackEntity);
     await this._artistFS.deleteTrack(
-      foundTrack.getMainArtist(),
-      foundTrack.getAlbum(),
-      foundTrack.getId(),
+      foundTrackEntity.getMainArtist(),
+      foundTrackEntity.getAlbum(),
+      foundTrackEntity.getId(),
     );
 
-    const foundTrackWithAlbumAndArtists = await this._RR.findById(id);
+    const foundTrackWithAlbum = await this._RR.findById(foundTrackEntity.getId());
 
-    if (!foundTrackWithAlbumAndArtists) {
+    if (!foundTrackWithAlbum) {
       throw new NotFoundException('Track does not exist');
     }
 
-    this._EB.publish(
-      new TrackUpdatedEvent({
-        id: foundTrackWithAlbumAndArtists.id,
-        name: foundTrackWithAlbumAndArtists.name,
-        album: {
-          id: foundTrackWithAlbumAndArtists.album.id,
-          name: foundTrackWithAlbumAndArtists.album.name,
-          isPublic: foundTrackWithAlbumAndArtists.album.isPublic,
-        },
-        artists: foundTrackWithAlbumAndArtists.artists.map(({ id, name, isPublic }) => ({
-          id,
-          name,
-          isPublic,
-        })),
-        featArtists: foundTrackWithAlbumAndArtists.featArtists.map(({ id, name, isPublic }) => ({
-          id,
-          name,
-          isPublic,
-        })),
-        cover: foundTrackWithAlbumAndArtists.album.cover,
-        isPublic: foundTrackWithAlbumAndArtists.isPublic,
-        isExplicit: foundTrackWithAlbumAndArtists.isExplicit,
-      }),
-    );
+    this._EB.publish(new TrackUpdatedEvent(prepareTrackEventPayload(foundTrackWithAlbum)));
 
-    return foundTrack.getId();
+    return foundTrackWithAlbum.id;
   }
 
-  async updateFeatArtists(id: string, payload: UpdateTrackFeatArtistsPayload): Promise<TrackId> {
-    const foundTrack = await this._WR.findById(id);
+  async updateFeatArtistsById(
+    trackId: string,
+    payload: UpdateTrackFeatArtistsPayload,
+  ): Promise<TrackId> {
+    const foundTrackEntity = await this._WR.findById(trackId);
 
-    if (!foundTrack) {
+    if (!foundTrackEntity) {
       throw new NotFoundException('Track does not exist');
     }
 
-    foundTrack.updateFeaturedArtists(payload.artistIds);
+    foundTrackEntity.updateFeaturedArtists(payload.artistIds);
 
-    await this._WR.save(foundTrack);
+    await this._WR.save(foundTrackEntity);
 
-    const foundTrackWithAlbumAndArtists = await this._RR.findById(id);
+    const foundTrackWithAlbum = await this._RR.findById(foundTrackEntity.getId());
 
-    if (!foundTrackWithAlbumAndArtists) {
+    if (!foundTrackWithAlbum) {
       throw new NotFoundException('Track does not exist');
     }
 
-    this._EB.publish(
-      new TrackUpdatedEvent({
-        id: foundTrackWithAlbumAndArtists.id,
-        name: foundTrackWithAlbumAndArtists.name,
-        album: {
-          id: foundTrackWithAlbumAndArtists.album.id,
-          name: foundTrackWithAlbumAndArtists.album.name,
-          isPublic: foundTrackWithAlbumAndArtists.album.isPublic,
-        },
-        artists: foundTrackWithAlbumAndArtists.artists.map(({ id, name, isPublic }) => ({
-          id,
-          name,
-          isPublic,
-        })),
-        featArtists: foundTrackWithAlbumAndArtists.featArtists.map(({ id, name, isPublic }) => ({
-          id,
-          name,
-          isPublic,
-        })),
-        cover: foundTrackWithAlbumAndArtists.album.cover,
-        isPublic: foundTrackWithAlbumAndArtists.isPublic,
-        isExplicit: foundTrackWithAlbumAndArtists.isExplicit,
-      }),
-    );
+    this._EB.publish(new TrackUpdatedEvent(prepareTrackEventPayload(foundTrackWithAlbum)));
 
-    return foundTrack.getId();
+    return foundTrackWithAlbum.id;
   }
 
   async updateArtistsByAlbumId(
     albumId: string,
     payload: UpdateTrackArtistsPayload,
   ): Promise<TrackId[]> {
-    const foundTracks = await this._WR.findByAlbumId(albumId);
+    const {
+      items: foundTrackEntities,
+      total: foundTrackEntitiesTotal,
+      itemIds: foundTrackEntityIds,
+    } = await this._WR.findByAlbumId(albumId);
 
-    if (!foundTracks.total) return [];
+    if (!foundTrackEntitiesTotal) return [];
 
-    foundTracks.items.forEach((track) => track.updateArtists(payload.artistIds));
+    foundTrackEntities.forEach((track) => track.updateArtists(payload.artistIds));
 
-    await this._WR.saveMany(foundTracks.items);
+    await this._WR.saveMany(foundTrackEntities);
 
-    const foundTrackWithAlbumAndArtists = await this._RR.findByIds(foundTracks.itemIds);
+    const { foundItems: foundTracks, foundIds: foundTrackIds } =
+      await this._RR.findByIds(foundTrackEntityIds);
 
-    const eventPayload = foundTrackWithAlbumAndArtists.foundItems.map((track) => ({
-      id: track.id,
-      name: track.name,
-      album: {
-        id: track.album.id,
-        name: track.album.name,
-        isPublic: track.album.isPublic,
-      },
-      artists: track.artists.map(({ id, name, isPublic }) => ({ id, name, isPublic })),
-      featArtists: track.featArtists.map(({ id, name, isPublic }) => ({
-        id,
-        name,
-        isPublic,
-      })),
-      cover: track.album.cover,
-      isPublic: track.isPublic,
-      isExplicit: track.isExplicit,
-    }));
-    this._EB.publish(new TracksUpdatedEvent({ tracks: eventPayload }));
+    this._EB.publish(
+      new TracksUpdatedEvent({
+        tracks: foundTracks.map((i) => prepareTrackEventPayload(i)),
+      }),
+    );
 
-    return foundTracks.itemIds;
+    return foundTrackIds;
   }
 
   async unlinkFeatArtistByArtistId(artistId: ArtistId): Promise<TrackId[]> {
-    const foundTracksResult = await this._WR.findByFeatArtistId(artistId);
+    const {
+      items: foundTrackEntities,
+      total: foundTrackEntitiesTotal,
+      itemIds: foundTrackEntityIds,
+    } = await this._WR.findByFeatArtistId(artistId);
 
-    if (!foundTracksResult.total) return [];
+    if (!foundTrackEntitiesTotal) return [];
 
-    foundTracksResult.items.forEach((track) => track.deleteFeaturedArtist(artistId));
+    foundTrackEntities.forEach((track) => track.deleteFeaturedArtist(artistId));
 
-    await this._WR.saveMany(foundTracksResult.items);
+    await this._WR.saveMany(foundTrackEntities);
 
-    const foundTrackWithAlbumAndArtists = await this._RR.findByIds(foundTracksResult.itemIds);
+    const { foundItems: foundTracks, foundIds: foundTrackId } =
+      await this._RR.findByIds(foundTrackEntityIds);
 
-    const eventPayload = foundTrackWithAlbumAndArtists.foundItems.map((track) => ({
-      id: track.id,
-      name: track.name,
-      album: {
-        id: track.album.id,
-        name: track.album.name,
-        isPublic: track.album.isPublic,
-      },
-      artists: track.artists.map(({ id, name, isPublic }) => ({ id, name, isPublic })),
-      featArtists: track.featArtists.map(({ id, name, isPublic }) => ({
-        id,
-        name,
-        isPublic,
-      })),
-      cover: track.album.cover,
-      isPublic: track.isPublic,
-      isExplicit: track.isExplicit,
-    }));
-    this._EB.publish(new TracksUpdatedEvent({ tracks: eventPayload }));
+    this._EB.publish(
+      new TracksUpdatedEvent({
+        tracks: foundTracks.map((i) => prepareTrackEventPayload(i)),
+      }),
+    );
 
-    return foundTracksResult.itemIds;
+    return foundTrackId;
   }
 }

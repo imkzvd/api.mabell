@@ -1,5 +1,6 @@
-import { BadRequestException } from '@core/shared/exceptions';
-import { AdminRole, AdminRoles } from '../constants/admin-roles';
+import { AdminRoles } from '../constants/admin-roles';
+import { BadRequestException } from '../../../../shared/exceptions';
+import { AdminRole } from '../types';
 
 export class AdminRoleVO {
   private constructor(public readonly value: AdminRole) {}

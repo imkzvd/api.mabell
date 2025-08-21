@@ -1,11 +1,9 @@
-import { QueryHandler } from '@nestjs/cqrs';
-import { AdminService } from '@core/app/components/admin/services/admin.service';
-import { GetAdminsQuery } from '@core/app/cqrs/admin/queries/get-admins/get-admins.query';
-import { GetAdminsHandler as CoreGetAdminsHandler } from '@core/app/cqrs/admin/queries/get-admins/get-admins.handler';
+import { QueryHandler } from '@api.mabell/cqrs';
+import { App } from '@api.mabell/core';
 
-@QueryHandler(GetAdminsQuery)
-export class GetAdminsHandler extends CoreGetAdminsHandler {
-  constructor(service: AdminService) {
+@QueryHandler(App.CQRS.GetAdminsQuery)
+export class GetAdminsHandler extends App.CQRS.GetAdminsHandler {
+  constructor(service: App.Components.Admin.AdminService) {
     super(service);
   }
 }

@@ -1,12 +1,12 @@
-import { QueryHandler } from '@nestjs/cqrs';
-import { GetAlbumTracksQuery } from '@core/app/cqrs/track/queries/get-album-tracks/get-album-tracks.query';
-import { GetAlbumTracksHandler as CoreGetAlbumTracksHandler } from '@core/app/cqrs/track/queries/get-album-tracks/get-album-tracks.handler';
-import { AlbumVerifyService } from '@core/app/components/album/services/album-verify.service';
-import { TrackService } from '@core/app/components/track/services/track.service';
+import { QueryHandler } from '@api.mabell/cqrs';
+import { App } from '@api.mabell/core';
 
-@QueryHandler(GetAlbumTracksQuery)
-export class GetAlbumTracksHandler extends CoreGetAlbumTracksHandler {
-  constructor(albumVerifyService: AlbumVerifyService, trackService: TrackService) {
+@QueryHandler(App.CQRS.GetAlbumTracksQuery)
+export class GetAlbumTracksHandler extends App.CQRS.GetAlbumTracksHandler {
+  constructor(
+    albumVerifyService: App.Components.Album.AlbumVerifyService,
+    trackService: App.Components.Track.TrackService,
+  ) {
     super(albumVerifyService, trackService);
   }
 }

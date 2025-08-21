@@ -1,12 +1,11 @@
 import { Provider } from '@nestjs/common';
-import { EventBus as EventBusPort } from '@core/app/common/ports/event-bus.port';
-import { AdminWriteRepository as AdminWriteRepositoryPort } from '@core/domain/components/admin/repository/admin-write-repository.port';
-import { EventBus } from '@infrastructure/event-bus';
-import { AdminWriteRepository } from '@infrastructure/mongoose/services/admin/admin-write-repository.service';
-import { AdminDeleteService } from '@core/app/components/admin/services/admin-delete.service';
+import { App, Domain } from '@api.mabell/core';
+import { EventBus } from '@api.mabell/event-bus';
+import { AdminDBModule } from '@api.mabell/db';
 
 export const adminDeleteServiceProvider: Provider = {
-  provide: AdminDeleteService,
-  useFactory: (eb: EventBusPort, wr: AdminWriteRepositoryPort) => new AdminDeleteService(eb, wr),
-  inject: [EventBus, AdminWriteRepository],
+  provide: App.Components.Admin.AdminDeleteService,
+  useFactory: (eb: App.Ports.EventBus, wr: Domain.Admin.AdminWriteRepository) =>
+    new App.Components.Admin.AdminDeleteService(eb, wr),
+  inject: [EventBus, AdminDBModule.AdminWriteRepository],
 };

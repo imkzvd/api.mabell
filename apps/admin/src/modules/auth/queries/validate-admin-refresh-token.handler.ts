@@ -1,11 +1,9 @@
-import { QueryHandler } from '@nestjs/cqrs';
-import { ValidateAdminRefreshTokenQuery } from '@core/app/cqrs/token/queries/validate-admin-refresh-token/validate-admin-refresh-token.query';
-import { ValidateAdminRefreshTokenHandler as CoreValidateAdminRefreshTokenHandler } from '@core/app/cqrs/token/queries/validate-admin-refresh-token/validate-admin-refresh-token.handler';
-import { AdminTokenValidateService } from '@core/app/components/admin-token/services/admin-token-validate.service';
+import { QueryHandler } from '@api.mabell/cqrs';
+import { App } from '@api.mabell/core';
 
-@QueryHandler(ValidateAdminRefreshTokenQuery)
-export class ValidateAdminRefreshTokenHandler extends CoreValidateAdminRefreshTokenHandler {
-  constructor(service: AdminTokenValidateService) {
+@QueryHandler(App.CQRS.ValidateAdminRefreshTokenQuery)
+export class ValidateAdminRefreshTokenHandler extends App.CQRS.ValidateAdminRefreshTokenHandler {
+  constructor(service: App.Components.AdminToken.AdminTokenValidateService) {
     super(service);
   }
 }

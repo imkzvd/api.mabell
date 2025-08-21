@@ -1,14 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { OffsetLimitPaginationRO } from '@shared/ros/offset-limit-pagination.ro';
-import { OffsetLimitPaginationResponseDTO } from '@core/shared/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
-import { TrackDTO } from '@core/app/components/track/dtos/track.dto';
+import { App } from '@api.mabell/core';
+import { OffsetLimitPaginationRO } from '@api.mabell/shared';
 import { TrackRO } from './track.ro';
 
 export class TracksRO extends OffsetLimitPaginationRO<TrackRO> {
   @ApiProperty({ type: () => [TrackRO], description: 'Items' })
   declare items: TrackRO[];
 
-  constructor(result: OffsetLimitPaginationResponseDTO<TrackDTO>) {
+  constructor(result: App.DTOs.TracksDTO) {
     super(
       result.items.map((item) => new TrackRO(item)),
       result.total,

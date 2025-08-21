@@ -1,12 +1,12 @@
-import { CommandHandler } from '@nestjs/cqrs';
-import { UpdateAlbumArtistsCommand } from '@core/app/cqrs/album/commands/update-album-artists/update-album-artists.command';
-import { UpdateAlbumArtistsHandler as CoreUpdateAlbumArtistsHandler } from '@core/app/cqrs/album/commands/update-album-artists/update-album-artists.handler';
-import { ArtistVerifyService } from '@core/app/components/artist/services/artist-verify.service';
-import { AlbumUpdateService } from '@core/app/components/album/services/album-update.service';
+import { CommandHandler } from '@api.mabell/cqrs';
+import { App } from '@api.mabell/core';
 
-@CommandHandler(UpdateAlbumArtistsCommand)
-export class UpdateAlbumArtistsHandler extends CoreUpdateAlbumArtistsHandler {
-  constructor(artistVerifyService: ArtistVerifyService, albumUpdateService: AlbumUpdateService) {
+@CommandHandler(App.CQRS.UpdateAlbumArtistsCommand)
+export class UpdateAlbumArtistsHandler extends App.CQRS.UpdateAlbumArtistsHandler {
+  constructor(
+    artistVerifyService: App.Components.Artist.ArtistVerifyService,
+    albumUpdateService: App.Components.Album.AlbumUpdateService,
+  ) {
     super(artistVerifyService, albumUpdateService);
   }
 }

@@ -3,7 +3,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 import * as cookieParser from 'cookie-parser';
 import { ValidationPipe } from '@nestjs/common';
-import { HttpExceptionFilter } from '@shared/filters/http-exception.filter';
+import { HttpExceptionFilter } from '@api.mabell/shared';
 import { AppModule } from './app.module';
 
 async function bootstrap() {

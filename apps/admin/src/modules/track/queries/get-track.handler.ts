@@ -1,11 +1,9 @@
-import { QueryHandler } from '@nestjs/cqrs';
-import { GetTrackQuery } from '@core/app/cqrs/track/queries/get-track/get-track.query';
-import { GetTrackHandler as CoreGetTrackHandler } from '@core/app/cqrs/track/queries/get-track/get-track.handler';
-import { TrackService } from '@core/app/components/track/services/track.service';
+import { QueryHandler } from '@api.mabell/cqrs';
+import { App } from '@api.mabell/core';
 
-@QueryHandler(GetTrackQuery)
-export class GetTrackHandler extends CoreGetTrackHandler {
-  constructor(service: TrackService) {
+@QueryHandler(App.CQRS.GetTrackQuery)
+export class GetTrackHandler extends App.CQRS.GetTrackHandler {
+  constructor(service: App.Components.Track.TrackService) {
     super(service);
   }
 }

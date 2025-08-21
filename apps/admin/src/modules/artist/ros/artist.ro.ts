@@ -1,9 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { faker } from '@faker-js/faker';
 import * as process from 'process';
-import { LabelValueRO } from '@shared/ros/label-value.ro';
-import { Genres, getGenreLabelByValue } from '@core/domain/common/constants/genres';
-import { ArtistDTO } from '@core/app/components/artist/dtos/artist.dto';
+import { LabelValueRO } from '@api.mabell/shared';
+import { App } from '@api.mabell/core';
 
 export class ArtistRO {
   @ApiProperty({
@@ -39,7 +38,6 @@ export class ArtistRO {
   @ApiProperty({
     type: () => [LabelValueRO],
     description: 'Genres',
-    example: new LabelValueRO(Genres['Hip-Hop'], getGenreLabelByValue(Genres['Hip-Hop'])),
   })
   genres: LabelValueRO[];
 
@@ -102,12 +100,12 @@ export class ArtistRO {
   })
   updatedAt: Date;
 
-  constructor(dto: ArtistDTO) {
+  constructor(dto: App.DTOs.ArtistDTO) {
     this.id = dto.id;
     this.name = dto.name;
     this.birthName = dto.birthName;
     this.birthDate = dto.birthDate;
-    this.genres = dto.genres.map((genre) => new LabelValueRO(genre, getGenreLabelByValue(genre)));
+    this.genres = dto.genreLabelValues.map((i) => new LabelValueRO(i));
     this.biography = dto.biography;
     this.avatar = dto.avatar ? `${process.env.API_URL}${dto.avatar}` : null;
     this.cover = dto.cover ? `${process.env.API_URL}${dto.cover}` : null;

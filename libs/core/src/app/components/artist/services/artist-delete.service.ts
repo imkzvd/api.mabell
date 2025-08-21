@@ -1,9 +1,8 @@
-import { NotFoundException } from '@core/shared/exceptions';
-import { ArtistWriteRepository } from '@core/domain/components/artist/repository/artist-write-repository.port';
-import { ArtistId } from '@core/domain/components/artist/types';
-import { EventBus } from '@core/app/common/ports/event-bus.port';
-import { ArtistFileStorage } from '@core/app/common/ports/file-storages/artist-file-storage.port';
-import { ArtistDeletedEvent } from '@core/app/common/events/artist/artist-deleted.event';
+import { ArtistWriteRepository } from '../../../../domain/components/artist';
+import { NotFoundException } from '../../../../shared/exceptions';
+import { ArtistFileStorage, EventBus } from '../../../ports';
+import { ArtistId } from '../../../../domain/components/artist/types';
+import { ArtistDeletedEvent } from '../../../events';
 
 export class ArtistDeleteService {
   constructor(
@@ -12,8 +11,8 @@ export class ArtistDeleteService {
     private readonly _FS: ArtistFileStorage,
   ) {}
 
-  async delete(id: string): Promise<ArtistId> {
-    const deletedArtistId = await this._WR.deleteById(id);
+  async deleteById(artistId: string): Promise<ArtistId> {
+    const deletedArtistId = await this._WR.deleteById(artistId);
 
     if (!deletedArtistId) {
       throw new NotFoundException('Artist does not exist');

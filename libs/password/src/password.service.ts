@@ -1,19 +1,12 @@
 import * as bcrypt from 'bcrypt';
 import * as generatePassword from 'generate-password';
 import * as process from 'process';
-import { PasswordService as PasswordServicePort } from '@core/app/common/ports/password-service.port';
-import { HashedPasswordVO } from '@core/domain/common/vos/hashed-password.vo';
+import { App } from '@api.mabell/core';
 
-export class PasswordService implements PasswordServicePort {
+export class PasswordService implements App.Ports.PasswordService {
   generate(options: { hash: false }): Promise<string>;
-  generate(options: { hash: true }): Promise<{ password: string; hashPassword: HashedPasswordVO }>;
-  async generate(options?: Partial<{ length: number; hash: boolean }>): Promise<
-    | string
-    | {
-        password: string;
-        hashPassword: HashedPasswordVO;
-      }
-  > {
+  generate(options: { hash: true }): Promise<{ password: string; hashPassword: string }>;
+  async generate(options?: Partial<{ length: number; hash: boolean }>) {
     const generatedPassword = generatePassword.generate({
       numbers: true,
       uppercase: true,
@@ -33,16 +26,11 @@ export class PasswordService implements PasswordServicePort {
     };
   }
 
-  async hash(password: string): Promise<HashedPasswordVO> {
-    const hashPassword = await bcrypt.hash(
-      password,
-      (process.env.DEFAULT_HASH_SALT as string) || 10,
-    );
-
-    return HashedPasswordVO.create(hashPassword);
+  hash(password: string) {
+    return bcrypt.hash(password, (process.env.DEFAULT_HASH_SALT as string) || 10);
   }
 
-  validate(password: string, hashedPassword: string): Promise<boolean> {
+  validate(password: string, hashedPassword: string) {
     return bcrypt.compare(password, hashedPassword);
   }
 }

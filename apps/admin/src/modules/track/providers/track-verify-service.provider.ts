@@ -1,10 +1,9 @@
 import { Provider } from '@nestjs/common';
-import { TrackWriteRepository as TrackWriteRepositoryPort } from '@core/domain/components/track/repository/track-write-repository.port';
-import { TrackWriteRepository } from '@infrastructure/mongoose/services/track/track-write-repository.service';
-import { TrackVerifyService } from '@core/app/components/track/services/track-verify.service';
+import { App } from '@api.mabell/core';
+import { TrackDBModule } from '@api.mabell/db';
 
 export const trackVerifyServiceProvider: Provider = {
-  provide: TrackVerifyService,
-  useFactory: (wr: TrackWriteRepositoryPort) => new TrackVerifyService(wr),
-  inject: [TrackWriteRepository],
+  provide: App.Components.Track.TrackVerifyService,
+  useFactory: (wr) => new App.Components.Track.TrackVerifyService(wr),
+  inject: [TrackDBModule.TrackWriteRepository],
 };

@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { FileStorageModule } from '@infrastructure/file-storage';
+import { FileStorageModule } from '@api.mabell/file-storage';
 import { UploadController } from './upload.controller';
 import { UploadFileHandler } from './commands/upload-file.handler';
 import { DeleteFileHandler } from './commands/delete-file.handler';

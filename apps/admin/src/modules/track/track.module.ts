@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { RandomIdModule } from '@infrastructure/random-id';
-import { FileStorageModule } from '@infrastructure/file-storage';
+import { RandomIdModule } from '@api.mabell/random-id';
+import { FileStorageModule } from '@api.mabell/file-storage';
 import { TrackController } from './track.controller';
 import { CreateTrackHandler } from './commands/create-track.handler';
 import { DeleteTrackHandler } from './commands/delete-track.handler';

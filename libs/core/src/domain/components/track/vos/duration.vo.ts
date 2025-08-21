@@ -1,4 +1,4 @@
-import { BadRequestException } from '@core/shared/exceptions';
+import { BadRequestException } from '../../../../shared/exceptions';
 
 export class DurationVO {
   private constructor(public readonly value: number) {

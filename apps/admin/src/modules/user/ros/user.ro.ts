@@ -1,10 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { faker } from '@faker-js/faker';
 import * as process from 'process';
-import { LabelValueRO } from '@shared/ros/label-value.ro';
-import { getRegionLabelByValue, Regions } from '@core/domain/common/constants/regions';
-import { Genres, getGenreLabelByValue } from '@core/domain/common/constants/genres';
-import { UserDTO } from '@core/app/components/user/dtos/user.dto';
+import { LabelValueRO } from '@api.mabell/shared';
+import { App } from '@api.mabell/core';
 
 export class UserRO {
   @ApiProperty({
@@ -44,21 +42,10 @@ export class UserRO {
   })
   birthDate: Date | null;
 
-  @ApiProperty({
-    type: () => LabelValueRO,
-    description: 'Region',
-    example: new LabelValueRO(
-      Regions['Russian Federation'],
-      getRegionLabelByValue(Regions['Russian Federation']),
-    ),
-  })
+  @ApiProperty({ type: () => LabelValueRO, description: 'Region' })
   region: LabelValueRO;
 
-  @ApiProperty({
-    type: () => [LabelValueRO],
-    description: 'Favorite genres',
-    example: new LabelValueRO(Genres['Hip-Hop'], getGenreLabelByValue(Genres['Hip-Hop'])),
-  })
+  @ApiProperty({ type: () => [LabelValueRO], description: 'Favorite genres' })
   genres: LabelValueRO[];
 
   @ApiProperty({
@@ -107,14 +94,14 @@ export class UserRO {
   })
   updatedAt: Date;
 
-  constructor(dto: UserDTO) {
+  constructor(dto: App.DTOs.UserDTO) {
     this.id = dto.id;
     this.username = dto.username;
     this.name = dto.name;
     this.email = dto.email;
     this.birthDate = dto.birthDate;
-    this.region = new LabelValueRO(dto.region, getRegionLabelByValue(dto.region));
-    this.genres = dto.genres.map((genre) => new LabelValueRO(genre, getGenreLabelByValue(genre)));
+    this.region = new LabelValueRO(dto.regionLabelValue);
+    this.genres = dto.genreLabelValues.map((i) => new LabelValueRO(i));
     this.avatar = dto.avatar ? `${process.env.API_URL}${dto.avatar}` : null;
     this.color = dto.color;
     this.isBlocked = dto.isBlocked;

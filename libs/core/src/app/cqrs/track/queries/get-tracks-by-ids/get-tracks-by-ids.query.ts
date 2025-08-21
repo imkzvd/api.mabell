@@ -1,9 +1,9 @@
-import { Query } from '@core/app/types';
-import { TrackDTO } from '@core/app/components/track/dtos/track.dto';
+import { Query } from '../../../../types';
+import { TrackWithAlbumDTO } from '../../../../dtos';
 
 export class GetTracksByIdsQuery extends Query<{
-  items: (TrackDTO | null)[];
-  foundItems: TrackDTO[];
+  items: (TrackWithAlbumDTO | null)[];
+  foundItems: TrackWithAlbumDTO[];
   foundIds: string[];
   total: number;
   missingIds: string[];

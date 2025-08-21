@@ -1,25 +1,19 @@
-import { EventBus as EventBusPort } from '@core/app/common/ports/event-bus.port';
 import { Inject } from '@nestjs/common';
-import { EventBus } from '@infrastructure/event-bus';
-import { AlbumDeletedEvent } from '@core/app/common/events/album/album-deleted.event';
-import { TrackDeleteService } from '@core/app/components/track/services/track-delete.service';
-import { DeleteTracksOnAlbumDeletedEventHandler } from '@core/app/components/track/event-handlers/delete-tracks-on-album-deleted.event-handler';
-import { DeleteTracksOnArtistDeletedEventHandler } from '@core/app/components/track/event-handlers/delete-tracks-on-artist-deleted.event-handler';
-import { ArtistDeletedEvent } from '@core/app/common/events/artist/artist-deleted.event';
+import { EventBus } from '@api.mabell/event-bus';
+import { App } from '@api.mabell/core';
 
 export class TrackEventSubscriber {
   constructor(
-    @Inject(EventBus) private readonly _EB: EventBusPort,
-    @Inject(TrackDeleteService) private readonly _service: TrackDeleteService,
+    @Inject(EventBus) private readonly _EB: EventBus,
+    @Inject(App.Components.Track.TrackDeleteService)
+    private readonly _service: App.Components.Track.TrackDeleteService,
   ) {
-    const deleteTracksOnArtistDeletedEventHandler = new DeleteTracksOnArtistDeletedEventHandler(
-      this._service,
-    );
-    const deleteTracksOnAlbumDeletedEventHandler = new DeleteTracksOnAlbumDeletedEventHandler(
-      this._service,
-    );
+    const deleteTracksOnArtistDeletedEventHandler =
+      new App.Components.Track.DeleteTracksOnArtistDeletedEventHandler(this._service);
+    const deleteTracksOnAlbumDeletedEventHandler =
+      new App.Components.Track.DeleteTracksOnAlbumDeletedEventHandler(this._service);
 
-    this._EB.subscribe(ArtistDeletedEvent, deleteTracksOnArtistDeletedEventHandler);
-    this._EB.subscribe(AlbumDeletedEvent, deleteTracksOnAlbumDeletedEventHandler);
+    this._EB.subscribe(App.Events.ArtistDeletedEvent, deleteTracksOnArtistDeletedEventHandler);
+    this._EB.subscribe(App.Events.AlbumDeletedEvent, deleteTracksOnAlbumDeletedEventHandler);
   }
 }

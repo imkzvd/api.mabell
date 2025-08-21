@@ -1,8 +1,7 @@
-import { Command } from '@core/app/types';
-import { PlaylistId } from '@core/domain/components/playlist/types';
-import { UpdatePlaylistPayload } from '@core/app/components/playlist/types';
+import { Command } from '../../../../types';
+import { UpdatePlaylistPayload } from '../../../../components/playlist/types';
 
-export class UpdatePlaylistCommand extends Command<PlaylistId> {
+export class UpdatePlaylistCommand extends Command<void> {
   constructor(
     public readonly id: string,
     public readonly payload: UpdatePlaylistPayload,

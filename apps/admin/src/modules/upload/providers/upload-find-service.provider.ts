@@ -1,10 +1,9 @@
 import { Provider } from '@nestjs/common';
-import { TmpFileStorage as TmpFileStoragePort } from '@core/app/common/ports/file-storages/tmp-file-storage.port';
-import { TmpFileStorage } from '@infrastructure/file-storage';
-import { UploadFindService } from '@core/app/components/upload/services/upload-find.service';
+import { App } from '@api.mabell/core';
+import { TmpFileStorage } from '@api.mabell/file-storage';
 
 export const uploadFindServiceProvider: Provider = {
-  provide: UploadFindService,
-  useFactory: (fs: TmpFileStoragePort) => new UploadFindService(fs),
+  provide: App.Components.Upload.UploadFindService,
+  useFactory: (fs) => new App.Components.Upload.UploadFindService(fs),
   inject: [TmpFileStorage],
 };

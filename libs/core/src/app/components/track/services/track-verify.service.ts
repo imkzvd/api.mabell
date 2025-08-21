@@ -1,5 +1,5 @@
-import { TrackWriteRepository } from '@core/domain/components/track/repository/track-write-repository.port';
-import { TrackId } from '@core/domain/components/track/types';
+import { TrackWriteRepository } from '../../../../domain/components/track';
+import { TrackId } from '../../../../domain/components/track/types';
 
 export class TrackVerifyService {
   constructor(private readonly _WR: TrackWriteRepository) {}

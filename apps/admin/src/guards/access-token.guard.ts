@@ -1,11 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Reflector } from '@nestjs/core';
 import type { Response } from 'express';
 import type { ExecutionContext } from '@nestjs/common';
-import { IS_PUBLIC_KEY } from '@shared/decorators/is-public.decorator';
-import { AccessTokenPayload } from '@core/app/components/admin-token/types';
-import { UnauthorizedException } from '@core/shared/exceptions';
+import { App } from '@api.mabell/core';
+import { IS_PUBLIC_KEY } from '@api.mabell/shared';
 import { ACCESS_TOKEN_STRATEGY_NAME } from '../strategies/constants';
 import { ACCESS_TOKEN_COOKIE_NAME } from '../constants';
 
@@ -31,7 +30,7 @@ export class AccessTokenGuard extends AuthGuard(ACCESS_TOKEN_STRATEGY_NAME) {
   // @ts-expect-error fix error
   handleRequest(
     err: any,
-    tokenPayload: AccessTokenPayload | false,
+    tokenPayload: App.Components.AdminToken.AccessTokenPayload | false,
     info: any,
     context: ExecutionContext,
   ) {

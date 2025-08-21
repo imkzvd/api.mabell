@@ -1,7 +1,6 @@
-import { Command } from '@core/app/types';
-import { ArtistId } from '@core/domain/components/artist/types';
+import { Command } from '../../../../types';
 
-export class DeleteArtistAvatarCommand extends Command<ArtistId> {
+export class DeleteArtistAvatarCommand extends Command<void> {
   constructor(public readonly id: string) {
     super();
   }

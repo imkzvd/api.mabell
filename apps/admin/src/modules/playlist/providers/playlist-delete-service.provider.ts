@@ -1,15 +1,11 @@
 import { Provider } from '@nestjs/common';
-import { EventBus as EventBusPort } from '@core/app/common/ports/event-bus.port';
-import { PlaylistWriteRepository as PlaylistWriteRepositoryPort } from '@core/domain/components/playlist/repository/playlist-write-repository.port';
-import { UserFileStorage as UserFileStoragePort } from '@core/app/common/ports/file-storages/user-file-storage.port';
-import { EventBus } from '@infrastructure/event-bus';
-import { PlaylistWriteRepository } from '@infrastructure/mongoose/services/playlist/playlist-write-repository.service';
-import { UserFileStorage } from '@infrastructure/file-storage';
-import { PlaylistDeleteService } from '@core/app/components/playlist/services/playlist-delete.service';
+import { App } from '@api.mabell/core';
+import { EventBus } from '@api.mabell/event-bus';
+import { PlaylistDBModule } from '@api.mabell/db';
+import { UserFileStorage } from '@api.mabell/file-storage';
 
 export const playlistDeleteServiceProvider: Provider = {
-  provide: PlaylistDeleteService,
-  useFactory: (eb: EventBusPort, wr: PlaylistWriteRepositoryPort, userFS: UserFileStoragePort) =>
-    new PlaylistDeleteService(eb, wr, userFS),
-  inject: [EventBus, PlaylistWriteRepository, UserFileStorage],
+  provide: App.Components.Playlist.PlaylistDeleteService,
+  useFactory: (eb, wr, userFS) => new App.Components.Playlist.PlaylistDeleteService(eb, wr, userFS),
+  inject: [EventBus, PlaylistDBModule.PlaylistWriteRepository, UserFileStorage],
 };

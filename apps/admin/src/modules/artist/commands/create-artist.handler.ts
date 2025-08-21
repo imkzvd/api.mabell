@@ -1,11 +1,9 @@
-import { CommandHandler } from '@nestjs/cqrs';
-import { CreateArtistCommand } from '@core/app/cqrs/artist/commands/create-artist/create-artist.command';
-import { CreateArtistHandler as CoreCreateArtistHandler } from '@core/app/cqrs/artist/commands/create-artist/create-artist.handler';
-import { ArtistCreateService } from '@core/app/components/artist/services/artist-create.service';
+import { CommandHandler } from '@api.mabell/cqrs';
+import { App } from '@api.mabell/core';
 
-@CommandHandler(CreateArtistCommand)
-export class CreateArtistHandler extends CoreCreateArtistHandler {
-  constructor(service: ArtistCreateService) {
+@CommandHandler(App.CQRS.CreateArtistCommand)
+export class CreateArtistHandler extends App.CQRS.CreateArtistHandler {
+  constructor(service: App.Components.Artist.ArtistCreateService) {
     super(service);
   }
 }

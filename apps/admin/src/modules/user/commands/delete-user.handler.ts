@@ -1,11 +1,9 @@
-import { CommandHandler } from '@nestjs/cqrs';
-import { DeleteUserCommand } from '@core/app/cqrs/user/commands/delete-user/delete-user.command';
-import { DeleteUserHandler as CoreDeleteUserHandler } from '@core/app/cqrs/user/commands/delete-user/delete-user.handler';
-import { UserDeleteService } from '@core/app/components/user/services/user-delete.service';
+import { CommandHandler } from '@api.mabell/cqrs';
+import { App } from '@api.mabell/core';
 
-@CommandHandler(DeleteUserCommand)
-export class DeleteUserHandler extends CoreDeleteUserHandler {
-  constructor(service: UserDeleteService) {
+@CommandHandler(App.CQRS.DeleteUserCommand)
+export class DeleteUserHandler extends App.CQRS.DeleteUserHandler {
+  constructor(service: App.Components.User.UserDeleteService) {
     super(service);
   }
 }

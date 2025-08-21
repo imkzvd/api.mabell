@@ -252,7 +252,7 @@ export type RegionLabel = keyof typeof Regions;
 
 export type Region = (typeof Regions)[RegionLabel];
 
-export function getRegionLabelByValue(value: Region): RegionLabel {
+export function getRegionLabelByValue(value: string): RegionLabel {
   return (Object.keys(Regions) as RegionLabel[]).find(
     (key) => Regions[key] === value,
   ) as RegionLabel;

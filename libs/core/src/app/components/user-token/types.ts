@@ -1,5 +1,5 @@
-import { UserId } from '@core/domain/components/user/types';
-import { BaseTokenPayload, BaseTokenWithIdPayload } from '@core/app/common/ports/jwt.service.port';
+import { BaseTokenPayload, BaseTokenWithIdPayload } from '../../ports/jwt/types';
+import { UserId } from '../../../domain/components/user/types';
 
 export type AccessTokenPayload = BaseTokenPayload;
 

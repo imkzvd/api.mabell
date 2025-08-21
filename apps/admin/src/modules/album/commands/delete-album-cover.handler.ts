@@ -1,11 +1,9 @@
-import { CommandHandler } from '@nestjs/cqrs';
-import { DeleteAlbumCoverCommand } from '@core/app/cqrs/album/commands/delete-album-cover/delete-album-cover.command';
-import { DeleteAlbumCoverHandler as CoreDeleteAlbumCoverHandler } from '@core/app/cqrs/album/commands/delete-album-cover/delete-album-cover.handler';
-import { AlbumUpdateService } from '@core/app/components/album/services/album-update.service';
+import { CommandHandler } from '@api.mabell/cqrs';
+import { App } from '@api.mabell/core';
 
-@CommandHandler(DeleteAlbumCoverCommand)
-export class DeleteAlbumCoverHandler extends CoreDeleteAlbumCoverHandler {
-  constructor(service: AlbumUpdateService) {
+@CommandHandler(App.CQRS.DeleteAlbumCoverCommand)
+export class DeleteAlbumCoverHandler extends App.CQRS.DeleteAlbumCoverHandler {
+  constructor(service: App.Components.Album.AlbumUpdateService) {
     super(service);
   }
 }

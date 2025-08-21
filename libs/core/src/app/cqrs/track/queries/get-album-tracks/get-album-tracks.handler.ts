@@ -1,8 +1,8 @@
-import { QueryHandler } from '@core/app/types';
-import { NotFoundException } from '@core/shared/exceptions';
-import { GetAlbumTracksQuery } from '@core/app/cqrs/track/queries/get-album-tracks/get-album-tracks.query';
-import { AlbumVerifyService } from '@core/app/components/album/services/album-verify.service';
-import { TrackService } from '@core/app/components/track/services/track.service';
+import { QueryHandler } from '../../../../types';
+import { GetAlbumTracksQuery } from './get-album-tracks.query';
+import { AlbumVerifyService } from '../../../../components/album';
+import { TrackService } from '../../../../components/track';
+import { NotFoundException } from '../../../../../shared/exceptions';
 
 export class GetAlbumTracksHandler implements QueryHandler<GetAlbumTracksQuery> {
   constructor(

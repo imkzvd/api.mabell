@@ -1,19 +1,18 @@
-import { ArtistWriteRepository } from '@core/domain/components/artist/repository/artist-write-repository.port';
-import { ArtistFactory } from '@core/domain/components/artist/artist.factory';
-import { ArtistId } from '@core/domain/components/artist/types';
-import { EventBus } from '@core/app/common/ports/event-bus.port';
-import { IdService } from '@core/app/common/ports/id.service.port';
-import { ArtistCreatedEvent } from '@core/app/common/events/artist/artist-created.event';
+import { ArtistFactory, ArtistWriteRepository } from '../../../../domain/components/artist';
+import { EventBus, IdService } from '../../../ports';
+import { ArtistId } from '../../../../domain/components/artist';
+import { ArtistCreatedEvent } from '../../../events';
+import { prepareArtistEventPayload } from '../utils/prepare-artist-event-payload.utility';
 
 export class ArtistCreateService {
   constructor(
     private readonly _EB: EventBus,
     private readonly _WR: ArtistWriteRepository,
-    private readonly _idService: IdService<ArtistId>,
+    private readonly _idService: IdService,
   ) {}
 
   async create(): Promise<ArtistId> {
-    const generatedId = this._idService.generate();
+    const generatedId = this._idService.generate<ArtistId>();
     const nextArtistIndex = await this._WR.getNextIndex();
     const createdArtist = ArtistFactory.create({
       id: generatedId,
@@ -21,15 +20,9 @@ export class ArtistCreateService {
     });
 
     await this._WR.save(createdArtist);
-    this._EB.publish(
-      new ArtistCreatedEvent({
-        id: generatedId,
-        name: createdArtist.getName().value,
-        avatar: createdArtist.getAvatar(),
-        isPublic: createdArtist.getPublicStatus(),
-      }),
-    );
 
-    return generatedId;
+    this._EB.publish(new ArtistCreatedEvent(prepareArtistEventPayload(createdArtist)));
+
+    return createdArtist.getId();
   }
 }

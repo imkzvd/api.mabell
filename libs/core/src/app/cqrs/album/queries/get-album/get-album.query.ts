@@ -1,5 +1,5 @@
-import { Query } from '@core/app/types';
-import { AlbumDTO } from '@core/app/components/album/dtos/album.dto';
+import { Query } from '../../../../types';
+import { AlbumDTO } from '../../../../dtos';
 
 export class GetAlbumQuery extends Query<AlbumDTO | null> {
   constructor(

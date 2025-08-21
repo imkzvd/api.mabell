@@ -1,7 +1,7 @@
-import { Command } from '@core/app/types';
-import { UserId } from '@core/domain/components/user/types';
+import { Command } from '../../../../types';
+import { UserId } from '../../../../../domain/components/user/types';
 
-export class CreateUserCommand extends Command<UserId> {
+export class CreateUserCommand extends Command<{ id: UserId }> {
   constructor() {
     super();
   }

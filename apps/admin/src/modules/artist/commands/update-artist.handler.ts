@@ -1,11 +1,9 @@
-import { CommandHandler } from '@nestjs/cqrs';
-import { UpdateArtistCommand } from '@core/app/cqrs/artist/commands/update-artist/update-artist.command';
-import { UpdateArtistHandler as CoreUpdateArtistHandler } from '@core/app/cqrs/artist/commands/update-artist/update-artist.handler';
-import { ArtistUpdateService } from '@core/app/components/artist/services/artist-update.service';
+import { CommandHandler } from '@api.mabell/cqrs';
+import { App } from '@api.mabell/core';
 
-@CommandHandler(UpdateArtistCommand)
-export class UpdateArtistHandler extends CoreUpdateArtistHandler {
-  constructor(service: ArtistUpdateService) {
+@CommandHandler(App.CQRS.UpdateArtistCommand)
+export class UpdateArtistHandler extends App.CQRS.UpdateArtistHandler {
+  constructor(service: App.Components.Artist.ArtistUpdateService) {
     super(service);
   }
 }

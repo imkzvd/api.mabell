@@ -1,5 +1,5 @@
-import { Query } from '@core/app/types';
-import { IndexedArtistDTO } from '@core/app/common/ports/search-service/dtos/indexed-artist.dto';
+import { Query } from '../../../../types';
+import { IndexedArtistDTO } from '../../../../dtos';
 
 export class GetArtistsQuery extends Query<IndexedArtistDTO[]> {
   constructor(public readonly q: string) {

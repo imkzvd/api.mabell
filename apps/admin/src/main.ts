@@ -3,8 +3,9 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as cookieParser from 'cookie-parser';
 import { ConfigService } from '@nestjs/config';
 import { ValidationPipe } from '@nestjs/common';
-import { HttpExceptionFilter } from '@shared/filters/http-exception.filter';
+import { HttpExceptionFilter } from '@api.mabell/shared';
 import { AppModule } from './app.module';
+import { version } from '../package.json';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -12,6 +13,7 @@ async function bootstrap() {
 
   const swaggerConfig = new DocumentBuilder()
     .setTitle('Admin API')
+    .setVersion(version || '1.0.0')
     .setDescription('The API description')
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, swaggerConfig);

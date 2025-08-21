@@ -1,14 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { faker } from '@faker-js/faker';
 import * as process from 'process';
-import { LabelValueRO } from '@shared/ros/label-value.ro';
-import {
-  AlbumTypes,
-  getAlbumTypeLabelByValue,
-} from '@core/domain/components/album/constants/album-types';
-import { Genres, getGenreLabelByValue } from '@core/domain/common/constants/genres';
-import { AlbumDTO } from '@core/app/components/album/dtos/album.dto';
-import { ArtistRO } from '../../artist/ros/artist.ro';
+import { App } from '@api.mabell/core';
+import { LabelValueRO } from '@api.mabell/shared';
+import { SimplifiedArtistRO } from '../../artist/ros/simplified-artist.ro';
 
 export class AlbumRO {
   @ApiProperty({
@@ -25,8 +20,8 @@ export class AlbumRO {
   })
   name: string;
 
-  @ApiProperty({ type: () => [ArtistRO], description: 'Artists' })
-  artists: ArtistRO[];
+  @ApiProperty({ type: () => [SimplifiedArtistRO], description: 'Artists' })
+  artists: SimplifiedArtistRO[];
 
   @ApiProperty({
     type: [String],
@@ -38,14 +33,12 @@ export class AlbumRO {
   @ApiProperty({
     type: () => LabelValueRO,
     description: 'Type',
-    example: new LabelValueRO(AlbumTypes['Album'], getAlbumTypeLabelByValue(AlbumTypes['Album'])),
   })
   type: LabelValueRO;
 
   @ApiProperty({
     type: () => [LabelValueRO],
     description: 'Genres',
-    example: new LabelValueRO(Genres['Hip-Hop'], getGenreLabelByValue(Genres['Hip-Hop'])),
   })
   genres: LabelValueRO[];
 
@@ -100,13 +93,13 @@ export class AlbumRO {
   })
   updatedAt: Date;
 
-  constructor(album: AlbumDTO) {
+  constructor(album: App.DTOs.AlbumDTO) {
     this.id = album.id;
     this.name = album.name;
-    this.artists = album.artists.map((i) => new ArtistRO(i));
+    this.artists = album.artists.map((i) => new SimplifiedArtistRO(i));
     this.artistIds = album.artists.map(({ id }) => id);
-    this.type = new LabelValueRO(album.type, getAlbumTypeLabelByValue(album.type));
-    this.genres = album.genres.map((genre) => new LabelValueRO(genre, getGenreLabelByValue(genre)));
+    this.type = new LabelValueRO(album.typeLabelValue);
+    this.genres = album.genreLabelValues.map((i) => new LabelValueRO(i));
     this.cover = album.cover ? `${process.env.API_URL}${album.cover}` : null;
     this.color = album.color;
     this.description = album.description;

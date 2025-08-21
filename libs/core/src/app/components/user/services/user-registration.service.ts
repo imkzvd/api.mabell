@@ -1,24 +1,22 @@
-import { BadRequestException } from '@core/shared/exceptions';
-import { UserFactory } from '@core/domain/components/user/user.factory';
-import { UserWriteRepository } from '@core/domain/components/user/repository/user-write-repository.port';
-import { UserId } from '@core/domain/components/user/types';
-import { EventBus } from '@core/app/common/ports/event-bus.port';
-import { IdService } from '@core/app/common/ports/id.service.port';
-import { PasswordService } from '@core/app/common/ports/password-service.port';
-import { UserRegisteredEvent } from '@core/app/common/events/user/user-registered.event';
 import { USER_MIN_LENGTH_PASSWORD } from '../constants';
 import { RegisterUserPayload } from '../types';
+import { UserFactory, UserWriteRepository } from '../../../../domain/components/user';
+import { BadRequestException } from '../../../../shared/exceptions';
+import { EventBus, IdService, PasswordService } from '../../../ports';
+import { UserId } from '../../../../domain/components/user/types';
+import { UserRegisteredEvent } from '../../../events';
+import { prepareUserEventPayload } from '../utils/prepare-user-event-payload.utility';
 
 export class UserRegistrationService {
   constructor(
     private readonly _EB: EventBus,
     private readonly _WR: UserWriteRepository,
-    private readonly _idService: IdService<UserId>,
+    private readonly _idService: IdService,
     private readonly _passwordService: PasswordService,
   ) {}
 
   async register(payload: RegisterUserPayload): Promise<UserId> {
-    const generatedId = this._idService.generate();
+    const generatedId = this._idService.generate<UserId>();
 
     if (payload.password.length < USER_MIN_LENGTH_PASSWORD) {
       throw new BadRequestException('Password is invalid');
@@ -36,15 +34,9 @@ export class UserRegistrationService {
     });
 
     await this._WR.save(createdUser);
-    this._EB.publish(
-      new UserRegisteredEvent({
-        id: generatedId,
-        name: createdUser.getName().value,
-        email: createdUser.getEmail()?.value || null,
-        avatar: createdUser.getAvatar(),
-      }),
-    );
 
-    return generatedId;
+    this._EB.publish(new UserRegisteredEvent(prepareUserEventPayload(createdUser)));
+
+    return createdUser.getId();
   }
 }

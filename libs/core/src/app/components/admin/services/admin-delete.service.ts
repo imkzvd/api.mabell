@@ -1,9 +1,8 @@
-import { BadRequestException, NotFoundException } from '@core/shared/exceptions';
-import { AdminWriteRepository } from '@core/domain/components/admin/repository/admin-write-repository.port';
-import { AdminRoles } from '@core/domain/components/admin/constants/admin-roles';
-import { AdminId } from '@core/domain/components/admin/types';
-import { EventBus } from '@core/app/common/ports/event-bus.port';
-import { AdminDeletedEvent } from '@core/app/common/events/admin/admin-deleted.event';
+import { AdminRoles, AdminWriteRepository } from '../../../../domain/components/admin';
+import { BadRequestException, NotFoundException } from '../../../../shared/exceptions';
+import { EventBus } from '../../../ports';
+import { AdminId } from '../../../../domain/components/admin/types';
+import { AdminDeletedEvent } from '../../../events';
 
 export class AdminDeleteService {
   constructor(
@@ -11,21 +10,21 @@ export class AdminDeleteService {
     private readonly _WR: AdminWriteRepository,
   ) {}
 
-  async delete(id: string): Promise<AdminId> {
-    const foundAdmin = await this._WR.findById(id);
+  async deleteById(adminId: string): Promise<AdminId> {
+    const foundAdmin = await this._WR.findById(adminId);
 
     if (!foundAdmin) {
-      throw new NotFoundException('Admin does not exist');
+      throw new NotFoundException('Admin does not exist.');
     }
 
     if (foundAdmin.getRole().value === AdminRoles.Owner) {
       throw new BadRequestException("You can't delete the owner.");
     }
 
-    const deletedAdminId = await this._WR.deleteById(id);
+    const deletedAdminId = await this._WR.deleteById(adminId);
 
     if (!deletedAdminId) {
-      throw new NotFoundException('Admin does not exist');
+      throw new NotFoundException('Admin does not exist.');
     }
 
     this._EB.publish(new AdminDeletedEvent({ id: deletedAdminId }));

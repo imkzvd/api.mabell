@@ -1,6 +1,6 @@
-import { CommandHandler } from '@core/app/types';
-import { DeleteAdminRefreshTokenByIdCommand } from '@core/app/cqrs/token/commands/delete-admin-refresh-token-by-id/delete-admin-refresh-token-by-id.command';
-import { AdminTokenDeleteService } from '@core/app/components/admin-token/services/admin-token-delete.service';
+import { CommandHandler } from '../../../../types';
+import { DeleteAdminRefreshTokenByIdCommand } from './delete-admin-refresh-token-by-id.command';
+import { AdminTokenDeleteService } from '../../../../components/admin-token';
 
 export class DeleteAdminRefreshTokenByIdHandler
   implements CommandHandler<DeleteAdminRefreshTokenByIdCommand>

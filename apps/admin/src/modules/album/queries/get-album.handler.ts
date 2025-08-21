@@ -1,11 +1,9 @@
-import { QueryHandler } from '@nestjs/cqrs';
-import { GetAlbumQuery } from '@core/app/cqrs/album/queries/get-album/get-album.query';
-import { GetAlbumHandler as CoreGetAlbumHandler } from '@core/app/cqrs/album/queries/get-album/get-album.handler';
-import { AlbumService } from '@core/app/components/album/services/album.service';
+import { QueryHandler } from '@api.mabell/cqrs';
+import { App } from '@api.mabell/core';
 
-@QueryHandler(GetAlbumQuery)
-export class GetAlbumHandler extends CoreGetAlbumHandler {
-  constructor(service: AlbumService) {
+@QueryHandler(App.CQRS.GetAlbumQuery)
+export class GetAlbumHandler extends App.CQRS.GetAlbumHandler {
+  constructor(service: App.Components.Album.AlbumService) {
     super(service);
   }
 }

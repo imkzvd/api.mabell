@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   DefaultValuePipe,
@@ -24,31 +25,19 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { faker } from '@faker-js/faker';
-import { AdminRoles } from '@core/domain/components/admin/constants/admin-roles';
-import { CommandBus } from '@infrastructure/command-bus';
-import { QueryBus } from '@infrastructure/query-bus';
-import { CreateArtistCommand } from '@core/app/cqrs/artist/commands/create-artist/create-artist.command';
-import { GetArtistQuery } from '@core/app/cqrs/artist/queries/get-artist/get-artist.query';
-import { BadRequestException } from '@core/shared/exceptions';
-import { ParseObjectIdPipe } from '@shared/pipes/parse-object-id.pipe';
-import { UpdateArtistCommand } from '@core/app/cqrs/artist/commands/update-artist/update-artist.command';
-import { UpdateArtistAvatarCommand } from '@core/app/cqrs/artist/commands/update-artist-avatar/update-artist-avatar.command';
-import { UpdateArtistCoverCommand } from '@core/app/cqrs/artist/commands/update-artist-cover/update-artist-cover.command';
-import { DeleteArtistAvatarCommand } from '@core/app/cqrs/artist/commands/delete-artist-avatar/delete-artist-avatar.command';
-import { DeleteArtistCoverCommand } from '@core/app/cqrs/artist/commands/delete-artist-cover/delete-artist-cover.command';
-import { DeleteArtistCommand } from '@core/app/cqrs/artist/commands/delete-artist/delete-artist.command';
+import { Domain, App } from '@api.mabell/core';
+import { CommandBus } from '@api.mabell/cqrs';
+import { QueryBus } from '@api.mabell/cqrs';
+import { ParseObjectIdPipe } from '@api.mabell/shared';
 import { ArtistRO } from './ros/artist.ro';
 import { UpdateArtistImageDTO } from './dtos/update-artist-image.dto';
 import { UpdateArtistDTO } from './dtos/update-artist.dto';
 import { Roles } from '../../decorators/roles.decorator';
 import { AlbumsRO } from '../album/ros/albums.ro';
-import { GetArtistAlbumsQuery } from '@core/app/cqrs/album/queries/get-artist-albums/get-artist-albums.query';
 import { TracksRO } from '../track/ros/tracks.ro';
-import { GetArtistTracksQuery } from '@core/app/cqrs/track/queries/get-artist-tracks/get-artist-tracks.query';
-import { CreateAlbumCommand } from '@core/app/cqrs/album/commands/create-album/create-album.command';
 
 @ApiTags('Artist')
-@Roles(AdminRoles.Owner, AdminRoles.Admin)
+@Roles(Domain.Admin.AdminRoles.Owner, Domain.Admin.AdminRoles.Admin)
 @Controller({ path: '/artists' })
 export class ArtistController {
   constructor(
@@ -60,8 +49,12 @@ export class ArtistController {
   @ApiCreatedResponse({ description: 'Artist', type: ArtistRO })
   @Post('/')
   async createArtist(): Promise<ArtistRO> {
-    const createdArtistId = await this._commandBus.execute(new CreateArtistCommand());
-    const createdArtist = await this._queryBus.execute(new GetArtistQuery(createdArtistId));
+    const { id: createdArtistId } = await this._commandBus.execute(
+      new App.CQRS.CreateArtistCommand(),
+    );
+    const createdArtist = await this._queryBus.execute(
+      new App.CQRS.GetArtistQuery(createdArtistId),
+    );
 
     if (!createdArtist) {
       throw new BadRequestException('Some error');
@@ -84,9 +77,9 @@ export class ArtistController {
     @Param('id', ParseObjectIdPipe) id: string,
     @Body() dto: UpdateArtistDTO,
   ): Promise<ArtistRO> {
-    await this._commandBus.execute(new UpdateArtistCommand(id, dto));
+    await this._commandBus.execute(new App.CQRS.UpdateArtistCommand(id, dto));
 
-    const updatedArtist = await this._queryBus.execute(new GetArtistQuery(id));
+    const updatedArtist = await this._queryBus.execute(new App.CQRS.GetArtistQuery(id));
 
     if (!updatedArtist) {
       throw new NotFoundException('Artist not found');
@@ -110,13 +103,13 @@ export class ArtistController {
     @Body() { fileId, color }: UpdateArtistImageDTO,
   ): Promise<ArtistRO> {
     await this._commandBus.execute(
-      new UpdateArtistAvatarCommand(id, {
+      new App.CQRS.UpdateArtistAvatarCommand(id, {
         fileId,
         color,
       }),
     );
 
-    const updatedArtist = await this._queryBus.execute(new GetArtistQuery(id));
+    const updatedArtist = await this._queryBus.execute(new App.CQRS.GetArtistQuery(id));
 
     if (!updatedArtist) {
       throw new NotFoundException('Artist not found');
@@ -140,13 +133,13 @@ export class ArtistController {
     @Body() { fileId, color }: UpdateArtistImageDTO,
   ): Promise<ArtistRO> {
     await this._commandBus.execute(
-      new UpdateArtistCoverCommand(id, {
+      new App.CQRS.UpdateArtistCoverCommand(id, {
         fileId,
         color,
       }),
     );
 
-    const updatedArtist = await this._queryBus.execute(new GetArtistQuery(id));
+    const updatedArtist = await this._queryBus.execute(new App.CQRS.GetArtistQuery(id));
 
     if (!updatedArtist) {
       throw new NotFoundException('Artist not found');
@@ -165,9 +158,9 @@ export class ArtistController {
   @ApiOkResponse({ description: "Artist's avatar has been deleted", type: ArtistRO })
   @Delete('/:id/avatar')
   async deleteArtistAvatar(@Param('id', ParseObjectIdPipe) id: string): Promise<ArtistRO> {
-    await this._commandBus.execute(new DeleteArtistAvatarCommand(id));
+    await this._commandBus.execute(new App.CQRS.DeleteArtistAvatarCommand(id));
 
-    const updatedArtist = await this._queryBus.execute(new GetArtistQuery(id));
+    const updatedArtist = await this._queryBus.execute(new App.CQRS.GetArtistQuery(id));
 
     if (!updatedArtist) {
       throw new NotFoundException('Artist not found');
@@ -186,9 +179,9 @@ export class ArtistController {
   @ApiOkResponse({ description: "Artist's cover has been deleted", type: ArtistRO })
   @Delete('/:id/cover')
   async deleteArtistCover(@Param('id', ParseObjectIdPipe) id: string): Promise<ArtistRO> {
-    await this._commandBus.execute(new DeleteArtistCoverCommand(id));
+    await this._commandBus.execute(new App.CQRS.DeleteArtistCoverCommand(id));
 
-    const updatedArtist = await this._queryBus.execute(new GetArtistQuery(id));
+    const updatedArtist = await this._queryBus.execute(new App.CQRS.GetArtistQuery(id));
 
     if (!updatedArtist) {
       throw new NotFoundException('Artist not found');
@@ -208,7 +201,7 @@ export class ArtistController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete('/:id')
   async deleteArtist(@Param('id', ParseObjectIdPipe) id: string): Promise<void> {
-    await this._commandBus.execute(new DeleteArtistCommand(id));
+    await this._commandBus.execute(new App.CQRS.DeleteArtistCommand(id));
   }
 
   @ApiOperation({ summary: 'Get an artist by id', operationId: 'getArtist' })
@@ -219,10 +212,10 @@ export class ArtistController {
     example: faker.database.mongodbObjectId(),
   })
   @ApiOkResponse({ description: 'Artist', type: ArtistRO })
-  @Roles(AdminRoles.Guest)
+  @Roles(Domain.Admin.AdminRoles.Guest)
   @Get('/:id')
   async getArtist(@Param('id', ParseObjectIdPipe) id: string): Promise<ArtistRO> {
-    const foundArtist = await this._queryBus.execute(new GetArtistQuery(id));
+    const foundArtist = await this._queryBus.execute(new App.CQRS.GetArtistQuery(id));
 
     if (!foundArtist) {
       throw new NotFoundException('Artist does not exist');
@@ -246,7 +239,9 @@ export class ArtistController {
   async createAlbum(@Param('id', ParseObjectIdPipe) id: string): Promise<{
     albumId: string;
   }> {
-    const createdAlbumId = await this._commandBus.execute(new CreateAlbumCommand(id));
+    const { id: createdAlbumId } = await this._commandBus.execute(
+      new App.CQRS.CreateAlbumCommand(id),
+    );
 
     return {
       albumId: createdAlbumId,
@@ -263,7 +258,7 @@ export class ArtistController {
   @ApiQuery({ required: false, type: Number, name: 'limit', description: 'Limit', example: 50 })
   @ApiQuery({ required: false, type: Number, name: 'offset', description: 'Offset', example: 0 })
   @ApiOkResponse({ description: 'Artist albums', type: AlbumsRO })
-  @Roles(AdminRoles.Guest)
+  @Roles(Domain.Admin.AdminRoles.Guest)
   @Get('/:id/albums')
   async getArtistAlbums(
     @Param('id', ParseObjectIdPipe) id: string,
@@ -271,7 +266,7 @@ export class ArtistController {
     @Query('offset', new DefaultValuePipe(0), ParseIntPipe) offset: number,
   ): Promise<AlbumsRO> {
     const foundAlbums = await this._queryBus.execute(
-      new GetArtistAlbumsQuery(id, { pagination: { limit, offset } }),
+      new App.CQRS.GetArtistAlbumsQuery(id, { pagination: { limit, offset } }),
     );
 
     return new AlbumsRO(foundAlbums);
@@ -287,7 +282,7 @@ export class ArtistController {
   @ApiQuery({ required: false, type: Number, name: 'limit', description: 'Limit', example: 50 })
   @ApiQuery({ required: false, type: Number, name: 'offset', description: 'Offset', example: 0 })
   @ApiOkResponse({ description: 'Artist tracks', type: TracksRO })
-  @Roles(AdminRoles.Guest)
+  @Roles(Domain.Admin.AdminRoles.Guest)
   @Get('/:id/tracks')
   async getArtistTracks(
     @Param('id', ParseObjectIdPipe) id: string,
@@ -295,7 +290,7 @@ export class ArtistController {
     @Query('offset', new DefaultValuePipe(0), ParseIntPipe) offset: number,
   ): Promise<TracksRO> {
     const foundTracks = await this._queryBus.execute(
-      new GetArtistTracksQuery(id, { pagination: { limit, offset } }),
+      new App.CQRS.GetArtistTracksQuery(id, { pagination: { limit, offset } }),
     );
 
     return new TracksRO(foundTracks);

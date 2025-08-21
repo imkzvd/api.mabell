@@ -1,4 +1,4 @@
-import { Command } from '@core/app/types';
+import { Command } from '../../../../types';
 
 export class DeleteAdminRefreshTokenByAdminIdCommand extends Command<void> {
   constructor(public readonly adminId: string) {

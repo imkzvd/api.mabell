@@ -1,19 +1,19 @@
-import { ArtistWriteRepository } from '@core/domain/components/artist/repository/artist-write-repository.port';
-import { ArtistId } from '@core/domain/components/artist/types';
+import { ArtistWriteRepository } from '../../../../domain/components/artist';
+import { ArtistId } from '../../../../domain/components/artist/types';
 
 export class ArtistVerifyService {
   constructor(private readonly _WR: ArtistWriteRepository) {}
 
-  async verify(id: string): Promise<ArtistId | null> {
-    return this._WR.existsById(id);
+  verifyById(artistId: string): Promise<ArtistId | null> {
+    return this._WR.existsById(artistId);
   }
 
-  async verifyByIds(ids: string[]): Promise<{
+  verifyByIds(artistIds: string[]): Promise<{
     items: (ArtistId | null)[];
     foundIds: ArtistId[];
     total: number;
     missingIds: string[];
   }> {
-    return this._WR.existsByIds(ids);
+    return this._WR.existsByIds(artistIds);
   }
 }

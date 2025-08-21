@@ -1,10 +1,12 @@
-import { Query } from '@core/app/types';
-import { TrackDTO } from '@core/app/components/track/dtos/track.dto';
+import { Query } from '../../../../types';
+import { TrackWithAlbumDTO } from '../../../../dtos';
 
-export class GetTrackQuery extends Query<TrackDTO | null> {
+export class GetTrackQuery extends Query<TrackWithAlbumDTO | null> {
   constructor(
     public readonly id: string,
-    public readonly isPublic?: boolean,
+    public readonly options?: Partial<{
+      isPublic: boolean;
+    }>,
   ) {
     super();
   }

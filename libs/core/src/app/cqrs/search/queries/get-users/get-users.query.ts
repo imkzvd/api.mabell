@@ -1,5 +1,5 @@
-import { Query } from '@core/app/types';
-import { IndexedUserDTO } from '@core/app/common/ports/search-service/dtos/indexed-user.dto';
+import { Query } from '../../../../types';
+import { IndexedUserDTO } from '../../../../dtos';
 
 export class GetUsersQuery extends Query<IndexedUserDTO[]> {
   constructor(public readonly q: string) {

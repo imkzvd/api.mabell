@@ -1,7 +1,7 @@
 import * as process from 'process';
 import { ApiProperty } from '@nestjs/swagger';
 import { faker } from '@faker-js/faker';
-import { IndexedArtistDTO } from '@core/app/common/ports/search-service/dtos/indexed-artist.dto';
+import { App } from '@api.mabell/core';
 
 export class IndexedArtistRO {
   @ApiProperty({ description: 'Id', example: faker.database.mongodbObjectId() })
@@ -18,7 +18,7 @@ export class IndexedArtistRO {
   })
   avatar: string | null;
 
-  constructor(dto: IndexedArtistDTO) {
+  constructor(dto: App.DTOs.IndexedArtistDTO) {
     this.id = dto.id;
     this.name = dto.name;
     this.avatar = dto.avatar ? `${process.env.API_URL}${dto.avatar}` : null;

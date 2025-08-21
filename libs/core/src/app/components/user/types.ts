@@ -1,5 +1,4 @@
-import { Region } from '@core/domain/common/constants/regions';
-import { Genre } from '@core/domain/common/constants/genres';
+import { Genre, Region } from '../../../domain/common';
 
 export type UpdateUserPayload = Partial<{
   name: string;

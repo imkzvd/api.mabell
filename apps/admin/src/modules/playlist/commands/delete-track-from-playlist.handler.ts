@@ -1,14 +1,11 @@
-import { CommandHandler } from '@nestjs/cqrs';
-import { DeleteTrackFromPlaylistCommand } from '@core/app/cqrs/playlist/commands/delete-track-from-playlist/delete-track-from-playlist.command';
-import { DeleteTrackFromPlaylistHandler as CoreDeleteTrackFromPlaylistHandler } from '@core/app/cqrs/playlist/commands/delete-track-from-playlist/delete-track-from-playlist.handler';
-import { TrackVerifyService } from '@core/app/components/track/services/track-verify.service';
-import { PlaylistUpdateService } from '@core/app/components/playlist/services/playlist-update.service';
+import { CommandHandler } from '@api.mabell/cqrs';
+import { App } from '@api.mabell/core';
 
-@CommandHandler(DeleteTrackFromPlaylistCommand)
-export class DeleteTrackFromPlaylistHandler extends CoreDeleteTrackFromPlaylistHandler {
+@CommandHandler(App.CQRS.DeleteTrackFromPlaylistCommand)
+export class DeleteTrackFromPlaylistHandler extends App.CQRS.DeleteTrackFromPlaylistHandler {
   constructor(
-    trackVerifyService: TrackVerifyService,
-    playlistUpdateService: PlaylistUpdateService,
+    trackVerifyService: App.Components.Track.TrackVerifyService,
+    playlistUpdateService: App.Components.Playlist.PlaylistUpdateService,
   ) {
     super(trackVerifyService, playlistUpdateService);
   }

@@ -3,7 +3,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import type { Request } from 'express';
-import { AccessTokenPayload } from '@core/app/components/admin-token/types';
+import { App } from '@api.mabell/core';
 import { ACCESS_TOKEN_STRATEGY_NAME } from './constants';
 import { ACCESS_TOKEN_COOKIE_NAME } from '../constants';
 
@@ -22,7 +22,7 @@ export class AccessTokenStrategy extends PassportStrategy(Strategy, ACCESS_TOKEN
     });
   }
 
-  validate(payload: AccessTokenPayload) {
+  validate(payload: App.Components.AdminToken.AccessTokenPayload) {
     return payload;
   }
 }

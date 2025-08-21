@@ -3,14 +3,14 @@ import { AdminRoles } from './constants/admin-roles';
 import { AdminRoleVO } from './vos/admin-role.vo';
 import { UsernameVO } from './vos/username.vo';
 import { NameVO } from './vos/name.vo';
+import { HashedPasswordVO } from '../../common/vos';
 import { AdminId } from './types';
-import { HashedPasswordVO } from '../../common/vos/hashed-password.vo';
 
 export class AdminFactory {
   static create(props: {
     id: AdminId;
     username: string;
-    password: HashedPasswordVO;
+    password: string;
     name?: string;
     isBlocked?: boolean;
     role?: string;
@@ -20,7 +20,7 @@ export class AdminFactory {
     return new Admin(
       props.id,
       UsernameVO.create(props.username),
-      props.password,
+      HashedPasswordVO.create(props.password),
       NameVO.create(props.name || props.username),
       props.isBlocked ?? false,
       AdminRoleVO.create(props.role || AdminRoles.Guest),

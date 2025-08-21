@@ -1,14 +1,14 @@
-import { BadRequestException, NotFoundException } from '@core/shared/exceptions';
-import { AlbumWriteRepository } from '@core/domain/components/album/repository/album-write-repository.port';
-import { AlbumReadRepository } from '@core/domain/components/album/repository/album-read-repository.port';
-import { AlbumId } from '@core/domain/components/album/types';
-import { EventBus } from '@core/app/common/ports/event-bus.port';
-import { TmpFileStorage } from '@core/app/common/ports/file-storages/tmp-file-storage.port';
-import { ArtistFileStorage } from '@core/app/common/ports/file-storages/artist-file-storage.port';
-import { AlbumUpdatedEvent } from '@core/app/common/events/album/album-updated.event';
-import { AlbumArtistsUpdatedEvent } from '@core/app/common/events/album/album-artists-updated.event';
-import { AlbumCoverDeletedEvent } from '@core/app/common/events/album/album-cover-deleted.event';
 import { UpdateAlbumArtistsPayload, UpdateAlbumCoverPayload, UpdateAlbumPayload } from '../types';
+import { AlbumWriteRepository } from '../../../../domain/components/album';
+import { BadRequestException, NotFoundException } from '../../../../shared/exceptions';
+import { AlbumReadRepository, ArtistFileStorage, EventBus, TmpFileStorage } from '../../../ports';
+import { AlbumId } from '../../../../domain/components/album/types';
+import {
+  AlbumArtistsUpdatedEvent,
+  AlbumCoverDeletedEvent,
+  AlbumUpdatedEvent,
+} from '../../../events';
+import { prepareAlbumEventPayload } from '../utils/prepare-album-event-payload.utility';
 
 export class AlbumUpdateService {
   constructor(
@@ -19,109 +19,86 @@ export class AlbumUpdateService {
     private readonly _artistFS: ArtistFileStorage,
   ) {}
 
-  async update(id: string, payload: UpdateAlbumPayload): Promise<AlbumId> {
-    const foundAlbum = await this._WR.findById(id);
+  async updateById(albumId: string, payload: UpdateAlbumPayload): Promise<AlbumId> {
+    const foundAlbumEntity = await this._WR.findById(albumId);
 
-    if (!foundAlbum) {
+    if (!foundAlbumEntity) {
       throw new NotFoundException('Album does not exist');
     }
 
     if (payload.name) {
-      foundAlbum.updateName(payload.name);
+      foundAlbumEntity.updateName(payload.name);
     }
 
     if (payload.type) {
-      foundAlbum.updateType(payload.type);
+      foundAlbumEntity.updateType(payload.type);
     }
 
     if (payload.genres) {
-      foundAlbum.updateGenres(payload.genres);
+      foundAlbumEntity.updateGenres(payload.genres);
     }
 
     if (payload.description) {
-      foundAlbum.updateDescription(payload.description);
+      foundAlbumEntity.updateDescription(payload.description);
     }
 
     if (payload.releaseAt !== undefined) {
-      foundAlbum.updateReleaseDate(payload.releaseAt);
+      foundAlbumEntity.updateReleaseDate(payload.releaseAt);
     }
 
     if (typeof payload.isActive === 'boolean') {
-      foundAlbum.updateActiveStatus(payload.isActive);
+      foundAlbumEntity.updateActiveStatus(payload.isActive);
     }
 
     if (typeof payload.isPublic === 'boolean') {
-      foundAlbum.updatePublicStatus(payload.isPublic);
+      foundAlbumEntity.updatePublicStatus(payload.isPublic);
     }
 
-    await this._WR.save(foundAlbum);
+    await this._WR.save(foundAlbumEntity);
 
-    const foundAlbumWithArtists = await this._RR.findById(id);
-
-    if (!foundAlbumWithArtists) {
-      throw new NotFoundException('Album does not exist');
-    }
-
-    this._EB.publish(
-      new AlbumUpdatedEvent({
-        id: foundAlbumWithArtists.id,
-        name: foundAlbumWithArtists.name,
-        artists: foundAlbumWithArtists.artists.map(({ id, name, isPublic }) => ({
-          id,
-          name,
-          isPublic,
-        })),
-        cover: foundAlbumWithArtists.cover,
-        isPublic: foundAlbumWithArtists.isPublic,
-      }),
-    );
-
-    return foundAlbum.getId();
-  }
-
-  async updateArtists(id: string, payload: UpdateAlbumArtistsPayload): Promise<AlbumId> {
-    const foundAlbum = await this._WR.findById(id);
+    const foundAlbum = await this._RR.findById(albumId);
 
     if (!foundAlbum) {
       throw new NotFoundException('Album does not exist');
     }
 
-    if (foundAlbum.getMainArtist() !== payload.artists[0]) {
+    this._EB.publish(new AlbumUpdatedEvent(prepareAlbumEventPayload(foundAlbum)));
+
+    return foundAlbum.id;
+  }
+
+  async updateArtistsById(albumId: string, payload: UpdateAlbumArtistsPayload): Promise<AlbumId> {
+    const foundAlbumEntity = await this._WR.findById(albumId);
+
+    if (!foundAlbumEntity) {
+      throw new NotFoundException('Album does not exist');
+    }
+
+    if (foundAlbumEntity.getMainArtist() !== payload.artists[0]) {
       throw new BadRequestException('The main artist cannot be changed');
     }
 
-    foundAlbum.updateArtists(payload.artists);
-    await this._WR.save(foundAlbum);
+    foundAlbumEntity.updateArtists(payload.artists);
+    await this._WR.save(foundAlbumEntity);
 
-    const foundAlbumWithArtists = await this._RR.findById(id);
+    const foundAlbum = await this._RR.findById(albumId);
 
-    if (!foundAlbumWithArtists) {
+    if (!foundAlbum) {
       throw new NotFoundException('Album does not exist');
     }
 
-    const eventPayload = {
-      id: foundAlbumWithArtists.id,
-      name: foundAlbumWithArtists.name,
-      artists: foundAlbumWithArtists.artists.map(({ id, name, isPublic }) => ({
-        id,
-        name,
-        isPublic,
-      })),
-      type: foundAlbumWithArtists.type,
-      cover: foundAlbumWithArtists.cover,
-      isPublic: foundAlbumWithArtists.isPublic,
-    };
+    const prepAlbumEventPayload = prepareAlbumEventPayload(foundAlbum);
 
-    this._EB.publish(new AlbumArtistsUpdatedEvent(eventPayload));
-    this._EB.publish(new AlbumUpdatedEvent(eventPayload));
+    this._EB.publish(new AlbumUpdatedEvent(prepAlbumEventPayload));
+    this._EB.publish(new AlbumArtistsUpdatedEvent(prepAlbumEventPayload));
 
-    return foundAlbum.getId();
+    return foundAlbum.id;
   }
 
-  async updateCover(id: string, payload: UpdateAlbumCoverPayload): Promise<AlbumId> {
-    const foundAlbum = await this._WR.findById(id);
+  async updateCoverById(albumId: string, payload: UpdateAlbumCoverPayload): Promise<AlbumId> {
+    const foundAlbumEntity = await this._WR.findById(albumId);
 
-    if (!foundAlbum) {
+    if (!foundAlbumEntity) {
       throw new NotFoundException('Album does not exist');
     }
 
@@ -133,76 +110,56 @@ export class AlbumUpdateService {
       }
 
       const storedFileData = await this._artistFS.saveAlbumCover(
-        foundAlbum.getMainArtist(),
-        foundAlbum.getId(),
+        foundAlbumEntity.getMainArtist(),
+        foundAlbumEntity.getId(),
         tmpFile,
       );
 
-      foundAlbum.updateCover(storedFileData.path);
+      foundAlbumEntity.updateCover(storedFileData.path);
     }
 
     if (payload.color !== undefined) {
-      foundAlbum.updateColor(payload.color);
+      foundAlbumEntity.updateColor(payload.color);
     }
 
-    await this._WR.save(foundAlbum);
+    await this._WR.save(foundAlbumEntity);
 
-    const foundAlbumWithArtists = await this._RR.findById(id);
-
-    if (!foundAlbumWithArtists) {
-      throw new NotFoundException('Album does not exist');
-    }
-
-    this._EB.publish(
-      new AlbumUpdatedEvent({
-        id: foundAlbumWithArtists.id,
-        name: foundAlbumWithArtists.name,
-        artists: foundAlbumWithArtists.artists.map(({ id, name, isPublic }) => ({
-          id,
-          name,
-          isPublic,
-        })),
-        cover: foundAlbumWithArtists.cover,
-        isPublic: foundAlbumWithArtists.isPublic,
-      }),
-    );
-
-    return foundAlbum.getId();
-  }
-
-  async deleteCover(id: string): Promise<AlbumId> {
-    const foundAlbum = await this._WR.findById(id);
+    const foundAlbum = await this._RR.findById(albumId);
 
     if (!foundAlbum) {
       throw new NotFoundException('Album does not exist');
     }
 
-    foundAlbum.deleteCover();
-    await this._WR.save(foundAlbum);
-    await this._artistFS.deleteAlbumCover(foundAlbum.getMainArtist(), foundAlbum.getId());
+    this._EB.publish(new AlbumUpdatedEvent(prepareAlbumEventPayload(foundAlbum)));
 
-    const foundAlbumWithArtists = await this._RR.findById(id);
+    return foundAlbum.id;
+  }
 
-    if (!foundAlbumWithArtists) {
+  async deleteCoverById(albumId: string): Promise<AlbumId> {
+    const foundAlbumEntity = await this._WR.findById(albumId);
+
+    if (!foundAlbumEntity) {
       throw new NotFoundException('Album does not exist');
     }
 
-    const eventPayload = {
-      id: foundAlbumWithArtists.id,
-      name: foundAlbumWithArtists.name,
-      artists: foundAlbumWithArtists.artists.map(({ id, name, isPublic }) => ({
-        id,
-        name,
-        isPublic,
-      })),
-      type: foundAlbumWithArtists.type,
-      cover: foundAlbumWithArtists.cover,
-      isPublic: foundAlbumWithArtists.isPublic,
-    };
+    foundAlbumEntity.deleteCover();
+    await this._WR.save(foundAlbumEntity);
+    await this._artistFS.deleteAlbumCover(
+      foundAlbumEntity.getMainArtist(),
+      foundAlbumEntity.getId(),
+    );
 
-    this._EB.publish(new AlbumCoverDeletedEvent(eventPayload));
-    this._EB.publish(new AlbumUpdatedEvent(eventPayload));
+    const foundAlbum = await this._RR.findById(albumId);
 
-    return foundAlbum.getId();
+    if (!foundAlbum) {
+      throw new NotFoundException('Album does not exist');
+    }
+
+    const prepAlbumEventPayload = prepareAlbumEventPayload(foundAlbum);
+
+    this._EB.publish(new AlbumCoverDeletedEvent(prepAlbumEventPayload));
+    this._EB.publish(new AlbumUpdatedEvent(prepAlbumEventPayload));
+
+    return foundAlbum.id;
   }
 }

@@ -1,6 +1,6 @@
-import { EventHandler } from '@core/app/common/ports/event-bus.port';
-import { ArtistDeletedEvent } from '@core/app/common/events/artist/artist-deleted.event';
-import { TrackDeleteService } from '@core/app/components/track/services/track-delete.service';
+import { TrackDeleteService } from '../services/track-delete.service';
+import { EventHandler } from '../../../ports/event-bus/types';
+import { ArtistDeletedEvent } from '../../../events';
 
 export class DeleteTracksOnArtistDeletedEventHandler extends EventHandler<ArtistDeletedEvent> {
   constructor(private readonly _service: TrackDeleteService) {

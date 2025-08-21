@@ -1,24 +1,21 @@
-import { Inject, Injectable } from '@nestjs/common';
 import * as path from 'path';
 import * as fsPromises from 'fs/promises';
 import * as process from 'process';
+import { Inject, Injectable } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
-import { CacheService } from '@core/app/common/ports/cache.service.port';
-import { TmpFileStorage as TmpFileStoragePort } from '@core/app/common/ports/file-storages/tmp-file-storage.port';
-import { TmpFileDTO } from '@core/app/common/ports/file-storages/common/dtos/tmp-file.dto';
-import { TmpFileId } from '@core/app/common/ports/file-storages/common/types';
-import { RedisService } from '@infrastructure/redis';
+import { App } from '@api.mabell/core';
+import { CacheService } from '@api.mabell/cache';
 
 @Injectable()
-export class TmpFileStorage implements TmpFileStoragePort {
+export class TmpFileStorage implements App.Ports.TmpFileStorage {
   private readonly _dir: string = path.join(process.cwd(), '/tmp');
 
-  constructor(@Inject(RedisService) private readonly _cacheService: CacheService) {
+  constructor(@Inject(CacheService) private readonly _cacheService: CacheService) {
     fsPromises.mkdir(this._dir, { recursive: true });
   }
 
-  async upload(file: Express.Multer.File): Promise<TmpFileDTO> {
-    const generatedId = uuidv4() as TmpFileId;
+  async upload(file: Express.Multer.File) {
+    const generatedId = uuidv4() as App.Ports.TmpFileId;
     const fileExtension = path.extname(file.originalname);
     const originalFileName = file.originalname.replace(fileExtension, '');
     const uniqueFileName = `${generatedId}${fileExtension}`;
@@ -32,7 +29,7 @@ export class TmpFileStorage implements TmpFileStoragePort {
 
     await fsPromises.writeFile(fullFilePath, file.buffer);
 
-    const fileData = new TmpFileDTO(
+    const fileData = new App.DTOs.TmpFileDTO(
       generatedId,
       uniqueFileName,
       originalFileName,
@@ -55,18 +52,18 @@ export class TmpFileStorage implements TmpFileStoragePort {
     return fileData;
   }
 
-  async findById(id: string): Promise<TmpFileDTO | null> {
-    const fileData = await this._cacheService.get(`file:${id}`);
+  async findById(fileId: string) {
+    const fileData = await this._cacheService.get<string>(`file:${fileId}`);
 
-    return fileData ? (JSON.parse(fileData) as TmpFileDTO) : null;
+    return fileData ? (JSON.parse(fileData) as App.DTOs.TmpFileDTO) : null;
   }
 
-  async deleteById(id: string): Promise<TmpFileId | null> {
-    const fileData = await this._cacheService.get(`file:${id}`);
+  async deleteById(fileId: string) {
+    const fileData = await this._cacheService.get<string>(`file:${fileId}`);
 
     if (!fileData) return null;
 
-    const parsedFileData = JSON.parse(fileData) as TmpFileDTO;
+    const parsedFileData = JSON.parse(fileData) as App.DTOs.TmpFileDTO;
 
     await fsPromises.rm(parsedFileData.path);
     await this._cacheService.del(`file:${parsedFileData.id}`);
@@ -74,7 +71,7 @@ export class TmpFileStorage implements TmpFileStoragePort {
     return parsedFileData.id;
   }
 
-  async clear(): Promise<void> {
+  async clear() {
     await fsPromises.rm(this._dir, { recursive: true });
     await fsPromises.mkdir(this._dir, { recursive: true });
 

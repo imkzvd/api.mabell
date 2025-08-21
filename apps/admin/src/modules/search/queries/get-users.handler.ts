@@ -1,13 +1,11 @@
 import { Inject } from '@nestjs/common';
-import { QueryHandler } from '@nestjs/cqrs';
-import { SearchService } from '@core/app/common/ports/search-service/search-service.port';
-import { GetUsersQuery } from '@core/app/cqrs/search/queries/get-users/get-users.query';
-import { GetUsersHandler as CoreGetUsersHandler } from '@core/app/cqrs/search/queries/get-users/get-users.handler';
-import { TypesenseService } from '@infrastructure/typesense';
+import { QueryHandler } from '@api.mabell/cqrs';
+import { App } from '@api.mabell/core';
+import { SearchService } from '@api.mabell/search';
 
-@QueryHandler(GetUsersQuery)
-export class GetUsersHandler extends CoreGetUsersHandler {
-  constructor(@Inject(TypesenseService) service: SearchService) {
+@QueryHandler(App.CQRS.GetUsersQuery)
+export class GetUsersHandler extends App.CQRS.GetUsersHandler {
+  constructor(@Inject(SearchService) service: App.Ports.SearchService) {
     super(service);
   }
 }

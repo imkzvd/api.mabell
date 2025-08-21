@@ -1,7 +1,7 @@
 import * as jwt from 'jsonwebtoken';
-import { JWTService as JWTServicePort } from '@api.mabell/core';
+import { App } from '@api.mabell/core';
 
-export class JWTService implements JWTServicePort {
+export class JWTService implements App.Ports.JWTService {
   create<CustomPayload extends Record<string, any>>(options: {
     type: 'access' | 'refresh';
     subject: string;

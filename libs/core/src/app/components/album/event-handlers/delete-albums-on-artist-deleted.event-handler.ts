@@ -1,6 +1,6 @@
-import { EventHandler } from '@core/app/common/ports/event-bus.port';
-import { ArtistDeletedEvent } from '@core/app/common/events/artist/artist-deleted.event';
-import { AlbumDeleteService } from '@core/app/components/album/services/album-delete.service';
+import { AlbumDeleteService } from '../services/album-delete.service';
+import { EventHandler } from '../../../ports/event-bus/types';
+import { ArtistDeletedEvent } from '../../../events';
 
 export class DeleteAlbumsOnArtistDeletedEventHandler extends EventHandler<ArtistDeletedEvent> {
   constructor(private readonly _service: AlbumDeleteService) {

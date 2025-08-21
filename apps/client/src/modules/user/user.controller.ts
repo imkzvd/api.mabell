@@ -1,9 +1,9 @@
 import { Controller, Get, NotFoundException, Param } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { faker } from '@faker-js/faker';
-import { GetUserQuery } from '@core/app/cqrs/user/queries/get-user/get-user.query';
-import { QueryBus } from '@infrastructure/query-bus';
-import { ParseObjectIdPipe } from '@shared/pipes/parse-object-id.pipe';
+import { App } from '@api.mabell/core';
+import { QueryBus } from '@api.mabell/cqrs';
+import { ParseObjectIdPipe } from '@api.mabell/shared';
 import { UserRO } from './ros/user.ro';
 
 @ApiTags('User')
@@ -21,7 +21,7 @@ export class UserController {
   @ApiOkResponse({ description: 'User', type: UserRO })
   @Get('/:id')
   async getUser(@Param('id', ParseObjectIdPipe) id: string): Promise<UserRO> {
-    const foundUser = await this._QB.execute(new GetUserQuery(id));
+    const foundUser = await this._QB.execute(new App.CQRS.GetUserQuery(id));
 
     if (!foundUser || foundUser.isBlocked) {
       throw new NotFoundException(`There is no user with the specified ID`);

@@ -1,6 +1,6 @@
 {
-  "name": "admin",
-  "version": "1.0.2-alpha.0",
+  "name": "@api.mabell/admin",
+  "version": "1.0.3-alpha.0",
   "description": "Admin API for the Mabell project",
   "main": "index.js",
   "scripts": {
@@ -9,6 +9,31 @@
   "author": "imkzvd@gmail.com",
   "license": "ISC",
   "dependencies": {
-    "@api.mabell/jwt": "^1.0.2-alpha.0"
+    "@api.mabell/core": "^1.0.1-alpha.0",
+    "@api.mabell/cqrs": "^0.0.1-alpha.0",
+    "@api.mabell/db": "^0.0.1-alpha.0",
+    "@api.mabell/event-bus": "^0.0.1-alpha.0",
+    "@api.mabell/file-storage": "^0.0.1-alpha.0",
+    "@api.mabell/jwt": "^1.0.3-alpha.0",
+    "@api.mabell/password": "^0.0.1-alpha.0",
+    "@api.mabell/random-id": "^0.0.1-alpha.0",
+    "@api.mabell/search": "^0.0.1-alpha.0",
+    "@api.mabell/shared": "^0.0.1-alpha.0",
+    "@faker-js/faker": "^9.9.0",
+    "@nestjs/common": "^11.1.6",
+    "@nestjs/config": "^4.0.2",
+    "@nestjs/core": "^11.1.6",
+    "@nestjs/passport": "^11.0.5",
+    "@nestjs/platform-express": "^11.1.6",
+    "@nestjs/serve-static": "^5.0.3",
+    "@nestjs/swagger": "^11.2.0",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.2",
+    "cookie-parser": "^1.4.7",
+    "passport-jwt": "^4.0.1"
+  },
+  "devDependencies": {
+    "@types/cookie-parser": "^1.4.9",
+    "@types/passport-jwt": "^4.0.1"
   }
 }

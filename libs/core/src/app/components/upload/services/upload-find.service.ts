@@ -1,10 +1,10 @@
-import { TmpFileStorage } from '@core/app/common/ports/file-storages/tmp-file-storage.port';
-import { TmpFileDTO } from '@core/app/common/ports/file-storages/common/dtos/tmp-file.dto';
+import { TmpFileDTO } from '../../../dtos';
+import { TmpFileStorage } from '../../../ports';
 
 export class UploadFindService {
   constructor(private readonly _FS: TmpFileStorage) {}
 
-  find(id: string): Promise<TmpFileDTO | null> {
-    return this._FS.findById(id);
+  findById(fileId: string): Promise<TmpFileDTO | null> {
+    return this._FS.findById(fileId);
   }
 }

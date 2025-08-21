@@ -1,23 +1,20 @@
-import { NotFoundException } from '@core/shared/exceptions';
-import { OffsetLimitPaginationDTO } from '@core/shared/dtos/offset-limit-pagination/offset-limit-pagination-payload.dto';
-import { PlaylistReadRepository } from '@core/domain/components/playlist/repository/playlist-read-repository.port';
-import { TrackId } from '@core/domain/components/track/types';
-import { PlaylistDTO } from '../dtos/playlist.dto';
-import PlaylistMapper from '../dtos/playlist.mapper';
-import { OffsetLimitPaginationResponseDTO } from '@core/shared/dtos/offset-limit-pagination/offset-limit-pagination-response.dto';
+import { OffsetLimitPaginationDTO } from '../../../../shared/dtos';
+import { NotFoundException } from '../../../../shared/exceptions';
+import { PlaylistDTO } from '../../../dtos';
+import { TrackId } from '../../../../domain/components/track/types';
+import { PlaylistReadRepository } from '../../../ports';
+import { PlaylistsDTO } from '../../../dtos/playlists.dto';
 
 export class PlaylistService {
   constructor(private readonly _RR: PlaylistReadRepository) {}
 
-  async find(
-    id: string,
+  findById(
+    playlistId: string,
     options?: Partial<{
       isPublic: boolean;
     }>,
   ): Promise<PlaylistDTO | null> {
-    const foundPlaylist = await this._RR.findById(id, options);
-
-    return foundPlaylist ? PlaylistMapper.toDTO(foundPlaylist) : null;
+    return this._RR.findById(playlistId, options);
   }
 
   async findByUserId(
@@ -25,22 +22,17 @@ export class PlaylistService {
     options?: Partial<{
       isPublic: boolean;
     }>,
-  ): Promise<OffsetLimitPaginationResponseDTO<PlaylistDTO>> {
-    const response = await this._RR.findByUserId(userId, options);
-
-    return {
-      ...response,
-      items: response.items.map((i) => PlaylistMapper.toDTO(i)),
-    };
+  ): Promise<PlaylistsDTO> {
+    return this._RR.findByUserId(userId, options);
   }
 
-  async getTrackIds(
-    id: string,
+  async getTrackIdsById(
+    playlistId: string,
     options?: Partial<{
       pagination: OffsetLimitPaginationDTO;
     }>,
   ): Promise<{ id: TrackId; addedAt: Date }[]> {
-    const foundPlaylist = await this._RR.findById(id);
+    const foundPlaylist = await this._RR.findById(playlistId);
 
     if (!foundPlaylist) {
       throw new NotFoundException('Playlist does not exist');

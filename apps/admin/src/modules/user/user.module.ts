@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { RandomIdModule } from '@infrastructure/random-id';
-import { PasswordModule } from '@infrastructure/password';
-import { FileStorageModule } from '@infrastructure/file-storage';
+import { RandomIdModule } from '@api.mabell/random-id';
+import { PasswordModule } from '@api.mabell/password';
+import { FileStorageModule } from '@api.mabell/file-storage';
 import { UserController } from './user.controller';
 import { CreateUserHandler } from './commands/create-user.handler';
 import { DeleteUserHandler } from './commands/delete-user.handler';

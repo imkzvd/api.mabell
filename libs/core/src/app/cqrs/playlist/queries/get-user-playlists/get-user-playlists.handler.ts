@@ -1,8 +1,8 @@
-import { QueryHandler } from '@core/app/types';
-import { NotFoundException } from '@core/shared/exceptions';
-import { GetUserPlaylistsQuery } from '@core/app/cqrs/playlist/queries/get-user-playlists/get-user-playlists.query';
-import { PlaylistService } from '@core/app/components/playlist/services/playlist.service';
-import { UserVerifyService } from '@core/app/components/user/services/user-verify.service';
+import { QueryHandler } from '../../../../types';
+import { GetUserPlaylistsQuery } from './get-user-playlists.query';
+import { UserVerifyService } from '../../../../components/user';
+import { PlaylistService } from '../../../../components/playlist';
+import { NotFoundException } from '../../../../../shared/exceptions';
 
 export class GetUserPlaylistsHandler implements QueryHandler<GetUserPlaylistsQuery> {
   constructor(
@@ -11,12 +11,12 @@ export class GetUserPlaylistsHandler implements QueryHandler<GetUserPlaylistsQue
   ) {}
 
   async execute({ userId, options }: GetUserPlaylistsQuery) {
-    const verifiedUserId = await this._userVerifyService.verify(userId);
+    const verifiedUserId = await this._userVerifyService.verifyById(userId);
 
     if (!verifiedUserId) {
       throw new NotFoundException('User does not exist');
     }
 
-    return await this._playlistService.findByUserId(userId, options);
+    return this._playlistService.findByUserId(userId, options);
   }
 }

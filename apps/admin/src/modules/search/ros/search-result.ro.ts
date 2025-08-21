@@ -1,9 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IndexedArtistDTO } from '@core/app/common/ports/search-service/dtos/indexed-artist.dto';
-import { IndexedAlbumDTO } from '@core/app/common/ports/search-service/dtos/indexed-album.dto';
-import { IndexedTrackDTO } from '@core/app/common/ports/search-service/dtos/indexed-track.dto';
-import { IndexedUserDTO } from '@core/app/common/ports/search-service/dtos/indexed-user.dto';
-import { IndexedPlaylistDTO } from '@core/app/common/ports/search-service/dtos/indexed-playlist.dto';
+import { App } from '@api.mabell/core';
 import { IndexedArtistRO } from './indexed-artist.ro';
 import { IndexedAlbumRO } from './indexed-album.ro';
 import { IndexedTrackRO } from './indexed-track.ro';
@@ -28,11 +24,11 @@ export class SearchResultRO {
 
   constructor(
     props: Partial<{
-      artists: IndexedArtistDTO[];
-      albums: IndexedAlbumDTO[];
-      tracks: IndexedTrackDTO[];
-      users: IndexedUserDTO[];
-      playlists: IndexedPlaylistDTO[];
+      artists: App.DTOs.IndexedArtistDTO[];
+      albums: App.DTOs.IndexedAlbumDTO[];
+      tracks: App.DTOs.IndexedTrackDTO[];
+      users: App.DTOs.IndexedUserDTO[];
+      playlists: App.DTOs.IndexedPlaylistDTO[];
     }>,
   ) {
     this.artists = props.artists?.map((dto) => new IndexedArtistRO(dto)) || [];

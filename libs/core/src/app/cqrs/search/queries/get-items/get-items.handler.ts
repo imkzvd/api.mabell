@@ -1,11 +1,11 @@
-import { QueryHandler } from '@core/app/types';
-import { GetItemsQuery } from '@core/app/cqrs/search/queries/get-items/get-items.query';
-import { SearchService } from '@core/app/common/ports/search-service/search-service.port';
+import { QueryHandler } from '../../../../types';
+import { GetItemsQuery } from './get-items.query';
+import { SearchService } from '../../../../ports';
 
 export class GetItemsHandler implements QueryHandler<GetItemsQuery> {
   constructor(private readonly _service: SearchService) {}
 
-  async execute({ q }: GetItemsQuery) {
+  execute({ q }: GetItemsQuery) {
     return this._service.find(q);
   }
 }

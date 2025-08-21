@@ -1,11 +1,9 @@
-import { QueryHandler } from '@nestjs/cqrs';
-import { GetFileHandler as CoreGetFileHandler } from '@core/app/cqrs/upload/queries/get-file/get-file.handler';
-import { GetFileQuery } from '@core/app/cqrs/upload/queries/get-file/get-file.query';
-import { UploadFindService } from '@core/app/components/upload/services/upload-find.service';
+import { QueryHandler } from '@api.mabell/cqrs';
+import { App } from '@api.mabell/core';
 
-@QueryHandler(GetFileQuery)
-export class GetFileHandler extends CoreGetFileHandler {
-  constructor(service: UploadFindService) {
+@QueryHandler(App.CQRS.GetFileQuery)
+export class GetFileHandler extends App.CQRS.GetFileHandler {
+  constructor(service: App.Components.Upload.UploadFindService) {
     super(service);
   }
 }

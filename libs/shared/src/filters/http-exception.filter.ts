@@ -1,13 +1,7 @@
 import { ExceptionFilter, Catch, ArgumentsHost, HttpException, HttpStatus } from '@nestjs/common';
 import { Response } from 'express';
-import {
-  BadRequestException as CoreBadRequestException,
-  DuplicationException as CoreDuplicationException,
-  ForbiddenException as CoreForbiddenException,
-  NotFoundException as CoreNotFoundException,
-  UnauthorizedException as CoreUnauthorizedException,
-} from '@core/shared/exceptions';
-import { ErrorRO } from '../ros/error.ro';
+import { Shared } from '@api.mabell/core';
+import { ErrorRO } from '../ros';
 
 @Catch()
 export class HttpExceptionFilter implements ExceptionFilter {
@@ -25,27 +19,27 @@ export class HttpExceptionFilter implements ExceptionFilter {
       errorMessage = error.getResponse().message as string | string[];
     }
 
-    if (error instanceof CoreBadRequestException) {
+    if (error instanceof Shared.Exceptions.BadRequestException) {
       statusCode = HttpStatus.BAD_REQUEST;
       errorMessage = error.message;
     }
 
-    if (error instanceof CoreDuplicationException) {
+    if (error instanceof Shared.Exceptions.DuplicationException) {
       statusCode = HttpStatus.BAD_REQUEST;
       errorMessage = error.message;
     }
 
-    if (error instanceof CoreForbiddenException) {
+    if (error instanceof Shared.Exceptions.ForbiddenException) {
       statusCode = HttpStatus.FORBIDDEN;
       errorMessage = error.message;
     }
 
-    if (error instanceof CoreNotFoundException) {
+    if (error instanceof Shared.Exceptions.NotFoundException) {
       statusCode = HttpStatus.NOT_FOUND;
       errorMessage = error.message;
     }
 
-    if (error instanceof CoreUnauthorizedException) {
+    if (error instanceof Shared.Exceptions.UnauthorizedException) {
       statusCode = HttpStatus.UNAUTHORIZED;
       errorMessage = error.message;
     }

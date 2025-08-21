@@ -1,8 +1,7 @@
-import { Command } from '@core/app/types';
-import { AdminId } from '@core/domain/components/admin/types';
-import { UpdateAdminPayload } from '@core/app/components/admin/types';
+import { Command } from '../../../../types';
+import { UpdateAdminPayload } from '../../../../components/admin/types';
 
-export class UpdateAdminCommand extends Command<AdminId> {
+export class UpdateAdminCommand extends Command<void> {
   constructor(
     public readonly id: string,
     public readonly payload: UpdateAdminPayload,

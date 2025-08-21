@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
-import { ArtistFileStorage } from '@infrastructure/file-storage/services/artist-file-storage.service';
-import { TmpFileStorage } from '@infrastructure/file-storage/services/tmp-file-storage.service';
-import { UserFileStorage } from '@infrastructure/file-storage/services/user-file-storage.service';
-import { RedisModule } from '@infrastructure/redis';
+import { CacheModule } from '@api.mabell/cache';
+import { ArtistFileStorage } from './services/artist-file-storage.service';
+import { TmpFileStorage } from './services/tmp-file-storage.service';
+import { UserFileStorage } from './services/user-file-storage.service';
 
 @Module({
-  imports: [RedisModule],
+  imports: [CacheModule],
   providers: [ArtistFileStorage, TmpFileStorage, UserFileStorage],
   exports: [ArtistFileStorage, TmpFileStorage, UserFileStorage],
 })

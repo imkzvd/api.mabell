@@ -1,8 +1,7 @@
-import { Command } from '@core/app/types';
-import { TrackId } from '@core/domain/components/track/types';
-import { UpdateTrackPayload } from '@core/app/components/track/types';
+import { Command } from '../../../../types';
+import { UpdateTrackPayload } from '../../../../components/track/types';
 
-export class UpdateTrackCommand extends Command<TrackId> {
+export class UpdateTrackCommand extends Command<void> {
   constructor(
     public readonly id: string,
     public readonly payload: UpdateTrackPayload,

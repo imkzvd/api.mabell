@@ -1,8 +1,7 @@
-import { UnauthorizedException } from '@core/shared/exceptions';
-import { AdminId } from '@core/domain/components/admin/types';
-import { AdminReadRepository } from '@core/domain/components/admin/repository/admin-read-repository.port';
-import { PasswordService } from '@core/app/common/ports/password-service.port';
 import { LoginAdminPayload } from '../types';
+import { UnauthorizedException } from '../../../../shared/exceptions';
+import { AdminReadRepository, PasswordService } from '../../../ports';
+import { AdminId } from '../../../../domain/components/admin';
 
 export class AdminLoginService {
   constructor(
@@ -24,7 +23,7 @@ export class AdminLoginService {
     }
 
     if (foundAdmin.isBlocked) {
-      throw new UnauthorizedException('Your account is blocked');
+      throw new UnauthorizedException('Your account is blocked.');
     }
 
     return foundAdmin.id;

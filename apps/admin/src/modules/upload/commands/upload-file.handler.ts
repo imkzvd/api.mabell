@@ -1,11 +1,9 @@
-import { CommandHandler } from '@nestjs/cqrs';
-import { UploadFileCommand } from '@core/app/cqrs/upload/commands/upload-file/upload-file.command';
-import { UploadFileHandler as CoreUploadFileHandler } from '@core/app/cqrs/upload/commands/upload-file/upload-file.handler';
-import { UploadService } from '@core/app/components/upload/services/upload.service';
+import { CommandHandler } from '@api.mabell/cqrs';
+import { App } from '@api.mabell/core';
 
-@CommandHandler(UploadFileCommand)
-export class UploadFileHandler extends CoreUploadFileHandler {
-  constructor(service: UploadService) {
+@CommandHandler(App.CQRS.UploadFileCommand)
+export class UploadFileHandler extends App.CQRS.UploadFileHandler {
+  constructor(service: App.Components.Upload.UploadService) {
     super(service);
   }
 }

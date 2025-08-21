@@ -1,11 +1,9 @@
-import { CommandHandler } from '@nestjs/cqrs';
-import { AdminUpdateService } from '@core/app/components/admin/services/admin-update.service';
-import { UpdateAdminCommand } from '@core/app/cqrs/admin/commands/update-admin/update-admin.command';
-import { UpdateAdminHandler as CoreUpdateAdminHandler } from '@core/app/cqrs/admin/commands/update-admin/update-admin.handler';
+import { CommandHandler } from '@api.mabell/cqrs';
+import { App } from '@api.mabell/core';
 
-@CommandHandler(UpdateAdminCommand)
-export class UpdateAdminHandler extends CoreUpdateAdminHandler {
-  constructor(service: AdminUpdateService) {
+@CommandHandler(App.CQRS.UpdateAdminCommand)
+export class UpdateAdminHandler extends App.CQRS.UpdateAdminHandler {
+  constructor(service: App.Components.Admin.AdminUpdateService) {
     super(service);
   }
 }

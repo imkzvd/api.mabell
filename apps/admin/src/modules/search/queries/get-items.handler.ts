@@ -1,13 +1,11 @@
 import { Inject } from '@nestjs/common';
-import { QueryHandler } from '@nestjs/cqrs';
-import { SearchService } from '@core/app/common/ports/search-service/search-service.port';
-import { GetItemsQuery } from '@core/app/cqrs/search/queries/get-items/get-items.query';
-import { GetItemsHandler as CoreGetItemsHandler } from '@core/app/cqrs/search/queries/get-items/get-items.handler';
-import { TypesenseService } from '@infrastructure/typesense';
+import { QueryHandler } from '@api.mabell/cqrs';
+import { App } from '@api.mabell/core';
+import { SearchService } from '@api.mabell/search';
 
-@QueryHandler(GetItemsQuery)
-export class GetItemsHandler extends CoreGetItemsHandler {
-  constructor(@Inject(TypesenseService) service: SearchService) {
+@QueryHandler(App.CQRS.GetItemsQuery)
+export class GetItemsHandler extends App.CQRS.GetItemsHandler {
+  constructor(@Inject(SearchService) service: App.Ports.SearchService) {
     super(service);
   }
 }

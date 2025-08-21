@@ -1,8 +1,8 @@
-import { CommandHandler } from '@core/app/types';
-import { NotFoundException } from '@core/shared/exceptions';
-import { UpdateAlbumArtistsCommand } from '@core/app/cqrs/album/commands/update-album-artists/update-album-artists.command';
-import { ArtistVerifyService } from '@core/app/components/artist/services/artist-verify.service';
-import { AlbumUpdateService } from '@core/app/components/album/services/album-update.service';
+import { CommandHandler } from '../../../../types';
+import { UpdateAlbumArtistsCommand } from './update-album-artists.command';
+import { ArtistVerifyService } from '../../../../components/artist';
+import { AlbumUpdateService } from '../../../../components/album';
+import { NotFoundException } from '../../../../../shared/exceptions';
 
 export class UpdateAlbumArtistsHandler implements CommandHandler<UpdateAlbumArtistsCommand> {
   constructor(
@@ -11,14 +11,15 @@ export class UpdateAlbumArtistsHandler implements CommandHandler<UpdateAlbumArti
   ) {}
 
   async execute({ id, artistIds }: UpdateAlbumArtistsCommand) {
-    const verifiedArtistIdsResult = await this._artistVerifyService.verifyByIds(artistIds);
+    const { foundIds: foundArtistIds, missingIds: missingArtistIds } =
+      await this._artistVerifyService.verifyByIds(artistIds);
 
-    if (verifiedArtistIdsResult.missingIds.length) {
+    if (missingArtistIds.length) {
       throw new NotFoundException('Artist does not exist');
     }
 
-    return await this._albumUpdateService.updateArtists(id, {
-      artists: verifiedArtistIdsResult.foundIds,
+    await this._albumUpdateService.updateArtistsById(id, {
+      artists: foundArtistIds,
     });
   }
 }

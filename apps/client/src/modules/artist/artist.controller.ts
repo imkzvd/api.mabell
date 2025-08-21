@@ -2,9 +2,9 @@ import { Controller, Get, NotFoundException, Param } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { faker } from '@faker-js/faker';
 import { ArtistRO } from './ros/artist.ro';
-import { ParseObjectIdPipe } from '@shared/pipes/parse-object-id.pipe';
-import { GetArtistQuery } from '@core/app/cqrs/artist/queries/get-artist/get-artist.query';
-import { QueryBus } from '@infrastructure/query-bus';
+import { App } from '@api.mabell/core';
+import { QueryBus } from '@api.mabell/cqrs';
+import { ParseObjectIdPipe } from '@api.mabell/shared';
 
 @ApiTags('Artists')
 @Controller({ path: '/artists' })
@@ -21,7 +21,7 @@ export class ArtistController {
   @ApiOkResponse({ description: 'Artist', type: ArtistRO })
   @Get('/:id')
   async getArtist(@Param('id', ParseObjectIdPipe) id: string): Promise<ArtistRO> {
-    const foundArtist = await this._QB.execute(new GetArtistQuery(id, { isPublic: true }));
+    const foundArtist = await this._QB.execute(new App.CQRS.GetArtistQuery(id, { isPublic: true }));
 
     if (!foundArtist) {
       throw new NotFoundException('Artist does not exist');

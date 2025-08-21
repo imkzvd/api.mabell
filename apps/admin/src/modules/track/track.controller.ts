@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -20,18 +21,10 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { faker } from '@faker-js/faker';
-import { AdminRoles } from '@core/domain/components/admin/constants/admin-roles';
-import { CommandBus } from '@infrastructure/command-bus';
-import { QueryBus } from '@infrastructure/query-bus';
-import { CreateTrackCommand } from '@core/app/cqrs/track/commands/create-track/create-track.command';
-import { GetTrackQuery } from '@core/app/cqrs/track/queries/get-track/get-track.query';
-import { BadRequestException } from '@core/shared/exceptions';
-import { ParseObjectIdPipe } from '@shared/pipes/parse-object-id.pipe';
-import { UpdateTrackCommand } from '@core/app/cqrs/track/commands/update-track/update-track.command';
-import { UpdateTrackFeatArtistsCommand } from '@core/app/cqrs/track/commands/update-track-feat-artists/update-track-feat-artists.command';
-import { UpdateTrackFileCommand } from '@core/app/cqrs/track/commands/update-track-file/update-track-file.command';
-import { DeleteTrackFileCommand } from '@core/app/cqrs/track/commands/delete-track-file/delete-track-file.command';
-import { DeleteTrackCommand } from '@core/app/cqrs/track/commands/delete-track/delete-track.command';
+import { Domain, App } from '@api.mabell/core';
+import { CommandBus } from '@api.mabell/cqrs';
+import { QueryBus } from '@api.mabell/cqrs';
+import { ParseObjectIdPipe } from '@api.mabell/shared';
 import { CreateTrackDTO } from './dtos/create-track.dto';
 import { UpdateTrackFileDTO } from './dtos/update-track-file.dto';
 import { TrackRO } from './ros/track.ro';
@@ -40,7 +33,7 @@ import { UpdateTrackFeatArtistsDTO } from './dtos/update-track-feat-artists.dto'
 import { Roles } from '../../decorators/roles.decorator';
 
 @ApiTags('Track')
-@Roles(AdminRoles.Owner, AdminRoles.Admin)
+@Roles(Domain.Admin.AdminRoles.Owner, Domain.Admin.AdminRoles.Admin)
 @Controller({ path: '/tracks' })
 export class TrackController {
   constructor(
@@ -53,8 +46,10 @@ export class TrackController {
   @ApiCreatedResponse({ description: 'Track', type: TrackRO })
   @Post('/')
   async createTrack(@Body() { albumId }: CreateTrackDTO): Promise<TrackRO> {
-    const createdTrackId = await this._commandBus.execute(new CreateTrackCommand(albumId));
-    const createdTrack = await this._queryBus.execute(new GetTrackQuery(createdTrackId));
+    const { id: createdTrackId } = await this._commandBus.execute(
+      new App.CQRS.CreateTrackCommand(albumId),
+    );
+    const createdTrack = await this._queryBus.execute(new App.CQRS.GetTrackQuery(createdTrackId));
 
     if (!createdTrack) {
       throw new BadRequestException('Some error');
@@ -77,9 +72,9 @@ export class TrackController {
     @Param('id', ParseObjectIdPipe) id: string,
     @Body() dto: UpdateTrackDTO,
   ): Promise<TrackRO> {
-    await this._commandBus.execute(new UpdateTrackCommand(id, dto));
+    await this._commandBus.execute(new App.CQRS.UpdateTrackCommand(id, dto));
 
-    const updatedTrack = await this._queryBus.execute(new GetTrackQuery(id));
+    const updatedTrack = await this._queryBus.execute(new App.CQRS.GetTrackQuery(id));
 
     if (!updatedTrack) {
       throw new NotFoundException('Track does not exist');
@@ -102,9 +97,9 @@ export class TrackController {
     @Param('id', ParseObjectIdPipe) id: string,
     @Body() dto: UpdateTrackFeatArtistsDTO,
   ): Promise<TrackRO> {
-    await this._commandBus.execute(new UpdateTrackFeatArtistsCommand(id, dto.artists));
+    await this._commandBus.execute(new App.CQRS.UpdateTrackFeatArtistsCommand(id, dto.artists));
 
-    const updatedTrack = await this._queryBus.execute(new GetTrackQuery(id));
+    const updatedTrack = await this._queryBus.execute(new App.CQRS.GetTrackQuery(id));
 
     if (!updatedTrack) {
       throw new NotFoundException('Track does not exist');
@@ -127,9 +122,9 @@ export class TrackController {
     @Param('id', ParseObjectIdPipe) id: string,
     @Body() dto: UpdateTrackFileDTO,
   ): Promise<TrackRO> {
-    await this._commandBus.execute(new UpdateTrackFileCommand(id, dto));
+    await this._commandBus.execute(new App.CQRS.UpdateTrackFileCommand(id, dto));
 
-    const updatedTrack = await this._queryBus.execute(new GetTrackQuery(id));
+    const updatedTrack = await this._queryBus.execute(new App.CQRS.GetTrackQuery(id));
 
     if (!updatedTrack) {
       throw new NotFoundException('Track does not exist');
@@ -148,9 +143,9 @@ export class TrackController {
   @ApiOkResponse({ description: 'Updated artist', type: TrackRO })
   @Delete('/:id/file')
   async deleteTrackFile(@Param('id', ParseObjectIdPipe) id: string): Promise<TrackRO> {
-    await this._commandBus.execute(new DeleteTrackFileCommand(id));
+    await this._commandBus.execute(new App.CQRS.DeleteTrackFileCommand(id));
 
-    const updatedTrack = await this._queryBus.execute(new GetTrackQuery(id));
+    const updatedTrack = await this._queryBus.execute(new App.CQRS.GetTrackQuery(id));
 
     if (!updatedTrack) {
       throw new NotFoundException('Track does not exist');
@@ -170,7 +165,7 @@ export class TrackController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete('/:id')
   async deleteTrack(@Param('id', ParseObjectIdPipe) id: string): Promise<void> {
-    await this._commandBus.execute(new DeleteTrackCommand(id));
+    await this._commandBus.execute(new App.CQRS.DeleteTrackCommand(id));
   }
 
   @ApiOperation({ summary: 'Get an track by id', operationId: 'getTrack' })
@@ -181,10 +176,10 @@ export class TrackController {
     example: faker.database.mongodbObjectId(),
   })
   @ApiOkResponse({ description: 'Track', type: TrackRO })
-  @Roles(AdminRoles.Guest)
+  @Roles(Domain.Admin.AdminRoles.Guest)
   @Get('/:id')
   async getTrack(@Param('id', ParseObjectIdPipe) id: string): Promise<TrackRO> {
-    const foundTrack = await this._queryBus.execute(new GetTrackQuery(id));
+    const foundTrack = await this._queryBus.execute(new App.CQRS.GetTrackQuery(id));
 
     if (!foundTrack) {
       throw new NotFoundException('Track does not exist');

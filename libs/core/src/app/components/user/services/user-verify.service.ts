@@ -1,10 +1,10 @@
-import { UserId } from '@core/domain/components/user/types';
-import { UserWriteRepository } from '@core/domain/components/user/repository/user-write-repository.port';
+import { UserWriteRepository } from '../../../../domain/components/user';
+import { UserId } from '../../../../domain/components/user/types';
 
 export class UserVerifyService {
   constructor(private readonly _WR: UserWriteRepository) {}
 
-  verify(id: string): Promise<UserId | null> {
-    return this._WR.existsById(id);
+  verifyById(userId: string): Promise<UserId | null> {
+    return this._WR.existsById(userId);
   }
 }

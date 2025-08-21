@@ -1,9 +1,8 @@
-import { CommandHandler } from '@core/app/types';
-import { NotFoundException } from '@core/shared/exceptions';
-import { CreateTrackCommand } from '@core/app/cqrs/track/commands/create-track/create-track.command';
-import { AlbumVerifyService } from '@core/app/components/album/services/album-verify.service';
-import { TrackCreateService } from '@core/app/components/track/services/track-create.service';
-import { AlbumService } from '@core/app/components/album/services/album.service';
+import { CommandHandler } from '../../../../types';
+import { CreateTrackCommand } from './create-track.command';
+import { AlbumService, AlbumVerifyService } from '../../../../components/album';
+import { TrackCreateService } from '../../../../components/track';
+import { NotFoundException } from '../../../../../shared/exceptions';
 
 export class CreateTrackHandler implements CommandHandler<CreateTrackCommand> {
   constructor(
@@ -14,15 +13,17 @@ export class CreateTrackHandler implements CommandHandler<CreateTrackCommand> {
 
   async execute({ albumId }: CreateTrackCommand) {
     const verifiedAlbumId = await this._albumVerifyService.verify(albumId);
-    const albumArtistIds = await this._albumService.getArtistIds(albumId);
+    const albumArtistIds = await this._albumService.getArtistIdsById(albumId);
 
     if (!verifiedAlbumId) {
       throw new NotFoundException('Album does not exist');
     }
 
-    return await this._trackCreateService.create({
+    const id = await this._trackCreateService.create({
       albumId: verifiedAlbumId,
       artistIds: albumArtistIds,
     });
+
+    return { id };
   }
 }

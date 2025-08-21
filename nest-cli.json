@@ -5,7 +5,7 @@
   "compilerOptions": {
     "deleteOutDir": true,
     "webpack": true,
-    "tsConfigPath": "apps/api.mabell/tsconfig.app.json"
+    "tsConfigPath": "./tsconfig.app.json"
   },
   "projects": {
     "admin": {
@@ -18,15 +18,6 @@
         "tsConfigPath": "apps/admin/tsconfig.app.json"
       }
     },
-    "api.mabell": {
-      "type": "application",
-      "root": "apps/api.mabell",
-      "entryFile": "main",
-      "sourceRoot": "apps/api.mabell/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/api.mabell/tsconfig.app.json"
-      }
-    },
     "client": {
       "type": "application",
       "root": "apps/client",
@@ -35,15 +26,6 @@
       "compilerOptions": {
         "webpack": false,
         "tsConfigPath": "apps/client/tsconfig.app.json"
-      }
-    },
-    "command-bus": {
-      "type": "library",
-      "root": "libs/command-bus",
-      "entryFile": "index",
-      "sourceRoot": "libs/command-bus/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/command-bus/tsconfig.lib.json"
       }
     },
     "core": {
@@ -82,13 +64,13 @@
         "tsConfigPath": "libs/jwt/tsconfig.lib.json"
       }
     },
-    "mongoose": {
+    "db": {
       "type": "library",
-      "root": "libs/mongoose",
+      "root": "libs/db",
       "entryFile": "index",
-      "sourceRoot": "libs/mongoose/src",
+      "sourceRoot": "libs/db/src",
       "compilerOptions": {
-        "tsConfigPath": "libs/mongoose/tsconfig.lib.json"
+        "tsConfigPath": "libs/db/tsconfig.lib.json"
       }
     },
     "password": {
@@ -100,13 +82,13 @@
         "tsConfigPath": "libs/password/tsconfig.lib.json"
       }
     },
-    "query-bus": {
+    "cqrs": {
       "type": "library",
-      "root": "libs/query-bus",
+      "root": "libs/cqrs",
       "entryFile": "index",
-      "sourceRoot": "libs/query-bus/src",
+      "sourceRoot": "libs/cqrs/src",
       "compilerOptions": {
-        "tsConfigPath": "libs/query-bus/tsconfig.lib.json"
+        "tsConfigPath": "libs/cqrs/tsconfig.lib.json"
       }
     },
     "random-id": {
@@ -118,13 +100,13 @@
         "tsConfigPath": "libs/random-id/tsconfig.lib.json"
       }
     },
-    "redis": {
+    "cache": {
       "type": "library",
-      "root": "libs/redis",
+      "root": "libs/cache",
       "entryFile": "index",
-      "sourceRoot": "libs/redis/src",
+      "sourceRoot": "libs/cache/src",
       "compilerOptions": {
-        "tsConfigPath": "libs/redis/tsconfig.lib.json"
+        "tsConfigPath": "libs/cache/tsconfig.lib.json"
       }
     },
     "shared": {
@@ -136,22 +118,13 @@
         "tsConfigPath": "libs/shared/tsconfig.lib.json"
       }
     },
-    "types": {
+    "search": {
       "type": "library",
-      "root": "libs/types",
+      "root": "libs/search",
       "entryFile": "index",
-      "sourceRoot": "libs/types/src",
+      "sourceRoot": "libs/search/src",
       "compilerOptions": {
-        "tsConfigPath": "libs/types/tsconfig.lib.json"
-      }
-    },
-    "typesense": {
-      "type": "library",
-      "root": "libs/typesense",
-      "entryFile": "index",
-      "sourceRoot": "libs/typesense/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/typesense/tsconfig.lib.json"
+        "tsConfigPath": "libs/search/tsconfig.lib.json"
       }
     }
   },

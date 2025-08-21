@@ -1,7 +1,6 @@
-import { Command } from '@core/app/types';
-import { AlbumId } from '@core/domain/components/album/types';
+import { Command } from '../../../../types';
 
-export class UpdateAlbumArtistsCommand extends Command<AlbumId> {
+export class UpdateAlbumArtistsCommand extends Command<void> {
   constructor(
     public readonly id: string,
     public readonly artistIds: string[],

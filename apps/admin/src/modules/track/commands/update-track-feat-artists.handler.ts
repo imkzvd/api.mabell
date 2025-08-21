@@ -1,12 +1,12 @@
-import { CommandHandler } from '@nestjs/cqrs';
-import { UpdateTrackFeatArtistsHandler as CoreUpdateTrackFeatArtistsHandler } from '@core/app/cqrs/track/commands/update-track-feat-artists/update-track-feat-artists.handler';
-import { UpdateTrackFeatArtistsCommand } from '@core/app/cqrs/track/commands/update-track-feat-artists/update-track-feat-artists.command';
-import { ArtistVerifyService } from '@core/app/components/artist/services/artist-verify.service';
-import { TrackUpdateService } from '@core/app/components/track/services/track-update.service';
+import { CommandHandler } from '@api.mabell/cqrs';
+import { App } from '@api.mabell/core';
 
-@CommandHandler(UpdateTrackFeatArtistsCommand)
-export class UpdateTrackFeatArtistsHandler extends CoreUpdateTrackFeatArtistsHandler {
-  constructor(artistVerifyService: ArtistVerifyService, trackUpdateService: TrackUpdateService) {
+@CommandHandler(App.CQRS.UpdateTrackFeatArtistsCommand)
+export class UpdateTrackFeatArtistsHandler extends App.CQRS.UpdateTrackFeatArtistsHandler {
+  constructor(
+    artistVerifyService: App.Components.Artist.ArtistVerifyService,
+    trackUpdateService: App.Components.Track.TrackUpdateService,
+  ) {
     super(artistVerifyService, trackUpdateService);
   }
 }

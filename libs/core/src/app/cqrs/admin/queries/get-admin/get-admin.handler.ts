@@ -1,11 +1,11 @@
-import { AdminService } from '@core/app/components/admin/services/admin.service';
-import { GetAdminQuery } from '@core/app/cqrs/admin/queries/get-admin/get-admin.query';
-import { QueryHandler } from '@core/app/types';
+import { QueryHandler } from '../../../../types';
+import { GetAdminQuery } from './get-admin.query';
+import { AdminService } from '../../../../components/admin';
 
 export class GetAdminHandler implements QueryHandler<GetAdminQuery> {
   constructor(private _service: AdminService) {}
 
-  async execute({ id }: GetAdminQuery) {
-    return this._service.find(id);
+  execute({ id }: GetAdminQuery) {
+    return this._service.findById(id);
   }
 }

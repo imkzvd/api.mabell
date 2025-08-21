@@ -1,8 +1,8 @@
-import { Command } from '@core/app/types';
-import { TmpFileId } from '@core/app/common/ports/file-storages/common/types';
-import { UploadFilePayload } from '@core/app/components/upload/types';
+import { Command } from '../../../../types';
+import { UploadFilePayload } from '../../../../components/upload/types';
+import { TmpFileId } from '../../../../ports/file-storages/types';
 
-export class UploadFileCommand extends Command<TmpFileId> {
+export class UploadFileCommand extends Command<{ id: TmpFileId }> {
   constructor(public readonly payload: UploadFilePayload) {
     super();
   }

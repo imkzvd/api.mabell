@@ -1,11 +1,9 @@
-import { CommandHandler } from '@nestjs/cqrs';
-import { DeleteAlbumCommand } from '@core/app/cqrs/album/commands/delete-album/delete-album.command';
-import { DeleteAlbumHandler as CoreDeleteAlbumHandler } from '@core/app/cqrs/album/commands/delete-album/delete-album.handler';
-import { AlbumDeleteService } from '@core/app/components/album/services/album-delete.service';
+import { CommandHandler } from '@api.mabell/cqrs';
+import { App } from '@api.mabell/core';
 
-@CommandHandler(DeleteAlbumCommand)
-export class DeleteAlbumHandler extends CoreDeleteAlbumHandler {
-  constructor(service: AlbumDeleteService) {
+@CommandHandler(App.CQRS.DeleteAlbumCommand)
+export class DeleteAlbumHandler extends App.CQRS.DeleteAlbumHandler {
+  constructor(service: App.Components.Album.AlbumDeleteService) {
     super(service);
   }
 }

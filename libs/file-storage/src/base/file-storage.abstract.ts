@@ -1,7 +1,7 @@
 import * as fsPromises from 'fs/promises';
-import * as sharp from 'sharp';
 import * as path from 'path';
 import * as process from 'process';
+import * as sharp from 'sharp';
 
 export abstract class FileStorage {
   protected readonly _projectDirPath: string = process.cwd();

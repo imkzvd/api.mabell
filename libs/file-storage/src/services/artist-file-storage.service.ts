@@ -1,143 +1,121 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { FileStorage } from '@infrastructure/file-storage/base/file-storage.abstract';
-import { ArtistFileStorage as ArtistFileStoragePort } from '@core/app/common/ports/file-storages/artist-file-storage.port';
-import { TmpFileStorage as TmpFileStoragePort } from '@core/app/common/ports/file-storages/tmp-file-storage.port';
-import { ArtistId } from '@core/domain/components/artist/types';
-import { TmpFileDTO } from '@core/app/common/ports/file-storages/common/dtos/tmp-file.dto';
-import { StoredFileDTO } from '@core/app/common/ports/file-storages/common/dtos/stored-file.dto';
-import { AlbumId } from '@core/domain/components/album/types';
-import { TrackId } from '@core/domain/components/track/types';
-import { TmpFileStorage } from '@infrastructure/file-storage/services/tmp-file-storage.service';
+import { App } from '@api.mabell/core';
+import { FileStorage } from '../base/file-storage.abstract';
+import { TmpFileStorage } from './tmp-file-storage.service';
 
 @Injectable()
-export class ArtistFileStorage extends FileStorage implements ArtistFileStoragePort {
-  constructor(
-    @Inject(TmpFileStorage)
-    private readonly _tmpFileStorage: TmpFileStoragePort,
-  ) {
+export class ArtistFileStorage extends FileStorage implements App.Ports.ArtistFileStorage {
+  constructor(@Inject(TmpFileStorage) private readonly _tmpFS: TmpFileStorage) {
     super('artists');
   }
 
-  async saveArtistAvatar(artistId: ArtistId, file: TmpFileDTO): Promise<StoredFileDTO> {
+  async saveArtistAvatar(artistId: string, file: App.DTOs.TmpFileDTO) {
     await this.createArtistDirectoryById(artistId);
 
     const { fileName, absPath, relPath } = this.getArtistAvatarMetaById(artistId);
     await this.convertAndSaveImage(file.path, absPath);
-    await this._tmpFileStorage.deleteById(file.id);
+    await this._tmpFS.deleteById(file.id);
 
-    return new StoredFileDTO(fileName, relPath, absPath, file.size, file.type);
+    return new App.DTOs.StoredFileDTO(fileName, relPath, absPath, file.size, file.type);
   }
 
-  deleteArtistAvatar(id: ArtistId): Promise<void> {
-    const { absPath } = this.getArtistAvatarMetaById(id);
+  deleteArtistAvatar(artistId: string) {
+    const { absPath } = this.getArtistAvatarMetaById(artistId);
 
     return this.deleteByPath(absPath);
   }
 
-  async saveArtistCover(id: ArtistId, file: TmpFileDTO): Promise<StoredFileDTO> {
-    await this.createArtistDirectoryById(id);
+  async saveArtistCover(artistId: string, file: App.DTOs.TmpFileDTO) {
+    await this.createArtistDirectoryById(artistId);
 
-    const { fileName, absPath, relPath } = this.getArtistCoverMetaById(id);
+    const { fileName, absPath, relPath } = this.getArtistCoverMetaById(artistId);
     await this.convertAndSaveImage(file.path, absPath);
-    await this._tmpFileStorage.deleteById(file.id);
+    await this._tmpFS.deleteById(file.id);
 
-    return new StoredFileDTO(fileName, relPath, absPath, file.size, file.type);
+    return new App.DTOs.StoredFileDTO(fileName, relPath, absPath, file.size, file.type);
   }
 
-  deleteArtistCover(id: ArtistId): Promise<void> {
-    const { absPath } = this.getArtistCoverMetaById(id);
+  deleteArtistCover(artistId: string) {
+    const { absPath } = this.getArtistCoverMetaById(artistId);
 
     return this.deleteByPath(absPath);
   }
 
-  deleteArtistDirectory(id: ArtistId): Promise<void> {
-    const { absPath } = this.resolveProjectPath(id);
+  deleteArtistDirectory(artistId: string) {
+    const { absPath } = this.resolveProjectPath(artistId);
 
     return this.deleteByPath(absPath);
   }
 
-  private createArtistDirectoryById(id: ArtistId): Promise<{ absPath: string; relPath: string }> {
-    return this.createDirectory(id);
+  private createArtistDirectoryById(artistId: string) {
+    return this.createDirectory(artistId);
   }
 
-  private getArtistAvatarMetaById(id: ArtistId): {
-    fileName: string;
-    absPath: string;
-    relPath: string;
-  } {
+  private getArtistAvatarMetaById(artistId: string) {
     const fileName = 'avatar.webp';
 
     return {
       fileName,
-      ...this.resolveProjectPath(id, fileName),
+      ...this.resolveProjectPath(artistId, fileName),
     };
   }
 
-  private getArtistCoverMetaById(id: ArtistId): {
-    fileName: string;
-    absPath: string;
-    relPath: string;
-  } {
+  private getArtistCoverMetaById(artistId: string) {
     const fileName = 'cover.webp';
 
     return {
       fileName,
-      ...this.resolveProjectPath(id, fileName),
+      ...this.resolveProjectPath(artistId, fileName),
     };
   }
 
-  async saveAlbumCover(id: ArtistId, albumId: AlbumId, file: TmpFileDTO): Promise<StoredFileDTO> {
-    await this.createAlbumDirectoryById(id, albumId);
+  async saveAlbumCover(artistId: string, albumId: string, file: App.DTOs.TmpFileDTO) {
+    await this.createAlbumDirectory(artistId, albumId);
 
-    const { fileName, absPath, relPath } = this.getAlbumCoverMetaById(id, albumId);
+    const { fileName, absPath, relPath } = this.getAlbumCoverMeta(artistId, albumId);
     await this.convertAndSaveImage(file.path, absPath);
-    await this._tmpFileStorage.deleteById(file.id);
+    await this._tmpFS.deleteById(file.id);
 
-    return new StoredFileDTO(fileName, relPath, absPath, file.size, file.type);
+    return new App.DTOs.StoredFileDTO(fileName, relPath, absPath, file.size, file.type);
   }
 
-  deleteAlbumCover(artistId: ArtistId, albumId: AlbumId): Promise<void> {
-    const { absPath } = this.getAlbumCoverMetaById(artistId, albumId);
+  deleteAlbumCover(artistId: string, albumId: string) {
+    const { absPath } = this.getAlbumCoverMeta(artistId, albumId);
 
     return this.deleteByPath(absPath);
   }
 
-  deleteAlbumDirectory(artistId: ArtistId, albumId: AlbumId): Promise<void> {
+  deleteAlbumDirectory(artistId: string, albumId: string) {
     const { absPath } = this.resolveProjectPath(artistId, 'albums', albumId);
 
     return this.deleteByPath(absPath);
   }
 
-  async saveTrack(
-    id: ArtistId,
-    albumId: AlbumId,
-    trackId: TrackId,
-    file: TmpFileDTO,
-  ): Promise<StoredFileDTO> {
-    await this.createAlbumDirectoryById(id, albumId);
+  async saveTrack(id: string, albumId: string, trackId: string, file: App.DTOs.TmpFileDTO) {
+    await this.createAlbumDirectory(id, albumId);
 
     const { fileName, absPath, relPath } = this.getTrackMeta(id, albumId, trackId);
     await this.moveFile(file.path, absPath);
 
-    return new StoredFileDTO(fileName, relPath, absPath, file.size, file.type);
+    return new App.DTOs.StoredFileDTO(fileName, relPath, absPath, file.size, file.type);
   }
 
-  deleteTrack(artistId: ArtistId, albumId: AlbumId, trackId: TrackId): Promise<void> {
+  deleteTrack(artistId: string, albumId: string, trackId: string) {
     const { absPath } = this.getTrackMeta(artistId, albumId, trackId);
 
     return this.deleteByPath(absPath);
   }
 
-  private createAlbumDirectoryById(
-    artistId: ArtistId,
+  private createAlbumDirectory(
+    artistId: string,
     albumId: string,
   ): Promise<{ absPath: string; relPath: string }> {
     return this.createDirectory(artistId, 'albums', albumId);
   }
 
-  private getAlbumCoverMetaById(
-    artistId: ArtistId,
-    albumId: AlbumId,
+  private getAlbumCoverMeta(
+    artistId: string,
+    albumId: string,
   ): {
     fileName: string;
     absPath: string;
@@ -152,9 +130,9 @@ export class ArtistFileStorage extends FileStorage implements ArtistFileStorageP
   }
 
   private getTrackMeta(
-    artistId: ArtistId,
-    albumId: AlbumId,
-    trackId: TrackId,
+    artistId: string,
+    albumId: string,
+    trackId: string,
   ): {
     fileName: string;
     absPath: string;
