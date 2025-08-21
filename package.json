@@ -4,17 +4,21 @@
   "author": "imkzvd@gmail.com",
   "private": true,
   "license": "UNLICENSED",
+  "workspaces": [
+    "apps/*",
+    "libs/*"
+  ],
   "scripts": {
     "build": "nest build",
     "build:admin": "nest build admin",
     "build:client": "nest build client",
     "format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\"",
     "start": "nest start",
-    "start:admin:dev": "nest start admin --watch --env-file .env.admin",
-    "start:client:dev": "nest start client --watch --env-file .env.client",
+    "start:admin:dev": "nest start admin --watch",
+    "start:client:dev": "nest start client --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
-    "start:admin:prod": "node dist/apps/admin/apps/admin/src/main --env-file .env.admin",
+    "start:admin:prod": "node dist/apps/admin/apps/admin/src/main",
     "start:client:prod": "node dist/apps/client/apps/client/src/main --env-file .env.client",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
@@ -25,33 +29,7 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "@babel/runtime": "^7.27.1",
-    "@faker-js/faker": "^9.9.0",
-    "@nestjs/common": "^11.0.1",
-    "@nestjs/config": "^4.0.2",
-    "@nestjs/core": "^11.0.1",
-    "@nestjs/cqrs": "^11.0.2",
-    "@nestjs/event-emitter": "^3.0.1",
-    "@nestjs/mongoose": "^11.0.1",
-    "@nestjs/passport": "^11.0.5",
-    "@nestjs/platform-express": "^11.0.1",
-    "@nestjs/serve-static": "^5.0.3",
-    "@nestjs/swagger": "^11.2.0",
-    "bcrypt": "^5.1.1",
-    "class-transformer": "^0.5.1",
-    "class-validator": "^0.14.1",
-    "cookie-parser": "^1.4.7",
-    "generate-password": "^1.7.1",
-    "ioredis": "^5.6.0",
-    "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.12.1",
-    "passport-jwt": "^4.0.1",
-    "reflect-metadata": "^0.2.2",
-    "rxjs": "^7.8.1",
-    "sharp": "^0.33.5",
-    "typesense": "^2.0.3",
-    "utility-types": "^3.11.0",
-    "uuid": "^11.1.0"
+    "@babel/runtime": "^7.27.1"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.8.0",
@@ -63,14 +41,9 @@
     "@nestjs/testing": "^11.0.1",
     "@swc/cli": "^0.6.0",
     "@swc/core": "^1.10.7",
-    "@types/bcrypt": "^5.0.2",
-    "@types/cookie-parser": "^1.4.8",
     "@types/express": "^5.0.0",
     "@types/jest": "^29.5.14",
-    "@types/jsonwebtoken": "^9.0.9",
     "@types/multer": "^1.4.12",
-    "@types/node": "^22.10.7",
-    "@types/passport-jwt": "^4.0.1",
     "@types/supertest": "^6.0.2",
     "eslint": "^9.18.0",
     "eslint-config-prettier": "^10.0.1",
@@ -109,25 +82,6 @@
     "roots": [
       "<rootDir>/libs/",
       "<rootDir>/apps/"
-    ],
-    "moduleNameMapper": {
-      "^@core(|/.*)$": "<rootDir>/libs/core/src/$1",
-      "^@infrastructure/command-bus(|/.*)$": "<rootDir>/libs/command-bus/src/$1",
-      "^@infrastructure/event-bus(|/.*)$": "<rootDir>/libs/event-bus/src/$1",
-      "^@infrastructure/file-storage(|/.*)$": "<rootDir>/libs/file-storage/src/$1",
-      "^@infrastructure/jwt(|/.*)$": "<rootDir>/libs/jwt/src/$1",
-      "^@infrastructure/mongoose(|/.*)$": "<rootDir>/libs/mongoose/src/$1",
-      "^@infrastructure/password(|/.*)$": "<rootDir>/libs/password/src/$1",
-      "^@infrastructure/query-bus(|/.*)$": "<rootDir>/libs/query-bus/src/$1",
-      "^@infrastructure/random-id(|/.*)$": "<rootDir>/libs/random-id/src/$1",
-      "^@infrastructure/redis(|/.*)$": "<rootDir>/libs/redis/src/$1",
-      "^@infrastructure/typesense(|/.*)$": "<rootDir>/libs/typesense/src/$1",
-      "^@shared(|/.*)$": "<rootDir>/libs/shared/src/$1",
-      "^@types(|/.*)$": "<rootDir>/libs/types/src/$1"
-    }
-  },
-  "workspaces": [
-    "apps/*",
-    "libs/*"
-  ]
+    ]
+  }
 }
