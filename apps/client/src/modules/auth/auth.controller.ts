@@ -1,12 +1,10 @@
 import { Controller, Post, Body, Res, Req, HttpCode, HttpStatus } from '@nestjs/common';
 import { ApiBody, ApiNoContentResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
-import { IsPublic } from '@shared/decorators/is-public.decorator';
-import { CommandBus } from '@infrastructure/command-bus';
+import { App } from '@api.mabell/core';
+import { CommandBus } from '@api.mabell/cqrs';
+import { IsPublic } from '@api.mabell/shared';
 import { ConfigService } from '@nestjs/config';
-import { LoginUserCommand } from '@core/app/cqrs/user/commands/login-user/login-user.command';
-import { CreateUserAccessTokenCommand } from '@core/app/cqrs/token/commands/create-user-access-token/create-user-access-token.command';
-import { CreateUserRefreshTokenCommand } from '@core/app/cqrs/token/commands/create-user-refresh-token/create-user-refresh-token.command';
 import { ACCESS_TOKEN_COOKIE_NAME, REFRESH_TOKEN_COOKIE_NAME } from '../../constants';
 import { LoginUserDTO } from './dtos/login-user.dto';
 
@@ -32,10 +30,12 @@ export class AuthController {
     const userAgent = req.headers['user-agent'] as string;
     const userIp = req.headers['x-real-ip'] as string;
 
-    const loggedUserId = await this._CB.execute(new LoginUserCommand(dto));
-    const accessToken = await this._CB.execute(new CreateUserAccessTokenCommand(loggedUserId));
+    const { id: loggedUserId } = await this._CB.execute(new App.CQRS.LoginUserCommand(dto));
+    const accessToken = await this._CB.execute(
+      new App.CQRS.CreateUserAccessTokenCommand(loggedUserId),
+    );
     const refreshToken = await this._CB.execute(
-      new CreateUserRefreshTokenCommand({
+      new App.CQRS.CreateUserRefreshTokenCommand({
         userId: loggedUserId,
         userAgent,
         ip: userIp,

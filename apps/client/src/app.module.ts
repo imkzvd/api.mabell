@@ -1,11 +1,10 @@
 import * as path from 'path';
 import { Module } from '@nestjs/common';
-import { CqrsModule } from '@nestjs/cqrs';
 import { ConfigModule } from '@nestjs/config';
 import { ServeStaticModule } from '@nestjs/serve-static';
-import { MongooseModule } from '@infrastructure/mongoose';
-import { EventBusModule } from '@infrastructure/event-bus';
-import { CommandBusModule } from '@infrastructure/command-bus';
+import { DBModule } from '@api.mabell/db';
+import { EventBusModule } from '@api.mabell/event-bus';
+import { CqrsModule } from '@api.mabell/cqrs';
 import appConfig from './configs/app.config';
 import corsConfig from './configs/cors.config';
 import databaseConfig from './configs/database.config';
@@ -20,7 +19,7 @@ import { ArtistModule } from './modules/artist/artist.module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: '.env.client',
+      envFilePath: '.env',
       load: [appConfig, corsConfig, databaseConfig, jwtConfig, mailConfig, redisConfig],
     }),
     ServeStaticModule.forRoot({
@@ -32,10 +31,10 @@ import { ArtistModule } from './modules/artist/artist.module';
       serveRoot: '/storages',
     }),
     ConfigModule.forRoot(),
-    CqrsModule.forRoot(),
-    MongooseModule,
+    CqrsModule,
+    DBModule,
     EventBusModule,
-    CommandBusModule,
+    CqrsModule,
     AuthModule,
     UserModule,
     ArtistModule,

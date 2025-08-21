@@ -1,12 +1,12 @@
-import { CommandHandler } from '@nestjs/cqrs';
-import { CreateUserRefreshTokenCommand } from '@core/app/cqrs/token/commands/create-user-refresh-token/create-user-refresh-token.command';
-import { CreateUserRefreshTokenHandler as CoreCreateUserRefreshTokenHandler } from '@core/app/cqrs/token/commands/create-user-refresh-token/create-user-refresh-token.handler';
-import { UserService } from '@core/app/components/user/services/user.service';
-import { UserTokenCreateService } from '@core/app/components/user-token/services/user-token-create.service';
+import { CommandHandler } from '@api.mabell/cqrs';
+import { App } from '@api.mabell/core';
 
-@CommandHandler(CreateUserRefreshTokenCommand)
-export class CreateUserRefreshTokenHandler extends CoreCreateUserRefreshTokenHandler {
-  constructor(userService: UserService, userTokenCreateService: UserTokenCreateService) {
+@CommandHandler(App.CQRS.CreateUserRefreshTokenCommand)
+export class CreateUserRefreshTokenHandler extends App.CQRS.CreateUserRefreshTokenHandler {
+  constructor(
+    userService: App.Components.User.UserService,
+    userTokenCreateService: App.Components.UserToken.UserTokenCreateService,
+  ) {
     super(userService, userTokenCreateService);
   }
 }

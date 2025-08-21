@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { faker } from '@faker-js/faker';
 import * as process from 'process';
-import { UserDTO } from '@core/app/components/user/dtos/user.dto';
+import { App } from '@api.mabell/core';
 
 export class UserRO {
   @ApiProperty({
@@ -34,7 +34,7 @@ export class UserRO {
   })
   color: string | null;
 
-  constructor(dto: UserDTO) {
+  constructor(dto: App.DTOs.UserDTO) {
     this.id = dto.id;
     this.name = dto.name;
     this.avatar = dto.avatar ? `${process.env.HOST}${dto.avatar}` : null;
