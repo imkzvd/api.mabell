@@ -1,11 +1,9 @@
-import { CommandHandler } from '@nestjs/cqrs';
-import { AdminUpdateService } from '@core/app/components/admin/services/admin-update.service';
-import { RefreshAdminPasswordHandler as CoreRefreshAdminPasswordHandler } from '@core/app/cqrs/admin/commands/refresh-admin-password/refresh-admin-password.handler';
-import { RefreshAdminPasswordCommand } from '@core/app/cqrs/admin/commands/refresh-admin-password/refresh-admin-password.command';
+import { CommandHandler } from '@api.mabell/cqrs';
+import { App } from '@api.mabell/core';
 
-@CommandHandler(RefreshAdminPasswordCommand)
-export class RefreshAdminPasswordHandler extends CoreRefreshAdminPasswordHandler {
-  constructor(service: AdminUpdateService) {
+@CommandHandler(App.CQRS.RefreshAdminPasswordCommand)
+export class RefreshAdminPasswordHandler extends App.CQRS.RefreshAdminPasswordHandler {
+  constructor(service: App.Components.Admin.AdminUpdateService) {
     super(service);
   }
 }

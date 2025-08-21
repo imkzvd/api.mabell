@@ -1,11 +1,9 @@
-import { CommandHandler } from '@nestjs/cqrs';
-import { LoginAdminCommand } from '@core/app/cqrs/admin/commands/login-admin/login-admin.command';
-import { LoginAdminHandler as CoreLoginAdminHandler } from '@core/app/cqrs/admin/commands/login-admin/login-admin.handler';
-import { AdminLoginService } from '@core/app/components/admin/services/admin-login.service';
+import { App } from '@api.mabell/core';
+import { CommandHandler } from '@api.mabell/cqrs';
 
-@CommandHandler(LoginAdminCommand)
-export class LoginAdminHandler extends CoreLoginAdminHandler {
-  constructor(service: AdminLoginService) {
+@CommandHandler(App.CQRS.LoginAdminCommand)
+export class LoginAdminHandler extends App.CQRS.LoginAdminHandler {
+  constructor(service: App.Components.Admin.AdminLoginService) {
     super(service);
   }
 }

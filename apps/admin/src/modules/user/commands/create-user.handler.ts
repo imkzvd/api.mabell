@@ -1,11 +1,9 @@
-import { CommandHandler } from '@nestjs/cqrs';
-import { CreateUserCommand } from '@core/app/cqrs/user/commands/create-user/create-user.command';
-import { CreateUserHandler as CoreCreateUserHandler } from '@core/app/cqrs/user/commands/create-user/create-user.handler';
-import { UserCreateService } from '@core/app/components/user/services/user-create.service';
+import { CommandHandler } from '@api.mabell/cqrs';
+import { App } from '@api.mabell/core';
 
-@CommandHandler(CreateUserCommand)
-export class CreateUserHandler extends CoreCreateUserHandler {
-  constructor(service: UserCreateService) {
+@CommandHandler(App.CQRS.CreateUserCommand)
+export class CreateUserHandler extends App.CQRS.CreateUserHandler {
+  constructor(service: App.Components.User.UserCreateService) {
     super(service);
   }
 }

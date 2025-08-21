@@ -1,11 +1,9 @@
-import { CommandHandler } from '@nestjs/cqrs';
-import { DeleteFileHandler as CoreDeleteFileHandler } from '@core/app/cqrs/upload/commands/delete-file/delete-file.handler';
-import { DeleteFileCommand } from '@core/app/cqrs/upload/commands/delete-file/delete-file.command';
-import { UploadDeleteService } from '@core/app/components/upload/services/upload-delete.service';
+import { CommandHandler } from '@api.mabell/cqrs';
+import { App } from '@api.mabell/core';
 
-@CommandHandler(DeleteFileCommand)
-export class DeleteFileHandler extends CoreDeleteFileHandler {
-  constructor(service: UploadDeleteService) {
+@CommandHandler(App.CQRS.DeleteFileCommand)
+export class DeleteFileHandler extends App.CQRS.DeleteFileHandler {
+  constructor(service: App.Components.Upload.UploadDeleteService) {
     super(service);
   }
 }

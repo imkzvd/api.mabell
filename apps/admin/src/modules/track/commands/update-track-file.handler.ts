@@ -1,11 +1,9 @@
-import { CommandHandler } from '@nestjs/cqrs';
-import { UpdateTrackFileCommand } from '@core/app/cqrs/track/commands/update-track-file/update-track-file.command';
-import { UpdateTrackFileHandler as CoreUpdateTrackFileHandler } from '@core/app/cqrs/track/commands/update-track-file/update-track-file.handler';
-import { TrackUpdateService } from '@core/app/components/track/services/track-update.service';
+import { CommandHandler } from '@api.mabell/cqrs';
+import { App } from '@api.mabell/core';
 
-@CommandHandler(UpdateTrackFileCommand)
-export class UpdateTrackFileHandler extends CoreUpdateTrackFileHandler {
-  constructor(service: TrackUpdateService) {
+@CommandHandler(App.CQRS.UpdateTrackFileCommand)
+export class UpdateTrackFileHandler extends App.CQRS.UpdateTrackFileHandler {
+  constructor(service: App.Components.Track.TrackUpdateService) {
     super(service);
   }
 }

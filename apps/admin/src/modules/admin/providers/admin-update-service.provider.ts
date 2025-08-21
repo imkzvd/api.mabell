@@ -1,18 +1,12 @@
 import { Provider } from '@nestjs/common';
-import { EventBus as EventBusPort } from '@core/app/common/ports/event-bus.port';
-import { AdminWriteRepository as AdminWriteRepositoryPort } from '@core/domain/components/admin/repository/admin-write-repository.port';
-import { PasswordService as PasswordServicePort } from '@core/app/common/ports/password-service.port';
-import { EventBus } from '@infrastructure/event-bus';
-import { AdminWriteRepository } from '@infrastructure/mongoose/services/admin/admin-write-repository.service';
-import { PasswordService } from '@infrastructure/password';
-import { AdminUpdateService } from '@core/app/components/admin/services/admin-update.service';
+import { App } from '@api.mabell/core';
+import { EventBus } from '@api.mabell/event-bus';
+import { AdminDBModule } from '@api.mabell/db';
+import { PasswordService } from '@api.mabell/password';
 
 export const adminUpdateServiceProvider: Provider = {
-  provide: AdminUpdateService,
-  useFactory: (
-    eb: EventBusPort,
-    wr: AdminWriteRepositoryPort,
-    passwordService: PasswordServicePort,
-  ) => new AdminUpdateService(eb, wr, passwordService),
-  inject: [EventBus, AdminWriteRepository, PasswordService],
+  provide: App.Components.Admin.AdminUpdateService,
+  useFactory: (eb, wr, passwordService) =>
+    new App.Components.Admin.AdminUpdateService(eb, wr, passwordService),
+  inject: [EventBus, AdminDBModule.AdminWriteRepository, PasswordService],
 };

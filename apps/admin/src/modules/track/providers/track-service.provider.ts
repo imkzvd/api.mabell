@@ -1,10 +1,9 @@
 import { Provider } from '@nestjs/common';
-import { TrackReadRepository as TrackReadRepositoryPort } from '@core/domain/components/track/repository/track-read-repository.port';
-import { TrackReadRepository } from '@infrastructure/mongoose/services/track/track-read-repository.service';
-import { TrackService } from '@core/app/components/track/services/track.service';
+import { App } from '@api.mabell/core';
+import { TrackDBModule } from '@api.mabell/db';
 
 export const trackServiceProvider: Provider = {
-  provide: TrackService,
-  useFactory: (rr: TrackReadRepositoryPort) => new TrackService(rr),
-  inject: [TrackReadRepository],
+  provide: App.Components.Track.TrackService,
+  useFactory: (rr) => new App.Components.Track.TrackService(rr),
+  inject: [TrackDBModule.TrackReadRepository],
 };

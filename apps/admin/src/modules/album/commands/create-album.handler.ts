@@ -1,12 +1,12 @@
-import { CommandHandler } from '@nestjs/cqrs';
-import { CreateAlbumCommand } from '@core/app/cqrs/album/commands/create-album/create-album.command';
-import { CreateAlbumHandler as CoreCreateAlbumHandler } from '@core/app/cqrs/album/commands/create-album/create-album.handler';
-import { ArtistVerifyService } from '@core/app/components/artist/services/artist-verify.service';
-import { AlbumCreateService } from '@core/app/components/album/services/album-create.service';
+import { CommandHandler } from '@api.mabell/cqrs';
+import { App } from '@api.mabell/core';
 
-@CommandHandler(CreateAlbumCommand)
-export class CreateAlbumHandler extends CoreCreateAlbumHandler {
-  constructor(artistVerifyService: ArtistVerifyService, albumCreateService: AlbumCreateService) {
+@CommandHandler(App.CQRS.CreateAlbumCommand)
+export class CreateAlbumHandler extends App.CQRS.CreateAlbumHandler {
+  constructor(
+    artistVerifyService: App.Components.Artist.ArtistVerifyService,
+    albumCreateService: App.Components.Album.AlbumCreateService,
+  ) {
     super(artistVerifyService, albumCreateService);
   }
 }

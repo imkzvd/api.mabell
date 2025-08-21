@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { RandomIdModule } from '@infrastructure/random-id';
-import { FileStorageModule } from '@infrastructure/file-storage';
+import { RandomIdModule } from '@api.mabell/random-id';
+import { FileStorageModule } from '@api.mabell/file-storage';
 import { AlbumController } from './album.controller';
 import { CreateAlbumHandler } from './commands/create-album.handler';
 import { DeleteAlbumHandler } from './commands/delete-album.handler';

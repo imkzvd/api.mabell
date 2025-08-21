@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { RandomIdModule } from '@infrastructure/random-id';
-import { FileStorageModule } from '@infrastructure/file-storage';
-import { PasswordModule } from '@infrastructure/password';
+import { RandomIdModule } from '@api.mabell/random-id';
+import { FileStorageModule } from '@api.mabell/file-storage';
+import { PasswordModule } from '@api.mabell/password';
 import { PlaylistController } from './playlist.controller';
 import { AddTrackInPlaylistHandler } from './commands/add-track-in-playlist.handler';
 import { CreatePlaylistHandler } from './commands/create-playlist.handler';

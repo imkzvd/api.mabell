@@ -1,9 +1,9 @@
 import * as process from 'process';
 import { ApiProperty } from '@nestjs/swagger';
 import { faker } from '@faker-js/faker';
-import { TrackDTO } from '@core/app/components/track/dtos/track.dto';
+import { App } from '@api.mabell/core';
 import { AlbumRO } from '../../album/ros/album.ro';
-import { ArtistRO } from '../../artist/ros/artist.ro';
+import { SimplifiedArtistRO } from '../../artist/ros/simplified-artist.ro';
 
 export class TrackRO {
   @ApiProperty({
@@ -41,10 +41,10 @@ export class TrackRO {
   artistIds: string[];
 
   @ApiProperty({
-    type: () => [ArtistRO],
+    type: () => [SimplifiedArtistRO],
     description: 'Primary artist',
   })
-  artists: ArtistRO[];
+  artists: SimplifiedArtistRO[];
 
   @ApiProperty({
     type: [String],
@@ -54,10 +54,10 @@ export class TrackRO {
   featArtistIds: string[];
 
   @ApiProperty({
-    type: () => [ArtistRO],
+    type: () => [SimplifiedArtistRO],
     description: 'Featured artist',
   })
-  featArtists: ArtistRO[];
+  featArtists: SimplifiedArtistRO[];
 
   @ApiProperty({
     type: String,
@@ -94,13 +94,13 @@ export class TrackRO {
   })
   updatedAt: Date;
 
-  constructor(dto: TrackDTO) {
+  constructor(dto: App.DTOs.TrackWithAlbumDTO) {
     this.id = dto.id;
     this.name = dto.name;
     this.album = new AlbumRO(dto.album);
-    this.artists = dto.artists.map((i) => new ArtistRO(i));
-    this.artistIds = dto.artists.map(({ id }) => id);
-    this.featArtists = dto.featArtists.map((i) => new ArtistRO(i));
+    this.artists = dto.album.artists.map((i) => new SimplifiedArtistRO(i));
+    this.artistIds = dto.album.artists.map(({ id }) => id);
+    this.featArtists = dto.featArtists.map((i) => new SimplifiedArtistRO(i));
     this.featArtistIds = dto.featArtists.map(({ id }) => id);
     this.file = dto.file ? `${process.env.API_URL}${dto.file}` : null;
     this.duration = dto.duration;

@@ -1,7 +1,7 @@
 import * as process from 'process';
 import { ApiProperty } from '@nestjs/swagger';
 import { faker } from '@faker-js/faker';
-import { IndexedPlaylistDTO } from '@core/app/common/ports/search-service/dtos/indexed-playlist.dto';
+import { App } from '@api.mabell/core';
 import { IndexedSimplifiedUserRO } from './indexed-simplified-user.ro';
 
 export class IndexedPlaylistRO {
@@ -25,7 +25,7 @@ export class IndexedPlaylistRO {
   @ApiProperty({ type: Boolean, description: 'Public', example: true })
   isPublic: boolean;
 
-  constructor(dto: IndexedPlaylistDTO) {
+  constructor(dto: App.DTOs.IndexedPlaylistDTO) {
     this.id = dto.id;
     this.name = dto.name;
     this.owner = new IndexedSimplifiedUserRO(dto.owner);

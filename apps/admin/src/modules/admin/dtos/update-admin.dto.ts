@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsBoolean, IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { faker } from '@faker-js/faker';
-import { AdminRole, AdminRoles } from '@core/domain/components/admin/constants/admin-roles';
+import { Domain } from '@api.mabell/core';
 
 export class UpdateAdminDTO {
   @ApiProperty({
@@ -19,16 +19,16 @@ export class UpdateAdminDTO {
     required: false,
     type: String,
     description: 'Role',
-    example: AdminRoles.Guest,
+    example: Domain.Admin.AdminRoles.Guest,
   })
-  @IsEnum(AdminRoles)
+  @IsEnum(Domain.Admin.AdminRoles)
   @IsOptional()
-  role?: AdminRole;
+  role?: Domain.Admin.AdminRole;
 
   @ApiProperty({
     required: false,
     type: Boolean,
-    description: 'BLock',
+    description: 'Block',
     example: true,
   })
   @IsBoolean()

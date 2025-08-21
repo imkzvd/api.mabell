@@ -1,9 +1,11 @@
 import {
+  BadRequestException,
   Controller,
   Delete,
   Get,
   HttpCode,
   HttpStatus,
+  NotFoundException,
   Param,
   Post,
   UploadedFile,
@@ -19,20 +21,14 @@ import {
 } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { faker } from '@faker-js/faker';
-import { AdminRoles } from '@core/domain/components/admin/constants/admin-roles';
-import { CommandBus } from '@infrastructure/command-bus';
-import { QueryBus } from '@infrastructure/query-bus';
-import { UploadFileCommand } from '@core/app/cqrs/upload/commands/upload-file/upload-file.command';
-import { GetFileQuery } from '@core/app/cqrs/upload/queries/get-file/get-file.query';
-import { BadRequestException, NotFoundException } from '@core/shared/exceptions';
-import { DeleteFileCommand } from '@core/app/cqrs/upload/commands/delete-file/delete-file.command';
-import { DeleteAllFilesCommand } from '@core/app/cqrs/upload/commands/delete-all-files/delete-all-files.command';
+import { Domain, App } from '@api.mabell/core';
+import { CommandBus, QueryBus } from '@api.mabell/cqrs';
 import { UploadFileDTO } from './dtos/upload-file.dto';
 import { TmpFileRO } from './ros/tmp-file.ro';
 import { Roles } from '../../decorators/roles.decorator';
 
 @ApiTags('Upload')
-@Roles(AdminRoles.Owner, AdminRoles.Admin)
+@Roles(Domain.Admin.AdminRoles.Owner, Domain.Admin.AdminRoles.Admin)
 @Controller('/uploads')
 export class UploadController {
   constructor(
@@ -46,9 +42,11 @@ export class UploadController {
   @UseInterceptors(FileInterceptor('file'))
   @Post('/')
   async uploadFile(@UploadedFile() file: Express.Multer.File): Promise<TmpFileRO> {
-    const uploadedFileId = await this._commandBus.execute(new UploadFileCommand({ file }));
+    const { id: uploadedFileId } = await this._commandBus.execute(
+      new App.CQRS.UploadFileCommand({ file }),
+    );
 
-    const fileData = await this._queryBus.execute(new GetFileQuery(uploadedFileId));
+    const fileData = await this._queryBus.execute(new App.CQRS.GetFileQuery(uploadedFileId));
 
     if (!fileData) {
       throw new BadRequestException('The file has not been uploaded');
@@ -68,7 +66,7 @@ export class UploadController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete('/:id')
   async deleteFile(@Param('id') id: string): Promise<void> {
-    await this._commandBus.execute(new DeleteFileCommand(id));
+    await this._commandBus.execute(new App.CQRS.DeleteFileCommand(id));
   }
 
   @ApiOperation({ summary: 'Delete all tmp file', operationId: 'deleteAllFiles' })
@@ -76,7 +74,7 @@ export class UploadController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete('/')
   async deleteAllFiles(): Promise<void> {
-    return this._commandBus.execute(new DeleteAllFilesCommand());
+    return this._commandBus.execute(new App.CQRS.DeleteAllFilesCommand());
   }
 
   @ApiOperation({ summary: 'Get uploaded file by id', operationId: 'getFile' })
@@ -89,7 +87,7 @@ export class UploadController {
   })
   @Get('/:id')
   async getFile(@Param('id') id: string): Promise<TmpFileRO> {
-    const fileData = await this._queryBus.execute(new GetFileQuery(id));
+    const fileData = await this._queryBus.execute(new App.CQRS.GetFileQuery(id));
 
     if (!fileData) {
       throw new NotFoundException('The file does not exist');

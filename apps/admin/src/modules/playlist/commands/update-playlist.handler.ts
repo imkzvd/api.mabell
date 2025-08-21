@@ -1,11 +1,9 @@
-import { CommandHandler } from '@nestjs/cqrs';
-import { UpdatePlaylistCommand } from '@core/app/cqrs/playlist/commands/update-playlist/update-playlist.command';
-import { UpdatePlaylistHandler as CoreUpdatePlaylistHandler } from '@core/app/cqrs/playlist/commands/update-playlist/update-playlist.handler';
-import { PlaylistUpdateService } from '@core/app/components/playlist/services/playlist-update.service';
+import { CommandHandler } from '@api.mabell/cqrs';
+import { App } from '@api.mabell/core';
 
-@CommandHandler(UpdatePlaylistCommand)
-export class UpdatePlaylistHandler extends CoreUpdatePlaylistHandler {
-  constructor(service: PlaylistUpdateService) {
+@CommandHandler(App.CQRS.UpdatePlaylistCommand)
+export class UpdatePlaylistHandler extends App.CQRS.UpdatePlaylistHandler {
+  constructor(service: App.Components.Playlist.PlaylistUpdateService) {
     super(service);
   }
 }

@@ -1,10 +1,9 @@
 import { Provider } from '@nestjs/common';
-import { ArtistReadRepository as ArtistReadRepositoryPort } from '@core/domain/components/artist/repository/artist-read-repository.port';
-import { ArtistReadRepository } from '@infrastructure/mongoose/services/artist/artist-read-repository.service';
-import { ArtistService } from '@core/app/components/artist/services/artist.service';
+import { App } from '@api.mabell/core';
+import { ArtistDBModule } from '@api.mabell/db';
 
 export const artistServiceProvider: Provider = {
-  provide: ArtistService,
-  useFactory: (rr: ArtistReadRepositoryPort) => new ArtistService(rr),
-  inject: [ArtistReadRepository],
+  provide: App.Components.Artist.ArtistService,
+  useFactory: (rr) => new App.Components.Artist.ArtistService(rr),
+  inject: [ArtistDBModule.ArtistReadRepository],
 };

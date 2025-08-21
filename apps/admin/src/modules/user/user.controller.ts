@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -21,20 +22,10 @@ import {
 } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 import { faker } from '@faker-js/faker';
-import { AdminRoles } from '@core/domain/components/admin/constants/admin-roles';
-import { CommandBus } from '@infrastructure/command-bus';
-import { QueryBus } from '@infrastructure/query-bus';
-import { CreateUserCommand } from '@core/app/cqrs/user/commands/create-user/create-user.command';
-import { GetUserQuery } from '@core/app/cqrs/user/queries/get-user/get-user.query';
-import { BadRequestException } from '@core/shared/exceptions';
-import { ParseObjectIdPipe } from '@shared/pipes/parse-object-id.pipe';
-import { UpdateUserCommand } from '@core/app/cqrs/user/commands/update-user/update-user.command';
-import { UpdateUserUsernameCommand } from '@core/app/cqrs/user/commands/update-user-username/update-user-username.command';
-import { UpdateUserEmailCommand } from '@core/app/cqrs/user/commands/update-user-email/update-user-email.command';
-import { UpdateUserAvatarCommand } from '@core/app/cqrs/user/commands/update-user-avatar/update-user-avatar.command';
-import { RefreshUserPasswordCommand } from '@core/app/cqrs/user/commands/refresh-user-password/refresh-user-password.command';
-import { DeleteUserAvatarCommand } from '@core/app/cqrs/user/commands/delete-user-avatar/delete-user-avatar.command';
-import { DeleteUserCommand } from '@core/app/cqrs/user/commands/delete-user/delete-user.command';
+import { Domain, App } from '@api.mabell/core';
+import { CommandBus } from '@api.mabell/cqrs';
+import { QueryBus } from '@api.mabell/cqrs';
+import { ParseObjectIdPipe } from '@api.mabell/shared';
 import { UpdateUserDTO } from './dtos/update-user.dto';
 import { UpdateUserUsernameDTO } from './dtos/update-user-username.dto';
 import { UpdateUserEmailDTO } from './dtos/update-user-email.dto';
@@ -43,7 +34,7 @@ import { UpdateUserAvatarDTO } from './dtos/update-user-avatar.dto';
 import { Roles } from '../../decorators/roles.decorator';
 
 @ApiTags('User')
-@Roles(AdminRoles.Owner, AdminRoles.Admin)
+@Roles(Domain.Admin.AdminRoles.Owner, Domain.Admin.AdminRoles.Admin)
 @Controller({ path: '/users' })
 export class UserController {
   constructor(
@@ -56,8 +47,8 @@ export class UserController {
   @ApiCreatedResponse({ description: 'Id of the created user', type: UserRO })
   @Post('/')
   async createUser(): Promise<UserRO> {
-    const createdUserId = await this._CB.execute(new CreateUserCommand());
-    const createdUser = await this._QB.execute(new GetUserQuery(createdUserId));
+    const { id: createdUserId } = await this._CB.execute(new App.CQRS.CreateUserCommand());
+    const createdUser = await this._QB.execute(new App.CQRS.GetUserQuery(createdUserId));
 
     if (!createdUser) {
       throw new BadRequestException('Some error');
@@ -80,9 +71,9 @@ export class UserController {
     @Param('id', ParseObjectIdPipe) id: string,
     @Body() dto: UpdateUserDTO,
   ): Promise<UserRO> {
-    await this._CB.execute(new UpdateUserCommand(id, dto));
+    await this._CB.execute(new App.CQRS.UpdateUserCommand(id, dto));
 
-    const updatedUser = await this._QB.execute(new GetUserQuery(id));
+    const updatedUser = await this._QB.execute(new App.CQRS.GetUserQuery(id));
 
     if (!updatedUser) {
       throw new NotFoundException('User not found');
@@ -105,9 +96,9 @@ export class UserController {
     @Param('id', ParseObjectIdPipe) id: string,
     @Body() { username }: UpdateUserUsernameDTO,
   ): Promise<UserRO> {
-    await this._CB.execute(new UpdateUserUsernameCommand(id, username));
+    await this._CB.execute(new App.CQRS.UpdateUserUsernameCommand(id, username));
 
-    const updatedUser = await this._QB.execute(new GetUserQuery(id));
+    const updatedUser = await this._QB.execute(new App.CQRS.GetUserQuery(id));
 
     if (!updatedUser) {
       throw new NotFoundException('User not found');
@@ -130,9 +121,9 @@ export class UserController {
     @Param('id', ParseObjectIdPipe) id: string,
     @Body() { email }: UpdateUserEmailDTO,
   ): Promise<UserRO> {
-    await this._CB.execute(new UpdateUserEmailCommand(id, email));
+    await this._CB.execute(new App.CQRS.UpdateUserEmailCommand(id, email));
 
-    const updatedUser = await this._QB.execute(new GetUserQuery(id));
+    const updatedUser = await this._QB.execute(new App.CQRS.GetUserQuery(id));
 
     if (!updatedUser) {
       throw new NotFoundException('User not found');
@@ -156,13 +147,13 @@ export class UserController {
     @Body() { fileId, color }: UpdateUserAvatarDTO,
   ): Promise<UserRO> {
     await this._CB.execute(
-      new UpdateUserAvatarCommand(id, {
+      new App.CQRS.UpdateUserAvatarCommand(id, {
         fileId,
         color,
       }),
     );
 
-    const updatedUser = await this._QB.execute(new GetUserQuery(id));
+    const updatedUser = await this._QB.execute(new App.CQRS.GetUserQuery(id));
 
     if (!updatedUser) {
       throw new NotFoundException('User not found');
@@ -182,7 +173,7 @@ export class UserController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Patch('/:id/password/refresh')
   async refreshUserPassword(@Param('id', ParseObjectIdPipe) id: string): Promise<void> {
-    await this._CB.execute(new RefreshUserPasswordCommand(id));
+    await this._CB.execute(new App.CQRS.RefreshUserPasswordCommand(id));
   }
 
   @ApiOperation({ summary: "Delete user's avatar", operationId: 'deleteUserAvatar' })
@@ -195,9 +186,9 @@ export class UserController {
   @ApiOkResponse({ description: "User's avatar has been deleted", type: UserRO })
   @Delete('/:id/avatar')
   async deleteUserAvatar(@Param('id', ParseObjectIdPipe) id: string): Promise<UserRO> {
-    await this._CB.execute(new DeleteUserAvatarCommand(id));
+    await this._CB.execute(new App.CQRS.DeleteUserAvatarCommand(id));
 
-    const updatedUser = await this._QB.execute(new GetUserQuery(id));
+    const updatedUser = await this._QB.execute(new App.CQRS.GetUserQuery(id));
 
     if (!updatedUser) {
       throw new NotFoundException('User not found');
@@ -217,12 +208,12 @@ export class UserController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete('/:id')
   async deleteUser(@Param('id', ParseObjectIdPipe) id: string): Promise<void> {
-    await this._CB.execute(new DeleteUserCommand(id));
+    await this._CB.execute(new App.CQRS.DeleteUserCommand(id));
   }
 
   @ApiOperation({ summary: 'Get mabell user', operationId: 'getMabellUser' })
   @ApiOkResponse({ description: 'Mabell User', type: UserRO })
-  @Roles(AdminRoles.Guest)
+  @Roles(Domain.Admin.AdminRoles.Guest)
   @Get('/mabell')
   async getMabellUser(): Promise<UserRO> {
     const mabellUserId = this._configService.get<string>('app.mabellUserId');
@@ -231,7 +222,7 @@ export class UserController {
       throw new BadRequestException('Mabell user id is required');
     }
 
-    const foundUser = await this._QB.execute(new GetUserQuery(mabellUserId));
+    const foundUser = await this._QB.execute(new App.CQRS.GetUserQuery(mabellUserId));
 
     if (!foundUser) {
       throw new NotFoundException(`User does not exist`);
@@ -248,10 +239,10 @@ export class UserController {
     example: faker.database.mongodbObjectId(),
   })
   @ApiOkResponse({ description: 'User', type: UserRO })
-  @Roles(AdminRoles.Guest)
+  @Roles(Domain.Admin.AdminRoles.Guest)
   @Get('/:id')
   async getUser(@Param('id', ParseObjectIdPipe) id: string): Promise<UserRO> {
-    const foundUser = await this._QB.execute(new GetUserQuery(id));
+    const foundUser = await this._QB.execute(new App.CQRS.GetUserQuery(id));
 
     if (!foundUser) {
       throw new NotFoundException(`There is no user with the specified ID`);

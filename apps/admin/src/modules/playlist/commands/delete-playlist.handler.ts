@@ -1,11 +1,9 @@
-import { CommandHandler } from '@nestjs/cqrs';
-import { DeletePlaylistCommand } from '@core/app/cqrs/playlist/commands/delete-playlist/delete-playlist.command';
-import { DeletePlaylistHandler as CoreDeletePlaylistHandler } from '@core/app/cqrs/playlist/commands/delete-playlist/delete-playlist.handler';
-import { PlaylistDeleteService } from '@core/app/components/playlist/services/playlist-delete.service';
+import { CommandHandler } from '@api.mabell/cqrs';
+import { App } from '@api.mabell/core';
 
-@CommandHandler(DeletePlaylistCommand)
-export class DeletePlaylistHandler extends CoreDeletePlaylistHandler {
-  constructor(service: PlaylistDeleteService) {
+@CommandHandler(App.CQRS.DeletePlaylistCommand)
+export class DeletePlaylistHandler extends App.CQRS.DeletePlaylistHandler {
+  constructor(service: App.Components.Playlist.PlaylistDeleteService) {
     super(service);
   }
 }

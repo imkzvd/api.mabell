@@ -1,11 +1,9 @@
-import { CommandHandler } from '@nestjs/cqrs';
-import { AdminDeleteService } from '@core/app/components/admin/services/admin-delete.service';
-import { DeleteAdminCommand } from '@core/app/cqrs/admin/commands/delete-admin/delete-admin.command';
-import { DeleteAdminHandler as CoreDeleteAdminHandler } from '@core/app/cqrs/admin/commands/delete-admin/delete-admin.handler';
+import { CommandHandler } from '@api.mabell/cqrs';
+import { App } from '@api.mabell/core';
 
-@CommandHandler(DeleteAdminCommand)
-export class DeleteAdminHandler extends CoreDeleteAdminHandler {
-  constructor(service: AdminDeleteService) {
+@CommandHandler(App.CQRS.DeleteAdminCommand)
+export class DeleteAdminHandler extends App.CQRS.DeleteAdminHandler {
+  constructor(service: App.Components.Admin.AdminDeleteService) {
     super(service);
   }
 }

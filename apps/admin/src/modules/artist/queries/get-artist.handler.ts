@@ -1,11 +1,9 @@
-import { QueryHandler } from '@nestjs/cqrs';
-import { GetArtistQuery } from '@core/app/cqrs/artist/queries/get-artist/get-artist.query';
-import { GetArtistHandler as CoreGetArtistHandler } from '@core/app/cqrs/artist/queries/get-artist/get-artist.handler';
-import { ArtistService } from '@core/app/components/artist/services/artist.service';
+import { QueryHandler } from '@api.mabell/cqrs';
+import { App } from '@api.mabell/core';
 
-@QueryHandler(GetArtistQuery)
-export class GetArtistHandler extends CoreGetArtistHandler {
-  constructor(service: ArtistService) {
+@QueryHandler(App.CQRS.GetArtistQuery)
+export class GetArtistHandler extends App.CQRS.GetArtistHandler {
+  constructor(service: App.Components.Artist.ArtistService) {
     super(service);
   }
 }

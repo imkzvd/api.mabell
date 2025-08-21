@@ -1,16 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { faker } from '@faker-js/faker';
-import { LabelValueRO } from '@shared/ros/label-value.ro';
-import { getRegionLabelByValue, Regions } from '@core/domain/common/constants/regions';
-import { Genres, getGenreLabelByValue } from '@core/domain/common/constants/genres';
-import {
-  AdminRoles,
-  getAdminRoleLabelByValue,
-} from '@core/domain/components/admin/constants/admin-roles';
-import {
-  AlbumTypes,
-  getAlbumTypeLabelByValue,
-} from '@core/domain/components/album/constants/album-types';
+import { LabelValueRO } from '@api.mabell/shared';
+import { Shared, Domain } from '@api.mabell/core';
 
 export class MetadataRO {
   @ApiProperty({
@@ -42,17 +33,29 @@ export class MetadataRO {
   albumTypes: LabelValueRO[];
 
   constructor() {
-    const regions = Object.values(Regions).map(
-      (value) => new LabelValueRO(value, getRegionLabelByValue(value)),
+    const regions = Object.values(Domain.Common.Regions).map(
+      (value) =>
+        new LabelValueRO(
+          new Shared.DTOs.LabelValueDTO(Domain.Common.getRegionLabelByValue(value), value),
+        ),
     );
-    const genres = Object.values(Genres).map(
-      (value) => new LabelValueRO(value, getGenreLabelByValue(value)),
+    const genres = Object.values(Domain.Common.Genres).map(
+      (value) =>
+        new LabelValueRO(
+          new Shared.DTOs.LabelValueDTO(Domain.Common.getGenreLabelByValue(value), value),
+        ),
     );
-    const adminRoles = Object.values(AdminRoles).map(
-      (value) => new LabelValueRO(value, getAdminRoleLabelByValue(value)),
+    const adminRoles = Object.values(Domain.Admin.AdminRoles).map(
+      (value) =>
+        new LabelValueRO(
+          new Shared.DTOs.LabelValueDTO(Domain.Admin.getAdminRoleLabelByValue(value), value),
+        ),
     );
-    const albumTypes = Object.values(AlbumTypes).map(
-      (value) => new LabelValueRO(value, getAlbumTypeLabelByValue(value)),
+    const albumTypes = Object.values(Domain.Album.AlbumTypes).map(
+      (value) =>
+        new LabelValueRO(
+          new Shared.DTOs.LabelValueDTO(Domain.Album.getAlbumTypeLabelByValue(value), value),
+        ),
     );
 
     this.regions = regions;

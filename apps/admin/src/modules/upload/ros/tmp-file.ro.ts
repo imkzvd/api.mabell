@@ -1,7 +1,7 @@
 import * as process from 'node:process';
 import { ApiProperty } from '@nestjs/swagger';
 import { faker } from '@faker-js/faker';
-import { TmpFileDTO } from '@core/app/common/ports/file-storages/common/dtos/tmp-file.dto';
+import { App } from '@api.mabell/core';
 
 export class TmpFileRO {
   @ApiProperty({
@@ -45,7 +45,7 @@ export class TmpFileRO {
   @ApiProperty({ description: 'Expires Date', example: faker.date.past() })
   expiresAt: Date;
 
-  constructor(dto: TmpFileDTO) {
+  constructor(dto: App.DTOs.TmpFileDTO) {
     this.id = dto.id;
     this.name = dto.name;
     this.originalName = dto.originalName;

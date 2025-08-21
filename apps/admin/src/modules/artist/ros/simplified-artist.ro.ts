@@ -1,9 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { faker } from '@faker-js/faker';
-import { LabelValueRO } from '@api.mabell/shared';
 import { App } from '@api.mabell/core';
 
-export class LoggedAdminProfileRO {
+export class SimplifiedArtistRO {
   @ApiProperty({
     type: String,
     description: 'Id',
@@ -18,12 +17,12 @@ export class LoggedAdminProfileRO {
   })
   name: string;
 
-  @ApiProperty({ type: () => LabelValueRO, description: 'Role' })
-  role: LabelValueRO;
+  @ApiProperty({ type: Boolean, description: 'Public', example: true })
+  isPublic: boolean;
 
-  constructor(dto: App.DTOs.AdminDTO) {
+  constructor(dto: App.DTOs.SimplifiedArtistDTO) {
     this.id = dto.id;
     this.name = dto.name;
-    this.role = new LabelValueRO(dto.roleLabelValue);
+    this.isPublic = dto.isPublic;
   }
 }

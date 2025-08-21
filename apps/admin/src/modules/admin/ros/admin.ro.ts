@@ -1,8 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { faker } from '@faker-js/faker';
-import { LabelValueRO } from '@shared/ros/label-value.ro';
-import { AdminDTO } from '@core/app/components/admin/dtos/admin.dto';
-import { getAdminRoleLabelByValue } from '@core/domain/components/admin/constants/admin-roles';
+import { App } from '@api.mabell/core';
+import { LabelValueRO } from '@api.mabell/shared';
 
 export class AdminRO {
   @ApiProperty({
@@ -46,11 +45,11 @@ export class AdminRO {
   })
   updatedAt: Date;
 
-  constructor(dto: AdminDTO) {
+  constructor(dto: App.DTOs.AdminDTO) {
     this.id = dto.id;
     this.username = dto.username;
     this.name = dto.name;
-    this.role = new LabelValueRO(dto.role, getAdminRoleLabelByValue(dto.role) || 'Label');
+    this.role = new LabelValueRO(dto.roleLabelValue);
     this.isBlocked = dto.isBlocked;
     this.createdAt = dto.createdAt;
     this.updatedAt = dto.updatedAt;

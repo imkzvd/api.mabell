@@ -1,13 +1,9 @@
 import { Provider } from '@nestjs/common';
-import { AlbumWriteRepository as AlbumWriteRepositoryPort } from '@core/domain/components/album/repository/album-write-repository.port';
-import { AlbumReadRepository as AlbumReadRepositoryPort } from '@core/domain/components/album/repository/album-read-repository.port';
-import { AlbumWriteRepository } from '@infrastructure/mongoose/services/album/album-write-repository.service';
-import { AlbumReadRepository } from '@infrastructure/mongoose/services/album/album-read-repository.service';
-import { AlbumService } from '@core/app/components/album/services/album.service';
+import { App } from '@api.mabell/core';
+import { AlbumDBModule } from '@api.mabell/db';
 
 export const albumServiceProvider: Provider = {
-  provide: AlbumService,
-  useFactory: (wr: AlbumWriteRepositoryPort, rr: AlbumReadRepositoryPort) =>
-    new AlbumService(wr, rr),
-  inject: [AlbumWriteRepository, AlbumReadRepository],
+  provide: App.Components.Album.AlbumService,
+  useFactory: (wr, rr) => new App.Components.Album.AlbumService(wr, rr),
+  inject: [AlbumDBModule.AlbumWriteRepository, AlbumDBModule.AlbumReadRepository],
 };

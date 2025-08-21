@@ -1,17 +1,17 @@
-import { EventBus as EventBusPort } from '@core/app/common/ports/event-bus.port';
 import { Inject } from '@nestjs/common';
-import { EventBus } from '@infrastructure/event-bus';
-import { DeletePlaylistsOnUserDeletedEventHandler } from '@core/app/components/playlist/event-handlers/delete-playlists-on-user-deleted.event-handler';
-import { PlaylistDeleteService } from '@core/app/components/playlist/services/playlist-delete.service';
-import { UserDeletedEvent } from '@core/app/common/events/user/user-deleted.event';
+import { EventBus } from '@api.mabell/event-bus';
+import { App } from '@api.mabell/core';
 
 export class PlaylistEventSubscriber {
   constructor(
-    @Inject(EventBus) private readonly _EB: EventBusPort,
-    @Inject(PlaylistDeleteService) private readonly _service: PlaylistDeleteService,
+    @Inject(EventBus) private readonly _EB: EventBus,
+    @Inject(App.Components.Playlist.PlaylistDeleteService)
+    private readonly _service: App.Components.Playlist.PlaylistDeleteService,
   ) {
-    const handler = new DeletePlaylistsOnUserDeletedEventHandler(this._service);
+    const handler = new App.Components.Playlist.DeletePlaylistsOnUserDeletedEventHandler(
+      this._service,
+    );
 
-    this._EB.subscribe(UserDeletedEvent, handler);
+    this._EB.subscribe(App.Events.UserDeletedEvent, handler);
   }
 }

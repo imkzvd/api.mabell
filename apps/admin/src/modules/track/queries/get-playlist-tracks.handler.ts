@@ -1,12 +1,12 @@
-import { QueryHandler } from '@nestjs/cqrs';
-import { GetPlaylistTracksQuery } from '@core/app/cqrs/track/queries/get-playlist-tracks/get-playlist-tracks.query';
-import { GetPlaylistTracksHandler as CoreGetPlaylistTracksHandler } from '@core/app/cqrs/track/queries/get-playlist-tracks/get-playlist-tracks.handler';
-import { PlaylistService } from '@core/app/components/playlist/services/playlist.service';
-import { TrackService } from '@core/app/components/track/services/track.service';
+import { QueryHandler } from '@api.mabell/cqrs';
+import { App } from '@api.mabell/core';
 
-@QueryHandler(GetPlaylistTracksQuery)
-export class GetPlaylistTracksHandler extends CoreGetPlaylistTracksHandler {
-  constructor(playlistService: PlaylistService, trackService: TrackService) {
+@QueryHandler(App.CQRS.GetPlaylistTracksQuery)
+export class GetPlaylistTracksHandler extends App.CQRS.GetPlaylistTracksHandler {
+  constructor(
+    playlistService: App.Components.Playlist.PlaylistService,
+    trackService: App.Components.Track.TrackService,
+  ) {
     super(playlistService, trackService);
   }
 }

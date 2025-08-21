@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { faker } from '@faker-js/faker';
+import { App } from '@api.mabell/core';
 import { TrackRO } from './track.ro';
-import { PlaylistTrackDTO } from '@core/app/components/track/dtos/playlist-track.dto';
 
 export class PlaylistTrackRO {
   @ApiProperty({
@@ -23,7 +23,7 @@ export class PlaylistTrackRO {
   })
   addedAt: Date;
 
-  constructor(dto: PlaylistTrackDTO) {
+  constructor(dto: App.DTOs.PlaylistTrackDTO) {
     this.track = dto.track ? new TrackRO(dto.track) : null;
     this.trackId = dto.trackId;
     this.addedAt = dto.addedAt;

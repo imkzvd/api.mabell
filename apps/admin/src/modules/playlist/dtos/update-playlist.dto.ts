@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { faker } from '@faker-js/faker';
 import { IsBoolean, IsEnum, IsNotEmpty, IsOptional, IsString, MinLength } from 'class-validator';
-import { Genre, Genres } from '@core/domain/common/constants/genres';
+import { Domain } from '@api.mabell/core';
 
 export class UpdatePlaylistDTO {
   @ApiProperty({
@@ -20,11 +20,11 @@ export class UpdatePlaylistDTO {
     required: false,
     type: [String],
     description: 'Genres',
-    example: [Genres['Hip-Hop']],
+    example: [Domain.Common.Genres['Hip-Hop']],
   })
-  @IsEnum(Genres, { each: true })
+  @IsEnum(Domain.Common.Genres, { each: true })
   @IsOptional()
-  genres?: Genre[];
+  genres?: Domain.Common.Genre[];
 
   @ApiProperty({
     required: false,

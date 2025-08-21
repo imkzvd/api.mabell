@@ -1,12 +1,12 @@
-import { CommandHandler } from '@nestjs/cqrs';
-import { CreateAdminRefreshTokenCommand } from '@core/app/cqrs/token/commands/create-admin-refresh-token/create-admin-refresh-token.command';
-import { CreateAdminRefreshTokenHandler as CoreCreateAdminRefreshTokenHandler } from '@core/app/cqrs/token/commands/create-admin-refresh-token/create-admin-refresh-token.handler';
-import { AdminService } from '@core/app/components/admin/services/admin.service';
-import { AdminTokenCreateService } from '@core/app/components/admin-token/services/admin-token-create.service';
+import { CommandHandler } from '@api.mabell/cqrs';
+import { App } from '@api.mabell/core';
 
-@CommandHandler(CreateAdminRefreshTokenCommand)
-export class CreateAdminRefreshTokenHandler extends CoreCreateAdminRefreshTokenHandler {
-  constructor(adminService: AdminService, adminTokenCreateService: AdminTokenCreateService) {
+@CommandHandler(App.CQRS.CreateAdminRefreshTokenCommand)
+export class CreateAdminRefreshTokenHandler extends App.CQRS.CreateAdminRefreshTokenHandler {
+  constructor(
+    adminService: App.Components.Admin.AdminService,
+    adminTokenCreateService: App.Components.AdminToken.AdminTokenCreateService,
+  ) {
     super(adminService, adminTokenCreateService);
   }
 }

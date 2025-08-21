@@ -1,23 +1,29 @@
 import { Provider } from '@nestjs/common';
-import { AdminTokenCreateService } from '@core/app/components/admin-token/services/admin-token-create.service';
-import { AdminRefreshTokenWriteRepository as AdminRefreshTokenWriteRepositoryPort } from '@core/domain/components/admin-refresh-token/repository/admin-refresh-token-write-repository.port';
-import { IdService as IdServicePort } from '@core/app/common/ports/id.service.port';
-import { AdminRefreshTokenId } from '@core/domain/components/admin-refresh-token/types';
-import { JWTService as JWTServicePort } from '@core/app/common/ports/jwt.service.port';
-import { AdminRefreshTokenWriteRepository } from '@infrastructure/mongoose/services/admin-refresh-token/admin-refresh-token-write-repository.service';
-import { RandomIdService } from '@infrastructure/random-id';
-import { JWTService } from '@api.mabell/jwt';
 import { ConfigService } from '@nestjs/config';
+import { JWTService } from '@api.mabell/jwt';
+import { App, Domain } from '@api.mabell/core';
+import { AdminRefreshTokenDBModule } from '@api.mabell/db';
+import { RandomIdService } from '@api.mabell/random-id';
 
 export const adminTokenCreateServiceProvider: Provider = {
-  provide: AdminTokenCreateService,
+  provide: App.Components.AdminToken.AdminTokenCreateService,
   useFactory: (
-    wr: AdminRefreshTokenWriteRepositoryPort,
-    idService: IdServicePort<AdminRefreshTokenId>,
-    jwtService: JWTServicePort,
+    wr: Domain.AdminRefreshToken.AdminRefreshTokenWriteRepository,
+    idService: App.Ports.IdService,
+    jwtService: App.Ports.JWTService,
     configService: ConfigService,
   ) => {
-    return new AdminTokenCreateService(wr, idService, jwtService, configService);
+    return new App.Components.AdminToken.AdminTokenCreateService(
+      wr,
+      idService,
+      jwtService,
+      configService,
+    );
   },
-  inject: [AdminRefreshTokenWriteRepository, RandomIdService, JWTService, ConfigService],
+  inject: [
+    AdminRefreshTokenDBModule.AdminRefreshTokenWriteRepository,
+    RandomIdService,
+    JWTService,
+    ConfigService,
+  ],
 };

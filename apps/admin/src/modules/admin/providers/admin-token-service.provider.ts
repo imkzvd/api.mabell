@@ -1,12 +1,11 @@
 import { Provider } from '@nestjs/common';
-import { AdminRefreshTokenReadRepository as AdminRefreshTokenReadRepositoryPort } from '@core/domain/components/admin-refresh-token/repository/admin-refresh-token-read-repository.port';
-import { AdminRefreshTokenReadRepository } from '@infrastructure/mongoose/services/admin-refresh-token/admin-refresh-token-read-repository.service';
-import { AdminTokenService } from '@core/app/components/admin-token/services/admin-token.service';
+import { App } from '@api.mabell/core';
+import { AdminRefreshTokenDBModule } from '@api.mabell/db';
 
 export const adminTokenServiceProvider: Provider = {
-  provide: AdminTokenService,
-  useFactory: (rr: AdminRefreshTokenReadRepositoryPort) => {
-    return new AdminTokenService(rr);
+  provide: App.Components.AdminToken.AdminTokenService,
+  useFactory: (rr: App.Ports.AdminRefreshTokenReadRepository) => {
+    return new App.Components.AdminToken.AdminTokenService(rr);
   },
-  inject: [AdminRefreshTokenReadRepository],
+  inject: [AdminRefreshTokenDBModule.AdminRefreshTokenReadRepository],
 };

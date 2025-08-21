@@ -1,11 +1,9 @@
-import { CommandHandler } from '@nestjs/cqrs';
-import { UpdateArtistAvatarCommand } from '@core/app/cqrs/artist/commands/update-artist-avatar/update-artist-avatar.command';
-import { UpdateArtistAvatarHandler as CoreUpdateArtistAvatarHandler } from '@core/app/cqrs/artist/commands/update-artist-avatar/update-artist-avatar.handler';
-import { ArtistUpdateService } from '@core/app/components/artist/services/artist-update.service';
+import { CommandHandler } from '@api.mabell/cqrs';
+import { App } from '@api.mabell/core';
 
-@CommandHandler(UpdateArtistAvatarCommand)
-export class UpdateArtistAvatarHandler extends CoreUpdateArtistAvatarHandler {
-  constructor(service: ArtistUpdateService) {
+@CommandHandler(App.CQRS.UpdateArtistAvatarCommand)
+export class UpdateArtistAvatarHandler extends App.CQRS.UpdateArtistAvatarHandler {
+  constructor(service: App.Components.Artist.ArtistUpdateService) {
     super(service);
   }
 }

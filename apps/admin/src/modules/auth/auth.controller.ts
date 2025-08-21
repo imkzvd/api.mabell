@@ -1,16 +1,20 @@
-import { Controller, Post, Body, HttpCode, HttpStatus, Res, Req } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  HttpCode,
+  HttpStatus,
+  Res,
+  Req,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { ApiBody, ApiNoContentResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 import { Request, Response } from 'express';
-import { LoginAdminCommand } from '@core/app/cqrs/admin/commands/login-admin/login-admin.command';
-import { CreateAdminAccessTokenCommand } from '@core/app/cqrs/token/commands/create-admin-access-token/create-admin-access-token.command';
-import { CreateAdminRefreshTokenCommand } from '@core/app/cqrs/token/commands/create-admin-refresh-token/create-admin-refresh-token.command';
-import { DeleteAdminRefreshTokenCommand } from '@core/app/cqrs/token/commands/delete-admin-refresh-token/delete-admin-refresh-token.command';
-import { UnauthorizedException } from '@core/shared/exceptions';
-import { ValidateAdminRefreshTokenQuery } from '@core/app/cqrs/token/queries/validate-admin-refresh-token/validate-admin-refresh-token.query';
-import { CommandBus } from '@infrastructure/command-bus';
-import { QueryBus } from '@infrastructure/query-bus';
-import { IsPublic } from '@shared/decorators/is-public.decorator';
+import { App } from '@api.mabell/core';
+import { CommandBus } from '@api.mabell/cqrs';
+import { QueryBus } from '@api.mabell/cqrs';
+import { IsPublic } from '@api.mabell/shared';
 import { LoginAdminDTO } from './dtos/login-admin.dto';
 import { ACCESS_TOKEN_COOKIE_NAME, REFRESH_TOKEN_COOKIE_NAME } from '../../constants';
 
@@ -38,10 +42,12 @@ export class AuthController {
     const userAgent = req.headers['user-agent'] as string;
     const userIp = req.headers['x-real-ip'] as string;
 
-    const loggedAdminId = await this._CB.execute(new LoginAdminCommand(dto));
-    const accessToken = await this._CB.execute(new CreateAdminAccessTokenCommand(loggedAdminId));
+    const { id: loggedAdminId } = await this._CB.execute(new App.CQRS.LoginAdminCommand(dto));
+    const accessToken = await this._CB.execute(
+      new App.CQRS.CreateAdminAccessTokenCommand(loggedAdminId),
+    );
     const refreshToken = await this._CB.execute(
-      new CreateAdminRefreshTokenCommand({
+      new App.CQRS.CreateAdminRefreshTokenCommand({
         adminId: loggedAdminId,
         userAgent,
         ip: userIp,
@@ -72,7 +78,7 @@ export class AuthController {
     const refreshToken = req.cookies[REFRESH_TOKEN_COOKIE_NAME] as string | undefined;
 
     if (refreshToken) {
-      await this._CB.execute(new DeleteAdminRefreshTokenCommand(refreshToken));
+      await this._CB.execute(new App.CQRS.DeleteAdminRefreshTokenCommand(refreshToken));
     }
 
     res.clearCookie(ACCESS_TOKEN_COOKIE_NAME);
@@ -97,7 +103,7 @@ export class AuthController {
     const userAgent = req.headers['user-agent'] as string;
 
     const validatedRefreshToken = await this._QB.execute(
-      new ValidateAdminRefreshTokenQuery({
+      new App.CQRS.ValidateAdminRefreshTokenQuery({
         token: refreshToken,
         ip: userIp,
         userAgent,
@@ -106,7 +112,7 @@ export class AuthController {
 
     if (validatedRefreshToken) {
       const accessToken = await this._CB.execute(
-        new CreateAdminAccessTokenCommand(validatedRefreshToken.owner),
+        new App.CQRS.CreateAdminAccessTokenCommand(validatedRefreshToken.owner),
       );
 
       const accessTokenExpiresIn = this._configService.get<number>('jwt.accessToken.expiresIn');

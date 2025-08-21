@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { faker } from '@faker-js/faker';
-import { IndexedSimplifiedUserDTO } from '@core/app/common/ports/search-service/dtos/indexed-simplified-user.dto';
+import { App } from '@api.mabell/core';
 
 export class IndexedSimplifiedUserRO {
   @ApiProperty({ description: 'Id', example: faker.database.mongodbObjectId() })
@@ -9,7 +9,7 @@ export class IndexedSimplifiedUserRO {
   @ApiProperty({ description: 'Name', example: faker.person.firstName() })
   name: string;
 
-  constructor(dto: IndexedSimplifiedUserDTO) {
+  constructor(dto: App.DTOs.IndexedSimplifiedUserDTO) {
     this.id = dto.id;
     this.name = dto.name;
   }

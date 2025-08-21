@@ -1,14 +1,11 @@
-import { CommandHandler } from '@nestjs/cqrs';
-import { AddTrackInPlaylistCommand } from '@core/app/cqrs/playlist/commands/add-track-in-playlist/add-track-in-playlist.command';
-import { AddTrackInPlaylistHandler as CoreAddTrackInPlaylistHandler } from '@core/app/cqrs/playlist/commands/add-track-in-playlist/add-track-in-playlist.handler';
-import { TrackVerifyService } from '@core/app/components/track/services/track-verify.service';
-import { PlaylistUpdateService } from '@core/app/components/playlist/services/playlist-update.service';
+import { CommandHandler } from '@api.mabell/cqrs';
+import { App } from '@api.mabell/core';
 
-@CommandHandler(AddTrackInPlaylistCommand)
-export class AddTrackInPlaylistHandler extends CoreAddTrackInPlaylistHandler {
+@CommandHandler(App.CQRS.AddTrackInPlaylistCommand)
+export class AddTrackInPlaylistHandler extends App.CQRS.AddTrackInPlaylistHandler {
   constructor(
-    trackVerifyService: TrackVerifyService,
-    playlistUpdateService: PlaylistUpdateService,
+    trackVerifyService: App.Components.Track.TrackVerifyService,
+    playlistUpdateService: App.Components.Playlist.PlaylistUpdateService,
   ) {
     super(trackVerifyService, playlistUpdateService);
   }

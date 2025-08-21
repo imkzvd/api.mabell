@@ -1,13 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { CqrsModule } from '@nestjs/cqrs';
 import { APP_GUARD } from '@nestjs/core';
 import * as path from 'path';
 import { ServeStaticModule } from '@nestjs/serve-static';
-import { CommandBusModule } from '@infrastructure/command-bus';
-import { QueryBusModule } from '@infrastructure/query-bus';
-import { EventBusModule } from '@infrastructure/event-bus';
-import { MongooseModule } from '@infrastructure/mongoose';
+import { CqrsModule } from '@api.mabell/cqrs';
+import { EventBusModule } from '@api.mabell/event-bus';
+import { DBModule } from '@api.mabell/db';
 import appConfig from './configs/app.config';
 import corsConfig from './configs/cors.config';
 import databaseConfig from './configs/database.config';
@@ -34,7 +32,7 @@ import { SearchModule } from './modules/search/search.module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: '.env.admin',
+      envFilePath: '.env',
       load: [appConfig, corsConfig, databaseConfig, jwtConfig, mailConfig, redisConfig],
     }),
     ServeStaticModule.forRoot({
@@ -46,11 +44,9 @@ import { SearchModule } from './modules/search/search.module';
       serveRoot: '/storages',
     }),
     ConfigModule.forRoot(),
-    CqrsModule.forRoot(),
     EventBusModule,
-    MongooseModule,
-    CommandBusModule,
-    QueryBusModule,
+    DBModule,
+    CqrsModule,
     AuthModule,
     MeModule,
     AdminModule,

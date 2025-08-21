@@ -1,11 +1,9 @@
-import { CommandHandler } from '@nestjs/cqrs';
-import { DeleteArtistAvatarCommand } from '@core/app/cqrs/artist/commands/delete-artist-avatar/delete-artist-avatar.command';
-import { DeleteArtistAvatarHandler as CoreDeleteArtistAvatarHandler } from '@core/app/cqrs/artist/commands/delete-artist-avatar/delete-artist-avatar.handler';
-import { ArtistUpdateService } from '@core/app/components/artist/services/artist-update.service';
+import { CommandHandler } from '@api.mabell/cqrs';
+import { App } from '@api.mabell/core';
 
-@CommandHandler(DeleteArtistAvatarCommand)
-export class DeleteArtistAvatarHandler extends CoreDeleteArtistAvatarHandler {
-  constructor(service: ArtistUpdateService) {
+@CommandHandler(App.CQRS.DeleteArtistAvatarCommand)
+export class DeleteArtistAvatarHandler extends App.CQRS.DeleteArtistAvatarHandler {
+  constructor(service: App.Components.Artist.ArtistUpdateService) {
     super(service);
   }
 }

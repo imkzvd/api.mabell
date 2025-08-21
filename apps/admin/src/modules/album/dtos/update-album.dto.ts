@@ -10,8 +10,7 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
-import { Genre, Genres } from '@core/domain/common/constants/genres';
-import { AlbumType, AlbumTypes } from '@core/domain/components/album/constants/album-types';
+import { Domain } from '@api.mabell/core';
 
 export class UpdateAlbumDTO {
   @ApiProperty({
@@ -31,21 +30,21 @@ export class UpdateAlbumDTO {
     required: false,
     type: String,
     description: 'Type',
-    example: AlbumTypes.Album,
+    example: Domain.Album.AlbumTypes.Album,
   })
-  @IsEnum(AlbumTypes)
+  @IsEnum(Domain.Album.AlbumTypes)
   @IsOptional()
-  type?: AlbumType;
+  type?: Domain.Album.AlbumType;
 
   @ApiProperty({
     required: false,
     type: [String],
     description: 'Favorite genres',
-    example: [Genres['Hip-Hop']],
+    example: [Domain.Common.Genres['Hip-Hop']],
   })
-  @IsEnum(Genres, { each: true })
+  @IsEnum(Domain.Common.Genres, { each: true })
   @IsOptional()
-  genres?: Genre[];
+  genres?: Domain.Common.Genre[];
 
   @ApiProperty({
     required: false,

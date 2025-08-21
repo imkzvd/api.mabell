@@ -1,10 +1,9 @@
 import { Provider } from '@nestjs/common';
-import { UserReadRepository as UserReadRepositoryPort } from '@core/domain/components/user/repository/user-read-repository.port';
-import { UserReadRepository } from '@infrastructure/mongoose/services/user/user-read-repository.service';
-import { UserService } from '@core/app/components/user/services/user.service';
+import { App } from '@api.mabell/core';
+import { UserDBModule } from '@api.mabell/db';
 
 export const userFindServiceProvider: Provider = {
-  provide: UserService,
-  useFactory: (rr: UserReadRepositoryPort) => new UserService(rr),
-  inject: [UserReadRepository],
+  provide: App.Components.User.UserService,
+  useFactory: (rr) => new App.Components.User.UserService(rr),
+  inject: [UserDBModule.UserReadRepository],
 };

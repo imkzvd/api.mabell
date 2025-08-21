@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { JWTModule } from '@api.mabell/jwt';
-import { PasswordModule } from '@infrastructure/password';
-import { RandomIdModule } from '@infrastructure/random-id';
+import { PasswordModule } from '@api.mabell/password';
+import { RandomIdModule } from '@api.mabell/random-id';
 import { AdminController } from './admin.controller';
 import { CreateAdminHandler } from './commands/create-admin.handler';
 import { UpdateAdminHandler } from './commands/update-admin.handler';

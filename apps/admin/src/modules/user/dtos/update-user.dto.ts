@@ -10,8 +10,7 @@ import {
   MinLength,
 } from 'class-validator';
 import { faker } from '@faker-js/faker';
-import { Region, Regions } from '@core/domain/common/constants/regions';
-import { Genre, Genres } from '@core/domain/common/constants/genres';
+import { Domain } from '@api.mabell/core';
 
 export class UpdateUserDTO {
   @ApiProperty({
@@ -42,22 +41,22 @@ export class UpdateUserDTO {
     required: false,
     type: String,
     description: 'Region',
-    example: Regions['Russian Federation'],
+    example: Domain.Common.Regions['Russian Federation'],
   })
-  @IsEnum(Regions)
+  @IsEnum(Domain.Common.Regions)
   @IsISO31661Alpha3()
   @IsOptional()
-  region?: Region;
+  region?: Domain.Common.Region;
 
   @ApiProperty({
     required: false,
     type: [String],
     description: 'Favorite genres',
-    example: [Genres['Hip-Hop']],
+    example: [Domain.Common.Genres['Hip-Hop']],
   })
-  @IsEnum(Genres, { each: true })
+  @IsEnum(Domain.Common.Genres, { each: true })
   @IsOptional()
-  genres?: Genre[];
+  genres?: Domain.Common.Genre[];
 
   @ApiProperty({
     required: false,
