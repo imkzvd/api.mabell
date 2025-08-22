@@ -82,6 +82,19 @@
     "roots": [
       "<rootDir>/libs/",
       "<rootDir>/apps/"
-    ]
+    ],
+    "moduleNameMapper": {
+      "^@api.mabell/cache(|/.*)$": "<rootDir>/libs/cache/$1",
+      "^@api.mabell/core(|/.*)$": "<rootDir>/libs/core/$1",
+      "^@api.mabell/cqrs(|/.*)$": "<rootDir>/libs/cqrs/$1",
+      "^@api.mabell/db(|/.*)$": "<rootDir>/libs/db/$1",
+      "^@api.mabell/event-bus(|/.*)$": "<rootDir>/libs/event-bus/$1",
+      "^@api.mabell/file-storage(|/.*)$": "<rootDir>/libs/file-storage/$1",
+      "^@api.mabell/jwt(|/.*)$": "<rootDir>/libs/jwt/$1",
+      "^@api.mabell/password(|/.*)$": "<rootDir>/libs/password/$1",
+      "^@api.mabell/random-id(|/.*)$": "<rootDir>/libs/random-id/$1",
+      "^@api.mabell/search(|/.*)$": "<rootDir>/libs/search/$1",
+      "^@api.mabell/shared(|/.*)$": "<rootDir>/libs/shared/$1"
+    }
   }
 }
