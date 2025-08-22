@@ -16,7 +16,7 @@
     "@api.mabell/cache": "^0.1.0",
     "@api.mabell/core": "^0.1.0",
     "@nestjs/common": "^11.1.6",
-    "sharp": "^0.34.3",
+    "sharp": "^0.33.5",
     "uuid": "10.0.0"
   },
   "devDependencies": {
