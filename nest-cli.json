@@ -18,6 +18,15 @@
         "tsConfigPath": "apps/admin/tsconfig.app.json"
       }
     },
+    "cache": {
+      "type": "library",
+      "root": "libs/cache",
+      "entryFile": "index",
+      "sourceRoot": "libs/cache/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/cache/tsconfig.lib.json"
+      }
+    },
     "client": {
       "type": "application",
       "root": "apps/client",
@@ -35,6 +44,24 @@
       "sourceRoot": "libs/core/src",
       "compilerOptions": {
         "tsConfigPath": "libs/core/tsconfig.lib.json"
+      }
+    },
+    "cqrs": {
+      "type": "library",
+      "root": "libs/cqrs",
+      "entryFile": "index",
+      "sourceRoot": "libs/cqrs/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/cqrs/tsconfig.lib.json"
+      }
+    },
+    "db": {
+      "type": "library",
+      "root": "libs/db",
+      "entryFile": "index",
+      "sourceRoot": "libs/db/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/db/tsconfig.lib.json"
       }
     },
     "event-bus": {
@@ -64,15 +91,6 @@
         "tsConfigPath": "libs/jwt/tsconfig.lib.json"
       }
     },
-    "db": {
-      "type": "library",
-      "root": "libs/db",
-      "entryFile": "index",
-      "sourceRoot": "libs/db/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/db/tsconfig.lib.json"
-      }
-    },
     "password": {
       "type": "library",
       "root": "libs/password",
@@ -80,15 +98,6 @@
       "sourceRoot": "libs/password/src",
       "compilerOptions": {
         "tsConfigPath": "libs/password/tsconfig.lib.json"
-      }
-    },
-    "cqrs": {
-      "type": "library",
-      "root": "libs/cqrs",
-      "entryFile": "index",
-      "sourceRoot": "libs/cqrs/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/cqrs/tsconfig.lib.json"
       }
     },
     "random-id": {
@@ -100,13 +109,13 @@
         "tsConfigPath": "libs/random-id/tsconfig.lib.json"
       }
     },
-    "cache": {
+    "search": {
       "type": "library",
-      "root": "libs/cache",
+      "root": "libs/search",
       "entryFile": "index",
-      "sourceRoot": "libs/cache/src",
+      "sourceRoot": "libs/search/src",
       "compilerOptions": {
-        "tsConfigPath": "libs/cache/tsconfig.lib.json"
+        "tsConfigPath": "libs/search/tsconfig.lib.json"
       }
     },
     "shared": {
@@ -116,15 +125,6 @@
       "sourceRoot": "libs/shared/src",
       "compilerOptions": {
         "tsConfigPath": "libs/shared/tsconfig.lib.json"
-      }
-    },
-    "search": {
-      "type": "library",
-      "root": "libs/search",
-      "entryFile": "index",
-      "sourceRoot": "libs/search/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/search/tsconfig.lib.json"
       }
     }
   },
