@@ -16,8 +16,5 @@
     "@nestjs/common": "^11.1.6",
     "bcrypt": "^6.0.0",
     "generate-password": "^1.7.1"
-  },
-  "devDependencies": {
-    "@types/bcrypt": "^6.0.0"
   }
 }
