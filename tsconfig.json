@@ -19,17 +19,17 @@
     "noFallthroughCasesInSwitch": true,
     "resolveJsonModule": true,
     "paths": {
+      "@api.mabell/cache": ["libs/cache"],
       "@api.mabell/core": ["libs/core"],
+      "@api.mabell/cqrs": ["libs/cqrs"],
+      "@api.mabell/db": ["libs/db"],
       "@api.mabell/event-bus": ["libs/event-bus"],
       "@api.mabell/file-storage": ["libs/file-storage"],
       "@api.mabell/jwt": ["libs/jwt"],
-      "@api.mabell/db": ["libs/db"],
-      "@api.mabell/cqrs": ["libs/cqrs"],
       "@api.mabell/password": ["libs/password"],
       "@api.mabell/random-id": ["libs/random-id"],
-      "@api.mabell/cache": ["libs/cache"],
-      "@api.mabell/shared": ["libs/shared"],
-      "@api.mabell/search": ["libs/search"]
+      "@api.mabell/search": ["libs/search"],
+      "@api.mabell/shared": ["libs/shared"]
     }
   }
 }
