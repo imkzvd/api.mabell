@@ -6,7 +6,7 @@
   "packages": ["apps/*", "libs/*"],
   "command": {
     "version": {
-      "allowBranch": "feature/*",
+      "allowBranch": "release/*",
       "message": "chore(release): updated packages",
       "includeMergedTags": true
     }
