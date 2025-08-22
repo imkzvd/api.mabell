@@ -2,8 +2,6 @@ name: Build and admin docker image to GHCR
 
 on:
   push:
-    branches:
-      - master
     tags:
       - 'v*'
 
