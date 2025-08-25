@@ -1,6 +1,6 @@
 {
   "name": "@api.mabell/cqrs",
-  "version": "1.0.0-alpha.0",
+  "version": "1.0.1-alpha.0",
   "description": "Package for the Mabell API",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -14,7 +14,7 @@
   "author": "imkzvd@gmail.com",
   "license": "ISC",
   "dependencies": {
-    "@api.mabell/core": "^1.0.0-alpha.0",
+    "@api.mabell/core": "^1.0.1-alpha.0",
     "@nestjs/common": "^11.1.6",
     "@nestjs/cqrs": "^11.0.3"
   }
