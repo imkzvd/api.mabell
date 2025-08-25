@@ -7,8 +7,7 @@
   "command": {
     "version": {
       "allowBranch": "release/*",
-      "message": "chore(release): updated packages",
-      "includeMergedTags": true
+      "message": "chore(release): v%v"
     }
   }
 }
