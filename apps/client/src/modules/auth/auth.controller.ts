@@ -47,11 +47,13 @@ export class AuthController {
 
     res.cookie(ACCESS_TOKEN_COOKIE_NAME, accessToken, {
       httpOnly: true,
+      secure: true,
       maxAge: (accessTokenExpiresIn ? accessTokenExpiresIn : 300) * 1000,
     });
 
     res.cookie(REFRESH_TOKEN_COOKIE_NAME, refreshToken, {
       httpOnly: true,
+      secure: true,
       maxAge: (refreshTokenExpiresIn ? refreshTokenExpiresIn : 600) * 1000,
     });
   }
