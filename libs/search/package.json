@@ -1,6 +1,6 @@
 {
   "name": "@api.mabell/search",
-  "version": "1.0.0-alpha.0",
+  "version": "1.0.0-alpha.1",
   "description": "Package for the Mabell API",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -13,8 +13,8 @@
   "author": "imkzvd@gmail.com",
   "license": "ISC",
   "dependencies": {
-    "@api.mabell/core": "^1.0.0-alpha.0",
-    "@api.mabell/event-bus": "^1.0.0-alpha.0",
+    "@api.mabell/core": "^1.0.0-alpha.1",
+    "@api.mabell/event-bus": "^1.0.0-alpha.1",
     "@nestjs/common": "^11.1.6",
     "typesense": "^2.1.0"
   }
