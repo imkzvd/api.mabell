@@ -31,10 +31,10 @@ export class AuthController {
     const userIp = req.headers['x-real-ip'] as string;
 
     const { id: loggedUserId } = await this._CB.execute(new App.CQRS.LoginUserCommand(dto));
-    const accessToken = await this._CB.execute(
+    const { token: accessToken } = await this._CB.execute(
       new App.CQRS.CreateUserAccessTokenCommand(loggedUserId),
     );
-    const refreshToken = await this._CB.execute(
+    const { token: refreshToken } = await this._CB.execute(
       new App.CQRS.CreateUserRefreshTokenCommand({
         userId: loggedUserId,
         userAgent,
