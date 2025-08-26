@@ -2,7 +2,7 @@ name: Build and admin docker image to GHCR
 
 on:
   release:
-    types: [ published, prereleased ]
+    types: [ published ]
 
 jobs:
   build:
