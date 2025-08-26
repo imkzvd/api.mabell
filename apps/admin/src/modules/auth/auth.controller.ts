@@ -43,10 +43,10 @@ export class AuthController {
     const userIp = req.headers['x-real-ip'] as string;
 
     const { id: loggedAdminId } = await this._CB.execute(new App.CQRS.LoginAdminCommand(dto));
-    const accessToken = await this._CB.execute(
+    const { token: accessToken } = await this._CB.execute(
       new App.CQRS.CreateAdminAccessTokenCommand(loggedAdminId),
     );
-    const refreshToken = await this._CB.execute(
+    const { token: refreshToken } = await this._CB.execute(
       new App.CQRS.CreateAdminRefreshTokenCommand({
         adminId: loggedAdminId,
         userAgent,
@@ -113,7 +113,7 @@ export class AuthController {
     );
 
     if (validatedRefreshToken) {
-      const accessToken = await this._CB.execute(
+      const { token: accessToken } = await this._CB.execute(
         new App.CQRS.CreateAdminAccessTokenCommand(validatedRefreshToken.owner),
       );
 
