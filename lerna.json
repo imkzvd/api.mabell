@@ -7,7 +7,8 @@
   "command": {
     "version": {
       "allowBranch": "release/*",
-      "message": "chore(release): v%v"
+      "message": "chore(release): v%v",
+      "tagVersionPrefix": "lv"
     }
   }
 }
