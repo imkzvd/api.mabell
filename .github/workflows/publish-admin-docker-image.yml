@@ -1,9 +1,8 @@
 name: Build and admin docker image to GHCR
 
 on:
-  push:
-    tags:
-      - 'v*'
+  release:
+    types: [ published, prereleased ]
 
 jobs:
   build:
@@ -26,13 +25,13 @@ jobs:
 
       - name: Build docker image
         run: |
-          docker build -t ghcr.io/${{ github.repository }}/api.admin.mabell:${{ env.VERSION }} .
+          docker build -t ghcr.io/${{ github.repository }}/admin:${{ env.VERSION }} .
 
       - name: Push Docker image
         run: |
-          docker push ghcr.io/${{ github.repository }}/api.admin.mabell:${{ env.VERSION }}
+          docker push ghcr.io/${{ github.repository }}/admin:${{ env.VERSION }}
 
       - name: Tag image as latest
         run: |
-          docker tag ghcr.io/${{ github.repository }}/api.admin.mabell:${{ env.VERSION }} ghcr.io/${{ github.repository }}/api.admin.mabell:latest
-          docker push ghcr.io/${{ github.repository }}/api.admin.mabell:latest
+          docker tag ghcr.io/${{ github.repository }}/admin:${{ env.VERSION }} ghcr.io/${{ github.repository }}/admin:latest
+          docker push ghcr.io/${{ github.repository }}/admin:latest
