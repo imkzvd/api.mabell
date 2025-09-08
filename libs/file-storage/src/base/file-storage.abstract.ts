@@ -41,7 +41,8 @@ export abstract class FileStorage {
     return sharp(srcPath).webp().toFile(distPath);
   }
 
-  protected moveFile(srcPath: string, destPath: string) {
-    return fsPromises.rename(srcPath, destPath);
+  protected async moveFile(srcPath: string, destPath: string) {
+    await fsPromises.copyFile(srcPath, destPath);
+    await fsPromises.unlink(srcPath);
   }
 }
