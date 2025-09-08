@@ -38,7 +38,7 @@ export abstract class FileStorage {
   }
 
   protected convertAndSaveImage(srcPath: string, distPath: string) {
-    return sharp(srcPath).webp().toFile(distPath);
+    return sharp(srcPath).webp({ quality: 100 }).toFile(distPath);
   }
 
   protected async moveFile(srcPath: string, destPath: string) {
