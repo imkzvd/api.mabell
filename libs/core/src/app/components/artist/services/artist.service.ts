@@ -18,4 +18,19 @@ export class ArtistService {
 
     return foundArtist.isPublic;
   }
+
+  async getSimilarArtistsById(
+    artistId: string,
+    options?: Partial<{ isPublic: boolean; limit: number }>,
+  ): Promise<ArtistDTO[]> {
+    const foundArtist = await this._RR.findById(artistId);
+
+    if (!foundArtist) {
+      throw new NotFoundException('Artist does not exist');
+    }
+
+    const foundArtists = await this._RR.findByGenres(foundArtist.genres, options);
+
+    return foundArtists.filter(({ id }) => id !== artistId);
+  }
 }
