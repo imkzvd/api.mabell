@@ -279,8 +279,8 @@ export class ArtistController {
     description: 'Id',
     example: faker.database.mongodbObjectId(),
   })
-  @ApiQuery({ required: false, type: Number, name: 'limit', description: 'Limit', example: 50 })
-  @ApiQuery({ required: false, type: Number, name: 'offset', description: 'Offset', example: 0 })
+  @ApiQuery({ required: false, type: Number, description: 'Limit', example: 50, default: 50 })
+  @ApiQuery({ required: false, type: Number, description: 'Offset', example: 0, default: 0 })
   @ApiOkResponse({ description: 'Artist tracks', type: TracksRO })
   @Roles(Domain.Admin.AdminRoles.Guest)
   @Get('/:id/tracks')
