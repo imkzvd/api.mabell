@@ -5,5 +5,6 @@ export class SimplifiedArtistDTO {
     public readonly id: ArtistId,
     public readonly name: string,
     public readonly isPublic: boolean,
+    public readonly isActive: boolean,
   ) {}
 }
