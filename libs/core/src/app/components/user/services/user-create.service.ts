@@ -1,7 +1,7 @@
 import { USER_MIN_LENGTH_PASSWORD } from '../constants';
 import { UserFactory, UserWriteRepository } from '../../../../domain/components/user';
 import { EventBus, IdService, PasswordService } from '../../../ports';
-import { UserId } from '../../../../domain/components/user/types';
+import { UserId } from '../../../../domain/components/user';
 import { UserCreatedEvent } from '../../../events';
 import { prepareUserEventPayload } from '../utils/prepare-user-event-payload.utility';
 
@@ -25,6 +25,7 @@ export class UserCreateService {
       username: `user${nextUserIndex}`,
       password: hashPassword,
       name: `User #${nextUserIndex}`,
+      email: null,
     });
 
     await this._WR.save(createdUser);
