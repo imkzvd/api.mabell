@@ -11,9 +11,9 @@ import databaseConfig from './configs/database.config';
 import jwtConfig from './configs/jwt.config';
 import mailConfig from './configs/mail.config';
 import redisConfig from './configs/redis.config';
-import { AuthModule } from './modules/auth/auth.module';
-import { UserModule } from './modules/user/user.module';
 import { ArtistModule } from './modules/artist/artist.module';
+import { AlbumModule } from './modules/album/album.module';
+import { TrackModule } from './modules/track/track.module';
 
 @Module({
   imports: [
@@ -35,9 +35,9 @@ import { ArtistModule } from './modules/artist/artist.module';
     DBModule,
     EventBusModule,
     CqrsModule,
-    AuthModule,
-    UserModule,
     ArtistModule,
+    AlbumModule,
+    TrackModule,
   ],
 })
 export class AppModule {}

@@ -17,12 +17,12 @@ export class SimplifiedArtistRO {
   })
   name: string;
 
-  @ApiProperty({ type: Boolean, description: 'Public', example: true })
-  isPublic: boolean;
+  @ApiProperty({ type: Boolean, description: 'Activation', example: true })
+  isActive: boolean;
 
   constructor(dto: App.DTOs.SimplifiedArtistDTO) {
     this.id = dto.id;
     this.name = dto.name;
-    this.isPublic = dto.isPublic;
+    this.isActive = dto.isActive;
   }
 }
