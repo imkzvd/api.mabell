@@ -25,7 +25,7 @@ jobs:
 
       - name: Build docker image
         run: |
-          docker build -t ghcr.io/${{ github.repository }}/admin:${{ env.VERSION }} .
+          docker build -f Dockerfile.admin -t ghcr.io/${{ github.repository }}/admin:${{ env.VERSION }} .
 
       - name: Push Docker image
         run: |
