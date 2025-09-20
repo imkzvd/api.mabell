@@ -1,12 +1,19 @@
 import { Controller, Get, NotFoundException, Param } from '@nestjs/common';
-import { ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
+import {
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
 import { faker } from '@faker-js/faker';
 import { App } from '@api.mabell/core';
 import { QueryBus } from '@api.mabell/cqrs';
-import { ParseObjectIdPipe } from '@api.mabell/shared';
+import { ErrorRO, ParseObjectIdPipe } from '@api.mabell/shared';
 import { UserRO } from './ros/user.ro';
 
 @ApiTags('User')
+@ApiNotFoundResponse({ type: ErrorRO })
 @Controller({ path: '/users' })
 export class UserController {
   constructor(private readonly _QB: QueryBus) {}

@@ -66,37 +66,16 @@ export class AlbumRO {
   @ApiProperty({ type: Boolean, description: 'Active', example: true })
   isActive: boolean;
 
-  @ApiProperty({ type: Boolean, description: 'Public', example: true })
-  isPublic: boolean;
-
-  @ApiProperty({
-    type: Date,
-    description: 'Created date',
-    example: faker.date.past().toISOString(),
-  })
-  createdAt: Date;
-
-  @ApiProperty({
-    type: Date,
-    description: 'Updated date',
-    example: faker.date.past().toISOString(),
-  })
-  updatedAt: Date;
-
   constructor(album: App.DTOs.AlbumDTO) {
     this.id = album.id;
     this.name = album.name;
     this.artists = album.artists.map((i) => new SimplifiedArtistRO(i));
     this.type = new LabelValueRO(album.typeLabelValue);
     this.genres = album.genreLabelValues.map((i) => new LabelValueRO(i));
-    this.cover = album.cover ? `${process.env.HOST}${album.cover}` : null;
+    this.cover = album.cover ? `${process.env.API_URL}${album.cover}` : null;
     this.color = album.color;
     this.description = album.description;
     this.releaseAt = album.releaseAt;
-    // this.tracks = tracks ? new TracksRO(tracks) : new OffsetLimitPaginationRO();
-    this.isActive = album.isActive;
-    this.isPublic = album.isPublic;
-    this.createdAt = album.createdAt;
-    this.updatedAt = album.updatedAt;
+    this.isActive = album.isActive && album.artists.every(({ isActive }) => isActive);
   }
 }
