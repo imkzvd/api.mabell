@@ -1,10 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { App, Domain, Shared } from '@api.mabell/core';
 import AlbumMapper from './album.mapper';
-import { AlbumDocument, AlbumWithArtists, AlbumWithArtistsDocument } from './types';
-import { POPULATE_OPTIONS } from './constants';
+import { AlbumDocument, AlbumWithArtistsDocument } from './types';
 import { Album } from './album.schema';
 
 @Injectable()
@@ -15,16 +14,30 @@ export class AlbumReadRepository implements App.Ports.AlbumReadRepository {
   ) {}
 
   async findById(albumId: string, options?: { isPublic: boolean }) {
-    const foundDoc = await this._albumModel
-      .findOne(
+    const [foundDoc] = await this._albumModel
+      .aggregate<AlbumWithArtistsDocument>([
         {
-          _id: albumId,
-          ...(options?.isPublic !== undefined && { isPublic: options.isPublic }),
+          $match: {
+            _id: new Types.ObjectId(albumId),
+            ...(options?.isPublic !== undefined && { isPublic: options.isPublic }),
+          },
         },
-        null,
-      )
-      .populate<AlbumWithArtistsDocument>(POPULATE_OPTIONS)
-      .lean<AlbumWithArtists>()
+        {
+          $lookup: {
+            from: 'artists',
+            localField: 'artists',
+            foreignField: '_id',
+            as: 'artists',
+          },
+        },
+        {
+          $match: {
+            ...(options?.isPublic !== undefined && {
+              'artists.isPublic': { $ne: !options.isPublic },
+            }),
+          },
+        },
+      ])
       .exec();
 
     if (!foundDoc) {
@@ -41,27 +54,90 @@ export class AlbumReadRepository implements App.Ports.AlbumReadRepository {
       pagination: Shared.DTOs.OffsetLimitPaginationDTO;
     }>,
   ) {
-    const filter = {
-      artists: artistId,
-      ...(options?.isPublic !== undefined && { isPublic: options.isPublic }),
-    };
-    const docsTotal = await this._albumModel.countDocuments(filter);
-    const foundDocs = await this._albumModel
-      .find(filter, null)
-      .limit(options?.pagination?.limit ?? 50)
-      .sort({ createdAt: -1 })
-      .skip(options?.pagination?.offset ?? 0)
-      .populate<AlbumWithArtistsDocument[]>(POPULATE_OPTIONS)
-      .lean<AlbumWithArtists[]>()
+    const [result] = await this._albumModel
+      .aggregate<{ docs: AlbumWithArtistsDocument[]; docsTotal: number }>([
+        {
+          $match: {
+            artists: new Types.ObjectId(artistId),
+            ...(options?.isPublic !== undefined && { isPublic: options.isPublic }),
+          },
+        },
+        {
+          $lookup: {
+            from: 'artists',
+            localField: 'artists',
+            foreignField: '_id',
+            as: 'artists',
+          },
+        },
+        {
+          $match: {
+            ...(options?.isPublic !== undefined && {
+              'artists.isPublic': { $ne: !options.isPublic },
+            }),
+          },
+        },
+        {
+          $facet: {
+            docsTotal: [{ $count: 'count' }],
+            docs: [
+              { $sort: { createdAt: -1 } },
+              { $skip: options?.pagination?.offset ?? 0 },
+              { $limit: options?.pagination?.limit ?? 50 },
+            ],
+          },
+        },
+        {
+          $project: {
+            docsTotal: { $arrayElemAt: ['$docsTotal.count', 0] },
+            docs: 1,
+          },
+        },
+      ])
       .exec();
 
     return new App.DTOs.AlbumsDTO(
-      foundDocs.map((doc) => AlbumMapper.toDTO(doc)),
-      docsTotal,
-      options?.pagination?.limit ?? 50,
+      result.docs.map((doc) => AlbumMapper.toDTO(doc)),
+      result.docsTotal,
       options?.pagination?.offset ?? 0,
-      (options?.pagination?.limit ?? 50) + (options?.pagination?.offset ?? 0) < docsTotal,
+      options?.pagination?.limit ?? 50,
+      (options?.pagination?.limit ?? 50) + (options?.pagination?.offset ?? 0) < result.docsTotal,
     );
+  }
+
+  async findLatestAlbumByArtistId(artistId: string, options?: Partial<AlbumWithArtistsDocument>) {
+    const [foundDoc] = await this._albumModel
+      .aggregate<AlbumWithArtistsDocument>([
+        {
+          $match: {
+            artists: new Types.ObjectId(artistId),
+            ...(options?.isPublic !== undefined && { isPublic: options.isPublic }),
+          },
+        },
+        {
+          $lookup: {
+            from: 'artists',
+            localField: 'artists',
+            foreignField: '_id',
+            as: 'artists',
+          },
+        },
+        {
+          $match: {
+            ...(options?.isPublic !== undefined && {
+              'artists.isPublic': { $ne: !options.isPublic },
+            }),
+          },
+        },
+        {
+          $sort: {
+            releaseAt: -1,
+          },
+        },
+      ])
+      .exec();
+
+    return foundDoc ? AlbumMapper.toDTO(foundDoc) : null;
   }
 
   async getPublicStatusById(albumId: string) {

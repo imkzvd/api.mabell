@@ -54,8 +54,11 @@ export class ArtistWriteRepository implements Domain.Artist.ArtistWriteRepositor
     };
   }
 
-  async existsById(artistId: string) {
-    const foundDoc = await this._artistModel.exists({ _id: artistId });
+  async existsById(artistId: string, isPublic?: boolean) {
+    const foundDoc = await this._artistModel.exists({
+      _id: artistId,
+      ...(isPublic !== undefined && { isPublic }),
+    });
 
     return foundDoc ? (foundDoc._id.toHexString() as Domain.Artist.ArtistId) : null;
   }

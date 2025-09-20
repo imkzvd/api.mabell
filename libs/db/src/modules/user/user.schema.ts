@@ -5,7 +5,7 @@ import { BasePersonSchema } from '../../base/base-person.schema';
 
 @Schema({ versionKey: false, timestamps: true })
 export class User extends BasePersonSchema {
-  @Prop({ required: false, type: String, default: null, unique: true, index: 1 })
+  @Prop({ required: false, type: String, default: null, index: 1 })
   email: string | null;
 
   @Prop({ required: false, type: Date, default: null })

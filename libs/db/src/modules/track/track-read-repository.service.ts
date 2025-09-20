@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { Domain, App, Shared } from '@api.mabell/core';
 import TrackMapper from './track.mapper';
 import { Track } from './track.schema';
@@ -15,16 +15,63 @@ export class TrackReadRepository implements App.Ports.TrackReadRepository {
   ) {}
 
   async findById(trackId: string, options?: Partial<{ isPublic: boolean }>) {
-    const foundDoc = await this._trackModel
-      .findOne(
+    const [foundDoc] = await this._trackModel
+      .aggregate<TrackWithAlbumAndArtists>([
         {
-          _id: trackId,
-          ...(options?.isPublic !== undefined && { isPublic: options.isPublic }),
+          $match: {
+            _id: new Types.ObjectId(trackId),
+            ...(options?.isPublic !== undefined && { isPublic: options.isPublic }),
+          },
         },
-        null,
-      )
-      .populate<TrackWithAlbumAndArtistsDocument[]>(POPULATE_OPTIONS)
-      .lean<TrackWithAlbumAndArtists>()
+        {
+          $lookup: {
+            from: 'albums',
+            localField: 'album',
+            foreignField: '_id',
+            as: 'album',
+          },
+        },
+        {
+          $unwind: { path: '$album' },
+        },
+        {
+          $lookup: {
+            from: 'artists',
+            localField: 'album.artists',
+            foreignField: '_id',
+            as: 'album.artists',
+          },
+        },
+        {
+          $lookup: {
+            from: 'artists',
+            localField: 'featArtists',
+            foreignField: '_id',
+            as: 'featArtists',
+            pipeline: [
+              {
+                $match: {
+                  ...(options?.isPublic !== undefined && { isPublic: options.isPublic }),
+                },
+              },
+            ],
+          },
+        },
+        {
+          $match: {
+            ...(options?.isPublic !== undefined && {
+              'album.isPublic': { $ne: !options.isPublic },
+            }),
+          },
+        },
+        {
+          $match: {
+            ...(options?.isPublic !== undefined && {
+              'album.artists.isPublic': { $ne: !options.isPublic },
+            }),
+          },
+        },
+      ])
       .exec();
 
     if (!foundDoc) {
@@ -69,25 +116,90 @@ export class TrackReadRepository implements App.Ports.TrackReadRepository {
       pagination: Shared.DTOs.OffsetLimitPaginationDTO;
     }>,
   ) {
-    const filter = {
-      album: albumId,
-      ...(options?.isPublic !== undefined && { isPublic: options.isPublic }),
-    };
-    const docsTotal = await this._trackModel.countDocuments(filter);
-    const foundDocs = await this._trackModel
-      .find(filter, null)
-      .limit(options?.pagination?.limit ?? 50)
-      .skip(options?.pagination?.offset ?? 0)
-      .populate<TrackWithAlbumAndArtistsDocument[]>(POPULATE_OPTIONS)
-      .lean<TrackWithAlbumAndArtists[]>()
+    const [result] = await this._trackModel
+      .aggregate<{
+        docs: TrackWithAlbumAndArtistsDocument[];
+        docsTotal: number;
+      }>([
+        {
+          $match: {
+            album: new Types.ObjectId(albumId),
+            ...(options?.isPublic !== undefined && { isPublic: options.isPublic }),
+          },
+        },
+        {
+          $lookup: {
+            from: 'albums',
+            localField: 'album',
+            foreignField: '_id',
+            as: 'album',
+          },
+        },
+        {
+          $unwind: { path: '$album' },
+        },
+        {
+          $lookup: {
+            from: 'artists',
+            localField: 'album.artists',
+            foreignField: '_id',
+            as: 'album.artists',
+          },
+        },
+        {
+          $lookup: {
+            from: 'artists',
+            localField: 'featArtists',
+            foreignField: '_id',
+            as: 'featArtists',
+            pipeline: [
+              {
+                $match: {
+                  ...(options?.isPublic !== undefined && { isPublic: options.isPublic }),
+                },
+              },
+            ],
+          },
+        },
+        {
+          $match: {
+            ...(options?.isPublic !== undefined && {
+              'album.isPublic': { $ne: !options.isPublic },
+            }),
+          },
+        },
+        {
+          $match: {
+            ...(options?.isPublic !== undefined && {
+              'album.artists.isPublic': { $ne: !options.isPublic },
+            }),
+          },
+        },
+        {
+          $facet: {
+            docsTotal: [{ $count: 'count' }],
+            docs: [
+              { $sort: { trackNumber: 1 } },
+              { $skip: options?.pagination?.offset ?? 0 },
+              { $limit: options?.pagination?.limit ?? 50 },
+            ],
+          },
+        },
+        {
+          $project: {
+            docsTotal: { $arrayElemAt: ['$docsTotal.count', 0] },
+            docs: 1,
+          },
+        },
+      ])
       .exec();
 
     return new App.DTOs.TracksDTO(
-      foundDocs.map((doc) => TrackMapper.toDTO(doc)),
-      docsTotal,
-      options?.pagination?.limit ?? 50,
+      result.docs.map((doc) => TrackMapper.toDTO(doc)),
+      result.docsTotal,
       options?.pagination?.offset ?? 0,
-      (options?.pagination?.limit ?? 50) + (options?.pagination?.offset ?? 0) < docsTotal,
+      options?.pagination?.limit ?? 50,
+      (options?.pagination?.limit ?? 50) + (options?.pagination?.offset ?? 0) < result.docsTotal,
     );
   }
 
@@ -98,23 +210,93 @@ export class TrackReadRepository implements App.Ports.TrackReadRepository {
       pagination: Shared.DTOs.OffsetLimitPaginationDTO;
     }>,
   ) {
-    const filter = {
-      $or: [{ artists: artistId }, { featArtists: artistId }],
-      ...(options?.isPublic !== undefined && { isPublic: options.isPublic }),
-    };
-    const docsTotal = await this._trackModel.countDocuments(filter);
-    const foundDocs = await this._trackModel
-      .find(filter, null)
-      .populate<TrackWithAlbumAndArtistsDocument[]>(POPULATE_OPTIONS)
-      .lean<TrackWithAlbumAndArtists[]>()
+    const [result] = await this._trackModel
+      .aggregate<{
+        docs: TrackWithAlbumAndArtistsDocument[];
+        docsTotal: number;
+      }>([
+        {
+          $match: {
+            $or: [
+              { artists: new Types.ObjectId(artistId) },
+              { featArtists: new Types.ObjectId(artistId) },
+            ],
+            ...(options?.isPublic !== undefined && { isPublic: options.isPublic }),
+          },
+        },
+        {
+          $lookup: {
+            from: 'albums',
+            localField: 'album',
+            foreignField: '_id',
+            as: 'album',
+          },
+        },
+        {
+          $unwind: { path: '$album' },
+        },
+        {
+          $lookup: {
+            from: 'artists',
+            localField: 'album.artists',
+            foreignField: '_id',
+            as: 'album.artists',
+          },
+        },
+        {
+          $lookup: {
+            from: 'artists',
+            localField: 'featArtists',
+            foreignField: '_id',
+            as: 'featArtists',
+            pipeline: [
+              {
+                $match: {
+                  ...(options?.isPublic !== undefined && { isPublic: options.isPublic }),
+                },
+              },
+            ],
+          },
+        },
+        {
+          $match: {
+            ...(options?.isPublic !== undefined && {
+              'album.isPublic': { $ne: !options.isPublic },
+            }),
+          },
+        },
+        {
+          $match: {
+            ...(options?.isPublic !== undefined && {
+              'album.artists.isPublic': { $ne: !options.isPublic },
+            }),
+          },
+        },
+        {
+          $facet: {
+            docsTotal: [{ $count: 'count' }],
+            docs: [
+              { $sort: { createdAt: -1 } },
+              { $skip: options?.pagination?.offset ?? 0 },
+              { $limit: options?.pagination?.limit ?? 50 },
+            ],
+          },
+        },
+        {
+          $project: {
+            docsTotal: { $arrayElemAt: ['$docsTotal.count', 0] },
+            docs: 1,
+          },
+        },
+      ])
       .exec();
 
     return new App.DTOs.TracksDTO(
-      foundDocs.map((doc) => TrackMapper.toDTO(doc)),
-      docsTotal,
-      options?.pagination?.limit ?? 50,
+      result.docs.map((doc) => TrackMapper.toDTO(doc)),
+      result.docsTotal,
       options?.pagination?.offset ?? 0,
-      (options?.pagination?.limit ?? 50) + (options?.pagination?.offset ?? 0) < docsTotal,
+      options?.pagination?.limit ?? 50,
+      (options?.pagination?.limit ?? 50) + (options?.pagination?.offset ?? 0) < result.docsTotal,
     );
   }
 }

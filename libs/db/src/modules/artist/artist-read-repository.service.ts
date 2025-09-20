@@ -32,6 +32,17 @@ export class ArtistReadRepository implements App.Ports.ArtistReadRepository {
     return ArtistMapper.toDTO(foundDoc);
   }
 
+  async findByGenres(genres: string[], options?: Partial<{ isPublic: boolean; limit: number }>) {
+    const foundDocs = await this._artistModel
+      .find({
+        genres: { $in: genres },
+        ...(options?.isPublic !== undefined && { isPublic: options.isPublic }),
+      })
+      .limit(options?.limit || 30);
+
+    return foundDocs.map((doc) => ArtistMapper.toDTO(doc));
+  }
+
   async getPublicStatusById(artistId: string) {
     const foundDoc = await this._artistModel.findById(artistId, 'isPublic').lean().exec();
 
