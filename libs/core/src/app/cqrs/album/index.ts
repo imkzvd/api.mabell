@@ -14,3 +14,5 @@ export * from './queries/get-album/get-album.query';
 export * from './queries/get-album/get-album.handler';
 export * from './queries/get-artist-albums/get-artist-albums.query';
 export * from './queries/get-artist-albums/get-artist-albums.handler';
+export * from './queries/get-artist-latest-album/get-artist-latest-album.handler';
+export * from './queries/get-artist-latest-album/get-artist-latest-album.query';
