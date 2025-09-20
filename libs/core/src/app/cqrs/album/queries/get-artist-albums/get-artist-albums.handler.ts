@@ -11,7 +11,10 @@ export class GetArtistAlbumsHandler implements QueryHandler<GetArtistAlbumsQuery
   ) {}
 
   async execute({ artistId, options }: GetArtistAlbumsQuery) {
-    const verifiedArtistId = await this._artistVerifyService.verifyById(artistId);
+    const verifiedArtistId = await this._artistVerifyService.verifyById(
+      artistId,
+      options?.isPublic,
+    );
 
     if (!verifiedArtistId) {
       throw new NotFoundException('Artist does not exist');
