@@ -25,6 +25,13 @@ export class AlbumService {
     return this._RR.findByArtistId(artistId, options);
   }
 
+  findLatestAlbumByArtistId(
+    artistId: string,
+    options?: Partial<{ isPublic: boolean }>,
+  ): Promise<AlbumDTO | null> {
+    return this._RR.findLatestAlbumByArtistId(artistId, options);
+  }
+
   getArtistIdsById(albumId: string): Promise<ArtistId[]> {
     return this._RR.getArtistIdsById(albumId);
   }
