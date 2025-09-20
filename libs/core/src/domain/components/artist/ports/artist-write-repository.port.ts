@@ -16,7 +16,7 @@ export interface ArtistWriteRepository {
     missingIds: string[];
   }>;
 
-  existsById(artistId: string): Promise<ArtistId | null>;
+  existsById(artistId: string, isPublic?: boolean): Promise<ArtistId | null>;
 
   existsByIds(artistIds: string[]): Promise<{
     items: (ArtistId | null)[];

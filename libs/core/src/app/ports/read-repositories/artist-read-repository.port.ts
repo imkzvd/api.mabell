@@ -8,5 +8,7 @@ export interface ArtistReadRepository {
     }>,
   ): Promise<ArtistDTO | null>;
 
+  findByGenres(genres: string[], options?: Partial<{ limit: number }>): Promise<ArtistDTO[]>;
+
   getPublicStatusById(artistId: string): Promise<boolean>;
 }

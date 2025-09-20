@@ -19,6 +19,11 @@ export interface AlbumReadRepository {
     }>,
   ): Promise<AlbumsDTO>;
 
+  findLatestAlbumByArtistId(
+    artistId: string,
+    options?: Partial<{ isPublic: boolean }>,
+  ): Promise<AlbumDTO | null>;
+
   getPublicStatusById(albumId: string): Promise<boolean>;
 
   getArtistIdsById(albumId: string): Promise<ArtistId[]>;
