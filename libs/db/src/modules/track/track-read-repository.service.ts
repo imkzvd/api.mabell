@@ -5,7 +5,6 @@ import { Domain, App, Shared } from '@api.mabell/core';
 import TrackMapper from './track.mapper';
 import { Track } from './track.schema';
 import { TrackWithAlbumAndArtistsDocument, TrackWithAlbumAndArtists } from './types';
-import { POPULATE_OPTIONS } from './constants';
 
 @Injectable()
 export class TrackReadRepository implements App.Ports.TrackReadRepository {
@@ -83,12 +82,62 @@ export class TrackReadRepository implements App.Ports.TrackReadRepository {
 
   async findByIds(trackIds: string[], options?: Partial<{ isPublic: boolean }>) {
     const foundDocs = await this._trackModel
-      .find(
-        { _id: trackIds, ...(options?.isPublic !== undefined && { isPublic: options.isPublic }) },
-        null,
-      )
-      .populate<TrackWithAlbumAndArtistsDocument[]>(POPULATE_OPTIONS)
-      .lean<TrackWithAlbumAndArtists[]>()
+      .aggregate<TrackWithAlbumAndArtists>([
+        {
+          $match: {
+            _id: {
+              $in: trackIds.map((i) => new Types.ObjectId(i)),
+            },
+            ...(options?.isPublic !== undefined && { isPublic: options.isPublic }),
+          },
+        },
+        {
+          $lookup: {
+            from: 'albums',
+            localField: 'album',
+            foreignField: '_id',
+            as: 'album',
+          },
+        },
+        { $unwind: { path: '$album' } },
+        {
+          $lookup: {
+            from: 'artists',
+            localField: 'album.artists',
+            foreignField: '_id',
+            as: 'album.artists',
+          },
+        },
+        {
+          $lookup: {
+            from: 'artists',
+            localField: 'featArtists',
+            foreignField: '_id',
+            as: 'featArtists',
+            pipeline: [
+              {
+                $match: {
+                  ...(options?.isPublic !== undefined && { isPublic: options.isPublic }),
+                },
+              },
+            ],
+          },
+        },
+        {
+          $match: {
+            ...(options?.isPublic !== undefined && {
+              'album.isPublic': { $ne: !options.isPublic },
+            }),
+          },
+        },
+        {
+          $match: {
+            ...(options?.isPublic !== undefined && {
+              'album.artists.isPublic': { $ne: !options.isPublic },
+            }),
+          },
+        },
+      ])
       .exec();
 
     const foundDocsMap: Map<string, TrackWithAlbumAndArtists> = new Map(
