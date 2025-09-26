@@ -14,6 +14,7 @@ import redisConfig from './configs/redis.config';
 import { ArtistModule } from './modules/artist/artist.module';
 import { AlbumModule } from './modules/album/album.module';
 import { TrackModule } from './modules/track/track.module';
+import { PlaylistModule } from './modules/playlist/playlist.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { TrackModule } from './modules/track/track.module';
     ArtistModule,
     AlbumModule,
     TrackModule,
+    PlaylistModule,
   ],
 })
 export class AppModule {}
