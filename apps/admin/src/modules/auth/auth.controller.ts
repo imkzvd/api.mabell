@@ -59,15 +59,15 @@ export class AuthController {
 
     res.cookie(ACCESS_TOKEN_COOKIE_NAME, accessToken, {
       httpOnly: true,
-      secure: true,
-      sameSite: 'none',
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
       maxAge: (accessTokenExpiresIn ? accessTokenExpiresIn : 300) * 1000,
     });
 
     res.cookie(REFRESH_TOKEN_COOKIE_NAME, refreshToken, {
       httpOnly: true,
-      secure: true,
-      sameSite: 'none',
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
       maxAge: (refreshTokenExpiresIn ? refreshTokenExpiresIn : 600) * 1000,
     });
   }
