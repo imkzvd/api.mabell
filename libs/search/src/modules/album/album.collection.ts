@@ -18,7 +18,9 @@ export class AlbumCollection extends BaseCollection<Album, App.DTOs.IndexedAlbum
           { name: 'name', type: 'string', index: true },
           { name: 'artistNames', type: 'string[]', index: true },
           { name: 'artistIds', type: 'string[]', index: true },
+          { name: 'artistPublic', type: 'bool[]', index: false },
           { name: 'cover', type: 'string', optional: true, index: false },
+          { name: 'isPublic', type: 'bool', index: false },
           { name: 'isGlobal', type: 'bool', index: true },
         ],
       },
@@ -64,6 +66,8 @@ export class AlbumCollection extends BaseCollection<Album, App.DTOs.IndexedAlbum
       const albumArtistIndex = doc.artistIds.findIndex((id) => id === artistId);
 
       doc.artistNames[albumArtistIndex] = payload.name;
+      doc.artistPublic[albumArtistIndex] = payload.isPublic;
+      doc.isGlobal = doc.isPublic && doc.artistPublic.every((i) => i);
     });
 
     await this._client.collections('albums').documents().import(docs, { action: 'upsert' });

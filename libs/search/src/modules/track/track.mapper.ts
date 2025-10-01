@@ -21,9 +21,16 @@ class TrackMapper implements BaseMapper<Track, App.DTOs.IndexedTrackDTO, TrackPa
         ),
         doc.cover || null,
       ),
-      doc.featArtistIds.map(
-        (id, index) => new App.DTOs.IndexedSimplifiedArtistDTO(id, doc.featArtistNames[index]),
-      ),
+      // TODO: delete filter!
+      doc.featArtistPublic
+        .filter((isPublic) => isPublic)
+        .map(
+          (_, index) =>
+            new App.DTOs.IndexedSimplifiedArtistDTO(
+              doc.featArtistIds[index],
+              doc.featArtistNames[index],
+            ),
+        ),
       doc.isExplicit,
     );
   }

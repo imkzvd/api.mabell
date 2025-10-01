@@ -8,7 +8,9 @@ export class AlbumFactory {
       payload.name,
       payload.artists.map(({ id }) => id),
       payload.artists.map(({ name }) => name),
+      payload.artists.map(({ isPublic }) => isPublic),
       payload.cover || undefined,
+      payload.isPublic,
       payload.isPublic && payload.artists.every(({ isPublic }) => isPublic),
     );
   }

@@ -19,12 +19,16 @@ export class TrackCollection extends BaseCollection<Track, App.DTOs.IndexedTrack
           { name: 'name', type: 'string', index: true },
           { name: 'albumId', type: 'string', index: true },
           { name: 'albumName', type: 'string', index: true },
+          { name: 'albumPublic', type: 'bool', index: false },
           { name: 'artistIds', type: 'string[]', index: true },
           { name: 'artistNames', type: 'string[]', index: true },
+          { name: 'artistPublic', type: 'bool[]', index: false },
           { name: 'featArtistIds', type: 'string[]', index: true },
           { name: 'featArtistNames', type: 'string[]', index: true },
+          { name: 'featArtistPublic', type: 'bool[]', index: false },
           { name: 'isExplicit', type: 'bool', index: false },
           { name: 'cover', type: 'string', optional: true, index: false },
+          { name: 'isPublic', type: 'bool', index: false },
           { name: 'isGlobal', type: 'bool', index: true },
         ],
       },
@@ -68,9 +72,12 @@ export class TrackCollection extends BaseCollection<Track, App.DTOs.IndexedTrack
 
     docs.forEach((doc) => {
       doc.albumName = payload.name;
+      doc.albumPublic = payload.isPublic;
       doc.artistIds = payload.artists.map(({ id }) => id);
       doc.artistNames = payload.artists.map(({ name }) => name);
+      doc.artistPublic = payload.artists.map(({ isPublic }) => isPublic);
       doc.cover = payload.cover || undefined;
+      doc.isGlobal = payload.isPublic && doc.isPublic && doc.artistPublic.every((i) => i);
     });
 
     await this._client
@@ -105,6 +112,8 @@ export class TrackCollection extends BaseCollection<Track, App.DTOs.IndexedTrack
       const trackArtistIndex = doc.artistIds.findIndex((id) => id === artistId);
 
       doc.artistNames[trackArtistIndex] = payload.name;
+      doc.artistPublic[trackArtistIndex] = payload.isPublic;
+      doc.isGlobal = doc.isPublic && doc.albumPublic && doc.artistPublic.every((i) => i);
     });
 
     await this._client.collections('tracks').documents().import(docs, { action: 'upsert' });
@@ -136,6 +145,7 @@ export class TrackCollection extends BaseCollection<Track, App.DTOs.IndexedTrack
       const trackFeatArtistIndex = doc.featArtistIds.findIndex((id) => id === artistId);
 
       doc.featArtistNames[trackFeatArtistIndex] = payload.name;
+      doc.featArtistPublic[trackFeatArtistIndex] = payload.isPublic;
     });
 
     await this._client
