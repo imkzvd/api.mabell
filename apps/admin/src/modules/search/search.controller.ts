@@ -27,7 +27,17 @@ export class SearchController {
   @ApiOkResponse({ description: 'Result', type: SearchResultRO })
   @Get('/')
   async search(@Query('q') q: string): Promise<SearchResultRO> {
-    const result = await this._QB.execute(new App.CQRS.GetItemsQuery(q));
+    const result = await this._QB.execute(
+      new App.CQRS.GetItemsQuery(q, {
+        collections: [
+          App.Ports.SEARCH_COLLECTIONS.artists,
+          App.Ports.SEARCH_COLLECTIONS.albums,
+          App.Ports.SEARCH_COLLECTIONS.tracks,
+          App.Ports.SEARCH_COLLECTIONS.playlists,
+          App.Ports.SEARCH_COLLECTIONS.users,
+        ],
+      }),
+    );
 
     return new SearchResultRO(result);
   }
