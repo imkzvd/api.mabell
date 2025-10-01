@@ -57,7 +57,7 @@ export class TrackRO {
     this.name = dto.name;
     this.album = new AlbumRO(dto.album);
     this.featArtists = dto.featArtists.map((i) => new SimplifiedArtistRO(i));
-    this.file = dto.file && dto.isActive ? `${process.env.API_URL}${dto.file}` : null;
+    this.file = dto.file && dto.isActive ? `${process.env.CLIENT_API_URL}${dto.file}` : null;
     this.duration = dto.duration;
     this.trackNumber = dto.trackNumber;
     this.isExplicit = dto.isExplicit;
