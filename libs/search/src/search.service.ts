@@ -18,14 +18,35 @@ export class SearchService implements App.Ports.SearchService {
   async find(
     q: string,
     options?: Partial<{
-      isGlobal?: boolean;
+      collections: App.Ports.SEARCH_COLLECTIONS[];
+      isGlobal: boolean;
     }>,
   ): Promise<App.DTOs.IndexedItemsDTO> {
-    const foundUsers = await this._userCollection.find(q, options?.isGlobal);
-    const foundArtists = await this._artistCollection.find(q, options?.isGlobal);
-    const foundAlbums = await this._albumCollection.find(q, options?.isGlobal);
-    const foundTracks = await this._trackCollection.find(q, options?.isGlobal);
-    const foundPlaylists = await this._playlistCollection.find(q, options?.isGlobal);
+    let foundUsers: App.DTOs.IndexedUserDTO[] = [];
+    let foundArtists: App.DTOs.IndexedArtistDTO[] = [];
+    let foundAlbums: App.DTOs.IndexedAlbumDTO[] = [];
+    let foundTracks: App.DTOs.IndexedTrackDTO[] = [];
+    let foundPlaylists: App.DTOs.IndexedPlaylistDTO[] = [];
+
+    if (options?.collections?.includes(App.Ports.SEARCH_COLLECTIONS.users)) {
+      foundUsers = await this._userCollection.find(q, options?.isGlobal);
+    }
+
+    if (options?.collections?.includes(App.Ports.SEARCH_COLLECTIONS.artists)) {
+      foundArtists = await this._artistCollection.find(q, options?.isGlobal);
+    }
+
+    if (options?.collections?.includes(App.Ports.SEARCH_COLLECTIONS.albums)) {
+      foundAlbums = await this._albumCollection.find(q, options?.isGlobal);
+    }
+
+    if (options?.collections?.includes(App.Ports.SEARCH_COLLECTIONS.tracks)) {
+      foundTracks = await this._trackCollection.find(q, options?.isGlobal);
+    }
+
+    if (options?.collections?.includes(App.Ports.SEARCH_COLLECTIONS.playlists)) {
+      foundPlaylists = await this._playlistCollection.find(q, options?.isGlobal);
+    }
 
     return new App.DTOs.IndexedItemsDTO(
       foundUsers,
