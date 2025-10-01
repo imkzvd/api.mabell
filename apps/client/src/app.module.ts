@@ -15,6 +15,7 @@ import { ArtistModule } from './modules/artist/artist.module';
 import { AlbumModule } from './modules/album/album.module';
 import { TrackModule } from './modules/track/track.module';
 import { PlaylistModule } from './modules/playlist/playlist.module';
+import { SearchModule } from './modules/search/search.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { PlaylistModule } from './modules/playlist/playlist.module';
     AlbumModule,
     TrackModule,
     PlaylistModule,
+    SearchModule,
   ],
 })
 export class AppModule {}
