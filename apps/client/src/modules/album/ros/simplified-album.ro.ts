@@ -42,7 +42,7 @@ export class SimplifiedAlbumRO {
     this.id = album.id;
     this.name = album.name;
     this.type = new LabelValueRO(album.typeLabelValue);
-    this.cover = album.cover ? `${process.env.API_URL}${album.cover}` : null;
+    this.cover = album.cover ? `${process.env.CLIENT_API_URL}${album.cover}` : null;
     this.releaseAt = album.releaseAt;
   }
 }

@@ -87,8 +87,8 @@ export class ArtistRO {
     this.birthDate = dto.birthDate;
     this.genres = dto.genreLabelValues.map((i) => new LabelValueRO(i));
     this.biography = dto.biography;
-    this.avatar = dto.avatar ? `${process.env.API_URL}${dto.avatar}` : null;
-    this.cover = dto.cover ? `${process.env.API_URL}${dto.cover}` : null;
+    this.avatar = dto.avatar ? `${process.env.CLIENT_API_URL}${dto.avatar}` : null;
+    this.cover = dto.cover ? `${process.env.CLIENT_API_URL}${dto.cover}` : null;
     this.accentColor = dto.accentColor;
     this.secondaryColor = dto.secondaryColor;
     this.isActive = dto.isActive;

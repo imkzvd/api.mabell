@@ -72,7 +72,7 @@ export class AlbumRO {
     this.artists = album.artists.map((i) => new SimplifiedArtistRO(i));
     this.type = new LabelValueRO(album.typeLabelValue);
     this.genres = album.genreLabelValues.map((i) => new LabelValueRO(i));
-    this.cover = album.cover ? `${process.env.API_URL}${album.cover}` : null;
+    this.cover = album.cover ? `${process.env.CLIENT_API_URL}${album.cover}` : null;
     this.color = album.color;
     this.description = album.description;
     this.releaseAt = album.releaseAt;
