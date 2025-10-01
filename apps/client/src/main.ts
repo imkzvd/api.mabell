@@ -5,6 +5,7 @@ import * as cookieParser from 'cookie-parser';
 import { ValidationPipe } from '@nestjs/common';
 import { HttpExceptionFilter } from '@api.mabell/shared';
 import { AppModule } from './app.module';
+import { version } from '../package.json';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -12,6 +13,7 @@ async function bootstrap() {
 
   const swaggerConfig = new DocumentBuilder()
     .setTitle('Client API')
+    .setVersion(version || '1.0.0')
     .setDescription('The API description')
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, swaggerConfig);
