@@ -7,11 +7,20 @@ import {
   IndexedPlaylistDTO,
 } from '../dtos';
 
+export enum SEARCH_COLLECTIONS {
+  'users' = 'users',
+  'artists' = 'artists',
+  'albums' = 'albums',
+  'tracks' = 'tracks',
+  'playlists' = 'playlists',
+}
+
 export interface SearchService {
   find(
     q: string,
     options?: Partial<{
-      isGlobal?: boolean;
+      collections: SEARCH_COLLECTIONS[];
+      isGlobal: boolean;
     }>,
   ): Promise<IndexedItemsDTO>;
 
