@@ -4,7 +4,8 @@ export class IndexedPlaylistDTO {
   constructor(
     public readonly id: string,
     public readonly name: string,
-    public readonly owner: IndexedSimplifiedUserDTO,
+    public readonly userId: string,
+    public readonly user: IndexedSimplifiedUserDTO,
     public readonly cover: string | null,
   ) {}
 }
