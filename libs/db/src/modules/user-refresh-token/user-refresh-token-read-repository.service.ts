@@ -15,11 +15,7 @@ export class UserRefreshTokenReadRepository implements App.Ports.UserRefreshToke
   async findById(tokenId: string) {
     const foundDoc = await this._model.findById(tokenId, null).lean<UserRefreshToken>().exec();
 
-    if (!foundDoc) {
-      return null;
-    }
-
-    return UserRefreshTokenMapper.toDTO(foundDoc);
+    return foundDoc ? UserRefreshTokenMapper.toDTO(foundDoc) : null;
   }
 
   async findByOwnerId(ownerId: string) {

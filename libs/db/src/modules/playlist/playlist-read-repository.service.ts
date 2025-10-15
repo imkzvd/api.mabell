@@ -27,11 +27,7 @@ export class PlaylistReadRepository implements App.Ports.PlaylistReadRepository 
       .lean<PlaylistWithUser>()
       .exec();
 
-    if (!foundDoc) {
-      return null;
-    }
-
-    return PlaylistMapper.toDTO(foundDoc);
+    return foundDoc ? PlaylistMapper.toDTO(foundDoc) : null;
   }
 
   async findByUserId(
@@ -48,6 +44,35 @@ export class PlaylistReadRepository implements App.Ports.PlaylistReadRepository 
     const docsTotal = await this._playlistModel.countDocuments(filter);
     const foundDocs = await this._playlistModel
       .find(filter, null)
+      .skip(options?.pagination?.offset ?? 0)
+      .limit(options?.pagination?.limit ?? 50)
+      .sort({ createdAt: -1 })
+      .populate<PlaylistWithUserDocument[]>(POPULATE_OPTIONS)
+      .lean<PlaylistWithUser[]>()
+      .exec();
+
+    return new App.DTOs.PlaylistsDTO(
+      foundDocs.map((doc) => PlaylistMapper.toDTO(doc)),
+      docsTotal,
+      options?.pagination?.offset,
+      options?.pagination?.limit,
+    );
+  }
+
+  async findByGenre(
+    genre: string,
+    options?: Partial<{
+      isPublic: boolean;
+      pagination: Shared.DTOs.OffsetLimitPaginationDTO;
+    }>,
+  ) {
+    const filter = {
+      genres: [genre],
+      ...(options?.isPublic !== undefined && { isPublic: options.isPublic }),
+    };
+    const docsTotal = await this._playlistModel.countDocuments(filter);
+    const foundDocs = await this._playlistModel
+      .find(filter, null)
       .limit(options?.pagination?.limit ?? 50)
       .sort({ createdAt: -1 })
       .skip(options?.pagination?.offset ?? 0)
@@ -58,9 +83,8 @@ export class PlaylistReadRepository implements App.Ports.PlaylistReadRepository 
     return new App.DTOs.PlaylistsDTO(
       foundDocs.map((doc) => PlaylistMapper.toDTO(doc)),
       docsTotal,
-      options?.pagination?.limit ?? 50,
-      options?.pagination?.offset ?? 0,
-      (options?.pagination?.limit ?? 50) + (options?.pagination?.offset ?? 0) < docsTotal,
+      options?.pagination?.offset,
+      options?.pagination?.limit,
     );
   }
 
@@ -82,10 +106,8 @@ export class PlaylistReadRepository implements App.Ports.PlaylistReadRepository 
     return new App.DTOs.PlaylistTrackIdsDTO(
       foundDoc.tracks,
       foundDoc.tracks.length,
-      options?.pagination?.limit ?? 50,
-      options?.pagination?.offset ?? 0,
-      (options?.pagination?.limit ?? 50) + (options?.pagination?.offset ?? 0) <
-        foundDoc.tracks.length,
+      options?.pagination?.limit,
+      options?.pagination?.offset,
     );
   }
 

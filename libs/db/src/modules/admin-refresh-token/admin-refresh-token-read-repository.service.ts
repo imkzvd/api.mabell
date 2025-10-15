@@ -15,11 +15,7 @@ export class AdminRefreshTokenReadRepository implements App.Ports.AdminRefreshTo
   async findById(tokenId: string) {
     const foundDoc = await this._model.findById(tokenId, null).lean<AdminRefreshToken>().exec();
 
-    if (!foundDoc) {
-      return null;
-    }
-
-    return AdminRefreshTokenMapper.toDTO(foundDoc);
+    return foundDoc ? AdminRefreshTokenMapper.toDTO(foundDoc) : null;
   }
 
   async findByOwnerId(ownerId: string) {

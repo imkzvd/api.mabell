@@ -28,6 +28,18 @@ export class AlbumReadRepository implements App.Ports.AlbumReadRepository {
             localField: 'artists',
             foreignField: '_id',
             as: 'artists',
+            let: { albumArtistIds: '$artists' },
+            pipeline: [
+              {
+                $set: {
+                  index: {
+                    $indexOfArray: ['$$albumArtistIds', '$_id'],
+                  },
+                },
+              },
+              { $sort: { index: 1 } },
+              { $unset: 'index' },
+            ],
           },
         },
         {
@@ -40,11 +52,7 @@ export class AlbumReadRepository implements App.Ports.AlbumReadRepository {
       ])
       .exec();
 
-    if (!foundDoc) {
-      return null;
-    }
-
-    return AlbumMapper.toDTO(foundDoc);
+    return foundDoc ? AlbumMapper.toDTO(foundDoc) : null;
   }
 
   async findByArtistId(
@@ -68,6 +76,131 @@ export class AlbumReadRepository implements App.Ports.AlbumReadRepository {
             localField: 'artists',
             foreignField: '_id',
             as: 'artists',
+            let: { albumArtistIds: '$artists' },
+            pipeline: [
+              {
+                $set: {
+                  index: {
+                    $indexOfArray: ['$$albumArtistIds', '$_id'],
+                  },
+                },
+              },
+              { $sort: { index: 1 } },
+              { $unset: 'index' },
+            ],
+          },
+        },
+        {
+          $match: {
+            ...(options?.isPublic !== undefined && {
+              'artists.isPublic': { $ne: !options.isPublic },
+            }),
+          },
+        },
+        {
+          $facet: {
+            docsTotal: [{ $count: 'count' }],
+            docs: [
+              { $sort: { releaseAt: -1 } },
+              { $skip: options?.pagination?.offset ?? 0 },
+              { $limit: options?.pagination?.limit ?? 50 },
+            ],
+          },
+        },
+        {
+          $project: {
+            docsTotal: { $arrayElemAt: ['$docsTotal.count', 0] },
+            docs: 1,
+          },
+        },
+      ])
+      .exec();
+
+    return new App.DTOs.AlbumsDTO(
+      result.docs.map((doc) => AlbumMapper.toDTO(doc)),
+      result.docsTotal,
+      options?.pagination?.offset,
+      options?.pagination?.limit,
+    );
+  }
+
+  async findLatestAlbumByArtistId(artistId: string, options?: Partial<AlbumWithArtistsDocument>) {
+    const [foundDoc] = await this._albumModel
+      .aggregate<AlbumWithArtistsDocument>([
+        {
+          $match: {
+            artists: new Types.ObjectId(artistId),
+            ...(options?.isPublic !== undefined && { isPublic: options.isPublic }),
+          },
+        },
+        {
+          $lookup: {
+            from: 'artists',
+            localField: 'artists',
+            foreignField: '_id',
+            as: 'artists',
+            let: { albumArtistIds: '$artists' },
+            pipeline: [
+              {
+                $set: {
+                  index: {
+                    $indexOfArray: ['$$albumArtistIds', '$_id'],
+                  },
+                },
+              },
+              { $sort: { index: 1 } },
+              { $unset: 'index' },
+            ],
+          },
+        },
+        {
+          $match: {
+            ...(options?.isPublic !== undefined && {
+              'artists.isPublic': { $ne: !options.isPublic },
+            }),
+          },
+        },
+        {
+          $sort: {
+            releaseAt: -1,
+          },
+        },
+      ])
+      .exec();
+
+    return foundDoc ? AlbumMapper.toDTO(foundDoc) : null;
+  }
+
+  async findByGenres(
+    genres: string[],
+    options?: Partial<{ isPublic: boolean; pagination: Shared.DTOs.OffsetLimitPaginationDTO }>,
+  ) {
+    const [result] = await this._albumModel
+      .aggregate<{ docs: AlbumWithArtistsDocument[]; docsTotal: number }>([
+        {
+          $match: {
+            genres: { $in: genres },
+            ...(options?.isPublic !== undefined && { isPublic: options.isPublic }),
+          },
+        },
+        {
+          $lookup: {
+            from: 'artists',
+            localField: 'artists',
+            foreignField: '_id',
+            as: 'artists',
+            let: { albumArtistIds: '$artists' },
+            pipeline: [
+              {
+                $set: {
+                  index: {
+                    $indexOfArray: ['$$albumArtistIds', '$_id'],
+                  },
+                },
+              },
+              { $sort: { index: 1 } },
+              { $unset: 'index' },
+            ],
           },
         },
         {
@@ -99,45 +232,9 @@ export class AlbumReadRepository implements App.Ports.AlbumReadRepository {
     return new App.DTOs.AlbumsDTO(
       result.docs.map((doc) => AlbumMapper.toDTO(doc)),
       result.docsTotal,
-      options?.pagination?.offset ?? 0,
-      options?.pagination?.limit ?? 50,
-      (options?.pagination?.limit ?? 50) + (options?.pagination?.offset ?? 0) < result.docsTotal,
+      options?.pagination?.offset,
+      options?.pagination?.limit,
     );
-  }
-
-  async findLatestAlbumByArtistId(artistId: string, options?: Partial<AlbumWithArtistsDocument>) {
-    const [foundDoc] = await this._albumModel
-      .aggregate<AlbumWithArtistsDocument>([
-        {
-          $match: {
-            artists: new Types.ObjectId(artistId),
-            ...(options?.isPublic !== undefined && { isPublic: options.isPublic }),
-          },
-        },
-        {
-          $lookup: {
-            from: 'artists',
-            localField: 'artists',
-            foreignField: '_id',
-            as: 'artists',
-          },
-        },
-        {
-          $match: {
-            ...(options?.isPublic !== undefined && {
-              'artists.isPublic': { $ne: !options.isPublic },
-            }),
-          },
-        },
-        {
-          $sort: {
-            releaseAt: -1,
-          },
-        },
-      ])
-      .exec();
-
-    return foundDoc ? AlbumMapper.toDTO(foundDoc) : null;
   }
 
   async getPublicStatusById(albumId: string) {

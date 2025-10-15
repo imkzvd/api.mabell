@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { App } from '@api.mabell/core';
+import { App, Shared } from '@api.mabell/core';
 import ArtistMapper from './artist.mapper';
 import { Artist } from './artist.schema';
 import { ArtistDocument } from './types';
@@ -25,22 +25,29 @@ export class ArtistReadRepository implements App.Ports.ArtistReadRepository {
       .lean<Artist>()
       .exec();
 
-    if (!foundDoc) {
-      return null;
-    }
-
-    return ArtistMapper.toDTO(foundDoc);
+    return foundDoc ? ArtistMapper.toDTO(foundDoc) : null;
   }
 
-  async findByGenres(genres: string[], options?: Partial<{ isPublic: boolean; limit: number }>) {
+  async findByGenres(
+    genres: string[],
+    options?: Partial<{ isPublic: boolean; pagination: Shared.DTOs.OffsetLimitPaginationDTO }>,
+  ) {
+    const filter = {
+      genres: { $in: genres },
+      ...(options?.isPublic !== undefined && { isPublic: options.isPublic }),
+    };
+    const docsTotal = await this._artistModel.countDocuments(filter);
     const foundDocs = await this._artistModel
-      .find({
-        genres: { $in: genres },
-        ...(options?.isPublic !== undefined && { isPublic: options.isPublic }),
-      })
-      .limit(options?.limit || 30);
+      .find(filter)
+      .skip(options?.pagination?.offset || 0)
+      .limit(options?.pagination?.limit || 50);
 
-    return foundDocs.map((doc) => ArtistMapper.toDTO(doc));
+    return new App.DTOs.ArtistsDTO(
+      foundDocs.map((doc) => ArtistMapper.toDTO(doc)),
+      docsTotal,
+      options?.pagination?.offset,
+      options?.pagination?.limit,
+    );
   }
 
   async getPublicStatusById(artistId: string) {
