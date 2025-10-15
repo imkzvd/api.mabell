@@ -39,6 +39,18 @@ export class TrackReadRepository implements App.Ports.TrackReadRepository {
             localField: 'album.artists',
             foreignField: '_id',
             as: 'album.artists',
+            let: { artistIds: '$artists' },
+            pipeline: [
+              {
+                $set: {
+                  index: {
+                    $indexOfArray: ['$$artistIds', '$_id'],
+                  },
+                },
+              },
+              { $sort: { index: 1 } },
+              { $unset: 'index' },
+            ],
           },
         },
         {
@@ -47,12 +59,22 @@ export class TrackReadRepository implements App.Ports.TrackReadRepository {
             localField: 'featArtists',
             foreignField: '_id',
             as: 'featArtists',
+            let: { featArtistIds: '$featArtists' },
             pipeline: [
               {
                 $match: {
                   ...(options?.isPublic !== undefined && { isPublic: options.isPublic }),
                 },
               },
+              {
+                $set: {
+                  index: {
+                    $indexOfArray: ['$$featArtistIds', '$_id'],
+                  },
+                },
+              },
+              { $sort: { index: 1 } },
+              { $unset: 'index' },
             ],
           },
         },
@@ -73,11 +95,7 @@ export class TrackReadRepository implements App.Ports.TrackReadRepository {
       ])
       .exec();
 
-    if (!foundDoc) {
-      return null;
-    }
-
-    return TrackMapper.toDTO(foundDoc);
+    return foundDoc ? TrackMapper.toDTO(foundDoc) : null;
   }
 
   async findByIds(trackIds: string[], options?: Partial<{ isPublic: boolean }>) {
@@ -106,6 +124,18 @@ export class TrackReadRepository implements App.Ports.TrackReadRepository {
             localField: 'album.artists',
             foreignField: '_id',
             as: 'album.artists',
+            let: { artistIds: '$artists' },
+            pipeline: [
+              {
+                $set: {
+                  index: {
+                    $indexOfArray: ['$$artistIds', '$_id'],
+                  },
+                },
+              },
+              { $sort: { index: 1 } },
+              { $unset: 'index' },
+            ],
           },
         },
         {
@@ -114,12 +144,22 @@ export class TrackReadRepository implements App.Ports.TrackReadRepository {
             localField: 'featArtists',
             foreignField: '_id',
             as: 'featArtists',
+            let: { featArtistIds: '$featArtists' },
             pipeline: [
               {
                 $match: {
                   ...(options?.isPublic !== undefined && { isPublic: options.isPublic }),
                 },
               },
+              {
+                $set: {
+                  index: {
+                    $indexOfArray: ['$$featArtistIds', '$_id'],
+                  },
+                },
+              },
+              { $sort: { index: 1 } },
+              { $unset: 'index' },
             ],
           },
         },
@@ -193,6 +233,18 @@ export class TrackReadRepository implements App.Ports.TrackReadRepository {
             localField: 'album.artists',
             foreignField: '_id',
             as: 'album.artists',
+            let: { artistIds: '$artists' },
+            pipeline: [
+              {
+                $set: {
+                  index: {
+                    $indexOfArray: ['$$artistIds', '$_id'],
+                  },
+                },
+              },
+              { $sort: { index: 1 } },
+              { $unset: 'index' },
+            ],
           },
         },
         {
@@ -201,12 +253,22 @@ export class TrackReadRepository implements App.Ports.TrackReadRepository {
             localField: 'featArtists',
             foreignField: '_id',
             as: 'featArtists',
+            let: { featArtistIds: '$featArtists' },
             pipeline: [
               {
                 $match: {
                   ...(options?.isPublic !== undefined && { isPublic: options.isPublic }),
                 },
               },
+              {
+                $set: {
+                  index: {
+                    $indexOfArray: ['$$featArtistIds', '$_id'],
+                  },
+                },
+              },
+              { $sort: { index: 1 } },
+              { $unset: 'index' },
             ],
           },
         },
@@ -246,9 +308,8 @@ export class TrackReadRepository implements App.Ports.TrackReadRepository {
     return new App.DTOs.TracksDTO(
       result.docs.map((doc) => TrackMapper.toDTO(doc)),
       result.docsTotal,
-      options?.pagination?.offset ?? 0,
-      options?.pagination?.limit ?? 50,
-      (options?.pagination?.limit ?? 50) + (options?.pagination?.offset ?? 0) < result.docsTotal,
+      options?.pagination?.offset,
+      options?.pagination?.limit,
     );
   }
 
@@ -290,6 +351,18 @@ export class TrackReadRepository implements App.Ports.TrackReadRepository {
             localField: 'album.artists',
             foreignField: '_id',
             as: 'album.artists',
+            let: { artistIds: '$artists' },
+            pipeline: [
+              {
+                $set: {
+                  index: {
+                    $indexOfArray: ['$$artistIds', '$_id'],
+                  },
+                },
+              },
+              { $sort: { index: 1 } },
+              { $unset: 'index' },
+            ],
           },
         },
         {
@@ -298,12 +371,22 @@ export class TrackReadRepository implements App.Ports.TrackReadRepository {
             localField: 'featArtists',
             foreignField: '_id',
             as: 'featArtists',
+            let: { featArtistIds: '$featArtists' },
             pipeline: [
               {
                 $match: {
                   ...(options?.isPublic !== undefined && { isPublic: options.isPublic }),
                 },
               },
+              {
+                $set: {
+                  index: {
+                    $indexOfArray: ['$$featArtistIds', '$_id'],
+                  },
+                },
+              },
+              { $sort: { index: 1 } },
+              { $unset: 'index' },
             ],
           },
         },
@@ -343,9 +426,8 @@ export class TrackReadRepository implements App.Ports.TrackReadRepository {
     return new App.DTOs.TracksDTO(
       result.docs.map((doc) => TrackMapper.toDTO(doc)),
       result.docsTotal,
-      options?.pagination?.offset ?? 0,
-      options?.pagination?.limit ?? 50,
-      (options?.pagination?.limit ?? 50) + (options?.pagination?.offset ?? 0) < result.docsTotal,
+      options?.pagination?.offset,
+      options?.pagination?.limit,
     );
   }
 }

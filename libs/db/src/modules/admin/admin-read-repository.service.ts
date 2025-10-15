@@ -16,22 +16,14 @@ export class AdminReadRepository implements App.Ports.AdminReadRepository {
   async findById(adminId: string) {
     const foundDoc = await this._adminModel.findById(adminId, null).lean<Admin>().exec();
 
-    if (!foundDoc) {
-      return null;
-    }
-
-    return AdminMapper.toDTO(foundDoc);
+    return foundDoc ? AdminMapper.toDTO(foundDoc) : null;
   }
 
   async findByUsername(username: string) {
     const filter = { username };
     const foundDoc = await this._adminModel.findOne(filter).lean<Admin>().exec();
 
-    if (!foundDoc) {
-      return null;
-    }
-
-    return AdminMapper.toDTO(foundDoc);
+    return foundDoc ? AdminMapper.toDTO(foundDoc) : null;
   }
 
   async find(
@@ -42,20 +34,18 @@ export class AdminReadRepository implements App.Ports.AdminReadRepository {
     const docsTotal = await this._adminModel.countDocuments();
 
     const foundDocs = await this._adminModel
-      .find({}, null, {
-        limit: options?.pagination?.limit ?? 50,
-        skip: options?.pagination?.offset ?? 0,
-        sort: { createdAt: -1 },
-      })
+      .find({}, null)
+      .skip(options?.pagination?.offset || 0)
+      .limit(options?.pagination?.limit || 50)
+      .sort({ createdAt: -1 })
       .lean<Admin[]>()
       .exec();
 
     return new App.DTOs.AdminsDTO(
       foundDocs.map((doc) => AdminMapper.toDTO(doc)),
       docsTotal,
-      options?.pagination?.limit || 50,
-      options?.pagination?.offset || 0,
-      (options?.pagination?.limit || 50) + (options?.pagination?.offset || 0) < docsTotal,
+      options?.pagination?.limit,
+      options?.pagination?.offset,
     );
   }
 }

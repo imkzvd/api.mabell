@@ -25,20 +25,12 @@ export class UserReadRepository implements App.Ports.UserReadRepository {
       .lean<User>()
       .exec();
 
-    if (!foundDoc) {
-      return null;
-    }
-
-    return UserMapper.toDTO(foundDoc);
+    return foundDoc ? UserMapper.toDTO(foundDoc) : null;
   }
 
   async findByUsername(username: string) {
     const foundDoc = await this._userModel.findOne({ username }).lean<User>().exec();
 
-    if (!foundDoc) {
-      return null;
-    }
-
-    return UserMapper.toDTO(foundDoc);
+    return foundDoc ? UserMapper.toDTO(foundDoc) : null;
   }
 }
