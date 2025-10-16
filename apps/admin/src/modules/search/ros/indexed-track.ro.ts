@@ -49,7 +49,7 @@ export class IndexedTrackRO {
     this.album = new IndexedSimplifiedAlbumRO(dto.album);
     this.artists = dto.artists.map((i) => new IndexedSimplifiedArtistRO(i));
     this.featArtists = dto.featArtists.map((i) => new IndexedSimplifiedArtistRO(i));
-    this.cover = dto.cover ? `${process.env.API_URL}${dto.cover}` : null;
+    this.cover = dto.cover ? `${process.env.ADMIN_API_URL}${dto.cover}` : null;
     this.type = 'track';
   }
 }

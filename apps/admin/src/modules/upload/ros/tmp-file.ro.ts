@@ -29,7 +29,7 @@ export class TmpFileRO {
 
   @ApiProperty({
     description: 'URL',
-    example: `${process.env.API_URL}/${faker.system.commonFileName('mp3')}`,
+    example: `${process.env.ADMIN_API_URL}/${faker.system.commonFileName('mp3')}`,
   })
   path: string;
 
@@ -50,7 +50,7 @@ export class TmpFileRO {
     this.name = dto.name;
     this.originalName = dto.originalName;
     this.fullPath = dto.fullPath;
-    this.path = `${process.env.API_URL}/${dto.path}`;
+    this.path = `${process.env.ADMIN_API_URL}/${dto.path}`;
     this.size = dto.size;
     this.type = dto.type;
     this.uploadedAt = dto.uploadedAt;

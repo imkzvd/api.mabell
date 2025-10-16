@@ -25,8 +25,8 @@ export class UserRefreshToken {
     required: false,
     type: Date,
     default: Date.now(),
-    expires: process.env.REFRESH_TOKEN_EXPIRATION
-      ? parseInt(process.env.REFRESH_TOKEN_EXPIRATION)
+    expires: process.env.JWT_REFRESH_EXPIRES_IN
+      ? parseInt(process.env.JWT_REFRESH_EXPIRES_IN)
       : 86400,
   })
   public readonly createdAt: Date;

@@ -11,7 +11,7 @@ import {
 } from '../../../../domain/components/user-refresh-token';
 import { IdService, JWTService } from '../../../ports';
 import { TokenTypes } from '../../../ports/jwt/types';
-import { UserRefreshTokenId } from '../../../../domain/components/user-refresh-token/types';
+import { UserRefreshTokenId } from '../../../../domain/components/user-refresh-token';
 
 export class UserTokenCreateService {
   constructor(
@@ -24,9 +24,9 @@ export class UserTokenCreateService {
     return this._JWTService.create<AccessTokenPayload>({
       type: TokenTypes.Access,
       subject: payload.userId,
-      secret: process.env.ACCESS_TOKEN_SECRET || 'accessSecret',
-      expiresIn: process.env.ACCESS_TOKEN_EXPIRATION
-        ? parseInt(process.env.ACCESS_TOKEN_EXPIRATION)
+      secret: process.env.JWT_ACCESS_SECRET || 'accessSecret',
+      expiresIn: process.env.JWT_ACCESS_EXPIRES_IN
+        ? parseInt(process.env.JWT_ACCESS_EXPIRES_IN)
         : 300,
     });
   }
@@ -47,8 +47,8 @@ export class UserTokenCreateService {
       subject: userId,
       jti: generatedRefreshTokenId,
       secret: process.env.JWT_REFRESH_SECRET || 'refreshSecret',
-      expiresIn: process.env.REFRESH_TOKEN_EXPIRATION
-        ? parseInt(process.env.REFRESH_TOKEN_EXPIRATION)
+      expiresIn: process.env.JWT_REFRESH_EXPIRES_IN
+        ? parseInt(process.env.JWT_REFRESH_EXPIRES_IN)
         : 600,
     });
   }

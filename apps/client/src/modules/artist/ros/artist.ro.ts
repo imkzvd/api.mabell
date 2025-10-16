@@ -48,7 +48,7 @@ export class ArtistRO {
   @ApiProperty({
     type: String,
     description: 'Avatar URL',
-    example: `${process.env.HOST}/${faker.system.commonFileName('webp')}`,
+    example: `${process.env.CLIENT_API_URL}/${faker.system.commonFileName('webp')}`,
     nullable: true,
   })
   avatar: string | null;
@@ -56,7 +56,7 @@ export class ArtistRO {
   @ApiProperty({
     type: String,
     description: 'Cover URL',
-    example: `${process.env.HOST}/${faker.system.commonFileName('webp')}`,
+    example: `${process.env.CLIENT_API_URL}/${faker.system.commonFileName('webp')}`,
     nullable: true,
   })
   cover: string | null;

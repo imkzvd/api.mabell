@@ -21,7 +21,7 @@ export class UserRO {
   @ApiProperty({
     type: String,
     description: 'Avatar URL',
-    example: `${process.env.HOST}/${faker.system.commonFileName('webp')}`,
+    example: `${process.env.CLIENT_API_URL}/${faker.system.commonFileName('webp')}`,
     nullable: true,
   })
   avatar: string | null;
@@ -37,7 +37,7 @@ export class UserRO {
   constructor(dto: App.DTOs.UserDTO) {
     this.id = dto.id;
     this.name = dto.name;
-    this.avatar = dto.avatar ? `${process.env.HOST}${dto.avatar}` : null;
+    this.avatar = dto.avatar ? `${process.env.CLIENT_API_URL}${dto.avatar}` : null;
     this.color = dto.color;
   }
 }
