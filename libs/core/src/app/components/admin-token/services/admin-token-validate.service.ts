@@ -14,7 +14,7 @@ export class AdminTokenValidateService {
   ): Promise<AdminRefreshTokenDTO | null> {
     const refreshTokenPayload = this._JWTService.decode<RefreshTokenPayload>(
       payload.token,
-      process.env.REFRESH_TOKEN_SECRET || 'refreshSecret',
+      process.env.JWT_REFRESH_SECRET || 'refreshSecret',
     );
 
     if (!refreshTokenPayload) {

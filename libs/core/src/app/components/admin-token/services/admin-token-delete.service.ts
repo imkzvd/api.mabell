@@ -14,7 +14,7 @@ export class AdminTokenDeleteService {
   async deleteRefreshTokenByToken(token: string): Promise<void> {
     const tokenPayload = this._JWTService.decode<RefreshTokenPayload>(
       token,
-      process.env.REFRESH_TOKEN_SECRET || 'refreshSecret',
+      process.env.JWT_REFRESH_SECRET || 'refreshSecret',
     );
 
     if (!tokenPayload) return;
