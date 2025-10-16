@@ -1,5 +1,4 @@
 import { Provider } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { JWTService } from '@api.mabell/jwt';
 import { App, Domain } from '@api.mabell/core';
 import { AdminRefreshTokenDBModule } from '@api.mabell/db';
@@ -11,19 +10,8 @@ export const adminTokenCreateServiceProvider: Provider = {
     wr: Domain.AdminRefreshToken.AdminRefreshTokenWriteRepository,
     idService: App.Ports.IdService,
     jwtService: App.Ports.JWTService,
-    configService: ConfigService,
   ) => {
-    return new App.Components.AdminToken.AdminTokenCreateService(
-      wr,
-      idService,
-      jwtService,
-      configService,
-    );
+    return new App.Components.AdminToken.AdminTokenCreateService(wr, idService, jwtService);
   },
-  inject: [
-    AdminRefreshTokenDBModule.AdminRefreshTokenWriteRepository,
-    RandomIdService,
-    JWTService,
-    ConfigService,
-  ],
+  inject: [AdminRefreshTokenDBModule.AdminRefreshTokenWriteRepository, RandomIdService, JWTService],
 };
