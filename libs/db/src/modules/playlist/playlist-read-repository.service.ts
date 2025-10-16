@@ -59,15 +59,15 @@ export class PlaylistReadRepository implements App.Ports.PlaylistReadRepository 
     );
   }
 
-  async findByGenre(
-    genre: string,
+  async findByGenres(
+    genres: string[],
     options?: Partial<{
       isPublic: boolean;
       pagination: Shared.DTOs.OffsetLimitPaginationDTO;
     }>,
   ) {
     const filter = {
-      genres: [genre],
+      genres: { $in: genres },
       ...(options?.isPublic !== undefined && { isPublic: options.isPublic }),
     };
     const docsTotal = await this._playlistModel.countDocuments(filter);
