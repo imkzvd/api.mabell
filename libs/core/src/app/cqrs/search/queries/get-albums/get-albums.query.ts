@@ -1,7 +1,7 @@
 import { Query } from '../../../../types';
-import { IndexedAlbumDTO } from '../../../../dtos';
+import { IndexedAlbumsDTO } from '../../../../dtos';
 
-export class GetAlbumsQuery extends Query<IndexedAlbumDTO[]> {
+export class GetAlbumsQuery extends Query<IndexedAlbumsDTO> {
   constructor(public readonly q: string) {
     super();
   }
