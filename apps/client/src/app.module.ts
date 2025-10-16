@@ -16,6 +16,7 @@ import { AlbumModule } from './modules/album/album.module';
 import { TrackModule } from './modules/track/track.module';
 import { PlaylistModule } from './modules/playlist/playlist.module';
 import { SearchModule } from './modules/search/search.module';
+import { PopularModule } from './modules/popular/popular.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { SearchModule } from './modules/search/search.module';
     TrackModule,
     PlaylistModule,
     SearchModule,
+    PopularModule,
   ],
 })
 export class AppModule {}
