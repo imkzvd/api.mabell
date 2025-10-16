@@ -1,10 +1,10 @@
 import {
   IndexedItemsDTO,
-  IndexedUserDTO,
-  IndexedArtistDTO,
-  IndexedAlbumDTO,
-  IndexedTrackDTO,
-  IndexedPlaylistDTO,
+  IndexedUsersDTO,
+  IndexedArtistsDTO,
+  IndexedAlbumsDTO,
+  IndexedTracksDTO,
+  IndexedPlaylistsDTO,
 } from '../dtos';
 
 export enum SEARCH_COLLECTIONS {
@@ -29,33 +29,33 @@ export interface SearchService {
     options?: Partial<{
       isGlobal?: boolean;
     }>,
-  ): Promise<IndexedUserDTO[]>;
+  ): Promise<IndexedUsersDTO>;
 
   findArtists(
     q: string,
     options?: Partial<{
       isGlobal?: boolean;
     }>,
-  ): Promise<IndexedArtistDTO[]>;
+  ): Promise<IndexedArtistsDTO>;
 
   findAlbums(
     q: string,
     options?: Partial<{
       isGlobal?: boolean;
     }>,
-  ): Promise<IndexedAlbumDTO[]>;
+  ): Promise<IndexedAlbumsDTO>;
 
   findTracks(
     q: string,
     options?: Partial<{
       isGlobal?: boolean;
     }>,
-  ): Promise<IndexedTrackDTO[]>;
+  ): Promise<IndexedTracksDTO>;
 
   findPlaylists(
     q: string,
     options?: Partial<{
       isGlobal?: boolean;
     }>,
-  ): Promise<IndexedPlaylistDTO[]>;
+  ): Promise<IndexedPlaylistsDTO>;
 }
