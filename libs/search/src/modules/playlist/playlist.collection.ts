@@ -30,16 +30,14 @@ export class PlaylistCollection extends BaseCollection<
     );
   }
 
-  async find(q: string, isGlobal?: boolean) {
-    const { items } = await this.search({
+  findByQuery(q: string, options?: Partial<{ isGlobal: boolean }>) {
+    return this.search({
       q,
       query_by: 'name',
-      ...(Boolean(isGlobal) && {
-        filter_by: `isGlobal:=${isGlobal}`,
+      ...(Boolean(options?.isGlobal) && {
+        filter_by: `isGlobal:=${options?.isGlobal}`,
       }),
     });
-
-    return items.map((item) => this._mapper.toDTO(item));
   }
 
   async updateUserDataByUserId(userId: string, payload: UserPayload) {
@@ -55,7 +53,7 @@ export class PlaylistCollection extends BaseCollection<
         limit,
       });
 
-      docs.push(...items);
+      docs.push(...items.map(({ item }) => item));
 
       if (!hasMore) break;
 

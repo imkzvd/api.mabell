@@ -23,15 +23,13 @@ export class UserCollection extends BaseCollection<User, App.DTOs.IndexedUserDTO
     );
   }
 
-  async find(q: string, isGlobal?: boolean) {
-    const { items } = await this.search({
+  async findByQuery(q: string, options?: Partial<{ isGlobal: boolean }>) {
+    return this.search({
       q,
       query_by: 'email',
-      ...(Boolean(isGlobal) && {
-        filter_by: `isGlobal:=${isGlobal}`,
+      ...(Boolean(options?.isGlobal) && {
+        filter_by: `isGlobal:=${options?.isGlobal}`,
       }),
     });
-
-    return items.map((item) => this._mapper.toDTO(item));
   }
 }

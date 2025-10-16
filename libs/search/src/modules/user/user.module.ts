@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { UserCollection } from './user.collection';
+import { UserService } from './user.service';
 
 @Module({
   providers: [
@@ -13,7 +14,8 @@ import { UserCollection } from './user.collection';
         return collection;
       },
     },
+    UserService,
   ],
-  exports: [UserCollection],
+  exports: [UserCollection, UserService],
 })
 export class UserModule {}

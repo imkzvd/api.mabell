@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { PlaylistCollection } from './playlist.collection';
+import { PlaylistService } from './playlist.service';
 
 @Module({
   providers: [
@@ -13,7 +14,8 @@ import { PlaylistCollection } from './playlist.collection';
         return collection;
       },
     },
+    PlaylistService,
   ],
-  exports: [PlaylistCollection],
+  exports: [PlaylistCollection, PlaylistService],
 })
 export class PlaylistModule {}

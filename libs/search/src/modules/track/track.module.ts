@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TrackCollection } from './track.collection';
+import { TrackService } from './track.service';
 
 @Module({
   providers: [
@@ -13,7 +14,8 @@ import { TrackCollection } from './track.collection';
         return collection;
       },
     },
+    TrackService,
   ],
-  exports: [TrackCollection],
+  exports: [TrackCollection, TrackService],
 })
 export class TrackModule {}
