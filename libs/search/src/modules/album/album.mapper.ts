@@ -13,6 +13,7 @@ class AlbumMapper implements BaseMapper<Album, App.DTOs.IndexedAlbumDTO, AlbumPa
     return new App.DTOs.IndexedAlbumDTO(
       doc.id,
       doc.name,
+      doc.artistIds,
       doc.artistIds.map(
         (id, index) => new App.DTOs.IndexedSimplifiedArtistDTO(id, doc.artistNames[index]),
       ),

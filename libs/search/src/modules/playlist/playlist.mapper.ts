@@ -13,6 +13,7 @@ class PlaylistMapper implements BaseMapper<Playlist, App.DTOs.IndexedPlaylistDTO
     return new App.DTOs.IndexedPlaylistDTO(
       doc.id,
       doc.name,
+      doc.userId,
       new App.DTOs.IndexedSimplifiedUserDTO(doc.userId, doc.userName),
       doc.cover || null,
     );

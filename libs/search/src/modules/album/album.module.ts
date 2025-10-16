@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AlbumCollection } from './album.collection';
+import { AlbumService } from './album.service';
 
 @Module({
   providers: [
@@ -13,7 +14,8 @@ import { AlbumCollection } from './album.collection';
         return collection;
       },
     },
+    AlbumService,
   ],
-  exports: [AlbumCollection],
+  exports: [AlbumCollection, AlbumService],
 })
 export class AlbumModule {}

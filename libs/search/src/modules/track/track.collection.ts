@@ -36,16 +36,15 @@ export class TrackCollection extends BaseCollection<Track, App.DTOs.IndexedTrack
     );
   }
 
-  async find(q: string, isGlobal?: boolean) {
-    const { items } = await this.search({
+  findByQuery(q: string, options?: Partial<{ isGlobal: boolean }>) {
+    return this.search({
       q,
       query_by: ['name', 'albumName', 'artistNames', 'featArtistNames'],
-      ...(Boolean(isGlobal) && {
-        filter_by: `isGlobal:=${isGlobal}`,
+      ...(Boolean(options?.isGlobal) && {
+        filter_by: `isGlobal:=${options?.isGlobal}`,
       }),
+      sort_by: '_text_match:desc',
     });
-
-    return items.map((item) => this._mapper.toDTO(item));
   }
 
   async updateAlbumDataByAlbumId(albumId: string, payload: AlbumPayload) {
@@ -61,7 +60,7 @@ export class TrackCollection extends BaseCollection<Track, App.DTOs.IndexedTrack
         limit,
       });
 
-      docs.push(...items);
+      docs.push(...items.map(({ item }) => item));
 
       if (!hasMore) break;
 
@@ -99,7 +98,7 @@ export class TrackCollection extends BaseCollection<Track, App.DTOs.IndexedTrack
         limit,
       });
 
-      docs.push(...items);
+      docs.push(...items.map(({ item }) => item));
 
       if (!hasMore) break;
 
@@ -132,7 +131,7 @@ export class TrackCollection extends BaseCollection<Track, App.DTOs.IndexedTrack
         limit,
       });
 
-      docs.push(...items);
+      docs.push(...items.map(({ item }) => item));
 
       if (!hasMore) break;
 

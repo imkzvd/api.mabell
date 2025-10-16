@@ -13,14 +13,13 @@ class TrackMapper implements BaseMapper<Track, App.DTOs.IndexedTrackDTO, TrackPa
     return new App.DTOs.IndexedTrackDTO(
       doc.id,
       doc.name,
-      new App.DTOs.IndexedAlbumDTO(
-        doc.albumId,
-        doc.albumName,
-        doc.artistIds.map(
-          (id, index) => new App.DTOs.IndexedSimplifiedArtistDTO(id, doc.artistNames[index]),
-        ),
-        doc.cover || null,
+      doc.albumId,
+      new App.DTOs.IndexedSimplifiedAlbumDTO(doc.albumId, doc.albumName),
+      doc.artistIds,
+      doc.artistIds.map(
+        (id, index) => new App.DTOs.IndexedSimplifiedArtistDTO(id, doc.artistNames[index]),
       ),
+      doc.featArtistIds,
       // TODO: delete filter!
       doc.featArtistPublic
         .filter((isPublic) => isPublic)
@@ -31,6 +30,7 @@ class TrackMapper implements BaseMapper<Track, App.DTOs.IndexedTrackDTO, TrackPa
               doc.featArtistNames[index],
             ),
         ),
+      doc.cover || null,
       doc.isExplicit,
     );
   }
