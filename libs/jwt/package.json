@@ -1,6 +1,6 @@
 {
   "name": "@api.mabell/jwt",
-  "version": "1.0.0-alpha.6",
+  "version": "1.0.0-alpha.7",
   "description": "Package for the Mabell API",
   "author": "imkzvd@gmail.com",
   "license": "ISC",
@@ -9,7 +9,7 @@
     "api.mabell"
   ],
   "dependencies": {
-    "@api.mabell/core": "^1.0.0-alpha.6",
+    "@api.mabell/core": "^1.0.0-alpha.7",
     "@nestjs/common": "^11.1.6",
     "jsonwebtoken": "^9.0.2"
   }

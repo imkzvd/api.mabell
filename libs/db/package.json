@@ -1,6 +1,6 @@
 {
   "name": "@api.mabell/db",
-  "version": "1.0.0-alpha.6",
+  "version": "1.0.0-alpha.7",
   "description": "Package for the Mabell API",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -12,7 +12,7 @@
   "author": "imkzvd@gmail.com",
   "license": "ISC",
   "dependencies": {
-    "@api.mabell/core": "^1.0.0-alpha.6",
+    "@api.mabell/core": "^1.0.0-alpha.7",
     "@nestjs/common": "^11.1.6",
     "@nestjs/config": "^4.0.2",
     "@nestjs/mongoose": "^11.0.3",
