@@ -33,10 +33,8 @@ export class GetPlaylistTracksHandler implements QueryHandler<GetPlaylistTracksQ
           ),
       ),
       foundTracks.total,
-      options?.pagination?.limit || 50,
-      options?.pagination?.offset || 0,
-      (options?.pagination?.limit || 50) + (options?.pagination?.offset || 0) >
-        foundPlaylistTrackData.length,
+      options?.pagination?.limit,
+      options?.pagination?.offset,
     );
   }
 }

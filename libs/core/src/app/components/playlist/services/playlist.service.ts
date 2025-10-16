@@ -43,4 +43,13 @@ export class PlaylistService {
       (options?.pagination?.offset || 0) + (options?.pagination?.limit || 25),
     );
   }
+
+  async getByGenres(
+    genres: string[],
+    options?: Partial<{
+      isPublic: boolean;
+    }>,
+  ): Promise<PlaylistsDTO> {
+    return this._RR.findByGenres(genres, options);
+  }
 }

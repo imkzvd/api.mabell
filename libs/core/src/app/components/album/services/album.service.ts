@@ -1,15 +1,11 @@
-import { AlbumWriteRepository } from '../../../../domain/components/album';
 import { OffsetLimitPaginationDTO } from '../../../../shared/dtos';
-import { AlbumDTO } from '../../../dtos';
-import { ArtistId } from '../../../../domain/components/artist/types';
+import { ArtistId } from '../../../../domain/components/artist';
 import { AlbumReadRepository } from '../../../ports';
-import { AlbumsDTO } from '../../../dtos/albums.dto';
+import { AlbumDTO } from '../../../dtos';
+import { AlbumsDTO } from '../../../dtos';
 
 export class AlbumService {
-  constructor(
-    private readonly _WR: AlbumWriteRepository,
-    private readonly _RR: AlbumReadRepository,
-  ) {}
+  constructor(private readonly _RR: AlbumReadRepository) {}
 
   findById(albumId: string, options?: Partial<{ isPublic: boolean }>): Promise<AlbumDTO | null> {
     return this._RR.findById(albumId, options);
@@ -34,5 +30,12 @@ export class AlbumService {
 
   getArtistIdsById(albumId: string): Promise<ArtistId[]> {
     return this._RR.getArtistIdsById(albumId);
+  }
+
+  async getByGenres(
+    genres: string[],
+    options?: Partial<{ isPublic: boolean; pagination: OffsetLimitPaginationDTO }>,
+  ): Promise<AlbumsDTO> {
+    return this._RR.findByGenres(genres, options);
   }
 }

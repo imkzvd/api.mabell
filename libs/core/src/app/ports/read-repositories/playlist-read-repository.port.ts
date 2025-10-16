@@ -19,6 +19,14 @@ export interface PlaylistReadRepository {
     }>,
   ): Promise<PlaylistsDTO>;
 
+  findByGenres(
+    genres: string[],
+    options?: Partial<{
+      isPublic: boolean;
+      pagination: OffsetLimitPaginationDTO;
+    }>,
+  ): Promise<PlaylistsDTO>;
+
   getTrackIdsById(
     playlistId: string,
     options?: Partial<{

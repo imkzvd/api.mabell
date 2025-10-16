@@ -18,3 +18,5 @@ export * from './queries/get-artist-public-status/get-artist-public-status.query
 export * from './queries/get-artist-public-status/get-artist-public-status.handler';
 export * from './queries/get-similar-artists/get-similar-artists.query';
 export * from './queries/get-similar-artists/get-similar-artists.handler';
+export * from './queries/get-artists-by-genres/get-artists-by-genres.query';
+export * from './queries/get-artists-by-genres/get-artists-by-genres.handler';

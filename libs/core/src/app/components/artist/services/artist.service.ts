@@ -1,6 +1,7 @@
 import { NotFoundException } from '../../../../shared/exceptions';
-import { ArtistDTO } from '../../../dtos';
+import { ArtistDTO, ArtistsDTO } from '../../../dtos';
 import { ArtistReadRepository } from '../../../ports';
+import { OffsetLimitPaginationDTO } from '../../../../shared/dtos';
 
 export class ArtistService {
   constructor(private readonly _RR: ArtistReadRepository) {}
@@ -31,6 +32,13 @@ export class ArtistService {
 
     const foundArtists = await this._RR.findByGenres(foundArtist.genres, options);
 
-    return foundArtists.filter(({ id }) => id !== artistId);
+    return foundArtists.items.filter(({ id }) => id !== artistId);
+  }
+
+  async getByGenres(
+    genres: string[],
+    options?: Partial<{ isPublic: boolean; pagination: OffsetLimitPaginationDTO }>,
+  ): Promise<ArtistsDTO> {
+    return this._RR.findByGenres(genres, options);
   }
 }

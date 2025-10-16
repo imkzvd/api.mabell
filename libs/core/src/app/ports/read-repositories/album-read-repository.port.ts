@@ -24,6 +24,11 @@ export interface AlbumReadRepository {
     options?: Partial<{ isPublic: boolean }>,
   ): Promise<AlbumDTO | null>;
 
+  findByGenres(
+    genres: string[],
+    options?: Partial<{ isPublic: boolean; pagination: OffsetLimitPaginationDTO }>,
+  ): Promise<AlbumsDTO>;
+
   getPublicStatusById(albumId: string): Promise<boolean>;
 
   getArtistIdsById(albumId: string): Promise<ArtistId[]>;
