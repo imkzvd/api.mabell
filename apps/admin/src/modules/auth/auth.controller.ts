@@ -40,7 +40,7 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ): Promise<void> {
     const userAgent = req.headers['user-agent'] as string;
-    const userIp = req.headers['x-real-ip'] as string;
+    const userIp = (req.headers['x-real-ip'] || req.ip) as string;
 
     const { id: loggedAdminId } = await this._CB.execute(new App.CQRS.LoginAdminCommand(dto));
     const { token: accessToken } = await this._CB.execute(
@@ -101,7 +101,7 @@ export class AuthController {
       throw new UnauthorizedException();
     }
 
-    const userIp = req.headers['x-real-ip'] as string;
+    const userIp = (req.headers['x-real-ip'] || req.ip) as string;
     const userAgent = req.headers['user-agent'] as string;
 
     const validatedRefreshToken = await this._QB.execute(
