@@ -11,8 +11,8 @@ export class IndexedPlaylistRO {
   @ApiProperty({ description: 'Name', example: faker.person.firstName() })
   name: string;
 
-  @ApiProperty({ description: 'Owner', type: () => IndexedSimplifiedUserRO })
-  owner: IndexedSimplifiedUserRO;
+  @ApiProperty({ description: 'User', type: () => IndexedSimplifiedUserRO })
+  user: IndexedSimplifiedUserRO;
 
   @ApiProperty({
     type: String,
@@ -22,13 +22,14 @@ export class IndexedPlaylistRO {
   })
   cover: string | null;
 
-  @ApiProperty({ type: Boolean, description: 'Public', example: true })
-  isPublic: boolean;
+  @ApiProperty({ type: String, description: 'Type' })
+  type: string;
 
   constructor(dto: App.DTOs.IndexedPlaylistDTO) {
     this.id = dto.id;
     this.name = dto.name;
-    this.owner = new IndexedSimplifiedUserRO(dto.owner);
+    this.user = new IndexedSimplifiedUserRO(dto.user);
     this.cover = dto.cover ? `${process.env.API_URL}${dto.cover}` : null;
+    this.type = 'playlist';
   }
 }

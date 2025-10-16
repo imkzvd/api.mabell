@@ -4,32 +4,53 @@ import { IndexedArtistRO } from './indexed-artist.ro';
 import { IndexedAlbumRO } from './indexed-album.ro';
 import { IndexedTrackRO } from './indexed-track.ro';
 import { IndexedPlaylistRO } from './indexed-playlist.ro';
+import { IndexedArtistsRO } from './indexed-artists.ro';
+import { IndexedAlbumsRO } from './indexed-albums.ro';
+import { IndexedTracksRO } from './indexed-tracks.ro';
+import { IndexedPlaylistsRO } from './indexed-playlists.ro';
 
 export class SearchResultRO {
-  @ApiProperty({ description: 'Artists', type: () => [IndexedArtistRO] })
-  artists: IndexedArtistRO[];
+  @ApiProperty({ description: 'Artists', type: () => IndexedArtistsRO })
+  artists: IndexedArtistsRO;
 
-  @ApiProperty({ description: 'Albums', type: () => [IndexedAlbumRO] })
-  albums: IndexedAlbumRO[];
+  @ApiProperty({ description: 'Albums', type: () => IndexedAlbumsRO })
+  albums: IndexedAlbumsRO;
 
-  @ApiProperty({ description: 'Tracks', type: () => [IndexedTrackRO] })
-  tracks: IndexedTrackRO[];
+  @ApiProperty({ description: 'Tracks', type: () => IndexedTracksRO })
+  tracks: IndexedTracksRO;
 
-  @ApiProperty({ description: 'Playlists', type: () => [IndexedPlaylistRO] })
-  playlists: IndexedPlaylistRO[];
+  @ApiProperty({ description: 'Playlists', type: () => IndexedPlaylistsRO })
+  playlists: IndexedPlaylistsRO;
 
-  constructor(
-    props: Partial<{
-      artists: App.DTOs.IndexedArtistDTO[];
-      albums: App.DTOs.IndexedAlbumDTO[];
-      tracks: App.DTOs.IndexedTrackDTO[];
-      users: App.DTOs.IndexedUserDTO[];
-      playlists: App.DTOs.IndexedPlaylistDTO[];
-    }>,
-  ) {
-    this.artists = props.artists?.map((dto) => new IndexedArtistRO(dto)) || [];
-    this.albums = props.albums?.map((dto) => new IndexedAlbumRO(dto)) || [];
-    this.tracks = props.tracks?.map((dto) => new IndexedTrackRO(dto)) || [];
-    this.playlists = props.playlists?.map((dto) => new IndexedPlaylistRO(dto)) || [];
+  @ApiProperty({ description: 'Top results', type: () => [IndexedPlaylistRO] })
+  topResults: (IndexedArtistRO | IndexedAlbumRO | IndexedTrackRO | IndexedPlaylistRO)[];
+
+  constructor(dto: App.DTOs.IndexedItemsDTO) {
+    this.artists = new IndexedArtistsRO(dto.artists);
+    this.albums = new IndexedAlbumsRO(dto.albums);
+    this.tracks = new IndexedTracksRO(dto.tracks);
+    this.playlists = new IndexedPlaylistsRO(dto.playlists);
+    this.topResults = dto.topResults.reduce(
+      (acc: (IndexedArtistRO | IndexedAlbumRO | IndexedTrackRO | IndexedPlaylistRO)[], dto) => {
+        if (dto instanceof App.DTOs.IndexedArtistDTO) {
+          acc.push(new IndexedArtistRO(dto));
+        }
+
+        if (dto instanceof App.DTOs.IndexedAlbumDTO) {
+          acc.push(new IndexedAlbumRO(dto));
+        }
+
+        if (dto instanceof App.DTOs.IndexedTrackDTO) {
+          acc.push(new IndexedTrackRO(dto));
+        }
+
+        if (dto instanceof App.DTOs.IndexedPlaylistDTO) {
+          acc.push(new IndexedPlaylistRO(dto));
+        }
+
+        return acc;
+      },
+      [],
+    );
   }
 }

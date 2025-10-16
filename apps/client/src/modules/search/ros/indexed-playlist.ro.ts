@@ -22,10 +22,14 @@ export class IndexedPlaylistRO {
   })
   cover: string | null;
 
+  @ApiProperty({ type: String, description: 'Type' })
+  type: string;
+
   constructor(dto: App.DTOs.IndexedPlaylistDTO) {
     this.id = dto.id;
     this.name = dto.name;
-    this.user = new IndexedSimplifiedUserRO(dto.owner);
+    this.user = new IndexedSimplifiedUserRO(dto.user);
     this.cover = dto.cover ? `${process.env.CLIENT_API_URL}${dto.cover}` : null;
+    this.type = 'playlist';
   }
 }

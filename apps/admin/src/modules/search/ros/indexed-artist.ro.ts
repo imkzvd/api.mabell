@@ -18,9 +18,13 @@ export class IndexedArtistRO {
   })
   avatar: string | null;
 
+  @ApiProperty({ type: String, description: 'Type' })
+  type: string;
+
   constructor(dto: App.DTOs.IndexedArtistDTO) {
     this.id = dto.id;
     this.name = dto.name;
     this.avatar = dto.avatar ? `${process.env.API_URL}${dto.avatar}` : null;
+    this.type = 'artist';
   }
 }

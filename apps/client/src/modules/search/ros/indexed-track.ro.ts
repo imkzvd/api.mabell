@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { faker } from '@faker-js/faker';
 import { App } from '@api.mabell/core';
 import { IndexedSimplifiedArtistRO } from './indexed-simplified-artist.ro';
-import { IndexedAlbumRO } from './indexed-album.ro';
+import { IndexedSimplifiedAlbumRO } from './indexed-simplified-album.ro';
 
 export class IndexedTrackRO {
   @ApiProperty({ description: 'Id', example: faker.database.mongodbObjectId() })
@@ -13,10 +13,17 @@ export class IndexedTrackRO {
 
   @ApiProperty({
     description: 'Artists of the album',
-    example: IndexedAlbumRO,
-    type: IndexedAlbumRO,
+    example: IndexedSimplifiedAlbumRO,
+    type: IndexedSimplifiedAlbumRO,
   })
-  album: IndexedAlbumRO;
+  album: IndexedSimplifiedAlbumRO;
+
+  @ApiProperty({
+    description: 'Featured artists',
+    example: [IndexedSimplifiedArtistRO],
+    type: () => [IndexedSimplifiedArtistRO],
+  })
+  artists: IndexedSimplifiedArtistRO[];
 
   @ApiProperty({
     description: 'Featured artists',
@@ -25,10 +32,24 @@ export class IndexedTrackRO {
   })
   featArtists: IndexedSimplifiedArtistRO[];
 
+  @ApiProperty({
+    type: String,
+    description: 'Cover',
+    example: faker.image.url(),
+    nullable: true,
+  })
+  cover: string | null;
+
+  @ApiProperty({ type: String, description: 'Type' })
+  type: string;
+
   constructor(dto: App.DTOs.IndexedTrackDTO) {
     this.id = dto.id;
     this.name = dto.name;
-    this.album = new IndexedAlbumRO(dto.album);
-    this.featArtists = dto.featArtists.map((i) => i);
+    this.album = new IndexedSimplifiedAlbumRO(dto.album);
+    this.artists = dto.artists.map((i) => new IndexedSimplifiedArtistRO(i));
+    this.featArtists = dto.featArtists.map((i) => new IndexedSimplifiedArtistRO(i));
+    this.cover = dto.cover ? `${process.env.CLIENT_API_URL}${dto.cover}` : null;
+    this.type = 'track';
   }
 }
