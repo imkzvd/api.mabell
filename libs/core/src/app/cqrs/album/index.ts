@@ -16,3 +16,5 @@ export * from './queries/get-artist-albums/get-artist-albums.query';
 export * from './queries/get-artist-albums/get-artist-albums.handler';
 export * from './queries/get-artist-latest-album/get-artist-latest-album.handler';
 export * from './queries/get-artist-latest-album/get-artist-latest-album.query';
+export * from './queries/get-albums-by-genres/get-albums-by-genres.query';
+export * from './queries/get-albums-by-genres/get-albums-by-genres.handler';

@@ -1,4 +1,5 @@
-import { ArtistDTO } from '../../dtos';
+import { ArtistDTO, ArtistsDTO } from '../../dtos';
+import { OffsetLimitPaginationDTO } from '../../../shared/dtos';
 
 export interface ArtistReadRepository {
   findById(
@@ -8,7 +9,10 @@ export interface ArtistReadRepository {
     }>,
   ): Promise<ArtistDTO | null>;
 
-  findByGenres(genres: string[], options?: Partial<{ limit: number }>): Promise<ArtistDTO[]>;
+  findByGenres(
+    genres: string[],
+    options?: Partial<{ isPublic: boolean; pagination: OffsetLimitPaginationDTO }>,
+  ): Promise<ArtistsDTO>;
 
   getPublicStatusById(artistId: string): Promise<boolean>;
 }
