@@ -46,7 +46,7 @@ export class UserTokenCreateService {
       type: TokenTypes.Refresh,
       subject: userId,
       jti: generatedRefreshTokenId,
-      secret: process.env.REFRESH_TOKEN_SECRET || 'refreshSecret',
+      secret: process.env.JWT_REFRESH_SECRET || 'refreshSecret',
       expiresIn: process.env.REFRESH_TOKEN_EXPIRATION
         ? parseInt(process.env.REFRESH_TOKEN_EXPIRATION)
         : 600,
