@@ -3,12 +3,12 @@ import { ApiOkResponse, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger'
 import { Domain, App } from '@api.mabell/core';
 import { QueryBus } from '@api.mabell/cqrs';
 import { SearchResultRO } from './ros/search-result.ro';
-import { IndexedArtistRO } from './ros/indexed-artist.ro';
-import { IndexedUserRO } from './ros/indexed-user.ro';
-import { IndexedAlbumRO } from './ros/indexed-album.ro';
-import { IndexedTrackRO } from './ros/indexed-track.ro';
-import { IndexedPlaylistRO } from './ros/indexed-playlist.ro';
 import { Roles } from '../../decorators/roles.decorator';
+import { IndexedUsersRO } from './ros/indexed-users.ro';
+import { IndexedArtistsRO } from './ros/indexed-artists.ro';
+import { IndexedAlbumsRO } from './ros/indexed-albums.ro';
+import { IndexedTracksRO } from './ros/indexed-tracks.ro';
+import { IndexedPlaylistsRO } from './ros/indexed-playlists.ro';
 
 @ApiTags('Search')
 @Roles(Domain.Admin.AdminRoles.Owner, Domain.Admin.AdminRoles.Admin, Domain.Admin.AdminRoles.Guest)
@@ -50,12 +50,12 @@ export class SearchController {
     description: 'QueryTypes',
     example: 'james007',
   })
-  @ApiOkResponse({ description: 'Result', type: [IndexedUserRO] })
+  @ApiOkResponse({ description: 'Result', type: () => IndexedUsersRO })
   @Get('/users')
-  async userSearch(@Query('q') q: string): Promise<IndexedUserRO[]> {
+  async userSearch(@Query('q') q: string): Promise<IndexedUsersRO> {
     const result = await this._QB.execute(new App.CQRS.GetUsersQuery(q));
 
-    return result.map((i) => new IndexedUserRO(i));
+    return new IndexedUsersRO(result);
   }
 
   @ApiOperation({ summary: 'Artist search', operationId: 'artistSearch' })
@@ -66,12 +66,12 @@ export class SearchController {
     description: 'QueryTypes',
     example: 'eminem',
   })
-  @ApiOkResponse({ description: 'Result', type: [IndexedArtistRO] })
+  @ApiOkResponse({ description: 'Result', type: () => IndexedArtistsRO })
   @Get('/artists')
-  async artistSearch(@Query('q') q: string): Promise<IndexedArtistRO[]> {
+  async artistSearch(@Query('q') q: string): Promise<IndexedArtistsRO> {
     const result = await this._QB.execute(new App.CQRS.GetArtistsQuery(q));
 
-    return result.map((i) => new IndexedArtistRO(i));
+    return new IndexedArtistsRO(result);
   }
 
   @ApiOperation({ summary: 'Album search', operationId: 'albumSearch' })
@@ -82,12 +82,12 @@ export class SearchController {
     description: 'QueryTypes',
     example: 'kamikaze',
   })
-  @ApiOkResponse({ description: 'Result', type: [IndexedAlbumRO] })
+  @ApiOkResponse({ description: 'Result', type: () => IndexedAlbumsRO })
   @Get('/albums')
-  async albumSearch(@Query('q') q: string): Promise<IndexedAlbumRO[]> {
+  async albumSearch(@Query('q') q: string): Promise<IndexedAlbumsRO> {
     const result = await this._QB.execute(new App.CQRS.GetAlbumsQuery(q));
 
-    return result.map((i) => new IndexedAlbumRO(i));
+    return new IndexedAlbumsRO(result);
   }
 
   @ApiOperation({ summary: 'Track search', operationId: 'trackSearch' })
@@ -98,12 +98,12 @@ export class SearchController {
     description: 'QueryTypes',
     example: 'lucky you',
   })
-  @ApiOkResponse({ description: 'Result', type: [IndexedTrackRO] })
+  @ApiOkResponse({ description: 'Result', type: () => IndexedTracksRO })
   @Get('/tracks')
-  async trackSearch(@Query('q') q: string): Promise<IndexedTrackRO[]> {
+  async trackSearch(@Query('q') q: string): Promise<IndexedTracksRO> {
     const result = await this._QB.execute(new App.CQRS.GetTracksQuery(q));
 
-    return result.map((i) => new IndexedTrackRO(i));
+    return new IndexedTracksRO(result);
   }
 
   @ApiOperation({ summary: 'Playlist search', operationId: 'playlistSearch' })
@@ -114,11 +114,11 @@ export class SearchController {
     description: 'QueryTypes',
     example: 'hip-hop 2025',
   })
-  @ApiOkResponse({ description: 'Result', type: [IndexedPlaylistRO] })
+  @ApiOkResponse({ description: 'Result', type: () => IndexedPlaylistsRO })
   @Get('/playlists')
-  async playlistSearch(@Query('q') q: string): Promise<IndexedPlaylistRO[]> {
+  async playlistSearch(@Query('q') q: string): Promise<IndexedPlaylistsRO> {
     const result = await this._QB.execute(new App.CQRS.GetPlaylistsQuery(q));
 
-    return result.map((i) => new IndexedPlaylistRO(i));
+    return new IndexedPlaylistsRO(result);
   }
 }

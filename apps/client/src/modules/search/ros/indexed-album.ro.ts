@@ -25,10 +25,14 @@ export class IndexedAlbumRO {
   })
   cover: string | null;
 
+  @ApiProperty({ type: String, description: 'Type' })
+  type: string;
+
   constructor(dto: App.DTOs.IndexedAlbumDTO) {
     this.id = dto.id;
     this.name = dto.name;
     this.artists = dto.artists.map((i) => new IndexedSimplifiedArtistRO(i));
     this.cover = dto.cover ? `${process.env.CLIENT_API_URL}${dto.cover}` : null;
+    this.type = 'album';
   }
 }
