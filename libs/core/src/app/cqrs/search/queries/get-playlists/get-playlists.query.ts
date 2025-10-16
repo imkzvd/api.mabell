@@ -1,7 +1,7 @@
 import { Query } from '../../../../types';
-import { IndexedPlaylistDTO } from '../../../../dtos';
+import { IndexedPlaylistsDTO } from '../../../../dtos';
 
-export class GetPlaylistsQuery extends Query<IndexedPlaylistDTO[]> {
+export class GetPlaylistsQuery extends Query<IndexedPlaylistsDTO> {
   constructor(public readonly q: string) {
     super();
   }
