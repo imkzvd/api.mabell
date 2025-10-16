@@ -76,7 +76,7 @@ export class PlaylistRO {
     this.userId = dto.user.id;
     this.user = new SimplifiedUserRO(dto.user);
     this.genres = dto.genreLabelValues.map((i) => new LabelValueRO(i));
-    this.cover = dto.cover ? `${process.env.API_URL}${dto.cover}` : null;
+    this.cover = dto.cover ? `${process.env.ADMIN_API_URL}${dto.cover}` : null;
     this.color = dto.color;
     this.description = dto.description;
     this.isPublic = dto.isPublic;

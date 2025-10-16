@@ -51,7 +51,7 @@ export class UserRO {
   @ApiProperty({
     type: String,
     description: 'Avatar URL',
-    example: `${process.env.API_URL}/${faker.system.commonFileName('webp')}`,
+    example: `${process.env.ADMIN_API_URL}/${faker.system.commonFileName('webp')}`,
     nullable: true,
   })
   avatar: string | null;
@@ -102,7 +102,7 @@ export class UserRO {
     this.birthDate = dto.birthDate;
     this.region = new LabelValueRO(dto.regionLabelValue);
     this.genres = dto.genreLabelValues.map((i) => new LabelValueRO(i));
-    this.avatar = dto.avatar ? `${process.env.API_URL}${dto.avatar}` : null;
+    this.avatar = dto.avatar ? `${process.env.ADMIN_API_URL}${dto.avatar}` : null;
     this.color = dto.color;
     this.isBlocked = dto.isBlocked;
     this.isVerified = dto.isVerified;

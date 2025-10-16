@@ -51,7 +51,7 @@ export class ArtistRO {
   @ApiProperty({
     type: String,
     description: 'Avatar URL',
-    example: `${process.env.API_URL}/${faker.system.commonFileName('webp')}`,
+    example: `${process.env.ADMIN_API_URL}/${faker.system.commonFileName('webp')}`,
     nullable: true,
   })
   avatar: string | null;
@@ -59,7 +59,7 @@ export class ArtistRO {
   @ApiProperty({
     type: String,
     description: 'Cover URL',
-    example: `${process.env.API_URL}/${faker.system.commonFileName('webp')}`,
+    example: `${process.env.ADMIN_API_URL}/${faker.system.commonFileName('webp')}`,
     nullable: true,
   })
   cover: string | null;
@@ -107,8 +107,8 @@ export class ArtistRO {
     this.birthDate = dto.birthDate;
     this.genres = dto.genreLabelValues.map((i) => new LabelValueRO(i));
     this.biography = dto.biography;
-    this.avatar = dto.avatar ? `${process.env.API_URL}${dto.avatar}` : null;
-    this.cover = dto.cover ? `${process.env.API_URL}${dto.cover}` : null;
+    this.avatar = dto.avatar ? `${process.env.ADMIN_API_URL}${dto.avatar}` : null;
+    this.cover = dto.cover ? `${process.env.ADMIN_API_URL}${dto.cover}` : null;
     this.accentColor = dto.accentColor;
     this.secondaryColor = dto.secondaryColor;
     this.isActive = dto.isActive;

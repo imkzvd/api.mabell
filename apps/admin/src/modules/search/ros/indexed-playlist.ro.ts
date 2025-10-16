@@ -29,7 +29,7 @@ export class IndexedPlaylistRO {
     this.id = dto.id;
     this.name = dto.name;
     this.user = new IndexedSimplifiedUserRO(dto.user);
-    this.cover = dto.cover ? `${process.env.API_URL}${dto.cover}` : null;
+    this.cover = dto.cover ? `${process.env.ADMIN_API_URL}${dto.cover}` : null;
     this.type = 'playlist';
   }
 }
