@@ -1,4 +1,4 @@
-<img src="assets/svg/api_logo.svg" width="200">
+<img src="assets/svg/api_logo.svg" width="280">
 
 # Description
 
