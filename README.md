@@ -1,6 +1,6 @@
 <img src="assets/svg/api_logo.svg" width="280">
 
-# Description
+## Description
 
 This repository contains the **backend API** for Mabell Application.
 
