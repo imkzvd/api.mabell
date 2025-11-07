@@ -4,10 +4,18 @@ import {
   Get,
   NotFoundException,
   Param,
+  ParseArrayPipe,
   ParseIntPipe,
   Query,
 } from '@nestjs/common';
-import { ApiOkResponse, ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
+import {
+  ApiOkResponse,
+  ApiOperation,
+  ApiParam,
+  ApiQuery,
+  ApiTags,
+  getSchemaPath,
+} from '@nestjs/swagger';
 import { faker } from '@faker-js/faker';
 import { App } from '@api.mabell/core';
 import { QueryBus } from '@api.mabell/cqrs';
@@ -19,6 +27,34 @@ import { TracksRO } from '../track/ros/tracks.ro';
 @Controller({ path: '/albums' })
 export class AlbumController {
   constructor(private readonly _queryBus: QueryBus) {}
+
+  @ApiOperation({ summary: 'Get albums by ids', operationId: 'getAlbumsByIds' })
+  @ApiQuery({
+    required: true,
+    type: String,
+    name: 'ids',
+    description: 'Ids',
+    example: `${faker.database.mongodbObjectId()},${faker.database.mongodbObjectId()}`,
+  })
+  @ApiOkResponse({
+    description: 'Albums',
+    schema: {
+      type: 'array',
+      items: {
+        oneOf: [{ $ref: getSchemaPath(AlbumRO) }, { type: 'null' }],
+      },
+    },
+  })
+  @Get('/')
+  async getAlbumsByIds(
+    @Query('ids', new ParseArrayPipe()) ids: string[],
+  ): Promise<(AlbumRO | null)[]> {
+    const foundAlbums = await this._queryBus.execute(
+      new App.CQRS.GetAlbumsByIdsQuery(ids, { isPublic: true }),
+    );
+
+    return foundAlbums.items.map((dto) => (dto ? new AlbumRO(dto) : null));
+  }
 
   @ApiOperation({ summary: 'Get an album by id', operationId: 'getAlbum' })
   @ApiParam({

@@ -12,6 +12,8 @@ export * from './commands/update-album-cover/update-album-cover.command';
 export * from './commands/update-album-cover/update-album-cover.handler';
 export * from './queries/get-album/get-album.query';
 export * from './queries/get-album/get-album.handler';
+export * from './queries/get-albums-by-ids/get-albums-by-ids.query';
+export * from './queries/get-albums-by-ids/get-albums-by-ids.handler';
 export * from './queries/get-artist-albums/get-artist-albums.query';
 export * from './queries/get-artist-albums/get-artist-albums.handler';
 export * from './queries/get-artist-latest-album/get-artist-latest-album.handler';
