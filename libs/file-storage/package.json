@@ -1,6 +1,6 @@
 {
   "name": "@api.mabell/file-storage",
-  "version": "1.0.0-alpha.7",
+  "version": "1.0.0-alpha.8",
   "description": "Package for the Mabell API",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -13,8 +13,8 @@
   "author": "imkzvd@gmail.com",
   "license": "ISC",
   "dependencies": {
-    "@api.mabell/cache": "^1.0.0-alpha.7",
-    "@api.mabell/core": "^1.0.0-alpha.7",
+    "@api.mabell/cache": "^1.0.0-alpha.8",
+    "@api.mabell/core": "^1.0.0-alpha.8",
     "@nestjs/common": "^11.1.6",
     "sharp": "^0.33.5",
     "uuid": "10.0.0"
