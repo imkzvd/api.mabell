@@ -55,6 +55,65 @@ export class AlbumReadRepository implements App.Ports.AlbumReadRepository {
     return foundDoc ? AlbumMapper.toDTO(foundDoc) : null;
   }
 
+  async findByIds(albumIds: string[], options?: Partial<{ isPublic: boolean }>) {
+    const foundDocs = await this._albumModel
+      .aggregate<AlbumWithArtistsDocument>([
+        {
+          $match: {
+            _id: {
+              $in: albumIds.map((i) => new Types.ObjectId(i)),
+            },
+            ...(options?.isPublic !== undefined && { isPublic: options.isPublic }),
+          },
+        },
+        {
+          $lookup: {
+            from: 'artists',
+            localField: 'artists',
+            foreignField: '_id',
+            as: 'artists',
+            let: { albumArtistIds: '$artists' },
+            pipeline: [
+              {
+                $set: {
+                  index: {
+                    $indexOfArray: ['$$albumArtistIds', '$_id'],
+                  },
+                },
+              },
+              { $sort: { index: 1 } },
+              { $unset: 'index' },
+            ],
+          },
+        },
+        {
+          $match: {
+            ...(options?.isPublic !== undefined && {
+              'artists.isPublic': { $ne: !options.isPublic },
+            }),
+          },
+        },
+      ])
+      .exec();
+
+    const foundDocsMap: Map<string, AlbumWithArtistsDocument> = new Map(
+      foundDocs.map((doc) => [doc._id.toHexString(), doc]),
+    );
+    const itemsResult: (App.DTOs.AlbumDTO | null)[] = albumIds.map((id) => {
+      const doc = foundDocsMap.get(id);
+
+      return doc ? AlbumMapper.toDTO(doc) : null;
+    });
+
+    return {
+      items: itemsResult,
+      foundItems: itemsResult.filter((i) => i !== null),
+      foundIds: [...foundDocsMap.keys()] as Domain.Album.AlbumId[],
+      total: foundDocsMap.size,
+      missingIds: albumIds.filter((id) => !foundDocsMap.has(id)),
+    };
+  }
+
   async findByArtistId(
     artistId: string,
     options?: Partial<{
