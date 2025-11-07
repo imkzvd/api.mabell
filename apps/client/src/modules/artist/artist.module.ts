@@ -11,6 +11,7 @@ import { albumServiceProvider } from '../album/providers/album-service.provider'
 import { GetArtistAlbumsHandler } from '../album/queries/get-artist-albums.handler';
 import { GetArtistLatestAlbumHandler } from './queries/get-artist-latest-album.handler';
 import { GetSimilarArtistsHandler } from './queries/get-similar-artists.handler';
+import { GetArtistsByIdsHandler } from './queries/get-artists-by-ids.handler';
 
 @Module({
   imports: [RandomIdModule, FileStorageModule],
@@ -20,6 +21,7 @@ import { GetSimilarArtistsHandler } from './queries/get-similar-artists.handler'
     albumServiceProvider,
     trackServiceProvider,
     GetArtistHandler,
+    GetArtistsByIdsHandler,
     GetArtistAlbumsHandler,
     GetArtistTracksHandler,
     GetArtistLatestAlbumHandler,

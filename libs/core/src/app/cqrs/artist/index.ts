@@ -14,6 +14,8 @@ export * from './commands/update-artist-cover/update-artist-cover.command';
 export * from './commands/update-artist-cover/update-artist-cover.handler';
 export * from './queries/get-artist/get-artist.query';
 export * from './queries/get-artist/get-artist.handler';
+export * from './queries/get-artists-by-ids/get-artists-by-ids.query';
+export * from './queries/get-artists-by-ids/get-artists-by-ids.handler';
 export * from './queries/get-artist-public-status/get-artist-public-status.query';
 export * from './queries/get-artist-public-status/get-artist-public-status.handler';
 export * from './queries/get-similar-artists/get-similar-artists.query';

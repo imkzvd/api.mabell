@@ -4,10 +4,18 @@ import {
   Get,
   NotFoundException,
   Param,
+  ParseArrayPipe,
   ParseIntPipe,
   Query,
 } from '@nestjs/common';
-import { ApiOkResponse, ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
+import {
+  ApiOkResponse,
+  ApiOperation,
+  ApiParam,
+  ApiQuery,
+  ApiTags,
+  getSchemaPath,
+} from '@nestjs/swagger';
 import { faker } from '@faker-js/faker';
 import { ArtistRO } from './ros/artist.ro';
 import { App } from '@api.mabell/core';
@@ -21,6 +29,34 @@ import { AlbumRO } from '../album/ros/album.ro';
 @Controller({ path: '/artists' })
 export class ArtistController {
   constructor(private readonly _QB: QueryBus) {}
+
+  @ApiOperation({ summary: 'Get artists by ids', operationId: 'getArtistsByIds' })
+  @ApiQuery({
+    required: true,
+    type: String,
+    name: 'ids',
+    description: 'Ids',
+    example: `${faker.database.mongodbObjectId()},${faker.database.mongodbObjectId()}`,
+  })
+  @ApiOkResponse({
+    description: 'Artists',
+    schema: {
+      type: 'array',
+      items: {
+        oneOf: [{ $ref: getSchemaPath(ArtistRO) }, { type: 'null' }],
+      },
+    },
+  })
+  @Get('/')
+  async getArtistsByIds(
+    @Query('ids', new ParseArrayPipe()) ids: string[],
+  ): Promise<(ArtistRO | null)[]> {
+    const foundArtist = await this._QB.execute(
+      new App.CQRS.GetArtistsByIdsQuery(ids, { isPublic: true }),
+    );
+
+    return foundArtist.items.map((dto) => (dto ? new ArtistRO(dto) : null));
+  }
 
   @ApiOperation({ summary: 'Get an artist by id', operationId: 'getArtist' })
   @ApiParam({
