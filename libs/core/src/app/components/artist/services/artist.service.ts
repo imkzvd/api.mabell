@@ -10,6 +10,19 @@ export class ArtistService {
     return this._RR.findById(artistId, options);
   }
 
+  findByIds(
+    artistIds: string[],
+    options?: Partial<{ isPublic: boolean }>,
+  ): Promise<{
+    items: (ArtistDTO | null)[];
+    foundItems: ArtistDTO[];
+    foundIds: string[];
+    total: number;
+    missingIds: string[];
+  }> {
+    return this._RR.findByIds(artistIds, options);
+  }
+
   async checkPublicStatus(id: string): Promise<boolean> {
     const foundArtist = await this._RR.findById(id);
 
