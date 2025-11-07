@@ -11,6 +11,19 @@ export class AlbumService {
     return this._RR.findById(albumId, options);
   }
 
+  findByIds(
+    albumIds: string[],
+    options?: Partial<{ isPublic: boolean }>,
+  ): Promise<{
+    items: (AlbumDTO | null)[];
+    foundItems: AlbumDTO[];
+    foundIds: string[];
+    total: number;
+    missingIds: string[];
+  }> {
+    return this._RR.findByIds(albumIds, options);
+  }
+
   findByArtistId(
     artistId: string,
     options?: Partial<{

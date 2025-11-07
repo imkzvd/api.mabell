@@ -5,6 +5,7 @@ import { GetAlbumTracksHandler } from '../track/queries/get-album-tracks.handler
 import { albumServiceProvider } from './providers/album-service.provider';
 import { trackServiceProvider } from '../track/providers/track-service.provider';
 import { albumVerifyServiceProvider } from './providers/album-verify-service.provider';
+import { GetAlbumsByIdsHandler } from './queries/get-albums-by-ids.handler';
 
 @Module({
   providers: [
@@ -13,6 +14,7 @@ import { albumVerifyServiceProvider } from './providers/album-verify-service.pro
     albumVerifyServiceProvider,
     GetAlbumHandler,
     GetAlbumTracksHandler,
+    GetAlbumsByIdsHandler,
   ],
   controllers: [AlbumController],
 })
