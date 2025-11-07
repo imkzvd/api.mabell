@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { App, Shared } from '@api.mabell/core';
+import { Model, Types } from 'mongoose';
+import { App, Domain, Shared } from '@api.mabell/core';
 import ArtistMapper from './artist.mapper';
 import { Artist } from './artist.schema';
 import { ArtistDocument } from './types';
@@ -26,6 +26,38 @@ export class ArtistReadRepository implements App.Ports.ArtistReadRepository {
       .exec();
 
     return foundDoc ? ArtistMapper.toDTO(foundDoc) : null;
+  }
+
+  async findByIds(artistIds: string[], options?: Partial<{ isPublic: boolean }>) {
+    const foundDocs = await this._artistModel
+      .aggregate<ArtistDocument>([
+        {
+          $match: {
+            _id: {
+              $in: artistIds.map((i) => new Types.ObjectId(i)),
+            },
+            ...(options?.isPublic !== undefined && { isPublic: options.isPublic }),
+          },
+        },
+      ])
+      .exec();
+
+    const foundDocsMap: Map<string, ArtistDocument> = new Map(
+      foundDocs.map((doc) => [doc._id.toHexString(), doc]),
+    );
+    const itemsResult: (App.DTOs.ArtistDTO | null)[] = artistIds.map((id) => {
+      const doc = foundDocsMap.get(id);
+
+      return doc ? ArtistMapper.toDTO(doc) : null;
+    });
+
+    return {
+      items: itemsResult,
+      foundItems: itemsResult.filter((i) => i !== null),
+      foundIds: [...foundDocsMap.keys()] as Domain.Artist.ArtistId[],
+      total: foundDocsMap.size,
+      missingIds: artistIds.filter((id) => !foundDocsMap.has(id)),
+    };
   }
 
   async findByGenres(
