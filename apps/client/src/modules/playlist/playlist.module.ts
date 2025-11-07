@@ -5,6 +5,7 @@ import { playlistServiceProvider } from './providers/playlist-service.provider';
 import { trackServiceProvider } from '../track/providers/track-service.provider';
 import { GetPlaylistTracksHandler } from '../track/queries/get-playlist-tracks.handler';
 import { GetPlaylistsByGenreHandler } from './queries/get-playlist-by-genre.handler';
+import { GetPlaylistsByIdsHandler } from './queries/get-playlist-by-ids.handler';
 
 @Module({
   providers: [
@@ -13,6 +14,7 @@ import { GetPlaylistsByGenreHandler } from './queries/get-playlist-by-genre.hand
     GetPlaylistHandler,
     GetPlaylistTracksHandler,
     GetPlaylistsByGenreHandler,
+    GetPlaylistsByIdsHandler,
   ],
   controllers: [PlaylistController],
 })
