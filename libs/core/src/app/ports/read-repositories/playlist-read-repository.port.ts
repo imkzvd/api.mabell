@@ -1,7 +1,8 @@
 import { PlaylistDTO } from '../../dtos';
 import { OffsetLimitPaginationDTO } from '../../../shared/dtos';
-import { PlaylistsDTO } from '../../dtos/playlists.dto';
-import { PlaylistTrackIdsDTO } from '../../dtos/playlist-track-ids.dto';
+import { PlaylistsDTO } from '../../dtos';
+import { PlaylistTrackIdsDTO } from '../../dtos';
+import { PlaylistId } from '../../../domain/components/playlist';
 
 export interface PlaylistReadRepository {
   findById(
@@ -10,6 +11,19 @@ export interface PlaylistReadRepository {
       isPublic: boolean;
     }>,
   ): Promise<PlaylistDTO | null>;
+
+  findByIds(
+    playlistIds: string[],
+    options?: Partial<{
+      isPublic: boolean;
+    }>,
+  ): Promise<{
+    items: (PlaylistDTO | null)[];
+    foundItems: PlaylistDTO[];
+    foundIds: PlaylistId[];
+    total: number;
+    missingIds: string[];
+  }>;
 
   findByUserId(
     userId: string,

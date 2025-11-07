@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { App, Shared } from '@api.mabell/core';
+import { Model, Types } from 'mongoose';
+import { App, Domain, Shared } from '@api.mabell/core';
 import { Playlist } from './playlist.schema';
 import { PlaylistWithUser, PlaylistWithUserDocument } from './types';
 import PlaylistMapper from './playlist.mapper';
@@ -28,6 +28,54 @@ export class PlaylistReadRepository implements App.Ports.PlaylistReadRepository 
       .exec();
 
     return foundDoc ? PlaylistMapper.toDTO(foundDoc) : null;
+  }
+
+  async findByIds(playlistIds: string[], options?: Partial<{ isPublic: boolean }>) {
+    const foundDocs = await this._playlistModel
+      .aggregate<PlaylistWithUser>([
+        {
+          $match: {
+            _id: {
+              $in: playlistIds.map((i) => new Types.ObjectId(i)),
+            },
+            ...(options?.isPublic !== undefined && { isPublic: options.isPublic }),
+          },
+        },
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'user',
+            foreignField: '_id',
+            as: 'user',
+          },
+        },
+        { $unwind: { path: '$user' } },
+        {
+          $match: {
+            ...(options?.isPublic !== undefined && {
+              'user.isPublic': { $ne: !options.isPublic },
+            }),
+          },
+        },
+      ])
+      .exec();
+
+    const foundDocsMap: Map<string, PlaylistWithUser> = new Map(
+      foundDocs.map((doc) => [doc._id.toHexString(), doc]),
+    );
+    const itemsResult: (App.DTOs.PlaylistDTO | null)[] = playlistIds.map((id) => {
+      const doc = foundDocsMap.get(id);
+
+      return doc ? PlaylistMapper.toDTO(doc) : null;
+    });
+
+    return {
+      items: itemsResult,
+      foundItems: itemsResult.filter((i) => i !== null),
+      foundIds: [...foundDocsMap.keys()] as Domain.Playlist.PlaylistId[],
+      total: foundDocsMap.size,
+      missingIds: playlistIds.filter((id) => !foundDocsMap.has(id)),
+    };
   }
 
   async findByUserId(
