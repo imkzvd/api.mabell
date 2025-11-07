@@ -1,6 +1,6 @@
 {
   "name": "@api.mabell/random-id",
-  "version": "1.0.0-alpha.7",
+  "version": "1.0.0-alpha.8",
   "description": "Package for the Mabell API",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -12,7 +12,7 @@
   "author": "imkzvd@gmail.com",
   "license": "ISC",
   "dependencies": {
-    "@api.mabell/core": "^1.0.0-alpha.7",
+    "@api.mabell/core": "^1.0.0-alpha.8",
     "@nestjs/common": "^11.1.6",
     "mongoose": "^8.17.1"
   }
