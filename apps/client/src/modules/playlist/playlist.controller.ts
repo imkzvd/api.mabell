@@ -8,19 +8,53 @@ import {
   ParseIntPipe,
   Query,
 } from '@nestjs/common';
-import { ApiOkResponse, ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
+import {
+  ApiOkResponse,
+  ApiOperation,
+  ApiParam,
+  ApiQuery,
+  ApiTags,
+  getSchemaPath,
+} from '@nestjs/swagger';
 import { faker } from '@faker-js/faker';
 import { QueryBus } from '@api.mabell/cqrs';
 import { App } from '@api.mabell/core';
 import { ParseObjectIdPipe } from '@api.mabell/shared';
 import { PlaylistRO } from './ros/playlist.ro';
 import { PlaylistTracksRO } from '../track/ros/playlist-tracks.ro';
-import { PlaylistsRO } from './ros/playlists.ro';
 
 @ApiTags('Playlist')
 @Controller({ path: '/playlists' })
 export class PlaylistController {
   constructor(private readonly _queryBus: QueryBus) {}
+
+  @ApiOperation({ summary: 'Get playlists by ids', operationId: 'getPlaylistsByIds' })
+  @ApiQuery({
+    required: true,
+    type: String,
+    name: 'ids',
+    description: 'Ids',
+    example: `${faker.database.mongodbObjectId()},${faker.database.mongodbObjectId()}`,
+  })
+  @ApiOkResponse({
+    description: 'Playlists',
+    schema: {
+      type: 'array',
+      items: {
+        oneOf: [{ $ref: getSchemaPath(PlaylistRO) }, { type: 'null' }],
+      },
+    },
+  })
+  @Get('/')
+  async getPlaylistsByIds(
+    @Query('ids', new ParseArrayPipe()) ids: string[],
+  ): Promise<(PlaylistRO | null)[]> {
+    const foundPlaylists = await this._queryBus.execute(
+      new App.CQRS.GetPlaylistsByIdsQuery(ids, { isPublic: true }),
+    );
+
+    return foundPlaylists.items.map((dto) => (dto ? new PlaylistRO(dto) : null));
+  }
 
   @ApiOperation({ summary: 'Get playlist by id', operationId: 'getPlaylist' })
   @ApiParam({
@@ -64,32 +98,5 @@ export class PlaylistController {
     );
 
     return new PlaylistTracksRO(foundTracks);
-  }
-
-  @ApiOperation({ summary: 'Get playlist by genre', operationId: 'getPlaylistsByGenres' })
-  @ApiQuery({
-    required: true,
-    type: String,
-    name: 'genres',
-    description: 'Genre',
-    example: 'hip-hop',
-  })
-  @ApiQuery({ required: false, type: String, name: 'offset', description: 'Offset', example: 0 })
-  @ApiQuery({ required: false, type: String, name: 'limit', description: 'Limit', example: 50 })
-  @ApiOkResponse({ description: 'Playlist', type: PlaylistsRO })
-  @Get('/')
-  async getPlaylistsByGenres(
-    @Query('genres', new ParseArrayPipe()) genres: string[],
-    @Query('offset', new DefaultValuePipe(0), ParseIntPipe) offset: number,
-    @Query('limit', new DefaultValuePipe(25), ParseIntPipe) limit: number,
-  ): Promise<PlaylistsRO> {
-    const foundPlaylist = await this._queryBus.execute(
-      new App.CQRS.GetPlaylistsByGenreQuery(genres, {
-        isPublic: true,
-        pagination: { offset, limit },
-      }),
-    );
-
-    return new PlaylistsRO(foundPlaylist);
   }
 }

@@ -14,6 +14,8 @@ export * from './commands/update-playlist-cover/update-playlist-cover.command';
 export * from './commands/update-playlist-cover/update-playlist-cover.handler';
 export * from './queries/get-playlist/get-playlist.query';
 export * from './queries/get-playlist/get-playlist.handler';
+export * from './queries/get-playlists-by-ids/get-playlists-by-ids.query';
+export * from './queries/get-playlists-by-ids/get-playlists-by-ids.handler';
 export * from './queries/get-user-playlists/get-user-playlists.query';
 export * from './queries/get-user-playlists/get-user-playlists.handler';
 export * from './queries/get-playlists-by-genre/get-playlists-by-genre.query';

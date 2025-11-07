@@ -1,9 +1,9 @@
 import { OffsetLimitPaginationDTO } from '../../../../shared/dtos';
 import { NotFoundException } from '../../../../shared/exceptions';
 import { PlaylistDTO } from '../../../dtos';
-import { TrackId } from '../../../../domain/components/track/types';
+import { TrackId } from '../../../../domain/components/track';
 import { PlaylistReadRepository } from '../../../ports';
-import { PlaylistsDTO } from '../../../dtos/playlists.dto';
+import { PlaylistsDTO } from '../../../dtos';
 
 export class PlaylistService {
   constructor(private readonly _RR: PlaylistReadRepository) {}
@@ -15,6 +15,19 @@ export class PlaylistService {
     }>,
   ): Promise<PlaylistDTO | null> {
     return this._RR.findById(playlistId, options);
+  }
+
+  findByIds(
+    playlistIds: string[],
+    options?: Partial<{ isPublic: boolean }>,
+  ): Promise<{
+    items: (PlaylistDTO | null)[];
+    foundItems: PlaylistDTO[];
+    foundIds: string[];
+    total: number;
+    missingIds: string[];
+  }> {
+    return this._RR.findByIds(playlistIds, options);
   }
 
   async findByUserId(
