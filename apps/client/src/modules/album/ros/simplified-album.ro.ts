@@ -31,6 +31,14 @@ export class SimplifiedAlbumRO {
   cover: string | null;
 
   @ApiProperty({
+    type: String,
+    description: 'Accent color',
+    example: faker.color.rgb(),
+    nullable: true,
+  })
+  color: string | null;
+
+  @ApiProperty({
     type: Date,
     description: 'Release date',
     example: faker.date.past().toISOString(),
@@ -43,6 +51,7 @@ export class SimplifiedAlbumRO {
     this.name = album.name;
     this.type = new LabelValueRO(album.typeLabelValue);
     this.cover = album.cover ? `${process.env.CLIENT_API_URL}${album.cover}` : null;
+    this.color = album.color;
     this.releaseAt = album.releaseAt;
   }
 }
