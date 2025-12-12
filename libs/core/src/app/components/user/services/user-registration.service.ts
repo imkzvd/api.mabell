@@ -1,3 +1,4 @@
+import { Domain } from '@api.mabell/core';
 import { USER_MIN_LENGTH_PASSWORD } from '../constants';
 import { RegisterUserPayload } from '../types';
 import { UserFactory, UserWriteRepository } from '../../../../domain/components/user';
@@ -25,12 +26,12 @@ export class UserRegistrationService {
     const hashedPassword = await this._passwordService.hash(payload.password);
     const createdUser = UserFactory.create({
       id: generatedId,
-      username: payload.username,
+      username: payload.email,
       password: hashedPassword,
       name: payload.name,
       email: payload.email,
       birthDate: payload.birthDate,
-      region: payload.region,
+      region: Domain.Common.Regions['Russian Federation'],
     });
 
     await this._WR.save(createdUser);
