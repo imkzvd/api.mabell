@@ -17,6 +17,7 @@ import { TrackModule } from './modules/track/track.module';
 import { PlaylistModule } from './modules/playlist/playlist.module';
 import { SearchModule } from './modules/search/search.module';
 import { PopularModule } from './modules/popular/popular.module';
+import { RegistrationModule } from './modules/registration/registration.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { PopularModule } from './modules/popular/popular.module';
     DBModule,
     EventBusModule,
     CqrsModule,
+    RegistrationModule,
     ArtistModule,
     AlbumModule,
     TrackModule,
