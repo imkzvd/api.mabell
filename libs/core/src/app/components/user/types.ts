@@ -10,12 +10,10 @@ export type UpdateUserPayload = Partial<{
 }>;
 
 export type RegisterUserPayload = {
-  username: string;
+  email: string;
   password: string;
   name: string;
-  email: string;
   birthDate: Date;
-  region: Region;
 };
 
 export type UpdateUserPasswordPayload = {
